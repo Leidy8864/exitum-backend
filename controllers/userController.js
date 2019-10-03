@@ -214,7 +214,7 @@ module.exports = {
     signIn: (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
         const userData = {
             email: req.body.email,
@@ -222,18 +222,18 @@ module.exports = {
         };
         models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
             if (!user) {
-                res.status(409).send({ message: "Wrong email or password, please try again" });
+                res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
             } else {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
                     helper.generateAccessData(user, res);
                 } else {
-                    res.status(409).send({ message: "Wrong email or password, please try again" });
+                    res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
                 }
             }
         }).catch(error => {
             console.log('Algo esta fallando: ' + error);
-            res.status(500).send("Server Error!")
+            res.status(200).send({status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
         });
     },
 
