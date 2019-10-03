@@ -217,7 +217,7 @@ module.exports = {
     signIn: (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
         const userData = {
             email: req.body.email,
@@ -225,18 +225,18 @@ module.exports = {
         };
         models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
             if (!user) {
-                res.json({ status: false, message: "Wrong email or password, please try again" });
+                res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
             } else {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
                     helper.generateAccessData(user, res);
                 } else {
-                    res.json({ status: false, message: "Wrong email or password, please try again" });
+                    res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
                 }
             }
         }).catch(error => {
             console.log('Algo esta fallando: ' + error);
-            res.json({ status: false, message: "Error en el servidor" });
+            res.status(200).send({status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
         });
     },
 
@@ -256,8 +256,6 @@ module.exports = {
                     const result = await models.sequelize.transaction(async (t) => {
 
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
-                        const country = await models.country.findOne({ where: { id: req.body.country_id } }, { transaction: t });
-
                         const newUser = await models.user.create({
                             name: user.name,
                             lastname: user.lastname,
@@ -268,8 +266,8 @@ module.exports = {
                             email: user.email,
                             role: 'employee',
                             photo: user.image,
-                            country_id: country.id,
-                            currency_id: country.currency_id
+                            country_id: 1,
+                            currency_id: 1
                         }, { transaction: t });
 
                         if (req.body.role === "entrepreneur") {
@@ -375,7 +373,7 @@ module.exports = {
     updateUser: async (req, res) => {
         try {
             var photo = req.files.photo;
-            const user = await models.user.findOne({ where: { id: req.params.user_id } });
+            const user = await models.user.findOne({ where: { id: req.body.user_id } });
 
             if (user) {
 
@@ -383,7 +381,6 @@ module.exports = {
                     console.log("Errrror papa", user.photo);
                     s3.deleteObject(NEW_BUCKET_NAME, user.photo);
                 }
-
                 const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
 
                 await user.update({

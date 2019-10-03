@@ -6,9 +6,10 @@ module.exports = {
         var message_exists = "Este campo es obligatorio";
         var message_array = "Este campo deber que ser un array";
         var message_numeric = "Este campo debe ser numérico";
+
         switch (method) {
 
-            case 'employee':
+            case 'create':
                 return [
                     check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('category_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
@@ -19,12 +20,20 @@ module.exports = {
                     check('skills', message_exists).exists().withMessage(message_exists).isArray().withMessage(message_array),
                     check('types', message_exists).exists().withMessage(message_exists).isArray().withMessage(message_array)
                 ]
+            case 'update':
+                return [
+                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('category_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('price_hour').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('about_me', message_exists).exists(),
+                    check('short_description', message_exists).exists()
+                ]
         }
     },
     create: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
         var languages = req.body.languages;
 
@@ -36,19 +45,24 @@ module.exports = {
                     category_id: req.body.category_id,
                     about_me: req.body.about_me,
                     short_description: req.body.short_description,
-                    price_hour: req.body.price_hour
+                    price_hour: req.body.price_hour,
+                    stage_id : 1
                 }, { transaction: t });
                 await employee.addSkill(req.body.skills, { transaction: t });
                 await employee.addType(req.body.types, { transaction: t });
+
                 for (let i = 0; i < languages.length; i++) {
                     employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } }, { transaction: t });
                 }
                 return employee;
             });
-            return res.status(200).json({ employee: result, message: "Impulsor registrado correctamente" });
+            return res.status(200).json({  status : true ,message: "Impulsor creado correctamente",data: result });
 
         } catch (error) {
-            res.status(500).json({
+            console.log("Error" + error);
+
+            res.status(200).json({
+                status : false ,
                 message: "Error al crear impulsor"
             });
         }
@@ -56,7 +70,7 @@ module.exports = {
     updateEmployee: async (req, res) => {
         const user_id = req.body.user_id;
         try {
-            const employee = await this.findEmployee(user_id);
+            const employee = await models.employee.findOne({ where: { user_id: user_id } });
             if (employee) {
 
                 await employee.update({
@@ -66,16 +80,18 @@ module.exports = {
                     price_hour: req.body.price_hour
                 });
 
-                return res.status(200).json({ status: 200, message: "Empleado actualizado correctamente" });
+                return res.status(200).json({ status: true, message: "Empleado actualizado correctamente", data : employee});
             } else {
-                return res.status(400).send({ status: 400, message: "No existe el empleado" })
+                return res.status(200).json({ status: false, message: "No existe el empleado" });
 
             }
 
         } catch (error) {
-            return res.status(500).json(
+            console.log("Error" + error);
+            return res.status(200).json(
                 {
-                    message: "Error al actualizar información del empleado",
+                    status: false,
+                    message: "Error al actualizar información del empleado"
                 });
         }
     },
@@ -83,17 +99,18 @@ module.exports = {
         const user_id = req.body.user_id;
         const skills = req.body.skills;
         try {
-            const employee = await this.findEmployee(user_id);
+            const employee = await models.employee.findOne({ where: { user_id: user_id } });
 
             await models.employee_skill.destroy({ where: { employee_id: employee.id } });
 
             employee.addSkill(skills);
 
-            return res.status(200).json({ status: 200, message: "Skills actualizados correctamente" });
+            return res.status(200).json({ status: true, message: "Skills actualizados correctamente" });
 
         } catch (error) {
-            return res.status(500).json(
+            return res.status(200).json(
                 {
+                    status: false,
                     message: "Error al actualizar información del empleado",
                 });
         }
@@ -102,7 +119,7 @@ module.exports = {
         const user_id = req.body.user_id;
         const languages = req.body.languages;
         try {
-            const employee = await this.findEmployee(user_id);
+            const employee = await models.employee.findOne({ where: { user_id: user_id } });
 
             await models.employee_language.destroy({ where: { employee_id: employee.id } });
 
@@ -110,11 +127,12 @@ module.exports = {
                 employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } });
             }
 
-            return res.status(200).json({ status: 200, message: "Lenguajes actualizados correctamente" });
+            return res.status(200).json({ status: true, message: "Lenguajes actualizados correctamente" });
 
         } catch (error) {
-            return res.status(500).json(
+            return res.status(200).json(
                 {
+                    status: false,
                     message: "Error al actualizar información del empleado",
                 });
         }
@@ -123,17 +141,18 @@ module.exports = {
         const user_id = req.body.user_id;
         const types = req.body.types;
         try {
-            const employee = await this.findEmployee(user_id);
+            const employee = await models.employee.findOne({ where: { user_id: user_id } });
 
             await models.employee_type.destroy({ where: { employee_id: employee.id } });
 
             await employee.addType(types);
 
-            return res.status(200).json({ status: 200, message: "Tipo de impulsor actualizado correctamente" });
+            return res.status(200).json({ status: true, message: "Tipo de impulsor actualizado correctamente" });
 
         } catch (error) {
-            return res.status(500).json(
+            return res.status(200).json(
                 {
+                    status: false,
                     message: "Error al actualizar información del empleado",
                 });
         }
@@ -177,24 +196,11 @@ module.exports = {
                 ]
             });
 
-            res.status(200).json({ employee });
+            res.status(200).json({ status : true, message : "OK", data : employee });
 
         } catch (error) {
             console.log(error);
-            res.status(500).send("Error al listar información de empleado");
-        }
-    },
-
-    findEmployee: async (user_id) => {
-        try {
-            const employee = await models.employee.findOne({ where: { user_id: user_id } });
-
-            res.status(200).json({ employee });
-
-        } catch (error) {
-            console.log(error);
-            res.status(500).send("Error al encontrar empleado");
+            res.status(200).json({status : true, message : "Error al listar información de empleado"});
         }
     }
-
 }

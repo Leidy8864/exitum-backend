@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/create',
-    controller.validate('employee'), function (req, res) {
+    controller.validate('create'), function (req, res) {
         controller.create(req, res);
     }
 );
@@ -16,7 +16,7 @@ router.get('/:user_id/detail', function (req, res) {
     controller.listEmployeeById(req, res);
 });
 
-router.post('/update', function (req, res) {
+router.post('/update',controller.validate('update'), function (req, res) {
     controller.updateEmployee(req, res);
 });
 

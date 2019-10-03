@@ -14,7 +14,7 @@ module.exports = {
                     check('id').exists(),
                     check('name', 'El campo nombre no puede estar vacio').exists(),
                     check('description', 'El campo descripcion no puede estar vacio').exists(),
-                    check('sector_id', 'Eliga un sector').exists(),
+                    check('category_id', 'Eliga un sector').exists()
                 ]
             }
             case 'update': {
@@ -22,7 +22,7 @@ module.exports = {
                     check('id').exists(),
                     check('name', 'El campo nombre no puede estar vacio').exists(),
                     check('description', 'El campo descripcion no puede estar vacio').exists(),
-                    check('sector_id', 'Eliga un sector').exists(),
+                    check('category_id', 'Eliga un sector').exists(),
                     check('startup_id').exists()
                 ]
             }
@@ -53,7 +53,7 @@ module.exports = {
                     photo_url: fileName,
                     ruc: ruc,
                     description: description,
-                    sector_id: sector_id,
+                    category_id: category_id,
                     stage_id: stage_id,
                     entrepreneur_id: entrepreneur.id
                 });

@@ -18,7 +18,7 @@ module.exports = {
             // expiresIn : expiresIn
         }
         
-        return res.status(200).json({status : 200, accessData : accessData});
+        return res.status(200).json({status : true, message: "Ok", data : accessData});
     },
     generateFileName : function(file){
         var nameFile = uuid.v1({node : [0x01, 0x23, 0x45, 0x67, 0x89, 0xab]}).toString() + file.name;

@@ -11,10 +11,6 @@ module.exports = (sequelize, DataType) => {
 
     });
     role.associate = function (models) {
-        role.hasMany(models.advertisement, {
-            foreignKey: 'role_id'
-        });
-
         role.belongsToMany(models.category,{
             through : 'category_role',
             foreignKey : 'role_id'

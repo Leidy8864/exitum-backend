@@ -895,8 +895,7 @@
  * @apiUse ErrorGeneral
  * @apiDescription Creacion de la experiencia del usuario
  * @apiParam {Int} employee_id Id del empleado.
- * @apiParam {String} position Posición o cargo que desepeño
- * @apiParam {String} company Compañia en la que trabajo
+ * @apiParam {String} description Descripción
  * @apiParam {Date} date_start Fecha de incio
  * @apiParam {Date} date_end Fecha fin
  * @apiParam {Boolean} current_job Trabajo actual, true o false
