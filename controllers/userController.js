@@ -52,14 +52,16 @@ module.exports = {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            // return res.status(400).json({ errors: errors.array() });
+            res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
         try {
             const user = await models.user.findOne({ where: { email: req.body.email } });
             if (user) {
-                return res.status(422).json({
-                    message: "Este email ya ha sido registrado"
-                });
+                res.status(200).send({status: false, message: "Este email ya ha sido registrado" });
+                // return res.status(422).json({
+                //     message: "Este email ya ha sido registrado"
+                // });
             } else {
                 const result = await models.sequelize.transaction(async (t) => {
 
@@ -79,7 +81,7 @@ module.exports = {
                         // currency_id: country.currency_id || 1
                         currency_id: 1
                     }, { transaction: t });
-                    console.log("insert")
+                    // console.log("insert")
                     // if (req.body.role === "entrepreneur") {
                     //     await models.entrepreneur.create({
                     //         user_id: newUser.id
