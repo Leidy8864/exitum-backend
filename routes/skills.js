@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/skillController');
 
-router.post('/list',
+router.get('/list',
     controller.findAllSkill
 );
 

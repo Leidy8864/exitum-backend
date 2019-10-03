@@ -1,5 +1,9 @@
 'use strict'
-var models = require('../models/index')
+const models = require('../models/index')
+const s3 = require('../libs/aws-s3');
+const index = require('../config/index');
+const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/startup-profile';
+
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
@@ -10,7 +14,7 @@ module.exports = {
                     check('id').exists(),
                     check('name', 'El campo nombre no puede estar vacio').exists(),
                     check('description', 'El campo descripcion no puede estar vacio').exists(),
-                    check('sector_id', 'Eliga un sector').exists()
+                    check('sector_id', 'Eliga un sector').exists(),
                 ]
             }
             case 'update': {
@@ -25,74 +29,90 @@ module.exports = {
         }
     },
 
-    create: (req, res) => {
+    create: async (req, res) => {
         var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.status(400).json({ errors: errors.array() }) }
+        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
 
         var id = req.body.id //id del usuario emprendedor
         var name = req.body.name
-        var photo_url = req.body.photo_url
+        var photo = req.files.photo;
         var ruc = req.body.ruc
         var description = req.body.description
-        var category_id = req.body.category_id
+        var sector_id = req.body.sector_id
         var stage_id = req.body.stage_id
 
-        models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
+        try {
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: id } });
+
             if (entrepreneur) {
-                models.startup.create({
+                
+                const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+
+                await models.startup.create({
                     name: name,
-                    photo_url: photo_url,
+                    photo_url: fileName,
                     ruc: ruc,
                     description: description,
                     sector_id: sector_id,
                     stage_id: stage_id,
                     entrepreneur_id: entrepreneur.id
-                }).then(startup => {
-                    if (startup) {
-                        res.status(200).send({ msg: "Startup creado correctamente" })
-                    }
                 });
+                return res.json({ status: 200, message: "Startup creado correctamente" });
             } else {
-                res.status(201).send({ msg: "No existe emprendedor con este usuario" })
+                return res.json({ status: false, message: "No existe el usuario" })
             }
-        });
+        } catch (error) {
+            console.log("Errrror", error);
+            return res.json({ status: false, message: "Error al actualizar el usuario", });
+        }
     },
 
-    update: (req, res) => {
+    update: async (req, res) => {
         var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.status(400).json({ errors: errors.array() }) }
+        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
 
         var id = req.body.id //id del usuario emprendedor
         var name = req.body.name
-        var photo_url = req.body.photo_url
+        var photo = req.files.photo;
         var ruc = req.body.ruc
         var description = req.body.description
         var sector_id = req.body.sector_id
         var startup_id = req.body.startup_id
 
-        models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
+        try {
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: id } });
+
             if (entrepreneur) {
-                models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } }).then(startup => {
-                    if (startup) {
-                        models.startup.update({
-                            name: name,
-                            photo_url: photo_url,
-                            ruc: ruc,
-                            description: description,
-                            sector_id: sector_id,
-                        }, { where: { id: startup_id } }).then(startup => {
-                            if (startup) {
-                                res.status(200).send({ msg: "Startup actualizado correctamente" })
-                            }
-                        });
-                    } else {
-                        res.status(201).send({ msg: "No existe startup con este id " })
-                    }
-                });
+
+                if (entrepreneur.photo) {
+                    s3.deleteObject(NEW_BUCKET_NAME, entrepreneur.photo);
+                }
+
+                const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                const startup = await models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } });
+
+                if (startup) {
+                    models.startup.update({
+                        name: name,
+                        photo_url: fileName,
+                        ruc: ruc,
+                        description: description,
+                        sector_id: sector_id,
+                    }, { where: { id: startup.id } }).then(startup => {
+                        if (startup) {
+                            res.json({ status: 200, message: "Startup actualizado correctamente" })
+                        } else {
+                            res.json({ status: false, message: "No se pudo actualizar" })
+                        }
+                    });
+                }
             } else {
-                res.status(201).send({ msg: "No existe emprendedor con este usuario" })
+                return res.json({ status: false, message: "No existe el emprendedor" })
             }
-        });
+        } catch (err) {
+            console.log(err);
+            return res.status(400).json({ status: false, message: err });
+        }
     },
 
     detail: (req, res) => {
@@ -117,15 +137,15 @@ module.exports = {
                 },
 
                 ).then(startup => {
-                    if (!startup) return res.status(400).send({ msg: 'No existe la startup' });
-                    res.status(200).send({ startup: startup })
+                    if (!startup) return res.status(400).json({ status: false, message: 'No existe la startup' });
+                    res.json({ startup: startup })
                 })
             } else {
-                res.status(201).send({ msg: 'No existe emprededor con este usuario' })
+                res.json({ status: false, message: 'No existe emprededor con este usuario' })
             }
         }).catch(err => {
             console.log("Error: " + err)
-            res.status(400).json(err)
+            res.status(400).json({ status: false, message: err })
         })
     },
 
@@ -134,23 +154,22 @@ module.exports = {
         models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
             if (entrepreneur) {
                 models.startup.findAll({ where: { entrepreneur_id: entrepreneur.id } }).then(startups => {
-                    if (!startups) return res.status(400).send({ msg: 'No tiene startups creados' });
-                    res.status(200).send({ startups: startups })
+                    if (!startups) return res.json({ status: false, message: 'No tiene startups creados' });
+                    res.json({ status: 200, startups: startups })
                 })
             } else {
-                res.status(201).send({ msg: 'No existe emprededor con este usuario' })
+                res.json({ status: false, message: 'No existe emprededor con este usuario' })
             }
         }).catch(err => {
             console.log("Error: " + err)
-            res.status(400).json(err)
+            res.status(400).json({ status: false, message: err })
         })
     },
 
     list: (req, res) => {
-        var id = req.body.id //id del usuario emprendedor
         models.startup.findAll().then(startups => {
-            if (!startups) return res.status(400).send({ msg: 'No tiene startups creados' });
-            res.status(200).send({ startups: startups })
+            if (!startups) return res.json({ status: false, message: 'No tiene startups creados' });
+            res.json({ status: 200, message: 'Ok', data: { startups: startups } })
         }).catch(err => {
             console.log("Error: " + err)
             res.status(400).json(err)
@@ -160,13 +179,13 @@ module.exports = {
     listSector: (req, res) => {
         models.sector.findAll().then(sectors => {
             if (sectors) {
-                res.status(200).send({ sectors: sectors })
+                res.json({ status: 200, message: 'Ok', data: { sectors: sectors } })
             } else {
-                res.status(201).send({ msg: "No hay sectores" })
+                res.json({ status: false, message: "No hay sectores" })
             }
         }).catch(err => {
             console.log("Error: " + err)
-            res.status(400).json(err)
+            res.status(400).json({ status: false, message: err })
         })
     }
 }

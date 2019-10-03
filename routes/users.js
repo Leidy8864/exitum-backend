@@ -45,7 +45,7 @@ router.post('/forgot',
 
 router.post('/reset/:token', 
   controller.validate('confirmPassword'),
-  controller.confirmPassword
+  controller.resetPassword
 );
 
 router.get('/countries',

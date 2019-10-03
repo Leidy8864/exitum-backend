@@ -1,6 +1,6 @@
 {
 	"name": "TEST  EXITUM API",
 	"version": "1.0.0",
-	"description": "URL BASE = http://localhost:3000",
+	"description": "URL BASE = http://localhost:8081",
     "title": "Especificación de servicios"
 }

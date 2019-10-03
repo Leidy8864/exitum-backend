@@ -6,7 +6,7 @@ module.exports = {
         try {
             const skills = models.skill.findAll();
 
-            return res.status(200).json({ skill: skills });
+            return res.status(200).json({ status: 200, message: "ok", data: { skill: skills } });
 
         } catch (error) {
             res.status(500).json({
@@ -14,6 +14,7 @@ module.exports = {
             });
         }
     },
+
     createSkill: async (req, res) => {
         try {
 
@@ -21,12 +22,10 @@ module.exports = {
                 skill: req.body.skill
             });
 
-            return res.status(200).json({ skill: skill, message: "Skill creado correctmente" });
+            return res.status(200).json({ status: 200, message: "Skill creado correctmente", data: { skill: skill } });
         } catch (error) {
-
-            res.status(500).json({
-                message: "Error al crear el skill"
-            });
+            console.log(error);
+            res.json({ status: false, message: "Error al crear el skill" });
         }
     }
 }

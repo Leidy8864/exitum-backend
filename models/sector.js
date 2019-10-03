@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataType) => {
     const sector = sequelize.define('sector', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        name: DataType.STRING,
+        sector: DataType.STRING,
     }, {
         freezeTableName: true,
         timestamps: false,
