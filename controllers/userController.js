@@ -253,8 +253,6 @@ module.exports = {
                     const result = await models.sequelize.transaction(async (t) => {
 
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
-                        const country = await models.country.findOne({ where: { id: req.body.country_id } }, { transaction: t });
-
                         const newUser = await models.user.create({
                             name: user.name,
                             lastname: user.lastname,
@@ -265,8 +263,8 @@ module.exports = {
                             email: user.email,
                             role: 'employee',
                             photo: user.image,
-                            country_id: country.id,
-                            currency_id: country.currency_id
+                            country_id: 1,
+                            currency_id: 1
                         }, { transaction: t });
 
                         if (req.body.role === "entrepreneur") {
@@ -369,7 +367,7 @@ module.exports = {
 
         try {
             var photo = req.files.photo;
-            const user = await models.user.findOne({ where: { id: req.params.user_id } });
+            const user = await models.user.findOne({ where: { id: req.body.user_id } });
 
             if (user) {
 
@@ -377,7 +375,6 @@ module.exports = {
                     console.log("Errrror papa", user.photo);
                     s3.deleteObject(NEW_BUCKET_NAME, user.photo);
                 }
-
                 const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
 
                 await user.update({

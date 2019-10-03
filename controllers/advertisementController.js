@@ -4,9 +4,39 @@ const models = require('../models/index');
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
+    //Función encargada de validar los campos que se reciben desde el FrontEnd
+    validate: (method) => {
+        var message_exists = "Este campo es obligatorio";
+        var message_string = "Este campo deber ser un string";
+        var message_numeric = "Este campo debe ser numèrico";
+        switch (method) {
 
+            case 'create':
+
+                return [
+                    check('title').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('category_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                ]
+            case 'update':
+
+                return [
+                    check('title').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('category_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('state').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('advertisement_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+
+                ]
+        }
+    },
     createAdvert: async (req, res) => {
-
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).json({ status : false , message : "Campos incorrectos",data: errors.array() });
+        }
         try {
             const result = await models.sequelize.transaction(async (t) => {
 
@@ -16,8 +46,7 @@ module.exports = {
                     state: 'active',
                     category_id: req.body.category_id,
                     startup_id: req.body.startup_id,
-                    created_at : Date.now()
-
+                    created_at: Date.now()
                 }, { transaction: t });
 
                 await advertisement.addSkill(req.body.skills, { transaction: t });
@@ -25,21 +54,27 @@ module.exports = {
                 return advertisement;
             });
 
-            return res.status(200).json({ advertisement: result, message: "Anuncio creado correctamente" });
+            return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
         } catch (error) {
 
-            res.status(500).json({
+            console.log(error);
+            res.status(200).json({
+                status : false,
                 message: "Error al crear anuncio"
             });
         }
     },
     updateAdvert: async (req, res) => {
-
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).json({ status : false , message : "Campos incorrectos",data: errors.array() });
+        }
         const advertisement_id = req.body.advertisement_id;
 
         try {
             const advertisement = await models.advertisement.findByPk(advertisement_id);
-            if (employee) {
+            
+            if (advertisement) {
 
                 await advertisement.update({
                     title: req.body.title,
@@ -49,16 +84,20 @@ module.exports = {
                     startup_id: req.body.startup_id
                 });
 
-                return res.status(200).json({ status: 200, message: "Anuncio actualizado correctamente" });
+                return res.status(200).json({ status: true, message: "Anuncio actualizado correctamente",data : advertisement });
+            
             } else {
 
-                return res.status(400).send({ status: 400, message: "No existe el anuncio" })
+                return res.status(200).json({ status: false, message: "No existe el anuncio" })
 
             }
 
         } catch (error) {
-            return res.status(500).json(
+            console.log("Error" + error);
+
+            return res.status(200).json(
                 {
+                    status : false,
                     message: "Error al actualizar información del empleado",
                 });
         }
@@ -72,27 +111,35 @@ module.exports = {
         try {
             await models.advertisement_skill.destroy({ where: { advertisement_id: advertisement_id } });
 
-            const advertisement = await models.employee.findByPk(advertisement_id);
+        
+            const advertisement = await models.advertisement.findByPk(advertisement_id);
 
-            advertisement.addSkill(skills);
+            if (advertisement) {                
+                advertisement.addSkill(skills);
+            }else{
+                return res.status(200).json({ status: false, message: "No se encontró el anuncio" });
+            }
 
-            return res.status(200).json({ status: 200, message: "Skills actualizados correctamente" });
+            return res.status(200).json({ status: true, message: "Skills actualizados correctamente" });
 
         } catch (error) {
-            return res.status(500).json(
+            console.log("Error" + error);
+
+            return res.status(200).json(
                 {
-                    message: "Error al actualizar información del empleado",
+                    status : false,
+                    message: "Error al actualizar skills del anuncio"
                 });
         }
     },
 
-    findAllAdvertActive: async (res) => {
+    findAllAdvertActive: async (req,res) => {
 
         try {
 
-            const advertisements = await models.advertisement.finAll({
-                limit: 15,
-                where: { active: true },
+            const advertisements = await models.advertisement.findAll({
+                offset: 15,
+                where: { state: 'active' },
 
                 include: [{
                     model: models.skill
@@ -106,25 +153,26 @@ module.exports = {
                 ]
             });
 
-            return res.status(200).json({ advertisements: advertisements });
+            return res.status(200).json({ status : true, message : "OK", data: advertisements });
 
         } catch (error) {
 
-            return res.status(500).json(
+            console.log("Error" + error);
+            return res.status(200).json(
                 {
-                    message: "Error al listar anuncios activos",
+                    status : false,
+                    message: "Error al listar los anuncios"
                 });
         }
     },
-    AdvertDetail : async (req,res) => {
+    AdvertDetail: async (req, res) => {
 
         const advertisement_id = req.params.advertisement_id;
 
         try {
 
-            const advertisements = await models.advertisement.findOne(advertisement_id,{
-                limit: 15,
-                include: [{
+            const advertisements = await models.advertisement.findByPk(advertisement_id, {
+                 include: [{
                     model: models.skill
                 },
                 {
@@ -136,67 +184,66 @@ module.exports = {
                 ]
             });
 
-            return res.status(200).json({ advertisements: advertisements });
+            return res.status(200).json({ status : true, message : "OK", data: advertisements });
 
         } catch (error) {
+            console.log("Error" + error);
 
-            return res.status(500).json(
-                {
-                    message: "Error al listar anuncios activos",
+            return res.status(200).json(
+                {   
+                    status : false,
+                    message: "Error al listar la informaciòn del anuncio"
                 });
         }
     },
     findAdvertByEntrepreneur: async (req, res) => {
 
+        // console.log("Gaaaaaa");
         const user_id = req.params.user_id;
 
         try {
 
-            const entrepreneur = await models.entrepreneur.finOne({ where: { user_id: user_id } });
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
 
-            const advertisements = await models.advertisement.finAll({
-                limit: 15,
-                where: { state: req.body.state },
-                include: [{
-                    model: models.skill
-                },
-                {
-                    model: models.category
-                },
-                {
-                    model: models.startup,
-                    include: [{
-                        model: models.entrepreneur,
-                        where: {
-                            id: entrepreneur.id
+            if (entrepreneur) {
+                var advertisements = await models.advertisement.findAll(
+                    {
+                        offset: 15,
+                        where: { state: req.body.state },
+                        include: [{
+                            model: models.skill
+                        },
+                        {
+                            model: models.category
+                        },
+                        {
+                            model: models.startup,
+                            include: [{
+                                model: models.entrepreneur,
+                                where: {
+                                    id: entrepreneur.id
+                                }
+                            }],
                         }
-                    }],
-                }
-                ]
-            });
+                        ]
+                    }
+                );
+                return res.status(200).json({ status : true, message : "OK", data: advertisements });
 
-            return res.status(200).json({ advertisements: advertisements });
-
-        } catch (error) {
-
-            return res.status(500).json(
-                {
-                    message: "Error al listar anuncios activos",
-                });
-        }
-
-    },
-
-    findEntreprenur: async (user_id) => {
-        try {
-            const entrepreneur = await models.entrepreneur.finOne({ where: { user_id: user_id } });
-
-            res.status(200).json({ entrepreneur });
+            }else{
+                return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
+            }
 
         } catch (error) {
             console.log(error);
-            res.status(500).send("Error al encontrar empleado");
+
+            return res.status(200).json(
+                {
+                    status : false,
+                    message: "Error al listar anuncios"
+                });
         }
+
     }
 
 }

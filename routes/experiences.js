@@ -7,12 +7,12 @@ router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/create', controller.validate('createExperience'), function (req, res) {
+router.post('/create', controller.validate('create'), function (req, res) {
   controller.createExperience(req, res);
 });
 
-router.post('/:experience_id/update', function (req, res) {
-    controller.updateExperience(req, res);
-  });
+router.post('/update', controller.validate('update'), function (req, res) {
+  controller.updateExperience(req, res);
+});
 
 module.exports = router;

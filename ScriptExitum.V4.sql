@@ -1,3 +1,5 @@
+-- MySQL Workbench Forward Engineering
+
 
 -- -----------------------------------------------------
 -- Schema exitum
@@ -84,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`entrepreneur` (
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_emprendedor_user1_idx` (`user_id` ASC) VISIBLE,
+  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_emprendedor_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -128,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup` (
   PRIMARY KEY (`id`),
   INDEX `fk_startup_emprendedor1_idx` (`entrepreneur_id` ASC) VISIBLE,
   INDEX `fk_startup_stage1_idx` (`stage_id` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
   INDEX `fk_startup_category1_idx` (`category_id` ASC) VISIBLE,
   CONSTRAINT `fk_startup_emprendedor1`
     FOREIGN KEY (`entrepreneur_id`)
@@ -153,22 +157,30 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `exitum`.`employee` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
+  `stage_id` INT NOT NULL,
   `category_id` INT NOT NULL,
   `short_description` VARCHAR(145) NULL,
-  `about_me` VARCHAR(1024) NULL,
-  `price_hour` DECIMAL(10,2) NULL,
   `behance_user` VARCHAR(145) NULL,
   `behance_active` TINYINT NULL,
   `linkedin_active` TINYINT NULL,
+  `price_hour` DECIMAL(10,2) NULL,
+  `about_me` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_employee_user1_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_employee_occupation1_idx` (`category_id` ASC) VISIBLE,
+  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
+  INDEX `fk_employee_stage1_idx` (`stage_id` ASC) VISIBLE,
+  INDEX `fk_employee_category1_idx` (`category_id` ASC) VISIBLE,
   CONSTRAINT `fk_employee_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_employee_occupation1`
+  CONSTRAINT `fk_employee_stage1`
+    FOREIGN KEY (`stage_id`)
+    REFERENCES `exitum`.`stage` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_employee_category1`
     FOREIGN KEY (`category_id`)
     REFERENCES `exitum`.`category` (`id`)
     ON DELETE NO ACTION
@@ -247,7 +259,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`advertisement` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `titile` VARCHAR(125) NULL,
+  `title` VARCHAR(120) NULL,
   `description` TEXT NULL,
   `state` ENUM('active', 'closed', 'archived') NULL,
   `created_at` DATETIME NULL,
@@ -323,11 +335,18 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`employee_skill` (
   `skill_id` INT NOT NULL,
-  PRIMARY KEY (`skill_id`),
+  `employee_id` INT NOT NULL,
+  PRIMARY KEY (`skill_id`, `employee_id`),
+  INDEX `fk_skill_has_employee_employee1_idx` (`employee_id` ASC) VISIBLE,
   INDEX `fk_skill_has_employee_skill1_idx` (`skill_id` ASC) VISIBLE,
   CONSTRAINT `fk_skill_has_employee_skill1`
     FOREIGN KEY (`skill_id`)
     REFERENCES `exitum`.`skill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_skill_has_employee_employee1`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `exitum`.`employee` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -777,12 +796,19 @@ CREATE TABLE IF NOT EXISTS `exitum`.`education` (
   `date_start` DATETIME NULL,
   `date_end` DATETIME NULL,
   `university_id` INT NULL,
+  `employee_id` INT NOT NULL,
   `other_university` VARCHAR(145) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_educations_universities1_idx` (`university_id` ASC) VISIBLE,
+  INDEX `fk_education_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_educations_universities1`
     FOREIGN KEY (`university_id`)
     REFERENCES `exitum`.`university` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_education_employee1`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `exitum`.`employee` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -855,10 +881,17 @@ ENGINE = InnoDB;
 -- Table `exitum`.`like`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`like` (
+  `startup_id` INT NOT NULL,
   `recommendation_id` INT NOT NULL,
   `like` TINYINT NULL,
-  PRIMARY KEY (`recommendation_id`),
+  PRIMARY KEY (`startup_id`, `recommendation_id`),
+  INDEX `fk_like_startup1_idx` (`startup_id` ASC) VISIBLE,
   INDEX `fk_like_recomendation1_idx` (`recommendation_id` ASC) VISIBLE,
+  CONSTRAINT `fk_like_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_like_recomendation1`
     FOREIGN KEY (`recommendation_id`)
     REFERENCES `exitum`.`recommendation` (`id`)
@@ -891,9 +924,16 @@ ENGINE = InnoDB;
 -- Table `exitum`.`startup_employee_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`startup_employee_type` (
+  `startup_id` INT NOT NULL,
   `type_id` INT NOT NULL,
-  PRIMARY KEY (`type_id`),
+  PRIMARY KEY (`startup_id`, `type_id`),
   INDEX `fk_startup_has_type_type1_idx` (`type_id` ASC) VISIBLE,
+  INDEX `fk_startup_has_type_startup1_idx` (`startup_id` ASC) VISIBLE,
+  CONSTRAINT `fk_startup_has_type_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_startup_has_type_type1`
     FOREIGN KEY (`type_id`)
     REFERENCES `exitum`.`type` (`id`)
@@ -947,13 +987,59 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `exitum`.`challenge`
+-- Table `exitum`.`available`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`))
+CREATE TABLE IF NOT EXISTS `exitum`.`available` (
+  `id` INT NOT NULL,
+  `days` INT NULL,
+  `from_hour` DATETIME NULL,
+  `to_hour` DATETIME NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_availability_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_availability_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `exitum`.`unavailable`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`unavailable` (
+  `id` INT NOT NULL,
+  `hour_break` TIME NULL,
+  `available_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_unavailable_availability1_idx` (`available_id` ASC) VISIBLE,
+  CONSTRAINT `fk_unavailable_availability1`
+    FOREIGN KEY (`available_id`)
+    REFERENCES `exitum`.`available` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `exitum`.`employee_tip`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`employee_tip` (
+  `tip_id` INT NOT NULL,
+  `employee_id` INT NOT NULL,
+  `checked` TINYINT NULL,
+  PRIMARY KEY (`tip_id`, `employee_id`),
+  INDEX `fk_tip_has_employee_employee1_idx` (`employee_id` ASC) VISIBLE,
+  INDEX `fk_tip_has_employee_tip1_idx` (`tip_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tip_has_employee_tip1`
+    FOREIGN KEY (`tip_id`)
+    REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tip_has_employee_employee1`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `exitum`.`employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

@@ -21,6 +21,13 @@ const model_startup = (sequelize, DataType) => {
                 key: 'id'
             }
         },
+        stage_id: {
+            type: DataType.INTEGER,
+            references: {
+                model: 'stage',
+                key: 'id'
+            }
+        },
     },
         {
             freezeTableName: true,

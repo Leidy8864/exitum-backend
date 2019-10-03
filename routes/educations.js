@@ -7,10 +7,10 @@ const controller = require('../controllers/educationController');
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
-router.post('/create', controller.validate('education'), function (req, res) {
+router.post('/create', controller.validate('create'), function (req, res) {
     controller.createEducation(req, res);
 });
-router.post('/:education_id/update', function (req, res) {
+router.post('/update',  controller.validate('update'), function (req, res) {
     controller.updateEducation(req, res);
 });
 module.exports = router;
