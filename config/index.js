@@ -1,8 +1,8 @@
 module.exports = {
     oauth: {
         google: {
-            clientID : '700642697607-67d5v2cokbnfue09v44061sj3iq6cr6d.apps.googleusercontent.com',
-            clientSecret : 'DeFxk0zPbSZjsbuuFnRIuPjQ'
+            clientID : '990260099345-jh6kjumka8s2a2a796nur9tf64u26tir.apps.googleusercontent.com',
+            clientSecret : 'q5gG1S4oifY19QR4ztcn5b7G'
         },
         facebook: {
             clientID : '3455346694483008',
