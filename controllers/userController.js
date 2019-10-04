@@ -23,7 +23,6 @@ module.exports = {
         switch (method) {
 
             case 'signUp':
-
                 return [
                     check('name').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('lastname').exists().withMessage(message_exists).isString().withMessage(message_string),
@@ -52,7 +51,7 @@ module.exports = {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.json({ status: false, message: "Campos incorrectas.", data: { errors: errors.array() } });
         }
         try {
             const user = await models.user.findOne({ where: { email: req.body.email } });
@@ -116,23 +115,20 @@ module.exports = {
                                 console.log('Un email de verificación ha sido enviado a ' + newUser.email + '.');
                             }).catch(err => {
                                 console.log("Error: " + err)
-                                res.status(500).json({ message: err.message })
+                                res.status(500).json({ status: false, message: err.message })
                             })
                         }
                     });
                     return newUser;
                 });
-
                 return helper.generateAccessData(result, res);
             }
         } catch (error) {
             console.log("Error", error);
-            return res.status(500).json(
-                {
-                    message: "Error al registrar el usuario"
-                });
+            return res.status(500).json({ status: 200, message: "Error al registrar el usuario" });
         }
     },
+
     //Función creada para la verificación del correo del usuario
     confirmation: async (req, res) => {
         const token = await models.token.findOne({ where: { token: req.params.token } })
@@ -162,11 +158,11 @@ module.exports = {
         }
     },
 
-    //Funcion para enviar un nuevo token
+    //Funcion para enviar un nuevo token para la verificación del correo
     resendToken: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.json({ status: false, message: "Campos incorrectas.", data: { errors: errors.array() } });
         }
         try {
             const user = await models.user.findOne({ where: { email: req.body.email } });
@@ -200,7 +196,7 @@ module.exports = {
                                 console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
                             }).catch(err => {
                                 console.log("Error: " + err)
-                                res.status(500).json({ message: err.message })
+                                res.status(500).json({ status: false, message: err.message })
                             })
                         }
                     });
@@ -208,8 +204,8 @@ module.exports = {
                 }
             }
         } catch (error) {
-            console.log("Error", error);
-            return;
+            console.log('Algo esta fallando: ' + error);
+            res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
         }
     },
 
@@ -217,7 +213,7 @@ module.exports = {
     signIn: (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
+            return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
         const userData = {
             email: req.body.email,
@@ -225,18 +221,18 @@ module.exports = {
         };
         models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
             if (!user) {
-                res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+                res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
             } else {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
                     helper.generateAccessData(user, res);
                 } else {
-                    res.status(200).send({status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+                    res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
                 }
             }
         }).catch(error => {
             console.log('Algo esta fallando: ' + error);
-            res.status(200).send({status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
+            res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
         });
     },
 
@@ -392,7 +388,6 @@ module.exports = {
                     role: req.body.role
                 });
 
-
                 if (req.body.role === "entrepreneur") {
                     await models.entrepreneur.create({
                         user_id: user.id
@@ -413,7 +408,7 @@ module.exports = {
             if (countries) {
                 return res.status(200).json({ status: 200, countries: countries })
             } else {
-                return res.status(201).json({ status: false, message: "No hay paises registrados" })
+                return res.json({ status: false, message: "No hay paises registrados" })
             }
         })
     }

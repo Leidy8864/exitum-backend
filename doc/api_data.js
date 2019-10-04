@@ -1,5 +1,609 @@
 define({ "api": [
   {
+    "type": "POST",
+    "url": "/advertisements/create",
+    "title": "POST advertisement create",
+    "name": "advertisement_create",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Creacion del anuncio de trabajo.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Titulo del anuncio</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción del anuncio</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "category_id",
+            "description": "<p>Id de la categoria</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "startup_id",
+            "description": "<p>Id de la startup</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "skills",
+            "description": "<p>Id's de los skills</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/advertisement/create\n{\n    \"title\" : \"Programador en Java\",\n    \"description\" : \"Requiero un programador senior\",\n    \"category_id\" : 1,\n    \"startup_id\" : 1,\n    \"skills\" : [1,2,3]\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Anuncio creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Java\",\n        \"description\": \"Requiero un programador senior\",\n        \"state\": \"active\",\n        \"category_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.373Z\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/advertisements/:id/detail",
+    "title": "GET advertisement detail",
+    "name": "advertisement_detail",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Detalle del anuncio</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del anuncio.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/advertisements/2/detail",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio con detalle</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Javascript\",\n        \"description\": \"Conocimientos solidos en NODEJS Y REACT\",\n        \"state\": \"archived\",\n        \"category_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.000Z\",\n        \"skills\": [\n            {\n                \"id\": 1,\n                \"skill\": \"PHP\",\n                \"advertisement_skill\": {\n                    \"advertisement_id\": 2,\n                    \"skill_id\": 1\n                }\n            },\n            {\n                \"id\": 2,\n                \"skill\": \"Node JS\",\n                \"advertisement_skill\": {\n                    \"advertisement_id\": 2,\n                    \"skill_id\": 2\n                }\n            }\n        ],\n        \"category\": {\n            \"id\": 1,\n            \"name\": \"Programación y Tecnología\"\n        },\n        \"startup\": {\n            \"id\": 1,\n            \"name\": \"Proyecto Exitum\",\n            \"photo_url\": null,\n            \"ruc\": null,\n            \"description\": \"Proyecto que pretende ayudar startups\",\n            \"entrepreneur_id\": 1,\n            \"category_id\": 1,\n            \"stage_id\": 1\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/advertisements/update/skills",
+    "title": "POST advertisement skill update",
+    "name": "advertisement_skill_update",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Creacion de la experiencia del usuario</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advertisement_id",
+            "description": "<p>Id del anuncio.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "skills",
+            "description": "<p>Id's de las habilidades</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/advertisements/update/skills\n{\n    \"advertisement_id\" : 2,\n    \"skills\" : [1,2]\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Skills actualizados correctamente\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/advertisements/update",
+    "title": "POST advertisement update",
+    "name": "advertisement_update",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Actualización de la experiencia del usuario</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advertisement_id",
+            "description": "<p>Id del empleado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "state",
+            "description": "<p>Estado del anuncio</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "category_id",
+            "description": "<p>Id de la categoria</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "startup_id",
+            "description": "<p>Id de la startup</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/educations/update\n{\n    \"advertisement_id\" : 2,\n    \"title\" : \"Programador en Javascript\",\n    \"description\" : \"Conocimientos solidos en NODEJS Y REACT\",\n    \"state\" : \"archived\",\n    \"category_id\" : 1,\n    \"startup_id\" : 1\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos de la educación acutualizada</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Anuncio actualizado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Javascript\",\n        \"description\": \"Conocimientos solidos en NODEJS Y REACT\",\n        \"state\": \"archived\",\n        \"category_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.000Z\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/advertisements/user/:id/list",
+    "title": "GET advertisements by id",
+    "name": "advertisements_by_id",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Listado de anuncios</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "active",
+            "description": "<p>Estado del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "    /advertisements/user/4/list\n    {\n\t    \"state\" : \"active\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de anuncios del usuario</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"category_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Programación y Tecnología\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/advertisements/list",
+    "title": "GET advertisements list",
+    "name": "advertisements_list",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Listado de anuncios</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/advertisements/list",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de anuncios</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"category_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Programación y Tecnología\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
@@ -99,7 +703,7 @@ define({ "api": [
     "name": "educations_create",
     "group": "EDUCATIONS",
     "version": "1.0.0",
-    "description": "<p>Creacion de la experiencia del usuario</p>",
+    "description": "<p>Creacion de la educación del usuario.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -114,36 +718,36 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "position",
-            "description": "<p>Posición o cargo que desepeño</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "company",
-            "description": "<p>Compañia en la que trabajo</p>"
+            "field": "description",
+            "description": "<p>Descripción</p>"
           },
           {
             "group": "Parameter",
             "type": "Date",
             "optional": false,
             "field": "date_start",
-            "description": "<p>Fecha de incio</p>"
+            "description": "<p>Fecha de incio de la experiencia</p>"
           },
           {
             "group": "Parameter",
             "type": "Date",
             "optional": false,
             "field": "date_end",
-            "description": "<p>Fecha fin</p>"
+            "description": "<p>Fecha fin de la experiencia</p>"
           },
           {
             "group": "Parameter",
-            "type": "Boolean",
+            "type": "Int",
             "optional": false,
-            "field": "current_job",
-            "description": "<p>Trabajo actual, true o false</p>"
+            "field": "university_id",
+            "description": "<p>Id de la universidad</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "other_university",
+            "description": "<p>Otra universidad si es que no se encuentra registrada</p>"
           }
         ]
       },
@@ -171,13 +775,147 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos de la educación creada</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Experiencia del empleado creada correctamente\",\n    \"data\": {\n        \"id\": 4,\n        \"employee_id\": 1,\n        \"position\": \"Desarrollador de software\",\n        \"company\": \"Tecsup\",\n        \"date_start\": \"2019-09-27T00:00:00.000Z\",\n        \"date_end\": \"2019-09-27T00:00:00.000Z\",\n        \"current_job\": false\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Educación del empleado creada correctamente\",\n    \"data\": {\n        \"id\": 1,\n        \"employee_id\": 1,\n        \"description\": \"Estudiante de Diseño de Software\",\n        \"date_start\": \"2019-09-27T00:00:00.000Z\",\n        \"date_end\": \"2019-09-27T00:00:00.000Z\",\n        \"university_id\": 2,\n        \"other_university\": \"\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EDUCATIONS",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/educations/update",
+    "title": "POST educations update",
+    "name": "educations_update",
+    "group": "EDUCATIONS",
+    "version": "1.0.0",
+    "description": "<p>Creacion de la experiencia del usuario</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "employee_id",
+            "description": "<p>Id del empleado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "date_start",
+            "description": "<p>Fecha de incio de la experiencia</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "date_end",
+            "description": "<p>Fecha fin de la experiencia</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "university_id",
+            "description": "<p>Id de la universidad</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "other_university",
+            "description": "<p>Otra universidad si es que no se encuentra</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/educations/update\n{\n    \"education_id\" : \"1\",\n    \"description\" : \"Estudiante de Maquinaria\",\n    \"date_start\" : \"2019-09-28\",\n    \"date_end\" : \"2019-09-28\",\n    \"university_id\" : 1,\n    \"other_university\" : \"\"\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos de la educación acutualizada</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Educación actualizada actualizada correctamente\",\n    \"data\": {\n        \"id\": 1,\n        \"description\": \"Estudiante de Maquinaria\",\n        \"date_start\": \"2019-09-28T00:00:00.000Z\",\n        \"date_end\": \"2019-09-28T00:00:00.000Z\",\n        \"university_id\": 1,\n        \"employee_id\": 1,\n        \"other_university\": \"\"\n    }\n}",
           "type": "json"
         }
       ]
@@ -253,21 +991,21 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Array",
+            "type": "Object",
             "optional": false,
             "field": "skills[]",
             "description": "<p>Id's de las habilidades.</p>"
           },
           {
             "group": "Parameter",
-            "type": "Array",
+            "type": "Object",
             "optional": false,
             "field": "types[]",
             "description": "<p>Id's de los tipos de empleado.</p>"
           },
           {
             "group": "Parameter",
-            "type": "Array",
+            "type": "Object",
             "optional": false,
             "field": "languages[]",
             "description": "<p>Id's de los tipos de empleado.</p>"
@@ -312,6 +1050,13 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Datos del impulsor actualizado</p>"
           }
         ]
       },
@@ -397,6 +1142,13 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Datos del empleado</p>"
           }
         ]
       },
@@ -503,6 +1255,13 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Datos del empleado actualizado</p>"
           }
         ]
       },
@@ -807,6 +1566,13 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Datos de la experiencia creada</p>"
           }
         ]
       },
@@ -855,7 +1621,7 @@ define({ "api": [
     "name": "experiencie_update",
     "group": "EXPERIENCIES",
     "version": "1.0.0",
-    "description": "<p>Creacion de la experiencia del usuario</p>",
+    "description": "<p>Actualizar la experiencia del usuario</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -927,6 +1693,13 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos de la experiencia actualizada</p>"
           }
         ]
       },
@@ -1240,8 +2013,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "Int",
             "optional": false,
-            "field": "sector_id",
-            "description": "<p>Id del sector elegido.</p>"
+            "field": "category_id",
+            "description": "<p>Id de la categoría elegida.</p>"
           },
           {
             "group": "Parameter",
@@ -1255,7 +2028,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/startups/create\n{\n    \"id\": 1\n    \"name\": \"NextMedicall\"\n    \"ruc\": \"12312313\"\n    \"description\": \"Startup de telemedicina\"\n    \"stage_id\": 1\n    \"sector_id\": 1\n}",
+          "content": "/startups/create\n{\n    \"id\": 1\n    \"name\": \"NextMedicall\"\n    \"ruc\": \"12312313\"\n    \"description\": \"Startup de telemedicina\"\n    \"category_id\": 1,\n    \"stage_id\": 1\n}",
           "type": "querystring"
         }
       ]
@@ -1374,7 +2147,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"startup\": {\n        \"id\": 1,\n        \"name\": \"NextMedicall\",\n        \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n        \"ruc\": \"12312313\",\n        \"description\": \"Startup de telemedicinaaa\",\n        \"entrepreneur_id\": 1,\n        \"sector_id\": 1,\n        \"stage_id\": 1,\n        \"entrepreneur\": {\n            \"id\": 1,\n            \"user_id\": 1,\n            \"user\": {\n                \"id\": 1,\n                \"name\": \"Leidy Paula\",\n                \"lastname\": \"Callupe Santisteban\",\n                \"email\": \"leidy.callupe@tecsup.edu.pe\",\n                \"provider_id\": null,\n                \"confirmed\": false,\n                \"phone\": \"1523456789\",\n                \"role\": \"entrepreneur\",\n                \"method\": \"local\",\n                \"password\": \"$2a$10$DUN2XDqeFKkKWo3c3tL2H.PUdHIzSItx4dKNaaExl9lFvHmGFXOqO\",\n                \"active\": true,\n                \"last_login\": null,\n                \"photo\": \"8bc1c170-e5f5-11e9-8295-0123456789abshutterstock_645324130-1080x675.jpg\",\n                \"photo_dni\": null,\n                \"avg_rating\": null,\n                \"country_id\": 1,\n                \"currency_id\": 1\n            }\n        }\n    }\n}",
+          "content": "{\n    \"startup\": {\n        \"id\": 1,\n        \"name\": \"NextMedicall\",\n        \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n        \"ruc\": \"12312313\",\n        \"description\": \"Startup de telemedicinaaa\",\n        \"entrepreneur_id\": 1,\n        \"category_id\": 1,\n        \"stage_id\": 1,\n        \"entrepreneur\": {\n            \"id\": 1,\n            \"user_id\": 1,\n            \"user\": {\n                \"id\": 1,\n                \"name\": \"Leidy Paula\",\n                \"lastname\": \"Callupe Santisteban\",\n                \"email\": \"leidy.callupe@tecsup.edu.pe\",\n                \"provider_id\": null,\n                \"confirmed\": false,\n                \"phone\": \"1523456789\",\n                \"role\": \"entrepreneur\",\n                \"method\": \"local\",\n                \"password\": \"$2a$10$DUN2XDqeFKkKWo3c3tL2H.PUdHIzSItx4dKNaaExl9lFvHmGFXOqO\",\n                \"active\": true,\n                \"last_login\": null,\n                \"photo\": \"8bc1c170-e5f5-11e9-8295-0123456789abshutterstock_645324130-1080x675.jpg\",\n                \"photo_dni\": null,\n                \"avg_rating\": null,\n                \"country_id\": 1,\n                \"currency_id\": 1\n            }\n        }\n    }\n}",
           "type": "json"
         }
       ]
@@ -1462,7 +2235,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Ok\",\n        \"data\": {\n            \"startups\": [\n                {\n                    \"id\": 5,\n                    \"name\": \"NextMedicall\",\n                    \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                    \"ruc\": \"12312313\",\n                    \"description\": \"Startup de telemedicinaaa\",\n                    \"entrepreneur_id\": 5,\n                    \"sector_id\": 1,\n                    \"stage_id\": 1\n                }\n            ]\n        }\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Ok\",\n        \"data\": {\n            \"startups\": [\n                {\n                    \"id\": 5,\n                    \"name\": \"NextMedicall\",\n                    \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                    \"ruc\": \"12312313\",\n                    \"description\": \"Startup de telemedicinaaa\",\n                    \"entrepreneur_id\": 5,\n                    \"category_id\": 1,\n                    \"stage_id\": 1\n                }\n            ]\n        }\n    }",
           "type": "json"
         }
       ]
@@ -1561,7 +2334,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"startups\": [\n            {\n                \"id\": 1,\n                \"name\": \"NextMedicall\",\n                \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                \"ruc\": \"12312313\",\n                \"description\": \"Startup de telemedicinaaa\",\n                \"entrepreneur_id\": 5,\n                \"sector_id\": 1,\n                \"stage_id\": 1\n            }\n        ]\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"startups\": [\n            {\n                \"id\": 1,\n                \"name\": \"NextMedicall\",\n                \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                \"ruc\": \"12312313\",\n                \"description\": \"Startup de telemedicinaaa\",\n                \"entrepreneur_id\": 5,\n                \"category_id\": 1,\n                \"stage_id\": 1\n            }\n        ]\n    }",
           "type": "json"
         }
       ]
@@ -1720,7 +2493,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "Int",
             "optional": false,
-            "field": "sector_id",
+            "field": "category_id",
             "description": "<p>Id del sector elegido.</p>"
           },
           {
@@ -1891,28 +2664,56 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/users/:id/update",
-    "title": "POST update user",
-    "name": "resendToken",
+    "url": "/users/oauth/facebook",
+    "title": "POST login facebook",
+    "name": "login_facebook",
     "group": "USER",
     "version": "1.0.0",
-    "description": "<p>Actualizar información del usuario.</p>",
+    "description": "<p>Registro de forma organica o local</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>Token de acceso.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "role",
+            "description": "<p>Role del usuario</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "method",
+            "description": "<p>Metodo social.</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Int",
             "optional": false,
-            "field": "id",
-            "description": "<p>Email para el reenvio de token.</p>"
+            "field": "country_id",
+            "description": "<p>Id del país seleccionado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "currency_id",
+            "description": "<p>Id de la moneda seleccionada.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
+          "content": "\t/users/oauth/facebook\n    {\n        \"access_token\" : \"ya29.GluNB9H9L0VcfNo6AYOZSSX0qCZAexNO8XUYTX1V3TS_pCG9Lk4_hpjCBFf_SvVboD7QzpHcylKDsT-\",\n        \"role\" : \"employee\",\n        \"method\" : \"facebook\",\n        \"country_id\" : 1,\n        \"currency_id\" :1\n    }",
           "type": "querystring"
         }
       ]
@@ -1929,17 +2730,172 @@ define({ "api": [
           },
           {
             "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "accessData",
+            "description": "<p>JWT</p>"
+          },
+          {
+            "group": "Datos obtenidos",
             "type": "String",
             "optional": false,
-            "field": "message",
-            "description": "<p>Menssaje de éxito</p>"
+            "field": "accessData.id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "accessData.email",
+            "description": "<p>email</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "accessData.accessToken",
+            "description": "<p>accessToken</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/oauth/google",
+    "title": "POST login google",
+    "name": "login_google",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Registro de forma organica o local</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>Token de acceso.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "role",
+            "description": "<p>Role del usuario</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "method",
+            "description": "<p>Metodo social.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "country_id",
+            "description": "<p>Id del país seleccionado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "currency_id",
+            "description": "<p>Id de la moneda seleccionada.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/oauth/google\n    {\n        \"access_token\" : \"ya29.GluNB9H9L0VcfNo6AYOZSSX0qCZAexNO8XUYTX1V3TS_pCG9Lk4_hpjCBFf_SvVboD7QzpHcylKDsT-\",\n        \"role\" : \"employee\",\n        \"method\" : \"google\",\n        \"country_id\" : 1,\n        \"currency_id\" :1\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "accessData",
+            "description": "<p>JWT</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "accessData.id",
+            "description": "<p>id</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "accessData.email",
+            "description": "<p>email</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "accessData.accessToken",
+            "description": "<p>accessToken</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
           "type": "json"
         }
       ]
@@ -1981,7 +2937,7 @@ define({ "api": [
     "name": "resendToken",
     "group": "USER",
     "version": "1.0.0",
-    "description": "<p>Registro de forma organica o local</p>",
+    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2203,27 +3159,13 @@ define({ "api": [
             "optional": false,
             "field": "password",
             "description": "<p>Contrasena del usuario.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": false,
-            "field": "country_id",
-            "description": "<p>Id del país seleccionado.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": false,
-            "field": "currency_id",
-            "description": "<p>Id de la moneda seleccionada.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "\t/users/signUp\n    {\n        \"name\":\"Leidy\",\n        \"lastname\": \"Callupe\",\n        \"email\":\"leidy.callupe@tecsup.edu.pe\",\n        \"password\":\"leidy123\",\n        \"country_id\": 1,\n        \"currency_id\":1\n    }",
+          "content": "\t/users/signUp\n    {\n        \"name\":\"Leidy\",\n        \"lastname\": \"Callupe\",\n        \"email\":\"leidy.callupe@tecsup.edu.pe\",\n        \"password\":\"leidy123\",\n    }",
           "type": "querystring"
         }
       ]
@@ -2364,6 +3306,119 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"accessToken\": accessToken,\n        }\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/update",
+    "title": "POST update user",
+    "name": "update_user",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Actualizar información del usuario.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nombre(s) del usuario actualizado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lastname",
+            "description": "<p>Apellido(s) del usuario actualizado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>Telefono del usuario actualizado.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "active",
+            "description": "<p>Apellido(s) del usuario actualizado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/update\n    {\n        \"user_id\": 2\n        \"name\": \"Leidy Paula\"\n        \"lastname\": \"Callupe Santisteban\"\n        \"phone\": \"1523456789\"\n        \"active\": \"true\"\n        \"role\": \"entrepreneur\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Menssaje de éxito</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
           "type": "json"
         }
       ]
