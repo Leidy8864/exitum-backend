@@ -267,8 +267,8 @@
  * @apiParam {String} name Nombre(s) del usuario actualizado.
  * @apiParam {String} lastname Apellido(s) del usuario actualizado.
  * @apiParam {String} phone Telefono del usuario actualizado.
- * @apiParam {String} active Apellido(s) del usuario actualizado.
- * @apiParam {String} lastname Apellido(s) del usuario actualizado.
+ * @apiParam {Boolean} active False cuando se quiere eliminar al usuario.
+ * @apiParam {String} rol Nuevo rol del usuario ('entrepreneur', 'employee', 'admin').
  * *
 	* @apiParamExample {querystring} Ejemplo url
 	/users/update

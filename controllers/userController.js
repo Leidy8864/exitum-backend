@@ -385,7 +385,7 @@ module.exports = {
                     lastname: req.body.lastname,
                     phone: req.body.phone,
                     photo: fileName,
-                    active: req.body.active,
+                    active: req.body.active || true,
                     role: req.body.role
                 });
 
