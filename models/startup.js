@@ -14,17 +14,10 @@ const model_startup = (sequelize, DataType) => {
                 key: 'id'
             }
         },
-        sector_id: {
+        category_id: {
             type: DataType.INTEGER,
             references: {
-                model: 'sector',
-                key: 'id'
-            }
-        },
-        stage_id: {
-            type: DataType.INTEGER,
-            references: {
-                model: 'stage',
+                model: 'category',
                 key: 'id'
             }
         },
@@ -51,9 +44,9 @@ const model_startup = (sequelize, DataType) => {
         startup.belongsTo(models.entrepreneur, {
             foreignKey: 'entrepreneur_id'
         });
-        // startup.belongsTo(models.category, {
-        //     foreignKey: 'category_id'
-        // });
+        startup.belongsTo(models.category, {
+            foreignKey: 'category_id'
+        });
         startup.belongsToMany(models.tip,{
             through : 'startup_tip',
             foreignKey : 'startup_id'

@@ -38,15 +38,17 @@ module.exports = {
         var photo = req.files.photo;
         var ruc = req.body.ruc
         var description = req.body.description
-        var sector_id = req.body.sector_id
+        var category_id = req.body.category_id
         var stage_id = req.body.stage_id
 
         try {
             const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: id } });
 
             if (entrepreneur) {
-                
-                const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                const fileName = ""
+                if (photo) {
+                    fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                }
 
                 await models.startup.create({
                     name: name,
@@ -76,7 +78,7 @@ module.exports = {
         var photo = req.files.photo;
         var ruc = req.body.ruc
         var description = req.body.description
-        var sector_id = req.body.sector_id
+        var category_id = req.body.category_id
         var startup_id = req.body.startup_id
 
         try {
@@ -87,8 +89,10 @@ module.exports = {
                 if (entrepreneur.photo) {
                     s3.deleteObject(NEW_BUCKET_NAME, entrepreneur.photo);
                 }
-
-                const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                const fileName = ""
+                if (photo) {
+                    fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                }
                 const startup = await models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } });
 
                 if (startup) {
@@ -97,7 +101,7 @@ module.exports = {
                         photo_url: fileName,
                         ruc: ruc,
                         description: description,
-                        sector_id: sector_id,
+                        category_id: category_id,
                     }, { where: { id: startup.id } }).then(startup => {
                         if (startup) {
                             res.json({ status: 200, message: "Startup actualizado correctamente" })
