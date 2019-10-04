@@ -129,10 +129,8 @@ module.exports = {
             }
         } catch (error) {
             console.log("Error", error);
-            return res.status(500).json(
-                {
-                    message: "Error al registrar el usuario"
-                });
+            res.status(200).send({status: false, message: "Error al crear usuario, favor de intentarlo en unos minutos." })
+
         }
     },
     //Función creada para la verificación del correo del usuario
@@ -284,7 +282,7 @@ module.exports = {
                 }
 
             } else {
-                return res.status(500).send("Error al obtener información del usuario");
+                res.status(200).send({status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
             console.log("Error", error);
@@ -295,12 +293,10 @@ module.exports = {
                 message = 'Este email ya ha sido registrado';
 
             } else {
-                message = 'Error al registrar el usuario'
+                message = 'Hubo un error en el sistema, favor de intentarlo en unos minutos.'
             }
-            return res.status(500).json(
-                {
-                    message: message
-                });
+            res.status(200).send({status: false, message: message })
+
         }
     },
 
@@ -389,7 +385,7 @@ module.exports = {
                     name: req.body.name,
                     lastname: req.body.lastname,
                     phone: req.body.phone,
-                    photo: fileName,
+                    photo: fileName || '',
                     active: req.body.active,
                     role: req.body.role
                 });
@@ -400,7 +396,7 @@ module.exports = {
                         user_id: user.id
                     });
                 }
-                return res.status(200).json({ status: 200, message: "Usuario actualizado correctamente" });
+                return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data : user });
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
@@ -413,7 +409,7 @@ module.exports = {
     listCountry: (req, res) => {
         models.country.findAll().then(countries => {
             if (countries) {
-                return res.status(200).json({ status: 200, countries: countries })
+                return res.status(200).json({ status: true, message : "OK",data: countries })
             } else {
                 return res.status(201).json({ status: false, message: "No hay paises registrados" })
             }
