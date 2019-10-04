@@ -13,6 +13,8 @@ module.exports = {
 
         const accessData = {
             id : user.id,
+            name : user.name,
+            lastname : user.lastname,
             email : user.email,
             accessToken : accessToken,
             // expiresIn : expiresIn

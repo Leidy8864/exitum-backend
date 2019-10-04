@@ -1,7 +1,4 @@
 -- MySQL Workbench Forward Engineering
-
-
-
 -- -----------------------------------------------------
 -- Schema exitum
 -- -----------------------------------------------------
@@ -586,7 +583,7 @@ ENGINE = InnoDB;
 -- Table `exitum`.`step`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`step` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `icon` VARCHAR(120) NULL,
   `stage_id` INT NOT NULL,
   PRIMARY KEY (`id`),
