@@ -411,7 +411,7 @@ module.exports = {
             if (countries) {
                 return res.status(200).json({ status: true, message : "OK",data: countries })
             } else {
-                return res.status(201).json({ status: false, message: "No hay paises registrados" })
+                return res.status(200).json({ status: false, message: "No hay paises registrados" })
             }
         })
     }
