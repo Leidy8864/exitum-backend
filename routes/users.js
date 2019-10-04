@@ -26,7 +26,7 @@ router.post('/oauth/facebook', passportFacebook, function (req, res) {
   controller.socialLoginOrRegister(req, res);
 });
 
-router.post('/update', function (req, res) {
+router.post('/update', controller.validate('update'),function (req, res) {
   controller.updateUser(req, res);
 });
 

@@ -1,9 +1,9 @@
 {
     "development": {
-      "username": "root",
-      "password": "Erquinio159",
+      "username": "exitum",
+      "password": "@@exitum2019",
       "database": "exitum",
-      "host": "127.0.0.1",
+      "host": "35.175.241.103",
       "dialect": "mysql",
       "operatorsAliases": false,
       "pool": {
@@ -26,10 +26,10 @@
       }
     },
     "production": {
-      "username": "root",
-      "password": "Erquinio159",
-      "database": "root",
-      "host": "127.0.0.1",
+      "username": "exitum",
+      "password": "@@exitum2019",
+      "database": "exitum",
+      "host": "35.175.241.103",
       "dialect": "mysql",
       "operatorsAliases": false,
       "pool": {

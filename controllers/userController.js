@@ -44,21 +44,27 @@ module.exports = {
                 return [
                     check_email
                 ]
+            case 'update':
+                return [
+                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                ]
         }
     },
     //Función encargada de realizar el registro de usuario de manera local
     signUp: async (req, res) => {
 
+
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.json({ status: false, message: "Campos incorrectas.", data: { errors: errors.array() } });
+            return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
         try {
             const user = await models.user.findOne({ where: { email: req.body.email } });
             if (user) {
-                return res.status(422).json({
-                    message: "Este email ya ha sido registrado"
-                });
+                res.status(200).send({ status: false, message: "Este email ya ha sido registrado" });
+                // return res.status(422).json({
+                //     message: "Este email ya ha sido registrado"
+                // });
             } else {
                 const result = await models.sequelize.transaction(async (t) => {
 
@@ -78,12 +84,6 @@ module.exports = {
                         // currency_id: country.currency_id || 1
                         currency_id: 1
                     }, { transaction: t });
-                    console.log("insert")
-                    // if (req.body.role === "entrepreneur") {
-                    //     await models.entrepreneur.create({
-                    //         user_id: newUser.id
-                    //     }, { transaction: t });
-                    // }
 
                     const token = crypto.randomBytes(16).toString('hex')
                     await models.token.create({
@@ -125,7 +125,8 @@ module.exports = {
             }
         } catch (error) {
             console.log("Error", error);
-            return res.status(500).json({ status: 200, message: "Error al registrar el usuario" });
+            res.status(200).send({ status: false, message: "Error al crear usuario, favor de intentarlo en unos minutos." })
+
         }
     },
 
@@ -239,8 +240,6 @@ module.exports = {
     //Función encargada de realizar el registro de usuario o login de usuario con proveedores
     socialLoginOrRegister: async (req, res) => {
         var user = null;
-
-        console.log("--------------");
         try {
             user = req.user
             if (user) {
@@ -266,19 +265,13 @@ module.exports = {
                             currency_id: 1
                         }, { transaction: t });
 
-                        if (req.body.role === "entrepreneur") {
-                            await models.entrepreneur.create({
-                                user_id: newUser.id
-                            }, { transaction: t });
-                        }
-
                         return newUser;
                     });
                     return helper.generateAccessData(result, res);
                 }
 
             } else {
-                return res.status(500).send("Error al obtener información del usuario");
+                res.status(200).send({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
             console.log("Error", error);
@@ -289,12 +282,10 @@ module.exports = {
                 message = 'Este email ya ha sido registrado';
 
             } else {
-                message = 'Error al registrar el usuario'
+                message = 'Hubo un error en el sistema, favor de intentarlo en unos minutos.'
             }
-            return res.status(500).json(
-                {
-                    message: message
-                });
+            res.status(200).send({ status: false, message: message })
+
         }
     },
 
@@ -367,8 +358,15 @@ module.exports = {
     },
 
     updateUser: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
+        }
         try {
-            var photo = req.files.photo;
+
+            var fileName = '';
             const user = await models.user.findOne({ where: { id: req.body.user_id } });
 
             if (user) {
@@ -377,7 +375,10 @@ module.exports = {
                     console.log("Errrror papa", user.photo);
                     s3.deleteObject(NEW_BUCKET_NAME, user.photo);
                 }
-                const fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                if (req.files) {
+                    var photo = req.files.photo;
+                    fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                }
 
                 await user.update({
                     name: req.body.name,
@@ -389,11 +390,16 @@ module.exports = {
                 });
 
                 if (req.body.role === "entrepreneur") {
-                    await models.entrepreneur.create({
-                        user_id: user.id
-                    });
+
+                    const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user.id } });
+                    
+                    if (!entrepreneur) {
+                        await models.entrepreneur.create({
+                            user_id: user.id
+                        });
+                    }
                 }
-                return res.status(200).json({ status: 200, message: "Usuario actualizado correctamente" });
+                return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
@@ -406,9 +412,9 @@ module.exports = {
     listCountry: (req, res) => {
         models.country.findAll().then(countries => {
             if (countries) {
-                return res.status(200).json({ status: 200, countries: countries })
+                return res.status(200).json({ status: true, message: "OK", data: countries })
             } else {
-                return res.json({ status: false, message: "No hay paises registrados" })
+                return res.status(200).json({ status: false, message: "No hay paises registrados" })
             }
         })
     }
