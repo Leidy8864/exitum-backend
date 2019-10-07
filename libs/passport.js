@@ -34,7 +34,7 @@ passport.use('facebookToken', new FacebookTokenStrategy({
     clientSecret: config.oauth.facebook.clientSecret,
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log("Profile",{profile})
+        // console.log("Profile",{profile})
         done(null, extractProfile(profile));
     } catch (error) {
         done(error, false, error.message);

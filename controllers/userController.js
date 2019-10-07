@@ -239,6 +239,9 @@ module.exports = {
 
     //Función encargada de realizar el registro de usuario o login de usuario con proveedores
     socialLoginOrRegister: async (req, res) => {
+
+        // console.log("SOCIAL ", req);
+
         var user = null;
         try {
             user = req.user
@@ -271,10 +274,10 @@ module.exports = {
                 }
 
             } else {
-                res.status(200).send({ status: false, message: "Error al obtener información del usuario" })
+                return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
-            console.log("Error", error);
+            // console.log("Error", error);
 
             var message = '';
             if (error.name === 'SequelizeUniqueConstraintError') {
@@ -284,7 +287,7 @@ module.exports = {
             } else {
                 message = 'Hubo un error en el sistema, favor de intentarlo en unos minutos.'
             }
-            res.status(200).send({ status: false, message: message })
+            return res.status(200).json({ status: false, message: message })
 
         }
     },
