@@ -4,6 +4,7 @@ const config = require('../config/index');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
 
@@ -52,8 +53,6 @@ module.exports = {
     },
     //Función encargada de realizar el registro de usuario de manera local
     signUp: async (req, res) => {
-
-
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
@@ -67,7 +66,6 @@ module.exports = {
                 // });
             } else {
                 const result = await models.sequelize.transaction(async (t) => {
-
                     // const country = await models.country.findOne({ where: { id: req.body.country_id } }, { transaction: t });
 
                     const newUser = await models.user.create({
@@ -84,14 +82,16 @@ module.exports = {
                         // currency_id: country.currency_id || 1
                         currency_id: 1
                     }, { transaction: t });
+                    return newUser;
+                });
 
-                    const token = crypto.randomBytes(16).toString('hex')
-                    await models.token.create({
-                        token: token,
-                        user_id: newUser.id,
+                helper.accessData(result, function(res) {
+                    models.token.create({
+                        token: res.accessToken,
+                        user_id: res.id,
                         token_created_at: Date.now()
-                    }, { transaction: t });
-
+                    });
+    
                     var transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
@@ -99,28 +99,27 @@ module.exports = {
                             pass: index.passwordExitum
                         }
                     });
+
                     transporter.verify(function (error, success) {
                         if (error) {
                             console.log(error);
-                        }
-                        else {
+                        } else {
                             console.log("El servidor esta listo para enviar mensajes.");
                             var mailOptions = {
                                 from: index.emailExitum,
-                                to: newUser.email,
+                                to: res.email,  
                                 subject: 'Verificacion de la cuenta',
-                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/users/confirmation\/' + token + '\n',
+                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + res.accessToken + '\n',
                             };
                             transporter.sendMail(mailOptions).then(() => {
-                                console.log('Un email de verificación ha sido enviado a ' + newUser.email + '.');
+                                console.log('Un email de verificación ha sido enviado a ' + res.email + '.');
                             }).catch(err => {
                                 console.log("Error: " + err)
                                 res.status(500).json({ status: false, message: err.message })
                             })
                         }
                     });
-                    return newUser;
-                });
+                }); 
                 return helper.generateAccessData(result, res);
             }
         } catch (error) {
@@ -138,25 +137,38 @@ module.exports = {
                 const user = await models.user.findOne({ where: { id: token.user_id } })
                 if (user) {
                     if (user.confirmed) {
-                        console.log({ type: 'already-verified', message: 'Este usuario fue verificado.' });
+                        return res.json({ status: false, message: "Esta cuenta ya fue verificada." })
                     } else {
                         const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                         if (newUser) {
-                            console.log("La cuenta fue verificada.");
-                            return helper.generateAccessData(newUser, res);
+                            return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
                         }
                     }
-                    return helper.generateAccessData(user, res);
                 } else {
                     res.json({ status: false, message: 'No pudimos encontrar al usuario con este token.' });
                 }
             } else {
                 res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
             }
-            return helper.generateAccessData(token, res);
         } else {
             res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
         }
+    },
+
+    verification: async (req, res) => {
+        models.token.findOne({ where: { token: req.params.token } }).then(token => {
+            if (token) {
+                models.user.findOne({ where: { id: token.user_id, confirmed: true } }).then(user => {
+                    if (user) {
+                        return helper.generateAccessData(user, res);
+                    } else {
+                        return res.json({ status: false, message: "Este usuario no esta verificado." })
+                    }
+                });
+            } else {
+                return res.json({ status: false, message: 'Token invalido.' })
+            }
+        });
     },
 
     //Funcion para enviar un nuevo token para la verificación del correo
@@ -187,12 +199,24 @@ module.exports = {
                             console.log(error);
                         } else {
                             console.log("El servidor esta listo para enviar mensajes.");
+                            // const handlebarOptions = {
+                            //     viewEngine: {
+                            //         extName: '.hbs',
+                            //         partialsDir: '../template/verification/',
+                            //         layoutsDir: '../template/verification/',
+                            //         defaultLayout: 'template.handlebars',
+                            //     },
+                            //     viewPath: 'some/path',
+                            //     extName: '.hbs',
+                            // };
+                            // transporter.use('compile', hbs(handlebarOptions));
                             var mailOptions = {
                                 from: index.emailExitum,
                                 to: user.email,
                                 subject: 'Verificacion de la cuenta',
-                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/users/confirmation\/' + token + '\n',
-                            };
+                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/users/dashboard\/' + token + '\n',
+                                template: 'template'
+                            }
                             transporter.sendMail(mailOptions).then(() => {
                                 console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
                             }).catch(err => {
@@ -392,7 +416,7 @@ module.exports = {
                 if (req.body.role === "entrepreneur") {
 
                     const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user.id } });
-                    
+
                     if (!entrepreneur) {
                         await models.entrepreneur.create({
                             user_id: user.id

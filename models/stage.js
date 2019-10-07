@@ -5,6 +5,11 @@ module.exports = (sequelize, DataType) => {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
         stage: DataType.STRING,
         description: DataType.TEXT,
+        type: {
+            type: DataType.ENUM,
+            values: ['startup', 'employee'],
+            allowNull: false
+        },
     },
         {
             freezeTableName: true,
@@ -17,8 +22,8 @@ module.exports = (sequelize, DataType) => {
         stage.hasMany(models.startup, {
             foreignKey: 'stage_id'
         });
-        stage.hasMany(models.tip,{
-            foreignKey : 'stage_id'
+        stage.hasMany(models.step, {
+            foreignKey: 'stage_id'
         });
         stage.hasMany(models.employee, {
             foreignKey: 'stage_id'

@@ -136,7 +136,7 @@
 
 /**
  *
- * @api {POST} /users/confirmation/:token POST confirmation user
+ * @api {GET} /users/dashboard/:token GET confirmation user
  * @apiName confirmation
  * @apiGroup USER
  * @apiVersion 1.0.0
@@ -145,7 +145,7 @@
  * @apiParam {String} token Token de validación de correo.
  *
 	* @apiParamExample {querystring} Ejemplo url
-	/users/confirmation/:3759a0775d7eae3f3eececcffd9a0b45
+	/users/dashboard/:3759a0775d7eae3f3eececcffd9a0b45
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {Object} accessData JWT

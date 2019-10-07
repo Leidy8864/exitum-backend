@@ -14,11 +14,13 @@ var experiencesRouter = require('./routes/experiences');
 var educationsRouter = require('./routes/educations');
 var advertisementsRouter = require('./routes/advertisements');
 
+const controller = require('./controllers/userController');
+
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -38,6 +40,10 @@ app.use('/favorites', favoriteRouter);
 app.use('/experiences', experiencesRouter);
 app.use('/educations', educationsRouter);
 app.use('/advertisements',advertisementsRouter);
+
+app.get('/dashboard/:token', function (req, res) {
+  controller.confirmation(req, res);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

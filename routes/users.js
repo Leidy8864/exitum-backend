@@ -26,13 +26,13 @@ router.post('/oauth/facebook', passportFacebook, function (req, res) {
   controller.socialLoginOrRegister(req, res);
 });
 
-router.post('/update', controller.validate('update'),function (req, res) {
+router.post('/update', controller.validate('update'), function (req, res) {
   controller.updateUser(req, res);
 });
 
-router.post('/confirmation/:token',
-  controller.confirmation
-);
+// router.get('/dashboard/:token', function (req, res) {
+//   controller.confirmation(req, res);
+// });
 
 router.post('/resend',
   controller.validate('resend'),

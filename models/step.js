@@ -1,9 +1,9 @@
 'use strict'
 
 module.exports = (sequelize, DataType) => {
-    const tip = sequelize.define('tip', {
+    const step = sequelize.define('step', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        tip: DataType.STRING,
+        icon: DataType.STRING,
         stage_id: {
             type: DataType.INTEGER,
             references: {
@@ -19,18 +19,10 @@ module.exports = (sequelize, DataType) => {
             underscored: true
 
         });
-    tip.associate = (models) => {
-        tip.belongsToMany(models.startup, {
-            through: 'startup_tip',
-            foreignKey: 'tip_id'
-        });
-        tip.belongsTo(models.step, {
-            foreignKey: 'step_id'
-        });
-        tip.belongsToMany(models.employee, {
-            through: 'employee_tip',
-            foreignKey: 'tip_id'
+    step.associate = (models) => {
+        step.belongsTo(models.stage,{
+            foreignKey : 'stage_id'
         });
     }
-    return tip
+    return step
 };
