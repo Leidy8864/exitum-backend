@@ -12,9 +12,11 @@ module.exports = {
         });
         
         const accessData = {
-            id: user.id,
-            email: user.email,
-            accessToken: accessToken,
+            id : user.id,
+            name : user.name,
+            lastname : user.lastname,
+            email : user.email,
+            accessToken : accessToken,
             // expiresIn : expiresIn
         }
 
@@ -23,19 +25,15 @@ module.exports = {
 
     accessData: function (user, res) {
         // const expiresIn = 24*60*60;
-
         const accessToken = jwt.sign({ id: user.id },
             SECRET_KEY, {
             // expiresIn : expiresIn
         });
-        
         const accessData = {
             id: user.id,
             email: user.email,
             accessToken: accessToken,
-            // expiresIn : expiresIn
         }
-
         return res(accessData);
     },
 

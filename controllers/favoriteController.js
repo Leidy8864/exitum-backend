@@ -27,7 +27,6 @@ module.exports = {
         var user_id = req.body.user_id 
         var chosen = req.body.chosen
 
-        selector = { where: { from_user_id: id, to_user_id: user_id } }
         models.favorite.create({
             from_user_id: id,
             to_user_id: user_id,
@@ -50,8 +49,8 @@ module.exports = {
         var user_id = req.body.user_id
         var chosen = req.body.chosen
 
-        selector = { where: { from_user_id: id, to_user_id: user_id } }
-        new_favorite = { chosen: chosen }
+        var selector = { where: { from_user_id: id, to_user_id: user_id } }
+        var new_favorite = { chosen: chosen }
 
         models.favorite.update(new_favorite, selector).then(new_favorite => {
             if(new_favorite){

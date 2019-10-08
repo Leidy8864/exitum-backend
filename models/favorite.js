@@ -9,14 +9,16 @@ module.exports = (sequelize, DataTypes) => {
                     model: 'user',
                     key: 'id'
                 }
-            }
+            },
+            primaryKey: true
         },
         to_user_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'user',
                 key: 'id'
-            }
+            },
+            primaryKey: true
         },
         chosen: DataTypes.INTEGER
     }, {

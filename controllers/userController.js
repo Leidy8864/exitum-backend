@@ -51,6 +51,7 @@ module.exports = {
                 ]
         }
     },
+
     //Función encargada de realizar el registro de usuario de manera local
     signUp: async (req, res) => {
         var errors = validationResult(req);
@@ -85,10 +86,10 @@ module.exports = {
                     return newUser;
                 });
 
-                helper.accessData(result, function(res) {
+                helper.accessData(result, function(response) {
                     models.token.create({
-                        token: res.accessToken,
-                        user_id: res.id,
+                        token: response.accessToken,
+                        user_id: response.id,
                         token_created_at: Date.now()
                     });
     
@@ -103,20 +104,21 @@ module.exports = {
                     transporter.verify(function (error, success) {
                         if (error) {
                             console.log(error);
-                        } else {
+                        }
+                        else {
                             console.log("El servidor esta listo para enviar mensajes.");
                             var mailOptions = {
                                 from: index.emailExitum,
-                                to: res.email,  
+                                to: response.email,
                                 subject: 'Verificacion de la cuenta',
-                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + res.accessToken + '\n',
+                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n',
                             };
                             transporter.sendMail(mailOptions).then(() => {
-                                console.log('Un email de verificación ha sido enviado a ' + res.email + '.');
+                                console.log('Un email de verificación ha sido enviado a ' + response.email + '.');
                             }).catch(err => {
-                                console.log("Error: " + err)
-                                res.status(500).json({ status: false, message: err.message })
-                            })
+                                console.log("Error: " + err);
+                                res.status(500).json({ status: false, message: err.message });
+                            });
                         }
                     });
                 }); 
@@ -133,42 +135,51 @@ module.exports = {
     confirmation: async (req, res) => {
         const token = await models.token.findOne({ where: { token: req.params.token } })
         if (token) {
-            if (moment(token.token_created_at).add(1, 'd').toDate() >= Date.now()) {
-                const user = await models.user.findOne({ where: { id: token.user_id } })
-                if (user) {
-                    if (user.confirmed) {
-                        return res.json({ status: false, message: "Esta cuenta ya fue verificada." })
-                    } else {
-                        const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
-                        if (newUser) {
-                            return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
-                        }
-                    }
+            //if (moment(token.token_created_at).add(1, 'd').toDate() >= Date.now()) {
+            const user = await models.user.findOne({ where: { id: token.user_id } })
+            if (user) {
+                if (user.confirmed) {
+                    return res.json({ status: false, message: "Esta cuenta ya fue verificada.", data: user })
                 } else {
-                    res.json({ status: false, message: 'No pudimos encontrar al usuario con este token.' });
+                    const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
+                    if (newUser) {
+                        return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
+                    }
                 }
             } else {
-                res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
+                res.json({ status: false, message: 'No pudimos encontrar al usuario con este token.' });
             }
+            // } else {
+            //     res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
+            // }
         } else {
             res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
-        }
+        }   
     },
 
     verification: async (req, res) => {
-        models.token.findOne({ where: { token: req.params.token } }).then(token => {
-            if (token) {
-                models.user.findOne({ where: { id: token.user_id, confirmed: true } }).then(user => {
-                    if (user) {
-                        return helper.generateAccessData(user, res);
-                    } else {
-                        return res.json({ status: false, message: "Este usuario no esta verificado." })
+        const token = await models.token.findOne({ where: { token: req.params.token } })
+        if (token) {
+            //if (moment(token.token_created_at).add(1, 'd').toDate() >= Date.now()) {
+            const user = await models.user.findOne({ where: { id: token.user_id } })
+            if (user) {
+                if (user.confirmed) {
+                    return res.json({ status: false, message: "Esta cuenta ya fue verificada." })
+                } else {
+                    const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
+                    if (newUser) {
+                        return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
                     }
-                });
+                }
             } else {
-                return res.json({ status: false, message: 'Token invalido.' })
+                res.json({ status: false, message: 'No pudimos encontrar al usuario con este token.' });
             }
-        });
+            // } else {
+            //     res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
+            // }
+        } else {
+            res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
+        }
     },
 
     //Funcion para enviar un nuevo token para la verificación del correo
@@ -185,47 +196,49 @@ module.exports = {
                 if (user.confirmed) {
                     return res.json({ status: false, message: "Esta cuenta ya fue verificada" });
                 } else {
-                    const token = crypto.randomBytes(16).toString('hex')
-                    const newToken = await models.token.update({ token: token }, { where: { user_id: user.id } });
-                    var transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: {
-                            user: index.emailExitum,
-                            pass: index.passwordExitum
-                        }
-                    });
-                    transporter.verify(function (error, success) {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            console.log("El servidor esta listo para enviar mensajes.");
-                            // const handlebarOptions = {
-                            //     viewEngine: {
-                            //         extName: '.hbs',
-                            //         partialsDir: '../template/verification/',
-                            //         layoutsDir: '../template/verification/',
-                            //         defaultLayout: 'template.handlebars',
-                            //     },
-                            //     viewPath: 'some/path',
-                            //     extName: '.hbs',
-                            // };
-                            // transporter.use('compile', hbs(handlebarOptions));
-                            var mailOptions = {
-                                from: index.emailExitum,
-                                to: user.email,
-                                subject: 'Verificacion de la cuenta',
-                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/users/dashboard\/' + token + '\n',
-                                template: 'template'
+                    helper.accessData(user, function(response) {
+                        models.token.update({ token: response.accessToken }, { where: { user_id: user.id } });
+                        var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: index.emailExitum,
+                                pass: index.passwordExitum
                             }
-                            transporter.sendMail(mailOptions).then(() => {
-                                console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
-                            }).catch(err => {
-                                console.log("Error: " + err)
-                                res.status(500).json({ status: false, message: err.message })
-                            })
-                        }
-                    });
-                    return helper.generateAccessData(newToken, res);
+                        });
+
+                        transporter.verify(function (error, success) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log("El servidor esta listo para enviar mensajes.");
+                                const handlebarOptions = {
+                                    viewEngine: {
+                                        extName: '.handlebars',
+                                        partialsDir: './template/verification',
+                                        layoutsDir: './template/verification/',
+                                        defaultLayout: 'template.handlebars',
+                                    },
+                                    viewPath: './template/verification',
+                                    extName: '.handlebars',
+                                };
+                                transporter.use('compile', hbs(handlebarOptions));
+                                var mailOptions = {
+                                    from: index.emailExitum,
+                                    to: user.email,
+                                    subject: 'Verificacion de la cuenta',
+                                    text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + res.accessToken + '\n',
+                                    template: 'template'
+                                }
+                                transporter.sendMail(mailOptions).then(() => {
+                                    console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
+                                    res.json({status:200, message:"Un email de verificación ha sido enviado a " + user.email + " ."})
+                                }).catch(err => {
+                                    console.log("Error: " + err)
+                                    res.status(500).json({ status: false, message: err.message })
+                                })
+                            }
+                        });
+                    });                    
                 }
             }
         } catch (error) {
@@ -263,6 +276,9 @@ module.exports = {
 
     //Función encargada de realizar el registro de usuario o login de usuario con proveedores
     socialLoginOrRegister: async (req, res) => {
+
+        // console.log("SOCIAL ", req);
+
         var user = null;
         try {
             user = req.user
@@ -295,10 +311,10 @@ module.exports = {
                 }
 
             } else {
-                res.status(200).send({ status: false, message: "Error al obtener información del usuario" })
+                return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
-            console.log("Error", error);
+            // console.log("Error", error);
 
             var message = '';
             if (error.name === 'SequelizeUniqueConstraintError') {
@@ -308,7 +324,7 @@ module.exports = {
             } else {
                 message = 'Hubo un error en el sistema, favor de intentarlo en unos minutos.'
             }
-            res.status(200).send({ status: false, message: message })
+            return res.status(200).json({ status: false, message: message })
 
         }
     },
