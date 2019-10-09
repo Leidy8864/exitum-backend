@@ -419,7 +419,7 @@ module.exports = {
                     if (newUser) {
                         console.log("Se cambio el password.");
                         const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } });
-                        return res.json({ status: 200, message: "Se cambio el password.", data: user });
+                        return helper.generateAccessData(user, res);
                     } else {
                         return res.json({ status: false, message: "No se pudo cambiar el password." });
                     }
