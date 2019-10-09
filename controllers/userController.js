@@ -119,18 +119,18 @@ module.exports = {
                             transporter.use('compile', hbs(handlebarOptions));
                             var mailOptions = {
                                 from: index.emailExitum,
-                                to: user.email,
+                                to: req.body.email,
                                 subject: 'Verificacion de la cuenta',
                                 //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
-                                    name: user.name + ' ' + user.lastname,
+                                    name: req.body.name + ' ' + req.body.lastname,
                                     description: 'Por favor verifica tu cuenta dandole click al boton.',
                                     url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
                                 },
                             }
                             transporter.sendMail(mailOptions).then(() => {
-                                console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
+                                console.log('Un email de verificación ha sido enviado a ' + req.body.email + '.');
                             }).catch(err => {
                                 console.log("Error: " + err)
                                 res.status(500).json({ status: false, message: err.message })
