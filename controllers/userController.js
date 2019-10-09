@@ -127,6 +127,7 @@ module.exports = {
                                     name: req.body.name + ' ' + req.body.lastname,
                                     description: 'Por favor verifica tu cuenta dandole click al boton.',
                                     url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                    boton: 'Verificar cuenta'
                                 },
                             }
                             transporter.sendMail(mailOptions).then(() => {
@@ -327,6 +328,7 @@ module.exports = {
                                         name: user.name + ' ' + user.lastname,
                                         description: 'Por favor verifica tu cuenta dandole click al boton.',
                                         url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                        boton: 'Verificar cuenta'
                                     },
                                 }
                                 transporter.sendMail(mailOptions).then(() => {
@@ -388,7 +390,8 @@ module.exports = {
                         context: {
                             name: user.name + ' ' + user.lastname,
                             description: 'Por favor recupera tu cuenta dandole click al boton.',
-                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\/' + token_password
+                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\/' + token_password,
+                            boton: 'Recuperar cuenta'
                         },
                     }
                     transporter.sendMail(mailOptions).then(() => {
