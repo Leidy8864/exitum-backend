@@ -261,7 +261,7 @@ module.exports = {
             const user = await models.user.findOne({ where: { id: token.user_id } })
             if (user) {
                 if (user.confirmed) {
-                    return res.json({ status: false, message: "Esta cuenta ya fue verificada." })
+                    return res.json({ status: false, message: "Esta cuenta ya fue verificada.", data: user })
                 } else {
                     const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                     if (newUser) {

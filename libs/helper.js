@@ -17,7 +17,8 @@ module.exports = {
             lastname : user.lastname,
             email : user.email,
             accessToken : accessToken,
-            role : user.role
+            role : user.role,
+            confirmed: user.confirmed
             // expiresIn : expiresIn
         }
 

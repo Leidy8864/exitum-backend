@@ -136,7 +136,7 @@
 
 /**
  *
- * @api {GET} /users/dashboard/:token GET confirmation user
+ * @api {GET} /dashboard/:token GET confirmation user
  * @apiName confirmation
  * @apiGroup USER
  * @apiVersion 1.0.0
@@ -145,16 +145,33 @@
  * @apiParam {String} token Token de validación de correo.
  *
 	* @apiParamExample {querystring} Ejemplo url
-	/users/dashboard/:3759a0775d7eae3f3eececcffd9a0b45
+	/dashboard/:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU3MDYzMjcxM30.V29Dd2_8jh-hyb84YCcutSFy70JPXiv9DypeqUSsjq4
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {Object} accessData JWT
- * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
+ * @apiSuccess (Datos obtenidos) {String} message Indica el mensaje de confirmación
+ * @apiSuccess (Datos obtenidos) {Object} data Datos del usuario validado
  * @apiSuccessExample {json} Datos obtenidos:
 	{
         "status": 200,
-        "accessData": {
-            "accessToken": accessToken,
+        "message": "Su cuenta fue verificada.",
+        "data": {
+            "id": 49,
+            "name": "Leidy",
+            "lastname": "Callupe",
+            "email": "leidy.callupe@tecsup.edu.pe",
+            "provider_id": null,
+            "confirmed": false,
+            "phone": null,
+            "role": "employee",
+            "method": "local",
+            "password": "$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG",
+            "active": true,
+            "last_login": null,
+            "photo": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "country_id": 1,
+            "currency_id": 1
         }
     }
  *
@@ -241,14 +258,11 @@
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {Object} accessData JWT
- * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
+ * @apiSuccess (Datos obtenidos) {String} message Indica el mensaje exitoso
  * @apiSuccessExample {json} Datos obtenidos:
 	{
         "status": 200,
-        "accessData": {
-            "accessToken": accessToken,
-        }
+        "message": "Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe ."
     }
  *
  *
@@ -1325,6 +1339,90 @@
                     "entrepreneur_id": 1,
                     "category_id": 1,
                     "stage_id": 1
+                }
+            }
+        ]
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {GET} /advertisements/user/:id/list GET advertisements by id
+ * @apiName advertisements by id
+ * @apiGroup ADVERTISEMENT
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Listado de anuncios
+ * @apiParam {Int} id Id del usuario.
+ * @apiParam {String} active Estado del anuncio
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /advertisements/user/4/list
+    {
+	    "state" : "active"
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct[]} data Indica el listado de anuncios del usuario
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "OK",
+        "data": [
+            {
+                "id": 3,
+                "title": "Programador en Java",
+                "description": "Requiero un programador senior",
+                "state": "active",
+                "category_id": 1,
+                "startup_id": 1,
+                "created_at": "2019-10-03T20:54:26.000Z",
+                "skills": [
+                    {
+                        "id": 1,
+                        "skill": "PHP",
+                        "advertisement_skill": {
+                            "advertisement_id": 3,
+                            "skill_id": 1
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "skill": "Node JS",
+                        "advertisement_skill": {
+                            "advertisement_id": 3,
+                            "skill_id": 2
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "skill": "Javascript",
+                        "advertisement_skill": {
+                            "advertisement_id": 3,
+                            "skill_id": 3
+                        }
+                    }
+                ],
+                "category": {
+                    "id": 1,
+                    "name": "Programación y Tecnología"
+                },
+                "startup": {
+                    "id": 1,
+                    "name": "Proyecto Exitum",
+                    "photo_url": null,
+                    "ruc": null,
+                    "description": "Proyecto que pretende ayudar startups",
+                    "entrepreneur_id": 1,
+                    "category_id": 1,
+                    "stage_id": 1,
+                    "entrepreneur": {
+                        "id": 1,
+                        "user_id": 4
+                    }
                 }
             }
         ]

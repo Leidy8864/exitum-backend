@@ -524,6 +524,105 @@
   },
   {
     "type": "GET",
+    "url": "/advertisements/user/:id/list",
+    "title": "GET advertisements by id",
+    "name": "advertisements_by_id",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Listado de anuncios</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "active",
+            "description": "<p>Estado del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "    /advertisements/user/4/list\n    {\n\t    \"state\" : \"active\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de anuncios del usuario</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"category_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Programación y Tecnología\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
     "url": "/advertisements/list",
     "title": "GET advertisements list",
     "name": "advertisements_list",
@@ -1743,80 +1842,6 @@
   },
   {
     "type": "POST",
-    "url": "/skills/create",
-    "title": "POST create skill",
-    "name": "create_skills",
-    "group": "SKILLS",
-    "version": "1.0.0",
-    "description": "<p>Crear habilidades</p>",
-    "parameter": {
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "/skills/create\n{\n    \"skill\": \"\"\n}",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "{\n\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "SKILLS",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "POST",
     "url": "/employees/update/skills",
     "title": "POST create skill",
     "name": "create_skills",
@@ -1855,6 +1880,80 @@
         {
           "title": "Datos obtenidos:",
           "content": "{\n    \"status\": true,\n    \"message\": \"Skills actualizados correctamente\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "SKILLS",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/skills/create",
+    "title": "POST create skill",
+    "name": "create_skills",
+    "group": "SKILLS",
+    "version": "1.0.0",
+    "description": "<p>Crear habilidades</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/skills/create\n{\n    \"skill\": \"\"\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n\n}",
           "type": "json"
         }
       ]
@@ -2571,9 +2670,9 @@
     }
   },
   {
-    "type": "POST",
-    "url": "/users/confirmation/:token",
-    "title": "POST confirmation user",
+    "type": "GET",
+    "url": "/dashboard/:token",
+    "title": "GET confirmation user",
     "name": "confirmation",
     "group": "USER",
     "version": "1.0.0",
@@ -2593,7 +2692,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/users/confirmation/:3759a0775d7eae3f3eececcffd9a0b45",
+          "content": "/dashboard/:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU3MDYzMjcxM30.V29Dd2_8jh-hyb84YCcutSFy70JPXiv9DypeqUSsjq4",
           "type": "querystring"
         }
       ]
@@ -2610,24 +2709,24 @@
           },
           {
             "group": "Datos obtenidos",
-            "type": "Object",
+            "type": "String",
             "optional": false,
-            "field": "accessData",
-            "description": "<p>JWT</p>"
+            "field": "message",
+            "description": "<p>Indica el mensaje de confirmación</p>"
           },
           {
             "group": "Datos obtenidos",
-            "type": "String",
+            "type": "Object",
             "optional": false,
-            "field": "accessData.accessToken",
-            "description": "<p>accessToken</p>"
+            "field": "data",
+            "description": "<p>Datos del usuario validado</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"accessToken\": accessToken,\n        }\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Su cuenta fue verificada.\",\n        \"data\": {\n            \"id\": 49,\n            \"name\": \"Leidy\",\n            \"lastname\": \"Callupe\",\n            \"email\": \"leidy.callupe@tecsup.edu.pe\",\n            \"provider_id\": null,\n            \"confirmed\": false,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"password\": \"$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
           "type": "json"
         }
       ]
@@ -2970,24 +3069,17 @@
           },
           {
             "group": "Datos obtenidos",
-            "type": "Object",
-            "optional": false,
-            "field": "accessData",
-            "description": "<p>JWT</p>"
-          },
-          {
-            "group": "Datos obtenidos",
             "type": "String",
             "optional": false,
-            "field": "accessData.accessToken",
-            "description": "<p>accessToken</p>"
+            "field": "message",
+            "description": "<p>Indica el mensaje exitoso</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"accessToken\": accessToken,\n        }\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
           "type": "json"
         }
       ]
@@ -3381,10 +3473,17 @@
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Boolean",
             "optional": false,
             "field": "active",
-            "description": "<p>Apellido(s) del usuario actualizado.</p>"
+            "description": "<p>False cuando se quiere eliminar al usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "rol",
+            "description": "<p>Nuevo rol del usuario ('entrepreneur', 'employee', 'admin'). *</p>"
           }
         ]
       },
