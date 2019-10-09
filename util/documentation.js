@@ -195,14 +195,11 @@
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {Object} accessData JWT
- * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
+ * @apiSuccess (Datos obtenidos) {String} message.Indica el mensaje de exito
  * @apiSuccessExample {json} Datos obtenidos:
 	{
         "status": 200,
-        "accessData": {
-            "accessToken": accessToken,
-        }
+        "message": 'Un email de recuperación ha sido enviado a leidy.callupe@tecsup.edu.pe',
     }
  *
  *
