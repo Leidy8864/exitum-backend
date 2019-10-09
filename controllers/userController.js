@@ -195,7 +195,7 @@ module.exports = {
                             lastname: user.lastname,
                             method: req.body.method,
                             provider_id: user.id,
-                            confirmed: false,
+                            confirmed: true,
                             active: true,
                             email: user.email,
                             role: 'undefined',
