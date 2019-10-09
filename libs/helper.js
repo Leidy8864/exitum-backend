@@ -17,6 +17,7 @@ module.exports = {
             lastname : user.lastname,
             email : user.email,
             accessToken : accessToken,
+            role : user.role
             // expiresIn : expiresIn
         }
 

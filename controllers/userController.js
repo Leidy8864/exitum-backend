@@ -52,6 +52,7 @@ module.exports = {
         }
     },
 
+
     //Función encargada de realizar el registro de usuario de manera local
     signUp: async (req, res) => {
         var errors = validationResult(req);
@@ -77,7 +78,7 @@ module.exports = {
                         password: bcrypt.hashSync(req.body.password),
                         active: true,
                         confirmed: false,
-                        role: 'employee',
+                        role: 'undefined',
                         // country_id: country.id || 1,
                         country_id: 1,
                         // currency_id: country.currency_id || 1
@@ -131,6 +132,87 @@ module.exports = {
         }
     },
 
+    //Función encargada de realizar la autenticación del usuario de manera local
+    signIn: (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
+        }
+        const userData = {
+            email: req.body.email,
+            password: req.body.password
+        };
+        models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
+            if (!user) {
+                res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+            } else {
+                const resultPassword = bcrypt.compareSync(userData.password, user.password);
+                if (resultPassword) {
+                    helper.generateAccessData(user, res);
+                } else {
+                    res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+                }
+            }
+        }).catch(error => {
+            console.log('Algo esta fallando: ' + error);
+            res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
+        });
+    },
+
+    //Función encargada de realizar el registro de usuario o login de usuario con proveedores
+    socialLoginOrRegister: async (req, res) => {
+
+        // console.log("SOCIAL ", req);
+
+        var user = null;
+        try {
+            user = req.user
+            if (user) {
+                const existingUser = await models.user.findOne({ where: { email: user.email, provider_id: user.id } });
+                if (existingUser) {
+                    console.log("User exists");
+                    return helper.generateAccessData(existingUser, res);
+                } else {
+                    const result = await models.sequelize.transaction(async (t) => {
+
+                        console.log("El usuario no existe en la BD estamos creando uno nuevo");
+                        const newUser = await models.user.create({
+                            name: user.name,
+                            lastname: user.lastname,
+                            method: req.body.method,
+                            provider_id: user.id,
+                            confirmed: false,
+                            active: true,
+                            email: user.email,
+                            role: 'undefined',
+                            photo: user.image,
+                            country_id: 1,
+                            currency_id: 1
+                        }, { transaction: t });
+
+                        return newUser;
+                    });
+                    return helper.generateAccessData(result, res);
+                }
+
+            } else {
+                return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
+            }
+        } catch (error) {
+            // console.log("Error", error);
+
+            var message = '';
+            if (error.name === 'SequelizeUniqueConstraintError') {
+
+                message = 'Este email ya ha sido registrado';
+
+            } else {
+                message = 'Hubo un error en el sistema, favor de intentarlo en unos minutos.'
+            }
+            return res.status(200).json({ status: false, message: message })
+
+        }
+    },
     //Función creada para la verificación del correo del usuario
     confirmation: async (req, res) => {
         const token = await models.token.findOne({ where: { token: req.params.token } })
@@ -244,88 +326,6 @@ module.exports = {
         } catch (error) {
             console.log('Algo esta fallando: ' + error);
             res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
-        }
-    },
-
-    //Función encargada de realizar la autenticación del usuario de manera local
-    signIn: (req, res) => {
-        var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
-        }
-        const userData = {
-            email: req.body.email,
-            password: req.body.password
-        };
-        models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
-            if (!user) {
-                res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
-            } else {
-                const resultPassword = bcrypt.compareSync(userData.password, user.password);
-                if (resultPassword) {
-                    helper.generateAccessData(user, res);
-                } else {
-                    res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
-                }
-            }
-        }).catch(error => {
-            console.log('Algo esta fallando: ' + error);
-            res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
-        });
-    },
-
-    //Función encargada de realizar el registro de usuario o login de usuario con proveedores
-    socialLoginOrRegister: async (req, res) => {
-
-        // console.log("SOCIAL ", req);
-
-        var user = null;
-        try {
-            user = req.user
-            if (user) {
-                const existingUser = await models.user.findOne({ where: { email: user.email, provider_id: user.id } });
-                if (existingUser) {
-                    console.log("User exists");
-                    return helper.generateAccessData(existingUser, res);
-                } else {
-                    const result = await models.sequelize.transaction(async (t) => {
-
-                        console.log("El usuario no existe en la BD estamos creando uno nuevo");
-                        const newUser = await models.user.create({
-                            name: user.name,
-                            lastname: user.lastname,
-                            method: req.body.method,
-                            provider_id: user.id,
-                            confirmed: false,
-                            active: true,
-                            email: user.email,
-                            role: 'employee',
-                            photo: user.image,
-                            country_id: 1,
-                            currency_id: 1
-                        }, { transaction: t });
-
-                        return newUser;
-                    });
-                    return helper.generateAccessData(result, res);
-                }
-
-            } else {
-                return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
-            }
-        } catch (error) {
-            // console.log("Error", error);
-
-            var message = '';
-            if (error.name === 'SequelizeUniqueConstraintError') {
-
-                message = 'Este email ya ha sido registrado';
-
-            } else {
-                message = 'Hubo un error en el sistema, favor de intentarlo en unos minutos.'
-            }
-            return res.status(200).json({ status: false, message: message })
-
         }
     },
 

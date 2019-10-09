@@ -1,4 +1,4 @@
--- MySQL Workbench Forward Engineering
+
 -- -----------------------------------------------------
 -- Schema exitum
 -- -----------------------------------------------------
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`country` (
   `code` VARCHAR(145) NULL,
   `currency_id` INT NOT NULL,
   PRIMARY KEY (`id`, `currency_id`),
-  INDEX `fk_country_currency1_idx` (`currency_id` ASC) ,
+  INDEX `fk_country_currency1_idx` (`currency_id` ASC) VISIBLE,
   CONSTRAINT `fk_country_currency1`
     FOREIGN KEY (`currency_id`)
     REFERENCES `exitum`.`currency` (`id`)
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   `provider_id` VARCHAR(100) NULL,
   `confirmed` TINYINT NULL,
   `phone` VARCHAR(10) NULL,
-  `role` ENUM('entrepreneur', 'employee', 'admin') NULL,
+  `role` ENUM('entrepreneur', 'employee', 'admin', 'undefined') NULL,
   `method` ENUM('local', 'google', 'facebook') NULL,
   `active` TINYINT NULL,
   `last_login` DATETIME NULL,
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   `country_id` INT NOT NULL,
   `currency_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_user_country1_idx` (`country_id` ASC) ,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
-  INDEX `fk_user_currency1_idx` (`currency_id` ASC) ,
+  INDEX `fk_user_country1_idx` (`country_id` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+  INDEX `fk_user_currency1_idx` (`currency_id` ASC) VISIBLE,
   CONSTRAINT `fk_user_country1`
     FOREIGN KEY (`country_id`)
     REFERENCES `exitum`.`country` (`id`)
@@ -83,8 +83,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`entrepreneur` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_emprendedor_user1_idx` (`user_id` ASC) ,
-  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) ,
+  INDEX `fk_emprendedor_user1_idx` (`user_id` ASC) VISIBLE,
+  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_emprendedor_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -128,10 +128,10 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup` (
   `stage_id` INT NOT NULL,
   `category_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_startup_emprendedor1_idx` (`entrepreneur_id` ASC) ,
-  INDEX `fk_startup_stage1_idx` (`stage_id` ASC) ,
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
-  INDEX `fk_startup_category1_idx` (`category_id` ASC) ,
+  INDEX `fk_startup_emprendedor1_idx` (`entrepreneur_id` ASC) VISIBLE,
+  INDEX `fk_startup_stage1_idx` (`stage_id` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
+  INDEX `fk_startup_category1_idx` (`category_id` ASC) VISIBLE,
   CONSTRAINT `fk_startup_emprendedor1`
     FOREIGN KEY (`entrepreneur_id`)
     REFERENCES `exitum`.`entrepreneur` (`id`)
@@ -165,10 +165,10 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee` (
   `price_hour` DECIMAL(10,2) NULL,
   `about_me` TEXT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_employee_user1_idx` (`user_id` ASC) ,
-  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) ,
-  INDEX `fk_employee_stage1_idx` (`stage_id` ASC) ,
-  INDEX `fk_employee_category1_idx` (`category_id` ASC) ,
+  INDEX `fk_employee_user1_idx` (`user_id` ASC) VISIBLE,
+  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
+  INDEX `fk_employee_stage1_idx` (`stage_id` ASC) VISIBLE,
+  INDEX `fk_employee_category1_idx` (`category_id` ASC) VISIBLE,
   CONSTRAINT `fk_employee_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`department` (
   `department` VARCHAR(145) NULL,
   `country_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_department_country_idx` (`country_id` ASC) ,
+  INDEX `fk_department_country_idx` (`country_id` ASC) VISIBLE,
   CONSTRAINT `fk_department_country`
     FOREIGN KEY (`country_id`)
     REFERENCES `exitum`.`country` (`id`)
@@ -232,9 +232,9 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_language` (
   `language_id` INT NOT NULL,
   `level_id` INT NOT NULL,
   PRIMARY KEY (`employee_id`, `language_id`, `level_id`),
-  INDEX `fk_employee_has_language_language1_idx` (`language_id` ASC) ,
-  INDEX `fk_employee_has_language_employee1_idx` (`employee_id` ASC) ,
-  INDEX `fk_employee_has_language_level1_idx` (`level_id` ASC) ,
+  INDEX `fk_employee_has_language_language1_idx` (`language_id` ASC) VISIBLE,
+  INDEX `fk_employee_has_language_employee1_idx` (`employee_id` ASC) VISIBLE,
+  INDEX `fk_employee_has_language_level1_idx` (`level_id` ASC) VISIBLE,
   CONSTRAINT `fk_employee_has_language_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -265,8 +265,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`advertisement` (
   `category_id` INT NOT NULL,
   `startup_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_project_category1_idx` (`category_id` ASC) ,
-  INDEX `fk_project_startup1_idx` (`startup_id` ASC) ,
+  INDEX `fk_project_category1_idx` (`category_id` ASC) VISIBLE,
+  INDEX `fk_project_startup1_idx` (`startup_id` ASC) VISIBLE,
   CONSTRAINT `fk_project_category1`
     FOREIGN KEY (`category_id`)
     REFERENCES `exitum`.`category` (`id`)
@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`subcategory` (
   `name` VARCHAR(145) NULL,
   `category_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_subcategory_category1_idx` (`category_id` ASC) ,
+  INDEX `fk_subcategory_category1_idx` (`category_id` ASC) VISIBLE,
   CONSTRAINT `fk_subcategory_category1`
     FOREIGN KEY (`category_id`)
     REFERENCES `exitum`.`category` (`id`)
@@ -314,8 +314,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`advertisement_skill` (
   `advertisement_id` INT NOT NULL,
   `skill_id` INT NOT NULL,
   PRIMARY KEY (`advertisement_id`, `skill_id`),
-  INDEX `fk_skill_has_project_project1_idx` (`advertisement_id` ASC) ,
-  INDEX `fk_skill_has_project_skill1_idx` (`skill_id` ASC) ,
+  INDEX `fk_skill_has_project_project1_idx` (`advertisement_id` ASC) VISIBLE,
+  INDEX `fk_skill_has_project_skill1_idx` (`skill_id` ASC) VISIBLE,
   CONSTRAINT `fk_skill_has_project_skill1`
     FOREIGN KEY (`skill_id`)
     REFERENCES `exitum`.`skill` (`id`)
@@ -336,8 +336,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_skill` (
   `skill_id` INT NOT NULL,
   `employee_id` INT NOT NULL,
   PRIMARY KEY (`skill_id`, `employee_id`),
-  INDEX `fk_skill_has_employee_employee1_idx` (`employee_id` ASC) ,
-  INDEX `fk_skill_has_employee_skill1_idx` (`skill_id` ASC) ,
+  INDEX `fk_skill_has_employee_employee1_idx` (`employee_id` ASC) VISIBLE,
+  INDEX `fk_skill_has_employee_skill1_idx` (`skill_id` ASC) VISIBLE,
   CONSTRAINT `fk_skill_has_employee_skill1`
     FOREIGN KEY (`skill_id`)
     REFERENCES `exitum`.`skill` (`id`)
@@ -359,8 +359,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`team` (
   `startup_id` INT NOT NULL,
   `contract` TINYINT NULL,
   PRIMARY KEY (`employee_id`, `startup_id`),
-  INDEX `fk_employee_has_startup_startup1_idx` (`startup_id` ASC) ,
-  INDEX `fk_employee_has_startup_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_employee_has_startup_startup1_idx` (`startup_id` ASC) VISIBLE,
+  INDEX `fk_employee_has_startup_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_employee_has_startup_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -392,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`question` (
   `question` VARCHAR(255) NULL,
   `test_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_questions_certiifications1_idx` (`test_id` ASC) ,
+  INDEX `fk_questions_certiifications1_idx` (`test_id` ASC) VISIBLE,
   CONSTRAINT `fk_questions_certiifications1`
     FOREIGN KEY (`test_id`)
     REFERENCES `exitum`.`test` (`id`)
@@ -410,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`answer` (
   `correct` TINYINT NULL,
   `question_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_answers_questions1_idx` (`question_id` ASC) ,
+  INDEX `fk_answers_questions1_idx` (`question_id` ASC) VISIBLE,
   CONSTRAINT `fk_answers_questions1`
     FOREIGN KEY (`question_id`)
     REFERENCES `exitum`.`question` (`id`)
@@ -427,8 +427,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`chat` (
   `from_id` INT NOT NULL,
   `to_id` INT NOT NULL,
   `created_at` DATETIME NULL,
-  INDEX `fk_chat_user1_idx` (`from_id` ASC) ,
-  INDEX `fk_chat_user2_idx` (`to_id` ASC) ,
+  INDEX `fk_chat_user1_idx` (`from_id` ASC) VISIBLE,
+  INDEX `fk_chat_user2_idx` (`to_id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_chat_user1`
     FOREIGN KEY (`from_id`)
@@ -453,7 +453,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`message` (
   `viewed` TINYINT NULL,
   `chat_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_messages_chat1_idx` (`chat_id` ASC) ,
+  INDEX `fk_messages_chat1_idx` (`chat_id` ASC) VISIBLE,
   CONSTRAINT `fk_messages_chat1`
     FOREIGN KEY (`chat_id`)
     REFERENCES `exitum`.`chat` (`id`)
@@ -471,8 +471,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`order` (
   `employer_id` INT NOT NULL,
   `employee_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_order_user1_idx` (`employer_id` ASC) ,
-  INDEX `fk_order_user2_idx` (`employee_id` ASC) ,
+  INDEX `fk_order_user1_idx` (`employer_id` ASC) VISIBLE,
+  INDEX `fk_order_user2_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_order_user1`
     FOREIGN KEY (`employer_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -497,8 +497,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`order_detail` (
   `day_start` DATETIME NULL,
   `day_end` DATETIME NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_order_detail_project1_idx` (`advertisement_id` ASC) ,
-  INDEX `fk_order_detail_order1_idx` (`order_id` ASC) ,
+  INDEX `fk_order_detail_project1_idx` (`advertisement_id` ASC) VISIBLE,
+  INDEX `fk_order_detail_order1_idx` (`order_id` ASC) VISIBLE,
   CONSTRAINT `fk_order_detail_project1`
     FOREIGN KEY (`advertisement_id`)
     REFERENCES `exitum`.`advertisement` (`id`)
@@ -521,7 +521,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`order_state` (
   `state` TINYINT NULL,
   `date_delivery` DATETIME NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_order_state_order1_idx` (`order_id` ASC) ,
+  INDEX `fk_order_state_order1_idx` (`order_id` ASC) VISIBLE,
   CONSTRAINT `fk_order_state_order1`
     FOREIGN KEY (`order_id`)
     REFERENCES `exitum`.`order` (`id`)
@@ -541,8 +541,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`proposal` (
   `viewed` TINYINT NULL,
   `created_at` DATETIME NULL,
   PRIMARY KEY (`advertisementt_id`, `employee_id`),
-  INDEX `fk_proposals_project1_idx` (`advertisementt_id` ASC) ,
-  INDEX `fk_proposals_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_proposals_project1_idx` (`advertisementt_id` ASC) VISIBLE,
+  INDEX `fk_proposals_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_proposals_project1`
     FOREIGN KEY (`advertisementt_id`)
     REFERENCES `exitum`.`advertisement` (`id`)
@@ -564,8 +564,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`invitation` (
   `employee_id` INT NOT NULL,
   `created_at` DATETIME NULL,
   PRIMARY KEY (`advertisement_id`, `employee_id`),
-  INDEX `fk_invitations_project1_idx` (`advertisement_id` ASC) ,
-  INDEX `fk_invitations_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_invitations_project1_idx` (`advertisement_id` ASC) VISIBLE,
+  INDEX `fk_invitations_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_invitations_project1`
     FOREIGN KEY (`advertisement_id`)
     REFERENCES `exitum`.`advertisement` (`id`)
@@ -587,7 +587,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`step` (
   `icon` VARCHAR(120) NULL,
   `stage_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_step_stage1_idx` (`stage_id` ASC) ,
+  INDEX `fk_step_stage1_idx` (`stage_id` ASC) VISIBLE,
   CONSTRAINT `fk_step_stage1`
     FOREIGN KEY (`stage_id`)
     REFERENCES `exitum`.`stage` (`id`)
@@ -604,7 +604,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`tip` (
   `tip` VARCHAR(145) NULL,
   `step_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_tip_step1_idx` (`step_id` ASC) ,
+  INDEX `fk_tip_step1_idx` (`step_id` ASC) VISIBLE,
   CONSTRAINT `fk_tip_step1`
     FOREIGN KEY (`step_id`)
     REFERENCES `exitum`.`step` (`id`)
@@ -621,8 +621,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup_tip` (
   `startup_id` INT NOT NULL,
   `checked` TINYINT NULL,
   PRIMARY KEY (`tip_id`, `startup_id`),
-  INDEX `fk_tips_has_startup_startup1_idx` (`startup_id` ASC) ,
-  INDEX `fk_tips_has_startup_tips1_idx` (`tip_id` ASC) ,
+  INDEX `fk_tips_has_startup_startup1_idx` (`startup_id` ASC) VISIBLE,
+  INDEX `fk_tips_has_startup_tips1_idx` (`tip_id` ASC) VISIBLE,
   CONSTRAINT `fk_tips_has_startup_tips1`
     FOREIGN KEY (`tip_id`)
     REFERENCES `exitum`.`tip` (`id`)
@@ -646,8 +646,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`review` (
   `rating` INT NULL,
   `state` TINYINT NULL,
   `created_at` DATETIME NULL,
-  INDEX `fk_reviews_user1_idx` (`form_user_id` ASC) ,
-  INDEX `fk_reviews_user2_idx` (`to_user_id` ASC) ,
+  INDEX `fk_reviews_user1_idx` (`form_user_id` ASC) VISIBLE,
+  INDEX `fk_reviews_user2_idx` (`to_user_id` ASC) VISIBLE,
   PRIMARY KEY (`form_user_id`, `to_user_id`),
   CONSTRAINT `fk_reviews_user1`
     FOREIGN KEY (`form_user_id`)
@@ -675,7 +675,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`experience` (
   `current_job` TINYINT NULL,
   `employee_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_experiencie_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_experiencie_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_experiencie_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -705,8 +705,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`notification` (
   `created_at` DATETIME NULL,
   `viewed` TINYINT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_notifications_notifications_type1_idx` (`notification_type_id` ASC) ,
-  INDEX `fk_notification_user1_idx` (`user_id` ASC) ,
+  INDEX `fk_notifications_notifications_type1_idx` (`notification_type_id` ASC) VISIBLE,
+  INDEX `fk_notification_user1_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_notifications_notifications_type1`
     FOREIGN KEY (`notification_type_id`)
     REFERENCES `exitum`.`notification_type` (`id`)
@@ -729,8 +729,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`notification_setting` (
   `user_id` INT NOT NULL,
   `notification_type_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_notification_setting_user1_idx` (`user_id` ASC) ,
-  INDEX `fk_notification_setting_notification_type1_idx` (`notification_type_id` ASC) ,
+  INDEX `fk_notification_setting_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_notification_setting_notification_type1_idx` (`notification_type_id` ASC) VISIBLE,
   CONSTRAINT `fk_notification_setting_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -761,8 +761,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_type` (
   `employee_id` INT NOT NULL,
   `type_id` INT NOT NULL,
   PRIMARY KEY (`employee_id`, `type_id`),
-  INDEX `fk_employee_has_employee_types_employee_types1_idx` (`type_id` ASC) ,
-  INDEX `fk_employee_has_employee_types_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_employee_has_employee_types_employee_types1_idx` (`type_id` ASC) VISIBLE,
+  INDEX `fk_employee_has_employee_types_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_employee_has_employee_types_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -784,7 +784,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`delivery` (
   `order_state_id` INT NOT NULL,
   `file` VARCHAR(145) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_deliveries_order_state1_idx` (`order_state_id` ASC) ,
+  INDEX `fk_deliveries_order_state1_idx` (`order_state_id` ASC) VISIBLE,
   CONSTRAINT `fk_deliveries_order_state1`
     FOREIGN KEY (`order_state_id`)
     REFERENCES `exitum`.`order_state` (`id`)
@@ -815,8 +815,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`education` (
   `employee_id` INT NOT NULL,
   `other_university` VARCHAR(145) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_educations_universities1_idx` (`university_id` ASC) ,
-  INDEX `fk_education_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_educations_universities1_idx` (`university_id` ASC) VISIBLE,
+  INDEX `fk_education_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_educations_universities1`
     FOREIGN KEY (`university_id`)
     REFERENCES `exitum`.`university` (`id`)
@@ -838,8 +838,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`meeting` (
   `employee_id` INT NOT NULL,
   `day_meet` DATETIME NULL,
   PRIMARY KEY (`startup_id`, `employee_id`),
-  INDEX `fk_meetings_startup1_idx` (`startup_id` ASC) ,
-  INDEX `fk_meetings_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_meetings_startup1_idx` (`startup_id` ASC) VISIBLE,
+  INDEX `fk_meetings_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_meetings_startup1`
     FOREIGN KEY (`startup_id`)
     REFERENCES `exitum`.`startup` (`id`)
@@ -860,8 +860,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_test` (
   `employee_id` INT NOT NULL,
   `test_id` INT NOT NULL,
   PRIMARY KEY (`employee_id`, `test_id`),
-  INDEX `fk_employee_has_certiification_certiification1_idx` (`test_id` ASC) ,
-  INDEX `fk_employee_has_certiification_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_employee_has_certiification_certiification1_idx` (`test_id` ASC) VISIBLE,
+  INDEX `fk_employee_has_certiification_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_employee_has_certiification_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -884,7 +884,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`recommendation` (
   `employee_id` INT NOT NULL,
   `total_likes` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_recomendation_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_recomendation_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_recomendation_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -901,8 +901,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`like` (
   `recommendation_id` INT NOT NULL,
   `like` TINYINT NULL,
   PRIMARY KEY (`startup_id`, `recommendation_id`),
-  INDEX `fk_like_startup1_idx` (`startup_id` ASC) ,
-  INDEX `fk_like_recomendation1_idx` (`recommendation_id` ASC) ,
+  INDEX `fk_like_startup1_idx` (`startup_id` ASC) VISIBLE,
+  INDEX `fk_like_recomendation1_idx` (`recommendation_id` ASC) VISIBLE,
   CONSTRAINT `fk_like_startup1`
     FOREIGN KEY (`startup_id`)
     REFERENCES `exitum`.`startup` (`id`)
@@ -927,7 +927,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`token` (
   `token_password_created_at` DATETIME NULL,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_token_user1_idx` (`user_id` ASC) ,
+  INDEX `fk_token_user1_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_token_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -943,8 +943,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup_employee_type` (
   `startup_id` INT NOT NULL,
   `type_id` INT NOT NULL,
   PRIMARY KEY (`startup_id`, `type_id`),
-  INDEX `fk_startup_has_type_type1_idx` (`type_id` ASC) ,
-  INDEX `fk_startup_has_type_startup1_idx` (`startup_id` ASC) ,
+  INDEX `fk_startup_has_type_type1_idx` (`type_id` ASC) VISIBLE,
+  INDEX `fk_startup_has_type_startup1_idx` (`startup_id` ASC) VISIBLE,
   CONSTRAINT `fk_startup_has_type_startup1`
     FOREIGN KEY (`startup_id`)
     REFERENCES `exitum`.`startup` (`id`)
@@ -965,8 +965,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`favorite` (
   `from_user_id` INT NOT NULL,
   `to_user_id` INT NOT NULL,
   `chosen` TINYINT NULL,
-  INDEX `fk_favorite_user1_idx` (`from_user_id` ASC) ,
-  INDEX `fk_favorite_user2_idx` (`to_user_id` ASC) ,
+  INDEX `fk_favorite_user1_idx` (`from_user_id` ASC) VISIBLE,
+  INDEX `fk_favorite_user2_idx` (`to_user_id` ASC) VISIBLE,
   PRIMARY KEY (`to_user_id`, `from_user_id`),
   CONSTRAINT `fk_favorite_user1`
     FOREIGN KEY (`from_user_id`)
@@ -993,7 +993,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
   `document_url` VARCHAR(255) NULL,
   `employee_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_certification_employee1_idx` (`employee_id` ASC) ,
+  INDEX `fk_certification_employee1_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `fk_certification_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -1012,7 +1012,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`available` (
   `to_hour` DATETIME NULL,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_availability_user1_idx` (`user_id` ASC) ,
+  INDEX `fk_availability_user1_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_availability_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -1029,7 +1029,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`unavailable` (
   `hour_break` TIME NULL,
   `available_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_unavailable_availability1_idx` (`available_id` ASC) ,
+  INDEX `fk_unavailable_availability1_idx` (`available_id` ASC) VISIBLE,
   CONSTRAINT `fk_unavailable_availability1`
     FOREIGN KEY (`available_id`)
     REFERENCES `exitum`.`available` (`id`)
@@ -1046,8 +1046,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_tip` (
   `employee_id` INT NOT NULL,
   `checked` TINYINT NULL,
   PRIMARY KEY (`tip_id`, `employee_id`),
-  INDEX `fk_tip_has_employee_employee1_idx` (`employee_id` ASC) ,
-  INDEX `fk_tip_has_employee_tip1_idx` (`tip_id` ASC) ,
+  INDEX `fk_tip_has_employee_employee1_idx` (`employee_id` ASC) VISIBLE,
+  INDEX `fk_tip_has_employee_tip1_idx` (`tip_id` ASC) VISIBLE,
   CONSTRAINT `fk_tip_has_employee_tip1`
     FOREIGN KEY (`tip_id`)
     REFERENCES `exitum`.`tip` (`id`)
