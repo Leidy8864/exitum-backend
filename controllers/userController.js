@@ -233,7 +233,7 @@ module.exports = {
         const token = await models.token.findOne({ where: { token: req.params.token } })
         if (token) {
             //if (moment(token.token_created_at).add(1, 'd').toDate() >= Date.now()) {
-            const user = await models.user.findOne({ where: { id: token.user_id } })
+            const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } })
             if (user) {
                 if (user.confirmed) {
                     return res.json({ status: false, message: "Esta cuenta ya fue verificada.", data: user })
