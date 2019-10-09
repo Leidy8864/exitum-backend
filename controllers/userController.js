@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
-
+const path = require('path');
 const { check, validationResult } = require('express-validator');
 const s3 = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/user-profile';
@@ -86,13 +86,13 @@ module.exports = {
                     return newUser;
                 });
 
-                helper.accessData(result, function(response) {
+                helper.accessData(result, function (response) {
                     models.token.create({
                         token: response.accessToken,
                         user_id: response.id,
                         token_created_at: Date.now()
                     });
-    
+
                     var transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
@@ -100,28 +100,43 @@ module.exports = {
                             pass: index.passwordExitum
                         }
                     });
-
                     transporter.verify(function (error, success) {
                         if (error) {
                             console.log(error);
-                        }
-                        else {
+                        } else {
                             console.log("El servidor esta listo para enviar mensajes.");
+                            const handlebarOptions = {
+                                viewEngine: {
+                                    extName: '.handlebars',
+                                    partialsDir: './public/images',
+                                    layoutsDir: './public',
+                                    defaultLayout: 'template.handlebars',
+                                },
+                                viewPath: './public',
+                                extName: '.handlebars',
+                            };
+                            transporter.use('compile', hbs(handlebarOptions));
                             var mailOptions = {
                                 from: index.emailExitum,
-                                to: response.email,
+                                to: user.email,
                                 subject: 'Verificacion de la cuenta',
-                                text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n',
-                            };
+                                //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                                template: 'template',
+                                context: {
+                                    name: user.name + ' ' + user.lastname,
+                                    description: 'Por favor verifica tu cuenta dandole click al boton.',
+                                    url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                },
+                            }
                             transporter.sendMail(mailOptions).then(() => {
-                                console.log('Un email de verificación ha sido enviado a ' + response.email + '.');
+                                console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
                             }).catch(err => {
-                                console.log("Error: " + err);
-                                res.status(500).json({ status: false, message: err.message });
-                            });
+                                console.log("Error: " + err)
+                                res.status(500).json({ status: false, message: err.message })
+                            })
                         }
                     });
-                }); 
+                });
                 return helper.generateAccessData(result, res);
             }
         } catch (error) {
@@ -154,7 +169,7 @@ module.exports = {
             // }
         } else {
             res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
-        }   
+        }
     },
 
     verification: async (req, res) => {
@@ -196,7 +211,7 @@ module.exports = {
                 if (user.confirmed) {
                     return res.json({ status: false, message: "Esta cuenta ya fue verificada" });
                 } else {
-                    helper.accessData(user, function(response) {
+                    helper.accessData(user, function (response) {
                         models.token.update({ token: response.accessToken }, { where: { user_id: user.id } });
                         var transporter = nodemailer.createTransport({
                             service: 'gmail',
@@ -205,7 +220,6 @@ module.exports = {
                                 pass: index.passwordExitum
                             }
                         });
-
                         transporter.verify(function (error, success) {
                             if (error) {
                                 console.log(error);
@@ -214,11 +228,11 @@ module.exports = {
                                 const handlebarOptions = {
                                     viewEngine: {
                                         extName: '.handlebars',
-                                        partialsDir: './template/verification',
-                                        layoutsDir: './template/verification/',
+                                        partialsDir: './public/images',
+                                        layoutsDir: './public',
                                         defaultLayout: 'template.handlebars',
                                     },
-                                    viewPath: './template/verification',
+                                    viewPath: './public',
                                     extName: '.handlebars',
                                 };
                                 transporter.use('compile', hbs(handlebarOptions));
@@ -226,19 +240,24 @@ module.exports = {
                                     from: index.emailExitum,
                                     to: user.email,
                                     subject: 'Verificacion de la cuenta',
-                                    text: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + res.accessToken + '\n',
-                                    template: 'template'
+                                    //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                                    template: 'template',
+                                    context: {
+                                        name: user.name + ' ' + user.lastname,
+                                        description: 'Por favor verifica tu cuenta dandole click al boton.',
+                                        url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                    },
                                 }
                                 transporter.sendMail(mailOptions).then(() => {
                                     console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
-                                    res.json({status:200, message:"Un email de verificación ha sido enviado a " + user.email + " ."})
+                                    res.json({ status: 200, message: "Un email de verificación ha sido enviado a " + user.email + " ." })
                                 }).catch(err => {
                                     console.log("Error: " + err)
                                     res.status(500).json({ status: false, message: err.message })
                                 })
                             }
                         });
-                    });                    
+                    });
                 }
             }
         } catch (error) {
