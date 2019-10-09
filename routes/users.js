@@ -19,6 +19,10 @@ router.post('/signUp', controller.validate('signUp'), function (req, res) {
   controller.signUp(req, res);
 });
 
+router.get('/authentication/:token', function (req, res) {
+  controller.confirmation(req, res);
+});
+
 router.post('/oauth/google', passportGoogle, function (req, res) {
   controller.socialLoginOrRegister(req, res);
 });
@@ -30,10 +34,6 @@ router.post('/update', controller.validate('update'), function (req, res) {
   controller.updateUser(req, res);
 });
 
-// router.get('/dashboard/:token', function (req, res) {
-//   controller.confirmation(req, res);
-// });
-
 router.post('/resend',
   controller.validate('resend'),
   controller.resendToken
@@ -43,7 +43,7 @@ router.post('/forgot',
   controller.forgotPassword
 );
 
-router.post('/reset/:token', 
+router.post('/authentication/reset/:token', 
   controller.validate('confirmPassword'),
   controller.resetPassword
 );

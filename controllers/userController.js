@@ -176,9 +176,7 @@ module.exports = {
 
     //Función encargada de realizar el registro de usuario o login de usuario con proveedores
     socialLoginOrRegister: async (req, res) => {
-
         // console.log("SOCIAL ", req);
-
         var user = null;
         try {
             user = req.user
@@ -228,6 +226,7 @@ module.exports = {
 
         }
     },
+
     //Función creada para la verificación del correo del usuario
     confirmation: async (req, res) => {
         const token = await models.token.findOne({ where: { token: req.params.token } })
@@ -321,7 +320,7 @@ module.exports = {
                                 var mailOptions = {
                                     from: index.emailExitum,
                                     to: user.email,
-                                    subject: 'Verificacion de la cuenta',
+                                    subject: 'Verificación de la cuenta',
                                     //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                     template: 'template',
                                     context: {
@@ -369,21 +368,38 @@ module.exports = {
                     console.log(error);
                 } else {
                     console.log("El servidor esta listo para enviar mensajes.");
+                    const handlebarOptions = {
+                        viewEngine: {
+                            extName: '.handlebars',
+                            partialsDir: './public/images',
+                            layoutsDir: './public',
+                            defaultLayout: 'template.handlebars',
+                        },
+                        viewPath: './public',
+                        extName: '.handlebars',
+                    };
+                    transporter.use('compile', hbs(handlebarOptions));
                     var mailOptions = {
                         from: index.emailExitum,
-                        to: req.body.email,
-                        subject: 'Recuperacion de la cuenta',
-                        text: 'Hola,\n\n' + 'Por favor recupere su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/users/reset\/' + token_password + '\n',
-                    };
+                        to: user.email,
+                        subject: 'Recuperación de la cuenta',
+                        //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                        template: 'template',
+                        context: {
+                            name: user.name + ' ' + user.lastname,
+                            description: 'Por favor recupera tu cuenta dandole click al boton.',
+                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\/' + token_password
+                        },
+                    }
                     transporter.sendMail(mailOptions).then(() => {
-                        console.log('Un email de verificación ha sido enviado a ' + req.body.email + '.');
+                        console.log('Un email de recuperación ha sido enviado a ' + req.body.email + '.');
+                        res.json({ status: 200, message: 'Un email de recuperación ha sido enviado a ' + req.body.email });
                     }).catch(err => {
                         console.log("Error: " + err)
                         res.status(500).json({ status: false, message: err.message })
                     })
                 }
             });
-            return helper.generateAccessData(token, res)
         } else {
             return res.json({ status: false, message: 'Este correo no se encuentra registrado' })
         }
@@ -402,11 +418,13 @@ module.exports = {
                     const newUser = await models.user.update({ password: bcrypt.hashSync(req.body.new_password) }, { where: { id: token.user_id } })
                     if (newUser) {
                         console.log("Se cambio el password.");
-                        return helper.generateAccessData(newUser, res);
+                        const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } });
+                        return res.json({ status: 200, message: "Se cambio el password.", data: user });
+                    } else {
+                        return res.json({ status: false, message: "No se pudo cambiar el password." });
                     }
-                    return helper.generateAccessData(token, res);
                 } else {
-                    res.json({ status: false, message: 'Los password no coinciden' })
+                    res.json({ status: false, message: 'Los password no coinciden' });
                 }
             } else {
                 res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });

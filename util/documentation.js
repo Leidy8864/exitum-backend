@@ -136,7 +136,7 @@
 
 /**
  *
- * @api {GET} /dashboard/:token GET confirmation user
+ * @api {GET} /users/authentication/:token GET confirmation user
  * @apiName confirmation
  * @apiGroup USER
  * @apiVersion 1.0.0
@@ -145,7 +145,7 @@
  * @apiParam {String} token Token de validación de correo.
  *
 	* @apiParamExample {querystring} Ejemplo url
-	/dashboard/:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU3MDYzMjcxM30.V29Dd2_8jh-hyb84YCcutSFy70JPXiv9DypeqUSsjq4
+	/users/authentication/:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU3MDYzMjcxM30.V29Dd2_8jh-hyb84YCcutSFy70JPXiv9DypeqUSsjq4
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {String} message Indica el mensaje de confirmación
@@ -210,7 +210,7 @@
 
 /**
  *
- * @api {POST} /users/reset/:token POST reset password
+ * @api {POST} /users/authentication/reset/:token POST reset password
  * @apiName rest password
  * @apiGroup USER
  * @apiVersion 1.0.0
@@ -232,9 +232,25 @@
  * @apiSuccessExample {json} Datos obtenidos:
 	{
         "status": 200,
-        "accessData": {
-            "id": id
-            "accessToken": accessToken,
+        "message": "Su cambio el password.",
+        "data": {
+            "id": 49,
+            "name": "Leidy",
+            "lastname": "Callupe",
+            "email": "leidy.callupe@tecsup.edu.pe",
+            "provider_id": null,
+            "confirmed": false,
+            "phone": null,
+            "role": "employee",
+            "method": "local",
+            "password": "$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG",
+            "active": true,
+            "last_login": null,
+            "photo": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "country_id": 1,
+            "currency_id": 1
         }
     }
  *

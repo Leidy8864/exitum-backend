@@ -2671,7 +2671,7 @@
   },
   {
     "type": "GET",
-    "url": "/dashboard/:token",
+    "url": "/users/authentication/:token",
     "title": "GET confirmation user",
     "name": "confirmation",
     "group": "USER",
@@ -2692,7 +2692,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/dashboard/:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU3MDYzMjcxM30.V29Dd2_8jh-hyb84YCcutSFy70JPXiv9DypeqUSsjq4",
+          "content": "/users/authentication/:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU3MDYzMjcxM30.V29Dd2_8jh-hyb84YCcutSFy70JPXiv9DypeqUSsjq4",
           "type": "querystring"
         }
       ]
@@ -3116,7 +3116,7 @@
   },
   {
     "type": "POST",
-    "url": "/users/reset/:token",
+    "url": "/users/authentication/reset/:token",
     "title": "POST reset password",
     "name": "rest_password",
     "group": "USER",
@@ -3178,7 +3178,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"id\": id\n            \"accessToken\": accessToken,\n        }\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Su cambio el password.\",\n        \"data\": {\n            \"id\": 49,\n            \"name\": \"Leidy\",\n            \"lastname\": \"Callupe\",\n            \"email\": \"leidy.callupe@tecsup.edu.pe\",\n            \"provider_id\": null,\n            \"confirmed\": false,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"password\": \"$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
           "type": "json"
         }
       ]

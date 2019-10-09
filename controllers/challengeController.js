@@ -46,7 +46,7 @@ module.exports = {
                             tip: req.body.tip,
                             step_id: step.id
                         });
-                        return res.json({ status: 200, message: "Reto creado correctamente."})
+                        return res.json({ status: 200, message: "Reto creado correctamente." })
                     });
                 }
             })
@@ -55,28 +55,28 @@ module.exports = {
         }
     },
 
-    checkChallengeEmployee: async(req, res) => {
+    checkChallengeEmployee: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
 
         try {
-            models.employee.findOne({ where: {user_id: req.body.id}}).then(employee => {
-                if(employee){
+            models.employee.findOne({ where: { user_id: req.body.id } }).then(employee => {
+                if (employee) {
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
                         startup_id: req.body.startup_id,
                         checked: req.body.checked
                     }).then(checked => {
-                        if(checked){
-                            return res.json({ status:200, message: "Creado correctamente."})
+                        if (checked) {
+                            return res.json({ status: 200, message: "Creado correctamente." })
                         } else {
-                            return res.json({ status: false, message: "Error al crear"})
+                            return res.json({ status: false, message: "Error al crear" })
                         }
                     });
                 } else {
-                    return res.json({ status:false, message: "No existe el impulsor"})
+                    return res.json({ status: false, message: "No existe el impulsor" })
                 }
             })
 
@@ -85,28 +85,28 @@ module.exports = {
         }
     },
 
-    checkChallengeStartup: async(req, res) => {
+    checkChallengeStartup: async (req, res) => {
         var errors = validationResult(req);
-        if (!errors.isEmpty()) {    
+        if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
 
         try {
-            models.employee.findOne({ where: {user_id: req.body.id}}).then(employee => {
-                if(employee){
+            models.employee.findOne({ where: { user_id: req.body.id } }).then(employee => {
+                if (employee) {
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
                         startup_id: req.body.startup_id,
                         checked: req.body.checked
                     }).then(checked => {
-                        if(checked){
-                            return res.json({ status:200, message: "Creado correctamente."})
+                        if (checked) {
+                            return res.json({ status: 200, message: "Creado correctamente." })
                         } else {
-                            return res.json({ status: false, message: "Error al crear"})
+                            return res.json({ status: false, message: "Error al crear" })
                         }
                     });
                 } else {
-                    return res.json({ status:false, message: "No existe el impulsor"})
+                    return res.json({ status: false, message: "No existe el impulsor" })
                 }
             })
 
