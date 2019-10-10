@@ -42,9 +42,9 @@ app.use('/experiences', experiencesRouter);
 app.use('/educations', educationsRouter);
 app.use('/advertisements',advertisementsRouter);
 
-app.get('/dashboard/:token', function (req, res) {
-  controller.confirmation(req, res);
-});
+// app.get('/dashboard/:token', function (req, res) {
+//   controller.confirmation(req, res);
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
