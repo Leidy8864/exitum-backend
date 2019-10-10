@@ -9,7 +9,7 @@ module.exports = {
     validate: (method) => {
         var message_exists = "Este campo es obligatorio";
         switch (method) {
-            case 'create':
+            case 'createStage':
                 return [
                     check('type', message_exists).exists().isIn(['employee', 'startup']),
                     check('stage', message_exists).exists(),
@@ -18,11 +18,50 @@ module.exports = {
         }
     },
 
-    createChallenge: async (req, res) => {
+    createStage: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
+        const { stage, description, type } = req.body
+        models.stage.findOne({ where: { stage: stage } }).then(st => {
+            if (st) {
+                res.json({ status: false, message: "El nombre de este stage ya existe" });
+            } else {
+                await models.stage.create({
+                    stage: stage,
+                    description: description,
+                    type: type
+                }).then(stage => {
+                    return res.json({ status: 200, message: "Etapa creado correctamente.", data: stage })
+                }).catch(err => {
+                    return res.json({ status: false, message: err })
+                });
+            }
+        })
+    },
+
+    createStep: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
+        }
+        const { stage_id } = req.body
+        var fileName = '';
+        if (req.files) {
+            var photo = req.files.photo;
+            fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+        }
+        models.step.create({
+            icon: fileName,
+            stage_id: stage_id
+        }).then(step => {
+            
+        });
+    },
+
+    createChallenge: async (req, res) => {
+
 
 
         models.stage.findOne({ where: { stage: req.body.stage } }).then(stage => {
@@ -43,7 +82,7 @@ module.exports = {
                         }
                         const step = await models.step.create({
                             icon: fileName,
-                            stage_id: stage.id
+                            stage_id: req.body.stage_id
                         }, { transaction: t });
 
                         await models.tip.create({
@@ -65,7 +104,6 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
-
         try {
             models.employee.findOne({ where: { user_id: req.body.id } }).then(employee => {
                 if (employee) {
