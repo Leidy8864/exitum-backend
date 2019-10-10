@@ -28,7 +28,7 @@ module.exports = {
             if (st) {
                 res.json({ status: false, message: "El nombre de este stage ya existe" });
             } else {
-                await models.stage.create({
+                models.stage.create({
                     stage: stage,
                     description: description,
                     type: type
