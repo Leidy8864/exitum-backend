@@ -120,12 +120,14 @@ module.exports = {
                             var mailOptions = {
                                 from: index.emailExitum,
                                 to: req.body.email,
-                                subject: 'Verificacion de la cuenta',
+                                subject: 'Verificación de la cuenta',
                                 //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
+                                    title: 'Bienvenido a bordo',
                                     name: req.body.name + ' ' + req.body.lastname,
-                                    description: 'Por favor verifica tu cuenta dandole click al boton.',
+                                    text: 'En Exitum estamos felices de tener tu confianza',
+                                    description: 'Por favor verifica tu cuenta dándole click al botón.',
                                     url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
@@ -325,8 +327,10 @@ module.exports = {
                                     //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                     template: 'template',
                                     context: {
+                                        title: 'Bienvenido a bordo',
                                         name: user.name + ' ' + user.lastname,
-                                        description: 'Por favor verifica tu cuenta dandole click al boton.',
+                                        text: 'En Exitum estamos felices de tener tu confianza',
+                                        description: 'Por favor verifica tu cuenta dándole click al botón.',
                                         url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
@@ -388,8 +392,10 @@ module.exports = {
                         //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                         template: 'template',
                         context: {
+                            title: 'Problemas al iniciar sesión',
                             name: user.name + ' ' + user.lastname,
-                            description: 'Por favor recupera tu cuenta dandole click al boton.',
+                            text: 'Notamos que tienes problemas para iniciar sesión.',
+                            description: 'Por favor renueva tu contraseña dándole click al botón.',
                             url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\/' + token_password,
                             boton: 'Recuperar cuenta'
                         },

@@ -14,7 +14,7 @@ module.exports = {
                     check('id').exists(),
                     check('name', 'El campo nombre no puede estar vacio').exists(),
                     check('description', 'El campo descripcion no puede estar vacio').exists(),
-                    check('category_id', 'Eliga un sector').exists()
+                    check('category_id', 'Eliga una categoria correcta.').exists()
                 ]
             }
             case 'update': {
@@ -22,7 +22,7 @@ module.exports = {
                     check('id').exists(),
                     check('name', 'El campo nombre no puede estar vacio').exists(),
                     check('description', 'El campo descripcion no puede estar vacio').exists(),
-                    check('category_id', 'Eliga un sector').exists(),
+                    check('category_id', 'Eliga una categoria correcta').exists(),
                     check('startup_id').exists()
                 ]
             }
@@ -35,7 +35,6 @@ module.exports = {
 
         var id = req.body.id //id del usuario emprendedor
         var name = req.body.name
-        var photo = req.files.photo;
         var ruc = req.body.ruc
         var description = req.body.description
         var category_id = req.body.category_id
@@ -46,8 +45,8 @@ module.exports = {
 
             if (entrepreneur) {
                 const fileName = ""
-                if (photo) {
-                    fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                if (req.files) {
+                    fileName = s3.putObject(NEW_BUCKET_NAME, req.files.photo);
                 }
 
                 await models.startup.create({

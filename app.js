@@ -14,8 +14,8 @@ var favoriteRouter = require('./routes/favorites');
 var experiencesRouter = require('./routes/experiences');
 var educationsRouter = require('./routes/educations');
 var advertisementsRouter = require('./routes/advertisements');
-
-const controller = require('./controllers/userController');
+var challengesRouter = require('./routes/challenges');
+//const controller = require('./controllers/userController');
 
 var app = express();
 
@@ -40,8 +40,8 @@ app.use('/startups', startupRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/experiences', experiencesRouter);
 app.use('/educations', educationsRouter);
-app.use('/advertisements',advertisementsRouter);
-
+app.use('/advertisements', advertisementsRouter);
+app.use('/challenges', challengesRouter);
 // app.get('/dashboard/:token', function (req, res) {
 //   controller.confirmation(req, res);
 // });
