@@ -240,7 +240,7 @@ module.exports = {
                 } else {
                     const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                     if (newUser) {
-                        return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
+                        return res.json({ status: true, message: "Su cuenta fue verificada.", data: newUser })
                     }
                 }
             } else {
@@ -261,11 +261,11 @@ module.exports = {
             const user = await models.user.findOne({ where: { id: token.user_id } })
             if (user) {
                 if (user.confirmed) {
-                    return res.json({ status: false, message: "Esta cuenta ya fue verificada.", data: user })
+                    return res.json({ status: true, message: "Esta cuenta ya fue verificada.", data: user })
                 } else {
                     const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                     if (newUser) {
-                        return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
+                        return res.json({ status: true, message: "Su cuenta fue verificada.", data: newUser })
                     }
                 }
             } else {
