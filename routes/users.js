@@ -52,4 +52,18 @@ router.get('/countries',
   controller.listCountry
 );
 
+router.post('/comment/:to_user_id',
+  controllerReview.validate('comment'),
+  controllerReview.comment
+)
+
+router.post('/rating/:to_user_id',
+  controllerReview.validate('rating'),
+  controllerReview.rating
+)
+
+router.get('/rating/:to_user_id',
+  controllerReview.ratingTotal
+)
+
 module.exports = router;

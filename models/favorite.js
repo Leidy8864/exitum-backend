@@ -5,10 +5,8 @@ module.exports = (sequelize, DataTypes) => {
         from_user_id: {
             type: DataTypes.INTEGER,
             references: {
-                references: {
-                    model: 'user',
-                    key: 'id'
-                }
+                model: 'user',
+                key: 'id'
             },
             primaryKey: true
         },

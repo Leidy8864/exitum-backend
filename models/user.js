@@ -71,11 +71,17 @@ module.exports = (sequelize, DataType) => {
     user.hasMany(models.order, {
       foreignKey: 'employee_id'
     });
-    user.hasMany(models.review, {
-      foreignKey: 'from_user_id'
+    user.belongsToMany(models.user, {
+      as: { singular: 'toUser', plural: 'toUsers' },
+      through: models.review,
+      foreignKey: 'form_user_id',
+      otherKey: 'to_user_id'
     });
-    user.hasMany(models.review, {
-      foreignKey: 'to_user_id'
+    user.belongsToMany(models.user, {
+      as: { singular: 'fromUser', plural: 'fromUsers' },
+      through: models.review,
+      foreignKey: 'to_user_id',
+      otherKey: 'form_user_id'
     });
     user.hasMany(models.chat, {
       foreignKey: 'from_id'
