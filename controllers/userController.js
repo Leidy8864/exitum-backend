@@ -126,7 +126,7 @@ module.exports = {
                                 context: {
                                     name: req.body.name + ' ' + req.body.lastname,
                                     description: 'Por favor verifica tu cuenta dandole click al boton.',
-                                    url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                    url: 'http:\/\/' + req.headers.host + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
                             }
@@ -327,7 +327,7 @@ module.exports = {
                                     context: {
                                         name: user.name + ' ' + user.lastname,
                                         description: 'Por favor verifica tu cuenta dandole click al boton.',
-                                        url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                        url: 'http:\/\/' + req.headers.host + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
                                 }
@@ -390,7 +390,7 @@ module.exports = {
                         context: {
                             name: user.name + ' ' + user.lastname,
                             description: 'Por favor recupera tu cuenta dandole click al boton.',
-                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\/' + token_password,
+                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
