@@ -121,12 +121,12 @@ module.exports = {
                                 from: index.emailExitum,
                                 to: req.body.email,
                                 subject: 'Verificacion de la cuenta',
-                                //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                                //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
                                     name: req.body.name + ' ' + req.body.lastname,
                                     description: 'Por favor verifica tu cuenta dandole click al boton.',
-                                    url: 'http:\/\/' + req.headers.host + '\/dashboard\?token=' + response.accessToken,
+                                    url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
                             }
@@ -322,12 +322,12 @@ module.exports = {
                                     from: index.emailExitum,
                                     to: user.email,
                                     subject: 'Verificación de la cuenta',
-                                    //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                                    //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                     template: 'template',
                                     context: {
                                         name: user.name + ' ' + user.lastname,
                                         description: 'Por favor verifica tu cuenta dandole click al boton.',
-                                        url: 'http:\/\/' + req.headers.host + '\/dashboard\?token=' + response.accessToken,
+                                        url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
                                 }
@@ -385,12 +385,12 @@ module.exports = {
                         from: index.emailExitum,
                         to: user.email,
                         subject: 'Recuperación de la cuenta',
-                        //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                        //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                         template: 'template',
                         context: {
                             name: user.name + ' ' + user.lastname,
                             description: 'Por favor recupera tu cuenta dandole click al boton.',
-                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\?token=' + token_password,
+                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
@@ -414,7 +414,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() });
         }
-        const token = await models.token.findOne({ where: { token_password: req.params.token } })
+        const token = await models.token.findOne({ where: { token_password: req.body.token } })
         if (token) {
             if (moment(token.token_password_created_at).add(30, 'm').toDate() >= Date.now()) {
                 if (req.body.new_password === req.body.verify_password) {
