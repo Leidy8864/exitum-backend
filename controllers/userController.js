@@ -417,7 +417,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() });
         }
-        const token = await models.token.findOne({ where: { token_password: req.body.token } })
+        const token = await models.token.findOne({ where: { token_password: req.params.token } })
         if (token) {
             if (moment(token.token_password_created_at).add(30, 'm').toDate() >= Date.now()) {
                 return res.json({ status: 200, message: "Token valido." });

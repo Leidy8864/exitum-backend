@@ -43,7 +43,7 @@ router.post('/forgot',
   controller.forgotPassword
 );
 
-router.get('/verificationToken',
+router.get('/verificationToken/:token',
   controller.validate('validateToken'),
   controller.validateToken
 );
