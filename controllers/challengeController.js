@@ -97,8 +97,9 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
+        const { id, tip_id, startup_id, checked } = req.body
         try {
-            models.employee.findOne({ where: { user_id: req.body.id } }).then(employee => {
+            models.employee.findOne({ where: { user_id: id } }).then(employee => {
                 if (employee) {
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
@@ -115,9 +116,8 @@ module.exports = {
                     return res.json({ status: false, message: "No existe el impulsor" })
                 }
             })
-
-        } catch (error) {
-            res.status(200).json({ status: false, message: "Error al crear un reto para el empleado" });
+        } catch (err) {
+            res.status(200).json({ status: false, message: err });
         }
     },
 
@@ -126,7 +126,6 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
-
         const { id, checked, tip_id } = req.body
         try {
             models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
