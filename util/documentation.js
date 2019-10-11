@@ -621,37 +621,12 @@
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription  Crear habilidades
+ * @apiParam {String} skill Nombre de la habilidad.
  *
 	* @apiParamExample {querystring} Ejemplo url
     /skills/create
     {
-        "skill": ""
-    }
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-
-    }
- *
- *
- */
-
- /**
- *
- * @api {POST} /employees/update/skills POST create skill
- * @apiName create skills
- * @apiGroup SKILLS
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription  Crear habilidades
- *
-	* @apiParamExample {querystring} Ejemplo url
-    /employees/update/skills
-    {
-        "user_id" : 2,
-        "skills" : [1,2]
+        "skill": "Programador en Java"
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -659,7 +634,11 @@
  * @apiSuccessExample {json} Datos obtenidos:
     {
         "status": true,
-        "message": "Skills actualizados correctamente"
+        "message": "Skill creado correctamente",
+        "data": {
+            "id": 2,
+            "skill": "Programador en JavaScript"
+        }
     }
  *
  *
@@ -702,8 +681,7 @@
                     "language_id": 3,
                     "level_id": 3
                 }
-            ],
-        "levels" : [1,2,3]
+            ]
     }	
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -857,10 +835,38 @@
  *
  */
 
+
  /**
  *
- * @api {POST} /employees/update/languages POST update languages
- * @apiName update languages
+ * @api {POST} /employees/update/skills POST update employee skills 
+ * @apiName update employee skills
+ * @apiGroup EMPLOYEE
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualiza las habilidades del empleado
+ *
+	* @apiParamExample {querystring} Ejemplo url
+    /employees/update/skills
+    {
+        "user_id" : 2,
+        "skills" : [1,2]
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Skills actualizados correctamente"
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /employees/update/languages POST update employee languages
+ * @apiName update employee languages
  * @apiGroup EMPLOYEE
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -888,8 +894,8 @@
 
  /**
  *
- * @api {POST} /employees/update/types POST update types
- * @apiName update types
+ * @api {POST} /employees/update/types POST update employee types
+ * @apiName update employee types
  * @apiGroup EMPLOYEE
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -1630,6 +1636,125 @@
             "tip": "Crear mi equipo de desarrollo",
             "step_id": 7
         }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/checkStartup POST check challenge stratup
+ * @apiName check challenge startup
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Marca el reto cumplido por la startup.
+ * @apiParam {Int} id Id del usuario impulsor.
+ * @apiParam {Boolean} checked Marca 0 o 1 segun el cumplimiento del reto.
+ * @apiParam {Int} tip_id Id del reto.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/checkStartup
+    {
+        "id": 3,
+        "startup_id": 1,
+        "checked": 1,
+        "tip_id": 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Reto superado guardado correctamente.",
+        "data": {
+            "check": [
+                1
+            ]
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/checkEmployee POST check challenge employee
+ * @apiName check challenge employee
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Marca el reto cumplido por el impulsor.
+ * @apiParam {Int} id Id del usuario impulsor.
+ * @apiParam {Boolean} checked Marca 0 o 1 segun el cumplimiento del reto.
+ * @apiParam {Int} tip_id Id del reto.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/checkEmployee
+    {
+        "id": 3,
+        "checked": 1,
+        "tip_id": 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Reto superado guardado correctamente.",
+        "data": {
+            "check": [
+                1
+            ]
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /proposals/create POST create proposal
+ * @apiName create proposal
+ * @apiGroup PROPOSALS
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Se crea o actualiza una propuesta para un anuncio.
+ * @apiParam {Int} id Id del usuario impulsor.
+ * @apiParam {Int} advertisement_id Id del anuncio.
+ * @apiParam {String} proposal Descripción de la propuesta.
+ * @apiParam {Decimal} amount Cantidad o precio a ofertar.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /proposals/create
+    {
+        "id": 3,
+        "advertisement_id": 1,
+        "proposal": "Tengo experiencia en el desarrollo de software",
+        "amount": 2100
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica la propuesta creado o actualizado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Propuesta creada correctamente.",
+        "data": [
+            {
+                "proposal": "Tengo experiencia en el desarrollo de software",
+                "amount": 2100,
+                "viewed": false,
+                "created_at": "2019-10-11T21:02:32.747Z",
+                "employee_id": 1,
+                "advertisement_id": 1
+            }
+        ]
     }
  *
  *

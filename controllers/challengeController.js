@@ -23,11 +23,18 @@ module.exports = {
                 return [
                     check('step_id', message_exists).exists()
                 ]
-            case 'checkStartup':
+            case 'checkEmployee':
                 return [
                     check('id', message_exists).exists(),
                     check('checked', message_exists).exists(),
                     check('tip_id', message_exists).exists()
+                ]
+            case 'checkStartup':
+                return [
+                    check('id', message_exists).exists(),
+                    check('checked', message_exists).exists(),
+                    check('tip_id', message_exists).exists(),
+                    check('startup_id', message_exists).exists()
                 ]
         }
     },
@@ -107,7 +114,7 @@ module.exports = {
                         } else {
                             return res.json({ status: false, message: 'Reto superado sin guardar.' })
                         }
-                    })
+                    });
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
                         startup_id: req.body.startup_id,
@@ -133,17 +140,17 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
-        const { id, checked, tip_id } = req.body
+        const { id, checked, tip_id, startup_id } = req.body
         try {
             models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
                 if (entrepreneur) {
-                    models.startup.findOne({ where: { entrepreneur_id: entrepreneur.id } }).then(startup => {
+                    models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } }).then(startup => {
                         if (startup) {
                             startup.addTip(tip_id, { through: { checked: checked } }).then(check => {
                                 if (check) {
                                     return res.json({ status: 200, message: 'Reto superado guardado correctamente.', data: { check } })
                                 } else {
-                                    return res.json({ status: false, message: 'Reto superado sin guardar.' })
+                                    return res.json({ status: false, message: 'No se efectuaron cambios.' })
                                 }
                             })
                         } else {
@@ -158,32 +165,5 @@ module.exports = {
         } catch (error) {
             res.status(200).json({ status: false, message: "Error al crear un reto para el empleado." });
         }
-    },
-
-    rating: (req, res) => {
-        var errors = validationResult(req)
-
-        const { rating, from_user_id } = req.body
-        const { to_user_id } = req.params
-
-        if (!errors.isEmpty()) {
-            return res.status(422).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
-        }
-
-        models.user.findOne({ where: { id: to_user_id } })
-            .then(user => {
-
-                user.addFromUser(from_user_id, { through: { rating: rating, created_at: Date.now() } })
-                    .then(rating => {
-                        return res.status(200).json({ status: true, message: 'Rating asignado correctamente.', data: { rating } })
-                    }).catch(err => {
-                        return res.status(500).json({ status: false, message: err.message, data: {} })
-                    });
-
-            })
-            .catch(err => {
-                return res.status(500).json(err)
-            })
-
-    },
+    }
 }

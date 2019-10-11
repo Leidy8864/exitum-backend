@@ -15,6 +15,8 @@ var experiencesRouter = require('./routes/experiences');
 var educationsRouter = require('./routes/educations');
 var advertisementsRouter = require('./routes/advertisements');
 var challengesRouter = require('./routes/challenges');
+var skillsRouter = require('./routes/skills');
+var proposalRouter = require('./routes/proposals');
 //const controller = require('./controllers/userController');
 
 var app = express();
@@ -42,9 +44,8 @@ app.use('/experiences', experiencesRouter);
 app.use('/educations', educationsRouter);
 app.use('/advertisements', advertisementsRouter);
 app.use('/challenges', challengesRouter);
-// app.get('/dashboard/:token', function (req, res) {
-//   controller.confirmation(req, res);
-// });
+app.use('/skills', skillsRouter);
+app.use('/proposals', proposalRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

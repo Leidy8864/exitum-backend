@@ -95,6 +95,7 @@ module.exports = {
                 });
         }
     },
+
     updateSkills: async (req, res) => {
         const user_id = req.body.user_id;
         const skills = req.body.skills;
@@ -103,7 +104,7 @@ module.exports = {
 
             await models.employee_skill.destroy({ where: { employee_id: employee.id } });
 
-            employee.addSkill(skills);
+            await employee.addSkill(skills);
 
             return res.status(200).json({ status: true, message: "Skills actualizados correctamente" });
 
@@ -115,6 +116,7 @@ module.exports = {
                 });
         }
     },
+
     updateLanguages: async (req, res) => {
         const user_id = req.body.user_id;
         const languages = req.body.languages;

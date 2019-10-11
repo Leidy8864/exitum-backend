@@ -28,4 +28,9 @@ router.post('/checkStartup',
     controller.checkChallengeStartup
 );
 
+router.post('/checkEmployee',
+    controller.validate('checkEmployee'),
+    controller.checkChallengeEmployee
+);
+
 module.exports = router;

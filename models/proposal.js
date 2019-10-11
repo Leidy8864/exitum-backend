@@ -2,10 +2,7 @@
 
 module.exports = (sequelize, DataType) => {
     const proposal = sequelize.define('proposal', {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        proposal: DataType.STRING,
-        amount: DataType.DECIMAL,
-        viewed: DataType.BOOLEAN,
+        accepted: DataType.BOOLEAN,
         created_at: DataType.DATE,
         advertisement_id: {
             type: DataType.INTEGER,
@@ -29,13 +26,5 @@ module.exports = (sequelize, DataType) => {
         underscored: true
 
     });
-    proposal.associate = function (models) {
-        proposal.belongsTo(models.advertisement, {
-            foreignKey: 'advertisement_id'
-        });
-        proposal.belongsTo(models.employee, {
-            foreignKey: 'employee_id'
-        });
-    };
     return proposal
 };

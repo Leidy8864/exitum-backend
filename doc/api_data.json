@@ -704,6 +704,218 @@
   },
   {
     "type": "POST",
+    "url": "/challenges/checkEmployee",
+    "title": "POST check challenge employee",
+    "name": "check_challenge_employee",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Marca el reto cumplido por el impulsor.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario impulsor.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "checked",
+            "description": "<p>Marca 0 o 1 segun el cumplimiento del reto.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "tip_id",
+            "description": "<p>Id del reto.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/checkEmployee\n{\n    \"id\": 3,\n    \"checked\": 1,\n    \"tip_id\": 2\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el reto creado o actualizado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Reto superado guardado correctamente.\",\n    \"data\": {\n        \"check\": [\n            1\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/challenges/checkStartup",
+    "title": "POST check challenge stratup",
+    "name": "check_challenge_startup",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Marca el reto cumplido por la startup.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario impulsor.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "checked",
+            "description": "<p>Marca 0 o 1 segun el cumplimiento del reto.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "tip_id",
+            "description": "<p>Id del reto.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/checkStartup\n{\n    \"id\": 3,\n    \"startup_id\": 1,\n    \"checked\": 1,\n    \"tip_id\": 2\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el reto creado o actualizado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Reto superado guardado correctamente.\",\n    \"data\": {\n        \"check\": [\n            1\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/challenges/createStage",
     "title": "POST create stage",
     "name": "create_stage",
@@ -1432,7 +1644,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/employees/create\n{\n    \"user_id\" : 3,\n    \"category_id\" : 1,\n    \"about_me\" : \"Soy un desarrollor web\",\n    \"short_description\" : \"Desarrollador Web\",\n    \"price_hour\" : 15,\n    \"skills\" : [1],\n    \"types\" : [1],\n    \"languages\" : [\n            {\n                \"language_id\": 2,\n                \"level_id\": 2\t\n            },\n            {\n                \"language_id\": 3,\n                \"level_id\": 3\n            }\n        ],\n    \"levels\" : [1,2,3]\n}",
+          "content": "/employees/create\n{\n    \"user_id\" : 3,\n    \"category_id\" : 1,\n    \"about_me\" : \"Soy un desarrollor web\",\n    \"short_description\" : \"Desarrollador Web\",\n    \"price_hour\" : 15,\n    \"skills\" : [1],\n    \"types\" : [1],\n    \"languages\" : [\n            {\n                \"language_id\": 2,\n                \"level_id\": 2\t\n            },\n            {\n                \"language_id\": 3,\n                \"level_id\": 3\n            }\n        ]\n}",
           "type": "querystring"
         }
       ]
@@ -1709,8 +1921,8 @@
   {
     "type": "POST",
     "url": "/employees/update/languages",
-    "title": "POST update languages",
-    "name": "update_languages",
+    "title": "POST update employee languages",
+    "name": "update_employee_languages",
     "group": "EMPLOYEE",
     "version": "1.0.0",
     "description": "<p>Actualizar lenguaje</p>",
@@ -1800,9 +2012,83 @@
   },
   {
     "type": "POST",
+    "url": "/employees/update/skills",
+    "title": "POST update employee skills",
+    "name": "update_employee_skills",
+    "group": "EMPLOYEE",
+    "version": "1.0.0",
+    "description": "<p>Actualiza las habilidades del empleado</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/employees/update/skills\n{\n    \"user_id\" : 2,\n    \"skills\" : [1,2]\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Skills actualizados correctamente\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EMPLOYEE",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/employees/update/types",
-    "title": "POST update types",
-    "name": "update_types",
+    "title": "POST update employee types",
+    "name": "update_employee_types",
     "group": "EMPLOYEE",
     "version": "1.0.0",
     "description": "<p>Actualizar tipo</p>",
@@ -2146,17 +2432,49 @@
   },
   {
     "type": "POST",
-    "url": "/employees/update/skills",
-    "title": "POST create skill",
-    "name": "create_skills",
-    "group": "SKILLS",
+    "url": "/proposals/create",
+    "title": "POST create proposal",
+    "name": "create_proposal",
+    "group": "PROPOSALS",
     "version": "1.0.0",
-    "description": "<p>Crear habilidades</p>",
+    "description": "<p>Se crea o actualiza una propuesta para un anuncio.</p>",
     "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario impulsor.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advertisement_id",
+            "description": "<p>Id del anuncio.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "proposal",
+            "description": "<p>Descripción de la propuesta.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>Cantidad o precio a ofertar.</p>"
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/employees/update/skills\n{\n    \"user_id\" : 2,\n    \"skills\" : [1,2]\n}",
+          "content": "/proposals/create\n{\n    \"id\": 3,\n    \"advertisement_id\": 1,\n    \"proposal\": \"Tengo experiencia en el desarrollo de software\",\n    \"amount\": 2100\n}",
           "type": "querystring"
         }
       ]
@@ -2177,19 +2495,26 @@
             "optional": false,
             "field": "message",
             "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica la propuesta creado o actualizado</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Skills actualizados correctamente\"\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Propuesta creada correctamente.\",\n    \"data\": [\n        {\n            \"proposal\": \"Tengo experiencia en el desarrollo de software\",\n            \"amount\": 2100,\n            \"viewed\": false,\n            \"created_at\": \"2019-10-11T21:02:32.747Z\",\n            \"employee_id\": 1,\n            \"advertisement_id\": 1\n        }\n    ]\n}",
           "type": "json"
         }
       ]
     },
     "filename": "util/documentation.js",
-    "groupTitle": "SKILLS",
+    "groupTitle": "PROPOSALS",
     "error": {
       "fields": {
         "Estructura de Error": [
@@ -2227,10 +2552,21 @@
     "version": "1.0.0",
     "description": "<p>Crear habilidades</p>",
     "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "skill",
+            "description": "<p>Nombre de la habilidad.</p>"
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/skills/create\n{\n    \"skill\": \"\"\n}",
+          "content": "/skills/create\n{\n    \"skill\": \"Programador en Java\"\n}",
           "type": "querystring"
         }
       ]
@@ -2257,7 +2593,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Skill creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"skill\": \"Programador en JavaScript\"\n    }\n}",
           "type": "json"
         }
       ]
