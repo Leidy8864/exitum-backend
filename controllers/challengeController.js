@@ -23,6 +23,12 @@ module.exports = {
                 return [
                     check('step_id', message_exists).exists()
                 ]
+            case 'checkStartup':
+                return [
+                    check('id', message_exists).exists(),
+                    check('checked', message_exists).exists(),
+                    check('tip_id', message_exists).exists()
+                ]
         }
     },
 
@@ -121,15 +127,15 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Campos incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
 
-        const { id, checked } = req.body
+        const { id, checked, tip_id } = req.body
         try {
             models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
                 if (entrepreneur) {
                     models.startup.findOne({ where: { entrepreneur_id: entrepreneur.id } }).then(startup => {
                         if (startup) {
-                            startup.addTip(req.body.tip_id, { through: { checked: checked } }).then(check => {
+                            startup.addTip(tip_id, { through: { checked: checked } }).then(check => {
                                 if (check) {
-                                    return res.json({ status: 200, message: 'Reto superado correctamente.', data: { check } })
+                                    return res.json({ status: 200, message: 'Reto superado guardado correctamente.', data: { check } })
                                 } else {
                                     return res.json({ status: false, message: 'Reto superado sin guardar.' })
                                 }

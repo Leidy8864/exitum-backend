@@ -24,6 +24,8 @@ router.post('/createTip',
 );
 
 router.post('/checkStartup',
+    controller.validate('checkStartup'),
+    controller.checkChallengeStartup
 );
 
 module.exports = router;
