@@ -390,7 +390,7 @@ module.exports = {
                         context: {
                             name: user.name + ' ' + user.lastname,
                             description: 'Por favor recupera tu cuenta dandole click al boton.',
-                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
+                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\/' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
