@@ -428,7 +428,7 @@ module.exports = {
             if (moment(token.token_password_created_at).add(30, 'm').toDate() >= Date.now()) {
                 return res.json({ status: true, message: "Token valido.", data: { user_id: token.user_id } });
             } else {
-                return res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
+                return res.json({ status: false, message: 'Su token expiro. Por favor vuelve a pedir un correo con tu nuevo token.' });
             }
         } else {
             return res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
