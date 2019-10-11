@@ -97,11 +97,17 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
-        const { id, tip_id, startup_id, checked } = req.body
+        const { id, tip_id, checked } = req.body
         try {
             models.employee.findOne({ where: { user_id: id } }).then(employee => {
                 if (employee) {
-                    
+                    employee.addTip(tip_id, { through: { checked: checked } }).then(check => {
+                        if (check) {
+                            return res.json({ status: 200, message: 'Reto superado guardado correctamente.', data: { check } })
+                        } else {
+                            return res.json({ status: false, message: 'Reto superado sin guardar.' })
+                        }
+                    })
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
                         startup_id: req.body.startup_id,
