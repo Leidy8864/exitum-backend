@@ -42,10 +42,11 @@ module.exports = {
                             icon: fileName,
                             stage_id: stage.id
                         }, { transaction: t });
+
                         await models.tip.create({
                             tip: req.body.tip,
                             step_id: step.id
-                        });
+                        }, { transaction: t });
                         return res.json({ status: 200, message: "Reto creado correctamente." })
                     });
                 }
@@ -92,8 +93,8 @@ module.exports = {
         }
 
         try {
-            models.employee.findOne({ where: { user_id: req.body.id } }).then(employee => {
-                if (employee) {
+            models.entrepreneur.findOne({ where: { user_id: req.body.id } }).then(entrepreneur => {
+                if (entrepreneur) {
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
                         startup_id: req.body.startup_id,

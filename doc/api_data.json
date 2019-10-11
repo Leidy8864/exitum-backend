@@ -3380,24 +3380,17 @@
           },
           {
             "group": "Datos obtenidos",
-            "type": "Object",
-            "optional": false,
-            "field": "accessData",
-            "description": "<p>JWT</p>"
-          },
-          {
-            "group": "Datos obtenidos",
             "type": "String",
             "optional": false,
-            "field": "accessData.accessToken",
-            "description": "<p>accessToken</p>"
+            "field": "message.Indica",
+            "description": "<p>el mensaje de exito</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"accessToken\": accessToken,\n        }\n    }",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": 'Un email de recuperación ha sido enviado a leidy.callupe@tecsup.edu.pe',\n    }",
           "type": "json"
         }
       ]

@@ -5,10 +5,8 @@ module.exports = (sequelize, DataTypes) => {
         tip_id: {
             type: DataTypes.INTEGER,
             references: {
-                references: {
-                    model: 'tip',
-                    key: 'id'
-                }
+                model: 'tip',
+                key: 'id'
             },
             primaryKey: true
         },

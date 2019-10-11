@@ -43,7 +43,12 @@ router.post('/forgot',
   controller.forgotPassword
 );
 
-router.post('/authentication/reset/:token', 
+router.get('/verificationToken',
+  controller.validate('validateToken'),
+  controller.validateToken
+);
+
+router.post('/reset', 
   controller.validate('confirmPassword'),
   controller.resetPassword
 );
