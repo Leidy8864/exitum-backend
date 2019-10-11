@@ -7,7 +7,20 @@ const controller = require('../controllers/challengeController');
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
-// router.post('/create', controller.validate('create'), function (req, res) {
-//     controller.createChallenge(req, res);
-// });
+
+router.post('/createStage', 
+    controller.validate('createStage'),
+    controller.createStage
+);
+
+router.post('/createStep', 
+    controller.validate('createStep'),
+    controller.createStep
+);
+
+router.post('/createTip', 
+    controller.validate('createTip'),
+    controller.createTip
+);
+
 module.exports = router;

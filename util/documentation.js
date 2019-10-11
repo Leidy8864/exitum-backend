@@ -1527,3 +1527,110 @@
  *
  *
  */
+
+ /**
+ *
+ * @api {POST} /challenges/createStage POST create stage
+ * @apiName create stage
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creación de etapa en la que se encuentra el reto
+ * @apiParam {String} stage Nombre de la etapa.
+ * @apiParam {String} description Descripción de la etapa
+ * @apiParam {String} type Tipo a quien le pertenece esta etapa (startup o employee)
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/createStage
+    {
+        "stage": "semilla",
+        "description": "Etapa semilla",
+        "type": "startup"
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica la etapa recien creada
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Etapa creado correctamente.",
+        "data": {
+            "stage": "semilla",
+            "description": "Etapa semilla",
+            "type": "startup"
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/createStep POST create step
+ * @apiName create step
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creación de nivel en la que se encuentra el reto.
+ * @apiParam {Int} stage_id Id de la etapa a la que pertenece el nivel.
+ * @apiParam {File} photo Icono del nivel.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/createStep
+    {
+        "stage_id": "1",
+        "photo": ""
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el nivel recien creado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Nivel creado correctamente.",
+        "data": {
+            "id": 7,
+            "icon": "892b95e0-eb8a-11e9-acef-0123456789abfoodU.png",
+            "stage_id": "1"
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/createTip POST create tip
+ * @apiName create tip
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creación del reto.
+ * @apiParam {Int} step_id Id del nivel al que pertenece el reto.
+ * @apiParam {String} tip Descripción del reto.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/createTip
+    {
+        "tip": "Crear mi equipo de desarrollo",
+        "step_id": 7
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el reto recien creado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Reto creado correctamente",
+        "data": {
+            "id": 2,
+            "tip": "Crear mi equipo de desarrollo",
+            "step_id": 7
+        }
+    }
+ *
+ *
+ */

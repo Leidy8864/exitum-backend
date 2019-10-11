@@ -15,6 +15,14 @@ module.exports = {
                     check('stage', message_exists).exists(),
                     check('description', message_exists).exists()
                 ]
+            case 'createStep':
+                return [
+                    check('stage_id', message_exists).exists()
+                ]
+            case 'createTip':
+                return [
+                    check('step_id', message_exists).exists()
+                ]
         }
     },
 
@@ -33,7 +41,7 @@ module.exports = {
                     description: description,
                     type: type
                 }).then(stage => {
-                    return res.json({ status: 200, message: "Etapa creado correctamente.", data: stage })
+                    return res.json({ status: 200, message: "Etapa creada correctamente.", data: stage })
                 }).catch(err => {
                     return res.json({ status: false, message: err })
                 });
@@ -52,51 +60,30 @@ module.exports = {
             var photo = req.files.photo;
             fileName = s3.putObject(NEW_BUCKET_NAME, photo);
         }
-        models.step.create({
+        await models.step.create({
             icon: fileName,
             stage_id: stage_id
         }).then(step => {
-            
+            return res.json({ status: 200, message: "Nivel creado correctamente.", data: step });
+        }).catch(err => {
+            return res.json({ status: false, message: err });
         });
     },
 
-    createChallenge: async (req, res) => {
-
-
-
-        models.stage.findOne({ where: { stage: req.body.stage } }).then(stage => {
-            if (stage) {
-                res.json({ status: false, message: "El nombre de este stage ya existe" });
-            } else {
-                try {
-                    models.sequelize.transaction(async (t) => {
-                        const stage = await models.stage.create({
-                            stage: req.body.stage,
-                            description: req.body.description,
-                            type: req.body.type
-                        }, { transaction: t });
-                        var fileName = '';
-                        if (req.files) {
-                            var photo = req.files.photo;
-                            fileName = s3.putObject(NEW_BUCKET_NAME, photo);
-                        }
-                        const step = await models.step.create({
-                            icon: fileName,
-                            stage_id: req.body.stage_id
-                        }, { transaction: t });
-
-                        await models.tip.create({
-                            tip: req.body.tip,
-                            step_id: step.id
-                        }, { transaction: t });
-                        return res.json({ status: 200, message: "Reto creado correctamente." })
-                    });
-                } catch (error) {
-                    res.status(200).json({ status: false, message: "Error al crear un reto" });
-                }
-            }
-        })
-
+    createTip: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
+        }
+        const { tip, step_id } = req.body
+        models.tip.create({
+            tip: tip,
+            step_id: step_id
+        }).then(tip => {
+            return res.status(200).json({ status: 200, message: "Reto creado correctamente", data: tip });
+        }).catch(err => {
+            return res.json({ status: false, message: err });
+        });
     },
 
     checkChallengeEmployee: async (req, res) => {

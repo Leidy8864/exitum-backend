@@ -703,6 +703,310 @@ define({ "api": [
     }
   },
   {
+    "type": "POST",
+    "url": "/challenges/createStage",
+    "title": "POST create stage",
+    "name": "create_stage",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Creación de etapa en la que se encuentra el reto</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "stage",
+            "description": "<p>Nombre de la etapa.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción de la etapa</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Tipo a quien le pertenece esta etapa (startup o employee)</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/createStage\n{\n    \"stage\": \"semilla\",\n    \"description\": \"Etapa semilla\",\n    \"type\": \"startup\"\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica la etapa recien creada</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Etapa creado correctamente.\",\n    \"data\": {\n        \"stage\": \"semilla\",\n        \"description\": \"Etapa semilla\",\n        \"type\": \"startup\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/challenges/createStep",
+    "title": "POST create step",
+    "name": "create_step",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Creación de nivel en la que se encuentra el reto.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "stage_id",
+            "description": "<p>Id de la etapa a la que pertenece el nivel.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "photo",
+            "description": "<p>Icono del nivel.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/createStep\n{\n    \"stage_id\": \"1\",\n    \"photo\": \"\"\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el nivel recien creado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Nivel creado correctamente.\",\n    \"data\": {\n        \"id\": 7,\n        \"icon\": \"892b95e0-eb8a-11e9-acef-0123456789abfoodU.png\",\n        \"stage_id\": \"1\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/challenges/createTip",
+    "title": "POST create tip",
+    "name": "create_tip",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Creación del reto.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "step_id",
+            "description": "<p>Id del nivel al que pertenece el reto.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tip",
+            "description": "<p>Descripción del reto.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/createTip\n{\n    \"tip\": \"Crear mi equipo de desarrollo\",\n    \"step_id\": 7\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el reto recien creado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Reto creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"tip\": \"Crear mi equipo de desarrollo\",\n        \"step_id\": 7\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
