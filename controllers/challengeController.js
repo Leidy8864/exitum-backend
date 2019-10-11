@@ -121,14 +121,15 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Campos incorrectas, por favor intentelo nuevamente.", data: errors.array() });
         }
 
+        const { id, checked } = req.body
         try {
-            models.entrepreneur.findOne({ where: { user_id: req.body.id } }).then(entrepreneur => {
+            models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
                 if (entrepreneur) {
                     models.startup.findOne({ where: { entrepreneur_id: entrepreneur.id } }).then(startup => {
                         if (startup) {
-                            startup.addTip(req.body.tip_id, { through: { checked: req.body.checked } }).then(checked => {
-                                if (checked) {
-                                    return res.json({ status: 200, message: 'Reto superado correctamente.', data: { checked } })
+                            startup.addTip(req.body.tip_id, { through: { checked: checked } }).then(check => {
+                                if (check) {
+                                    return res.json({ status: 200, message: 'Reto superado correctamente.', data: { check } })
                                 } else {
                                     return res.json({ status: false, message: 'Reto superado sin guardar.' })
                                 }

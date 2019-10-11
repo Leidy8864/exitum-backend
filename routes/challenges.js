@@ -23,4 +23,7 @@ router.post('/createTip',
     controller.createTip
 );
 
+router.post('/checkStartup',
+);
+
 module.exports = router;
