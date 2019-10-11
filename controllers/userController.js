@@ -212,7 +212,7 @@ module.exports = {
                 return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
-            // console.log("Error", error);
+            console.log("Error", error);
 
             var message = '';
             if (error.name === 'SequelizeUniqueConstraintError') {

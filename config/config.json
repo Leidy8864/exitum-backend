@@ -12,11 +12,11 @@
         "idle": 600000
       }
     },
-    "test": {
-      "username": "exitum",
-      "password": "@@exitum2019",
+    "test": { 
+      "username": "root",
+      "password": "Erquinio159",
       "database": "exitum",
-      "host": "35.175.241.103",
+      "host": "127.0.0.1",
       "dialect": "mysql",
       "operatorsAliases": false,
       "pool": {
