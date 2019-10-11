@@ -49,6 +49,10 @@ module.exports = {
                 return [
                     check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                 ]
+            case 'validateToken':
+                return [
+                    check('token').exists()
+                ]
         }
     },
 
@@ -390,7 +394,7 @@ module.exports = {
                         context: {
                             name: user.name + ' ' + user.lastname,
                             description: 'Por favor recupera tu cuenta dandole click al boton.',
-                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\/' + token_password,
+                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
@@ -408,8 +412,7 @@ module.exports = {
         }
     },
 
-    //Funcion encargada de cambiar el password
-    resetPassword: async (req, res) => {
+    validateToken: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() });
@@ -417,23 +420,32 @@ module.exports = {
         const token = await models.token.findOne({ where: { token_password: req.body.token } })
         if (token) {
             if (moment(token.token_password_created_at).add(30, 'm').toDate() >= Date.now()) {
-                if (req.body.new_password === req.body.verify_password) {
-                    const newUser = await models.user.update({ password: bcrypt.hashSync(req.body.new_password) }, { where: { id: token.user_id } })
-                    if (newUser) {
-                        console.log("Se cambio el password.");
-                        const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } });
-                        return helper.generateAccessData(user, res);
-                    } else {
-                        return res.json({ status: false, message: "No se pudo cambiar el password." });
-                    }
-                } else {
-                    res.json({ status: false, message: 'Los password no coinciden' });
-                }
+                return res.json({ status: 200, message: "Token valido." });
             } else {
-                res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
+                return res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
             }
         } else {
-            res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
+            return res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
+        }
+    },
+
+    //Funcion encargada de cambiar el password
+    resetPassword: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() });
+        }
+        if (req.body.new_password === req.body.verify_password) {
+            const newUser = await models.user.update({ password: bcrypt.hashSync(req.body.new_password) }, { where: { id: token.user_id } })
+            if (newUser) {
+                console.log("Se cambio el password.");
+                const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } });
+                return helper.generateAccessData(user, res);
+            } else {
+                return res.json({ status: false, message: "No se pudo cambiar el password." });
+            }
+        } else {
+            res.json({ status: false, message: 'Los password no coinciden' });
         }
     },
 
