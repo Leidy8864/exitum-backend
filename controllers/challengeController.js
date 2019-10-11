@@ -101,6 +101,7 @@ module.exports = {
         try {
             models.employee.findOne({ where: { user_id: id } }).then(employee => {
                 if (employee) {
+                    
                     models.startup_tip.create({
                         tip_id: req.body.tip_id,
                         startup_id: req.body.startup_id,

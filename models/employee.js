@@ -86,9 +86,15 @@ module.exports = (sequelize, DataTypes) => {
         employee.belongsTo(models.stage, {
             foreignKey: 'stage_id'
         });
-        employee.belongsToMany(models.tip,{
-            through : 'employee_tip',
-            foreignKey : 'employee_id'
+        // employee.belongsToMany(models.tip,{
+        //     through : 'employee_tip',
+        //     foreignKey : 'employee_id'
+        // });
+        employee.belongsToMany(models.tip, {
+            as: { singular: 'tip', plural: 'tips'},
+            through: models.employee_tip,
+            foreignKey: 'employee_id',
+            otherKey: 'tip_id'
         });
     }
     return employee
