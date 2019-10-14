@@ -2545,6 +2545,486 @@
   },
   {
     "type": "POST",
+    "url": "/startups/rating/:startup_id",
+    "title": "POST create and update rating",
+    "name": "Puntuar_Startup",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "startup_id",
+            "description": "<p>ID usuario del usuario al que se puntuará.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/startups/rating/1",
+        "type": "json"
+      }
+    ],
+    "group": "REVIEW_STARTUP",
+    "version": "1.0.0",
+    "description": "<p>Puntuar a un usuario.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que inicio sesion y desea puntuar.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>Puntaje del 1 al 5 que asignó el usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "\t{\n        \"user_id\": 2,\n        \"rating\": 5\n    }",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"Rating asignado correctamente.\",\n    \"data\": {}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "REVIEW_STARTUP"
+  },
+  {
+    "type": "POST",
+    "url": "/startups/recommendation/:startup_id",
+    "title": "POST create and update recommendation",
+    "name": "Recomendaci_n_Startup",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "startup",
+            "description": "<p>ID startup al que se comentará.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/startups/recommendation/1",
+        "type": "json"
+      }
+    ],
+    "group": "REVIEW_STARTUP",
+    "version": "1.0.0",
+    "description": "<p>Recomendación a una startup.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que inicio sesion y desea comentar.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "review",
+            "description": "<p>Recomendación que asignó el usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "\t{\n        \"user_id\": 2,\n        \"review\": \"Recomendación del usuario 2\"\n    }",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"Recomendación asignada correctamente.\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "REVIEW_STARTUP"
+  },
+  {
+    "type": "POST",
+    "url": "/users/rating/:to_user_id",
+    "title": "POST create and update rating",
+    "name": "Puntuar",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "to_user_id",
+            "description": "<p>ID usuario del usuario al que se puntuará.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/users/rating/1",
+        "type": "json"
+      }
+    ],
+    "group": "REVIEW_USER",
+    "version": "1.0.0",
+    "description": "<p>Puntuar a un usuario.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "from_user_id",
+            "description": "<p>ID del usuario que inicio sesion y desea puntuar.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>Puntaje del 1 al 5 que asignó el usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "\t{\n        \"from_user_id\": 2,\n        \"rating\": 5\n    }",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"Rating asignado correctamente.\",\n    \"data\": {}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "REVIEW_USER"
+  },
+  {
+    "type": "POST",
+    "url": "/users/comment/:to_user_id",
+    "title": "POST create and update comment",
+    "name": "comentario",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "to_user_id",
+            "description": "<p>ID usuario del usuario al que se comentará.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/users/comment/1",
+        "type": "json"
+      }
+    ],
+    "group": "REVIEW_USER",
+    "version": "1.0.0",
+    "description": "<p>Comentario a un usuario.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "from_user_id",
+            "description": "<p>ID del usuario que inicio sesion y desea comentar.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "review",
+            "description": "<p>Comentario que asignó el usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "\t{\n        \"from_user_id\": 2,\n        \"review\": \"Comentario del usuario 2\"\n    }",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"Comentario asignado correctamente.\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "REVIEW_USER"
+  },
+  {
+    "type": "POST",
     "url": "/skills/create",
     "title": "POST create skill",
     "name": "create_skills",
