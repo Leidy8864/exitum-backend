@@ -1759,3 +1759,175 @@
  *
  *
  */
+ 
+ /**
+ *
+ * @api {POST} /users/comment/:to_user_id POST create and update comment
+ * @apiName comentario
+ * @apiParam {Number} to_user_id ID usuario del usuario al que se comentará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/comment/1
+ * @apiGroup REVIEW USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Comentario a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} from_user_id ID del usuario que inicio sesion y desea comentar.
+ * @apiSuccess (Datos requeridos) {String} review Comentario que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "from_user_id": 2,
+        "review": "Comentario del usuario 2"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Comentario asignado correctamente.",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /users/rating/:to_user_id POST create and update rating
+ * @apiName Puntuar
+ * @apiParam {Number} to_user_id ID usuario del usuario al que se puntuará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/rating/1
+ * @apiGroup REVIEW USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} from_user_id ID del usuario que inicio sesion y desea puntuar.
+ * @apiSuccess (Datos requeridos) {Number} rating Puntaje del 1 al 5 que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "from_user_id": 2,
+        "rating": 5
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": {}
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /startups/recommendation/:startup_id POST create and update recommendation
+ * @apiName Recomendación Startup
+ * @apiParam {Number} startup ID startup al que se comentará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/startups/recommendation/1
+ * @apiGroup REVIEW STARTUP
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Recomendación a una startup.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesion y desea comentar.
+ * @apiSuccess (Datos requeridos) {String} review Recomendación que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "user_id": 2,
+        "review": "Recomendación del usuario 2"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Recomendación asignada correctamente.",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /startups/rating/:startup_id POST create and update rating
+ * @apiName Puntuar Startup
+ * @apiParam {Number} startup_id ID usuario del usuario al que se puntuará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/startups/rating/1
+ * @apiGroup REVIEW STARTUP
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesion y desea puntuar.
+ * @apiSuccess (Datos requeridos) {Number} rating Puntaje del 1 al 5 que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "user_id": 2,
+        "rating": 5
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": {}
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */

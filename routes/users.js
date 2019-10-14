@@ -68,8 +68,4 @@ router.post('/rating/:to_user_id',
   controllerReview.rating
 )
 
-router.get('/rating/:to_user_id',
-  controllerReview.ratingTotal
-)
-
 module.exports = router;
