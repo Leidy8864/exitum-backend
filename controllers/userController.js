@@ -49,6 +49,10 @@ module.exports = {
                 return [
                     check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                 ]
+            case 'validateToken':
+                return [
+                    check('token').exists()
+                ]
         }
     },
 
@@ -120,15 +124,15 @@ module.exports = {
                             var mailOptions = {
                                 from: index.emailExitum,
                                 to: req.body.email,
-                                subject: 'Verificación de la cuenta',
-                                //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                                subject: 'Verificacion de la cuenta',
+                                //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
                                     title: 'Bienvenido a bordo',
                                     name: req.body.name + ' ' + req.body.lastname,
                                     text: 'En Exitum estamos felices de tener tu confianza',
-                                    description: 'Por favor verifica tu cuenta dándole click al botón.',
-                                    url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                    description: 'Por favor verifica tu cuenta dándole click al botón.',                                    
+                                    url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
                             }
@@ -206,6 +210,12 @@ module.exports = {
                             currency_id: 1
                         }, { transaction: t });
 
+                        await models.token.create({
+                            token: "",
+                            user_id: newUser.id,
+                            token_created_at: Date.now()
+                        }, { transaction: t });
+
                         return newUser;
                     });
                     return helper.generateAccessData(result, res);
@@ -238,11 +248,11 @@ module.exports = {
             const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } })
             if (user) {
                 if (user.confirmed) {
-                    return res.json({ status: false, message: "Esta cuenta ya fue verificada.", data: user })
+                    return res.json({ status: true, message: "Esta cuenta ya fue verificada.", data: user })
                 } else {
                     const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                     if (newUser) {
-                        return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
+                        return res.json({ status: true, message: "Su cuenta fue verificada.", data: newUser })
                     }
                 }
             } else {
@@ -263,11 +273,11 @@ module.exports = {
             const user = await models.user.findOne({ where: { id: token.user_id } })
             if (user) {
                 if (user.confirmed) {
-                    return res.json({ status: false, message: "Esta cuenta ya fue verificada.", data: user })
+                    return res.json({ status: true, message: "Esta cuenta ya fue verificada.", data: user })
                 } else {
                     const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                     if (newUser) {
-                        return res.json({ status: 200, message: "Su cuenta fue verificada.", data: user })
+                        return res.json({ status: true, message: "Su cuenta fue verificada.", data: newUser })
                     }
                 }
             } else {
@@ -324,14 +334,14 @@ module.exports = {
                                     from: index.emailExitum,
                                     to: user.email,
                                     subject: 'Verificación de la cuenta',
-                                    //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                                    //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                     template: 'template',
                                     context: {
                                         title: 'Bienvenido a bordo',
                                         name: user.name + ' ' + user.lastname,
                                         text: 'En Exitum estamos felices de tener tu confianza',
-                                        description: 'Por favor verifica tu cuenta dándole click al botón.',
-                                        url: 'http:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken,
+                                        description: 'Por favor verifica tu cuenta dándole click al botón.', 
+                                        url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
                                 }
@@ -358,7 +368,7 @@ module.exports = {
         const user = await models.user.findOne({ where: { email: req.body.email } });
         if (user) {
             const token_password = crypto.randomBytes(16).toString('hex');
-            const token = await models.token.update({
+            await models.token.update({
                 token_password: token_password,
                 token_password_created_at: Date.now()
             }, { where: { user_id: user.id } });
@@ -389,14 +399,14 @@ module.exports = {
                         from: index.emailExitum,
                         to: user.email,
                         subject: 'Recuperación de la cuenta',
-                        //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + req.headers.host + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
+                        //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                         template: 'template',
                         context: {
                             title: 'Problemas al iniciar sesión',
                             name: user.name + ' ' + user.lastname,
                             text: 'Notamos que tienes problemas para iniciar sesión.',
-                            description: 'Por favor renueva tu contraseña dándole click al botón.',
-                            url: 'http:\/\/' + req.headers.host + '\/dashboard\/reset\/' + token_password,
+                            description: 'Por favor renueva tu contraseña dándole click al botón.',                            
+                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
@@ -414,8 +424,7 @@ module.exports = {
         }
     },
 
-    //Funcion encargada de cambiar el password
-    resetPassword: async (req, res) => {
+    validateToken: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() });
@@ -423,12 +432,28 @@ module.exports = {
         const token = await models.token.findOne({ where: { token_password: req.params.token } })
         if (token) {
             if (moment(token.token_password_created_at).add(30, 'm').toDate() >= Date.now()) {
+                return res.json({ status: true, message: "Token valido.", data: { user_id: token.user_id } });
+            } else {
+                return res.json({ status: false, message: 'Su token expiro. Por favor vuelve a pedir un correo con tu nuevo token.' });
+            }
+        } else {
+            return res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
+        }
+    },
+
+    //Funcion encargada de cambiar el password
+    resetPassword: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() });
+        }
+        models.user.findOne({ where: { id: req.body.user_id } }).then(usr => {
+            if (usr) {
                 if (req.body.new_password === req.body.verify_password) {
-                    const newUser = await models.user.update({ password: bcrypt.hashSync(req.body.new_password) }, { where: { id: token.user_id } })
+                    const newUser = models.user.update({ password: bcrypt.hashSync(req.body.new_password) }, { where: { id: usr.id } })
                     if (newUser) {
                         console.log("Se cambio el password.");
-                        const user = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } });
-                        return helper.generateAccessData(user, res);
+                        return helper.generateAccessData(usr, res);
                     } else {
                         return res.json({ status: false, message: "No se pudo cambiar el password." });
                     }
@@ -436,11 +461,9 @@ module.exports = {
                     res.json({ status: false, message: 'Los password no coinciden' });
                 }
             } else {
-                res.json({ status: false, message: 'No pudimos encontrar un token válido. Su token expiro.' });
+                res.json({ status: false, message: 'Id del usuario invalido' });
             }
-        } else {
-            res.json({ status: false, message: 'No pudimos encontrar un token válido.' });
-        }
+        })
     },
 
     updateUser: async (req, res) => {
