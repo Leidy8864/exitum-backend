@@ -13,10 +13,10 @@
       }
     },
     "test": {
-      "username": "root",
-      "password": "",
-      "database": "mydb",
-      "host": "127.0.0.1",
+      "username": "exitum",
+      "password": "@@exitum2019",
+      "database": "exitum",
+      "host": "35.175.241.103",
       "dialect": "mysql",
       "operatorsAliases": false,
       "pool": {
