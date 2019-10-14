@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/startupController');
+const controllerReview = require('../controllers/startupReviewController');
 
 router.post('/create',
     controller.validate('create'),
@@ -27,5 +28,15 @@ router.get('/list',
 router.get('/listsector',
     controller.listSector
 );
+
+router.post('/recommendation/:startup_id',
+  controllerReview.validate('recommendation'),
+  controllerReview.recommendation
+)
+
+router.post('/rating/:startup_id',
+  controllerReview.validate('rating'),
+  controllerReview.rating
+)
 
 module.exports = router;

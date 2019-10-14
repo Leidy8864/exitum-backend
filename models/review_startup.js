@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataType) => {
-    const review = sequelize.define('review', {
-        from_user_id: {
+    const review = sequelize.define('review_startup', {
+        user_id: {
             type: DataType.INTEGER,
             allowNull: false,
             primaryKey: true,
@@ -10,21 +10,17 @@ module.exports = (sequelize, DataType) => {
                 key: 'id'
             }
         },
-        to_user_id: {
+        startup_id: {
             type: DataType.INTEGER,
             allowNull: false,
             primaryKey: true,
             references: {
-                model: 'user',
+                model: 'startup',
                 key: 'id'
             }
         },
-        review: DataType.TEXT,
-        rating: DataType.BOOLEAN,
-        state: {
-            type: DataType.ENUM,
-            values: ['active', 'pending', 'deleted']
-        },
+        recommendation: DataType.TEXT,
+        rating: DataType.BOOLEAN, //TINYINT(1)
         created_at: DataType.DATE
     }, {
         freezeTableName: true,

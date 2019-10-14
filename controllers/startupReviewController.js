@@ -6,23 +6,23 @@ const { check, validationResult } = require('express-validator');
 module.exports = {
     validate: (review) => {
 
-        var from_user_id = check('from_user_id')
+        var user_id = check('user_id')
             .exists().withMessage('Es necesario el id del usuario que inicio sesión.')
             .isNumeric().withMessage("El tipo de dato no es el adecuado.")
 
-        var to_user_id = check('to_user_id')
+        var startup_id = check('startup_id')
             .exists().withMessage("Es necesario el id del usuario al que se comentará o puntuar.")
             .isNumeric().withMessage("El tipo de dato no es el adecuado.")
 
         switch (review) {
-            case 'comment':
+            case 'recommendation':
                 return [
-                    from_user_id, to_user_id,
-                    check('review').exists().withMessage("Es necesario agregar un comentario")
+                    user_id, startup_id,
+                    check('recommendation').exists().withMessage("Es necesario agregar un comentario")
                 ]
             case 'rating':
                 return [
-                    from_user_id, to_user_id,
+                    user_id, startup_id,
                     check('rating').exists().withMessage("Es necesario un puntaje")
                     .isNumeric().withMessage("El tipo de dato no es el adecuado.")
                     .custom(value=> value <= 5 && value > 0).withMessage("El valor debe estar entre el rango de 1 y 5.")
@@ -30,20 +30,20 @@ module.exports = {
         }
     },
 
-    comment:  async (req, res) => {
+    recommendation:  async (req, res) => {
         var errors = validationResult(req)
 
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
         }
         
-        const { review, from_user_id } = req.body
-        const { to_user_id } = req.params
+        const { recommendation, user_id } = req.body
+        const { startup_id } = req.params
 
         try {
 
-            const user = await existById( models.user, to_user_id )
-            user.addFromUser( from_user_id, { through: { review: review, created_at: Date.now() } } )
+            const startup = await existById( models.startup, startup_id )
+            startup.addToStartupUser( user_id, { through: { recommendation: recommendation, created_at: Date.now() } } )
 
             return res.status(200).json( { status: true, message: 'Comentario asignado correctamente.', data: {  } } )
 
@@ -56,24 +56,24 @@ module.exports = {
     rating:  (req, res) => {
         var errors = validationResult(req)
 
-        const { rating, from_user_id } = req.body
-        const { to_user_id } = req.params
+        const { rating, user_id } = req.body
+        const { startup_id } = req.params
 
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
         }
+        
+        models.startup.findOne( { where: { id: startup_id } } )
+        .then(startup => {
 
-        models.user.findOne( { where: { id: to_user_id } } )
-        .then(user => {
+            if ( !startup )
+                return res.status(200).json( { status: false, message: "Startup no existente", data: {  }  } )
 
-            if ( !user )
-                return res.status(200).json( { status: false, message: "Usuario no existente", data: {  }  } )
-
-            user.addFromUser( from_user_id, { through: { rating: rating, created_at: Date.now() } } )
+            startup.addToStartupUser( user_id, { through: { rating: rating, created_at: Date.now() } } )
             .then( response => {
 
-                models.review.findOne({
-                    where: { to_user_id: to_user_id  },
+                models.review_startup.findOne({
+                    where: { startup_id: startup_id  },
                     attributes: [
                         [  Sequelize.fn('sum', Sequelize.col('rating')), 'total'  ],
                         [  Sequelize.fn('count', Sequelize.col('rating')), 'cantidad'  ],
@@ -81,7 +81,7 @@ module.exports = {
                 })
                 .then(elements => {
                     var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
-                    user.update({ avg_rating: avg_rating })
+                    startup.update({ avg_rating: avg_rating })
                     return res.status(200).json( { status: true, message: 'Rating asignado correctamente.', data: {  } }  )
                 })
                 .catch( err => {
