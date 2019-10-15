@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   `provider_id` VARCHAR(100) NULL,
   `confirmed` TINYINT NULL,
   `phone` VARCHAR(10) NULL,
-  `role` ENUM('entrepreneur', 'employee', 'admin') NULL,
+  `role` ENUM('entrepreneur', 'employee', 'admin', 'undefined') NULL,
   `method` ENUM('local', 'google', 'facebook') NULL,
   `active` TINYINT NULL,
   `last_login` DATETIME NULL,
