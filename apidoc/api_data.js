@@ -703,192 +703,6 @@ define({ "api": [
     }
   },
   {
-    "type": "GET",
-    "url": "/categories/all",
-    "title": "GET list categories",
-    "name": "List_Categories",
-    "examples": [
-      {
-        "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/categories/list",
-        "type": "json"
-      }
-    ],
-    "group": "CATEGORY",
-    "version": "1.0.0",
-    "description": "<p>Listar.</p>",
-    "success": {
-      "fields": {
-        "Datos retornados": [
-          {
-            "group": "Datos retornados",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si la petición fue existosa.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos retornados",
-          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Tecnológico\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Radio y televisión\"\n        },\n        ...\n    ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error retornado": [
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Estado negativo de la petición.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error",
-          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "CATEGORY"
-  },
-  {
-    "type": "POST",
-    "url": "/categories/search",
-    "title": "POST find and create categories",
-    "name": "Search_Categories",
-    "examples": [
-      {
-        "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/categories/search",
-        "type": "json"
-      }
-    ],
-    "group": "CATEGORY",
-    "version": "1.0.0",
-    "description": "<p>Puntuar a un usuario.</p>",
-    "success": {
-      "fields": {
-        "Datos requeridos": [
-          {
-            "group": "Datos requeridos",
-            "type": "String",
-            "optional": false,
-            "field": "category",
-            "description": "<p>Nombre del una categoria.</p>"
-          }
-        ],
-        "Datos retornados": [
-          {
-            "group": "Datos retornados",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si la petición fue existosa.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos requeridos",
-          "content": "\t{\n        \"category\": \"tecn\"\n    }",
-          "type": "json"
-        },
-        {
-          "title": "Datos retornados",
-          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"Rating asignado correctamente.\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Tecnológico\"\n    }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error retornado": [
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Estado negativo de la petición.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error",
-          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "CATEGORY"
-  },
-  {
     "type": "POST",
     "url": "/challenges/checkEmployee",
     "title": "POST check challenge employee",
@@ -2730,6 +2544,92 @@ define({ "api": [
     }
   },
   {
+    "type": "GET",
+    "url": "/categories/all",
+    "title": "GET lista de categorias",
+    "name": "List_Categories",
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/categories/list/1",
+        "type": "json"
+      }
+    ],
+    "group": "REVIEW_STARTUP",
+    "version": "1.0.0",
+    "description": "<p>Listar.</p>",
+    "success": {
+      "fields": {
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK.\",\n    \"data\": {}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "REVIEW_STARTUP"
+  },
+  {
     "type": "POST",
     "url": "/startups/rating/:startup_id",
     "title": "POST create and update rating",
@@ -3367,199 +3267,6 @@ define({ "api": [
         }
       ]
     }
-  },
-  {
-    "type": "POST",
-    "url": "/stages/create",
-    "title": "POST create a stage",
-    "name": "Crear_Stage",
-    "examples": [
-      {
-        "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/stages/create",
-        "type": "json"
-      }
-    ],
-    "group": "STAGE",
-    "version": "1.0.0",
-    "description": "<p>Puntuar a un usuario.</p>",
-    "success": {
-      "fields": {
-        "Datos requeridos": [
-          {
-            "group": "Datos requeridos",
-            "type": "Number",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>ID del usuario que inicio sesion y desea puntuar.</p>"
-          },
-          {
-            "group": "Datos requeridos",
-            "type": "Number",
-            "optional": false,
-            "field": "rating",
-            "description": "<p>Puntaje del 1 al 5 que asignó el usuario.</p>"
-          }
-        ],
-        "Datos retornados": [
-          {
-            "group": "Datos retornados",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si la petición fue existosa.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos requeridos",
-          "content": "\t{\n        \"stage\": \"stage\",\n        \"description\": \"description\",\n        \"type\":\"type\"\n    }",
-          "type": "json"
-        },
-        {
-          "title": "Datos retornados",
-          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {\n        \"id\": ...,\n        \"stage\": \"stage\",\n        \"description\": \"description\",\n        \"type\": \"employee\"\n    }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error retornado": [
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Estado negativo de la petición.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error",
-          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "STAGE"
-  },
-  {
-    "type": "GET",
-    "url": "/stages/all",
-    "title": "GET list stages",
-    "name": "List_Stages",
-    "examples": [
-      {
-        "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/stages/list",
-        "type": "json"
-      }
-    ],
-    "group": "STAGE",
-    "version": "1.0.0",
-    "description": "<p>Listar.</p>",
-    "success": {
-      "fields": {
-        "Datos retornados": [
-          {
-            "group": "Datos retornados",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si la petición fue existosa.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Datos retornados",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos retornados",
-          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK.\",\n    \"\"data\": [\n        {\n            \"id\": 1,\n            \"stage\": \"Pre semilla\",\n            \"description\": \"Etapa donde solo se tiene una idea superficial y se busca validarla.\",\n            \"type\": \"startup\"\n        },\n        {\n            \"id\": 2,\n            \"stage\": \"Semilla\",\n            \"description\": \"Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.\",\n            \"type\": \"startup\"\n        },\n        ...\n    ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error retornado": [
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Estado negativo de la petición.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Boolean",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Mensaje retornado.</p>"
-          },
-          {
-            "group": "Error retornado",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Contenido retornado</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error",
-          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "STAGE"
   },
   {
     "type": "POST",

@@ -102,9 +102,9 @@ ENGINE = InnoDB;
 -- Table `exitum`.`stage`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`stage` (
-  `id` INT NOT NULL,
-  `stage` VARCHAR(45) NULL,
-  `description` VARCHAR(45) NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `stage` VARCHAR(100) NULL,
+  `description` TEXT NULL,
   `type` ENUM('employee', 'startup') NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -1107,8 +1107,16 @@ VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVb
 (NULL, 'Emprendedora', 'Emprendedora', 'emprendedora@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '2', '2');
 
 INSERT INTO `entrepreneur` (`id`, `user_id`) VALUES (NULL, '5'), (NULL, '6');
-INSERT INTO `stage` (`id`, `stage`, `description`, `type`) VALUES ('1', 'Stage', NULL, 'employee'), ('2', 'Stage2', NULL, 'startup');
-INSERT INTO `category` (`id`, `name`) VALUES (NULL, 'TI'), (NULL, 'Ciencias');
+INSERT INTO `stage` (`id`, `stage`, `description`, `type`) 
+VALUES (null, 'Pre semilla', "Etapa donde solo se tiene una idea superficial y se busca validarla.", 'startup'), 
+(null, 'Semilla', "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.", 'startup'), 
+(null, 'Temprana', "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.", 'startup'), 
+(null, 'Crecimiento', "Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.", 'startup'), 
+(null, 'Expansión', "Etapa donde se busca alcanzar nuevos horizontes en otros mercados.", 'startup'), 
+(null, 'IPO', "Etapa donde se lanza al mercado acciones de nuestra empresa para conseguir acciones y expandir planes de negocio.", 'startup');
+INSERT INTO `category` (`id`, `name`) VALUES (NULL, 'Tecnológico'), (NULL, 'Radio y televisión'), (NULL, 'Automotriz'), (NULL, 'Alimenticia'), (NULL, 'Bebidas'),
+(NULL, 'Textil'), (NULL, 'Construnccion'), (NULL, 'Maquinaria y equipo'), (NULL, 'Productos Químicos'), (NULL, 'Farmaceutica'), (NULL, 'Inmoviliarias'), (NULL, 'Transporte'),
+(NULL, 'Agricultura'), (NULL, 'Educación');
 
 INSERT INTO `startup` (`id`, `name`, `photo_url`, `ruc`, `description`, `avg_rating`, `entrepreneur_id`, `stage_id`, `category_id`)
 VALUES (NULL, 'Startup', NULL, '12345678', NULL, NULL, '1', '1', '1'), (NULL, 'Startup2', NULL, '12345698', NULL, NULL, '2', '2', '2'),

@@ -1931,3 +1931,188 @@
  *
  *
  */
+
+ /**
+ *
+ * @api {GET} /categories/all GET list categories
+ * @apiName List Categories
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/categories/list
+ * @apiGroup CATEGORY
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Listar.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK.",
+        "data": [
+            {
+                "id": 1,
+                "name": "Tecnológico"
+            },
+            {
+                "id": 2,
+                "name": "Radio y televisión"
+            },
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /categories/search POST find and create categories
+ * @apiName Search Categories 
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/categories/search
+ * @apiGroup CATEGORY
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {String} category Nombre del una categoria.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "category": "tecn"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": {
+            "id": 1,
+            "name": "Tecnológico"
+        }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /stages/all GET list stages
+ * @apiName List Stages
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/stages/list
+ * @apiGroup STAGE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Listar.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK.",
+        ""data": [
+            {
+                "id": 1,
+                "stage": "Pre semilla",
+                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
+                "type": "startup"
+            },
+            {
+                "id": 2,
+                "stage": "Semilla",
+                "description": "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.",
+                "type": "startup"
+            },
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+ 
+ /**
+ *
+ * @api {POST} /stages/create POST create a stage
+ * @apiName Crear Stage
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/stages/create
+ * @apiGroup STAGE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesion y desea puntuar.
+ * @apiSuccess (Datos requeridos) {Number} rating Puntaje del 1 al 5 que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "stage": "stage",
+        "description": "description",
+        "type":"type"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": {
+            "id": ...,
+            "stage": "stage",
+            "description": "description",
+            "type": "employee"
+        }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */

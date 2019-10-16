@@ -16,6 +16,8 @@ var educationsRouter = require('./routes/educations');
 var advertisementsRouter = require('./routes/advertisements');
 var challengesRouter = require('./routes/challenges');
 var skillsRouter = require('./routes/skills');
+var stageRouter = require('./routes/stage');
+var categoryRouter = require('./routes/category');
 var proposalRouter = require('./routes/proposals');
 //const controller = require('./controllers/userController');
 
@@ -46,6 +48,8 @@ app.use('/advertisements', advertisementsRouter);
 app.use('/challenges', challengesRouter);
 app.use('/skills', skillsRouter);
 app.use('/proposals', proposalRouter);
+app.use('/stages', stageRouter);
+app.use('/categories', categoryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

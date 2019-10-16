@@ -7,7 +7,7 @@ module.exports = {
         const response = await model.findOne({ where: { id: value } })
 
         if (!response) {
-            throw("No existe el elemento al que deseas hacer review.");
+            throw("No existe el elemento.");
         }
         return response
     },
