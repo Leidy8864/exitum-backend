@@ -6,7 +6,7 @@ module.exports = {
         var message_exists = "Este campo es obligatorio";
         var message_array = "Este campo deber que ser un array";
         var message_numeric = "Este campo debe ser numérico";
-
+        var message_min = "Es necesario que selecciones dos impulsores";
         switch (method) {
 
             case 'create':
@@ -28,6 +28,11 @@ module.exports = {
                     check('about_me', message_exists).exists(),
                     check('short_description', message_exists).exists()
                 ]
+            case 'compare':
+                return [
+                    check('employee_id_1').exists().withMessage(message_min).isNumeric().withMessage(message_numeric),
+                    check('employee_id_2').exists().withMessage(message_min).isNumeric().withMessage(message_numeric)
+                ]
         }
     },
     create: async (req, res) => {
@@ -46,7 +51,7 @@ module.exports = {
                     about_me: req.body.about_me,
                     short_description: req.body.short_description,
                     price_hour: req.body.price_hour,
-                    stage_id : 1
+                    stage_id: 1
                 }, { transaction: t });
                 await employee.addSkill(req.body.skills, { transaction: t });
                 await employee.addType(req.body.types, { transaction: t });
@@ -56,13 +61,13 @@ module.exports = {
                 }
                 return employee;
             });
-            return res.status(200).json({  status : true ,message: "Impulsor creado correctamente",data: result });
+            return res.status(200).json({ status: true, message: "Impulsor creado correctamente", data: result });
 
         } catch (error) {
             console.log("Error" + error);
 
             res.status(200).json({
-                status : false ,
+                status: false,
                 message: "Error al crear impulsor"
             });
         }
@@ -80,7 +85,7 @@ module.exports = {
                     price_hour: req.body.price_hour
                 });
 
-                return res.status(200).json({ status: true, message: "Empleado actualizado correctamente", data : employee});
+                return res.status(200).json({ status: true, message: "Empleado actualizado correctamente", data: employee });
             } else {
                 return res.status(200).json({ status: false, message: "No existe el empleado" });
 
@@ -165,7 +170,6 @@ module.exports = {
 
         try {
 
-
             const employee = await models.employee.findOne({
                 where: {
                     user_id: user_id
@@ -198,11 +202,57 @@ module.exports = {
                 ]
             });
 
-            res.status(200).json({ status : true, message : "OK", data : employee });
+            res.status(200).json({ status: true, message: "OK", data: employee });
 
         } catch (error) {
             console.log(error);
-            res.status(200).json({status : true, message : "Error al listar información de empleado"});
+            res.status(200).json({ status: true, message: "Error al listar información de empleado" });
         }
+    },
+    compareEmploye: async (req, res) => {
+        const { employee_id_1, employee_id_2 } = req.body
+        const Op = models.Sequelize.Op
+        models.employee.findAll({
+            where: {
+                [Op.or]: [
+                    { id: employee_id_1 },
+                    { id: employee_id_2 }
+                ]
+            },
+            include: [
+                {
+                    model: models.category
+                },
+                {
+                    model: models.education,
+                    as: 'education',
+                    include: [{
+                        model: models.university
+                    }]
+                },
+                {
+                    model: models.experience,
+                    as: 'experience'
+                },
+                {
+                    model: models.recommendation,
+                    as: 'recommendation'
+                },
+                {
+                    model: models.language,
+                },
+                {
+                    model: models.skill,
+                }
+            ]
+        }).then(employees => {
+            if (employees) {
+                res.json({ status: 200, message: "Comparación de dos impulsores exitosa", data: { employees } });
+            } else {
+                res.json({ status: false, message: "No se encontro a los impulsores" });
+            }
+        }).catch(err => {
+            res.json({ status: false, message: "Usuario invalido", data: "" + err });
+        });
     }
 }
