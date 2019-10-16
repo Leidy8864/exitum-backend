@@ -1934,7 +1934,7 @@
 
  /**
  *
- * @api {GET} /categories/all GET list categories
+ * @api {GET} /categories/list GET list categories
  * @apiName List Categories
  * @apiExample Request parameter
  * http://35.175.241.103:8081/categories/list
@@ -2022,7 +2022,7 @@
 
  /**
  *
- * @api {GET} /stages/all GET list stages
+ * @api {GET} /stages/list GET list stages
  * @apiName List Stages
  * @apiExample Request parameter
  * http://35.175.241.103:8081/stages/list
@@ -2069,6 +2069,56 @@
  *
  */
  
+ /**
+ *
+ * @api {GET} /stages/show/:type GET show stages x type
+ * @apiName List stages x type
+ * @apiParam {String} type Tipo de stage exitente.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/stages/show/startups
+ * @apiGroup CATEGORY
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription  List stages x type.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": [
+            {
+                "id": 1,
+                "stage": "Pre semilla",
+                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
+                "type": "startup"
+            },
+            {
+                "id": 2,
+                "stage": "Semilla",
+                "description": "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.",
+                "type": "startup"
+            },
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
  /**
  *
  * @api {POST} /stages/create POST create a stage
