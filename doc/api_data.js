@@ -704,7 +704,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/categories/all",
+    "url": "/categories/list",
     "title": "GET list categories",
     "name": "List_Categories",
     "examples": [
@@ -747,6 +747,105 @@ define({ "api": [
         {
           "title": "Datos retornados",
           "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Tecnológico\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Radio y televisión\"\n        },\n        ...\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CATEGORY"
+  },
+  {
+    "type": "GET",
+    "url": "/stages/show/:type",
+    "title": "GET show stages x type",
+    "name": "List_stages_x_type",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Tipo de stage exitente.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/stages/show/startups",
+        "type": "json"
+      }
+    ],
+    "group": "CATEGORY",
+    "version": "1.0.0",
+    "description": "<p>List stages x type.</p>",
+    "success": {
+      "fields": {
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"Rating asignado correctamente.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"stage\": \"Pre semilla\",\n            \"description\": \"Etapa donde solo se tiene una idea superficial y se busca validarla.\",\n            \"type\": \"startup\"\n        },\n        {\n            \"id\": 2,\n            \"stage\": \"Semilla\",\n            \"description\": \"Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.\",\n            \"type\": \"startup\"\n        },\n        ...\n    ]\n}",
           "type": "json"
         }
       ]
@@ -3477,7 +3576,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/stages/all",
+    "url": "/stages/list",
     "title": "GET list stages",
     "name": "List_Stages",
     "examples": [

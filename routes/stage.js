@@ -6,6 +6,11 @@ router.get('/list',
     controller.all
 );
 
+router.get('/show/:type',
+    controller.validate('show'),
+    controller.show
+);
+
 router.post('/create',
     controller.validate('create'),
     controller.create
