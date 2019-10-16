@@ -621,37 +621,12 @@
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription  Crear habilidades
+ * @apiParam {String} skill Nombre de la habilidad.
  *
 	* @apiParamExample {querystring} Ejemplo url
     /skills/create
     {
-        "skill": ""
-    }
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-
-    }
- *
- *
- */
-
- /**
- *
- * @api {POST} /employees/update/skills POST create skill
- * @apiName create skills
- * @apiGroup SKILLS
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription  Crear habilidades
- *
-	* @apiParamExample {querystring} Ejemplo url
-    /employees/update/skills
-    {
-        "user_id" : 2,
-        "skills" : [1,2]
+        "skill": "Programador en Java"
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -659,7 +634,11 @@
  * @apiSuccessExample {json} Datos obtenidos:
     {
         "status": true,
-        "message": "Skills actualizados correctamente"
+        "message": "Skill creado correctamente",
+        "data": {
+            "id": 2,
+            "skill": "Programador en JavaScript"
+        }
     }
  *
  *
@@ -702,8 +681,7 @@
                     "language_id": 3,
                     "level_id": 3
                 }
-            ],
-        "levels" : [1,2,3]
+            ]
     }	
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -857,10 +835,38 @@
  *
  */
 
+
  /**
  *
- * @api {POST} /employees/update/languages POST update languages
- * @apiName update languages
+ * @api {POST} /employees/update/skills POST update employee skills 
+ * @apiName update employee skills
+ * @apiGroup EMPLOYEE
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualiza las habilidades del empleado
+ *
+	* @apiParamExample {querystring} Ejemplo url
+    /employees/update/skills
+    {
+        "user_id" : 2,
+        "skills" : [1,2]
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Skills actualizados correctamente"
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /employees/update/languages POST update employee languages
+ * @apiName update employee languages
  * @apiGroup EMPLOYEE
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -888,8 +894,8 @@
 
  /**
  *
- * @api {POST} /employees/update/types POST update types
- * @apiName update types
+ * @api {POST} /employees/update/types POST update employee types
+ * @apiName update employee types
  * @apiGroup EMPLOYEE
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -1523,6 +1529,589 @@
                 }
             }
         ]
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/createStage POST create stage
+ * @apiName create stage
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creación de etapa en la que se encuentra el reto
+ * @apiParam {String} stage Nombre de la etapa.
+ * @apiParam {String} description Descripción de la etapa
+ * @apiParam {String} type Tipo a quien le pertenece esta etapa (startup o employee)
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/createStage
+    {
+        "stage": "semilla",
+        "description": "Etapa semilla",
+        "type": "startup"
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica la etapa recien creada
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Etapa creado correctamente.",
+        "data": {
+            "stage": "semilla",
+            "description": "Etapa semilla",
+            "type": "startup"
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/createStep POST create step
+ * @apiName create step
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creación de nivel en la que se encuentra el reto.
+ * @apiParam {Int} stage_id Id de la etapa a la que pertenece el nivel.
+ * @apiParam {File} photo Icono del nivel.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/createStep
+    {
+        "stage_id": "1",
+        "photo": ""
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el nivel recien creado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Nivel creado correctamente.",
+        "data": {
+            "id": 7,
+            "icon": "892b95e0-eb8a-11e9-acef-0123456789abfoodU.png",
+            "stage_id": "1"
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/createTip POST create tip
+ * @apiName create tip
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creación del reto.
+ * @apiParam {Int} step_id Id del nivel al que pertenece el reto.
+ * @apiParam {String} tip Descripción del reto.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/createTip
+    {
+        "tip": "Crear mi equipo de desarrollo",
+        "step_id": 7
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el reto recien creado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Reto creado correctamente",
+        "data": {
+            "id": 2,
+            "tip": "Crear mi equipo de desarrollo",
+            "step_id": 7
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/checkStartup POST check challenge stratup
+ * @apiName check challenge startup
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Marca el reto cumplido por la startup.
+ * @apiParam {Int} id Id del usuario impulsor.
+ * @apiParam {Boolean} checked Marca 0 o 1 segun el cumplimiento del reto.
+ * @apiParam {Int} tip_id Id del reto.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/checkStartup
+    {
+        "id": 3,
+        "startup_id": 1,
+        "checked": 1,
+        "tip_id": 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Reto superado guardado correctamente.",
+        "data": {
+            "check": [
+                1
+            ]
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /challenges/checkEmployee POST check challenge employee
+ * @apiName check challenge employee
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Marca el reto cumplido por el impulsor.
+ * @apiParam {Int} id Id del usuario impulsor.
+ * @apiParam {Boolean} checked Marca 0 o 1 segun el cumplimiento del reto.
+ * @apiParam {Int} tip_id Id del reto.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/checkEmployee
+    {
+        "id": 3,
+        "checked": 1,
+        "tip_id": 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Reto superado guardado correctamente.",
+        "data": {
+            "check": [
+                1
+            ]
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /proposals/create POST create proposal
+ * @apiName create proposal
+ * @apiGroup PROPOSALS
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Se crea o actualiza una propuesta para un anuncio.
+ * @apiParam {Int} id Id del usuario impulsor.
+ * @apiParam {Int} advertisement_id Id del anuncio.
+ * @apiParam {String} proposal Descripción de la propuesta.
+ * @apiParam {Decimal} amount Cantidad o precio a ofertar.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /proposals/create
+    {
+        "id": 3,
+        "advertisement_id": 1,
+        "proposal": "Tengo experiencia en el desarrollo de software",
+        "amount": 2100
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica la propuesta creado o actualizado
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Propuesta creada correctamente.",
+        "data": [
+            {
+                "proposal": "Tengo experiencia en el desarrollo de software",
+                "amount": 2100,
+                "viewed": false,
+                "created_at": "2019-10-11T21:02:32.747Z",
+                "employee_id": 1,
+                "advertisement_id": 1
+            }
+        ]
+    }
+ *
+ *
+ */
+ 
+ /**
+ *
+ * @api {POST} /users/comment/:to_user_id POST create and update comment
+ * @apiName comentario
+ * @apiParam {Number} to_user_id ID usuario del usuario al que se comentará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/comment/1
+ * @apiGroup REVIEW USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Comentario a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} from_user_id ID del usuario que inicio sesion y desea comentar.
+ * @apiSuccess (Datos requeridos) {String} review Comentario que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "from_user_id": 2,
+        "review": "Comentario del usuario 2"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Comentario asignado correctamente.",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /users/rating/:to_user_id POST create and update rating
+ * @apiName Puntuar
+ * @apiParam {Number} to_user_id ID usuario del usuario al que se puntuará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/rating/1
+ * @apiGroup REVIEW USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} from_user_id ID del usuario que inicio sesion y desea puntuar.
+ * @apiSuccess (Datos requeridos) {Number} rating Puntaje del 1 al 5 que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "from_user_id": 2,
+        "rating": 5
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": {}
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /startups/recommendation/:startup_id POST create and update recommendation
+ * @apiName Recomendación Startup
+ * @apiParam {Number} startup ID startup al que se comentará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/startups/recommendation/1
+ * @apiGroup REVIEW STARTUP
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Recomendación a una startup.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesion y desea comentar.
+ * @apiSuccess (Datos requeridos) {String} review Recomendación que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "user_id": 2,
+        "review": "Recomendación del usuario 2"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Recomendación asignada correctamente.",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /startups/rating/:startup_id POST create and update rating
+ * @apiName Puntuar Startup
+ * @apiParam {Number} startup_id ID usuario del usuario al que se puntuará.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/startups/rating/1
+ * @apiGroup REVIEW STARTUP
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesion y desea puntuar.
+ * @apiSuccess (Datos requeridos) {Number} rating Puntaje del 1 al 5 que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "user_id": 2,
+        "rating": 5
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": {}
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /categories/all GET list categories
+ * @apiName List Categories
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/categories/list
+ * @apiGroup CATEGORY
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Listar.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK.",
+        "data": [
+            {
+                "id": 1,
+                "name": "Tecnológico"
+            },
+            {
+                "id": 2,
+                "name": "Radio y televisión"
+            },
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /categories/search POST find and create categories
+ * @apiName Search Categories 
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/categories/search
+ * @apiGroup CATEGORY
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {String} category Nombre del una categoria.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "category": "tecn"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "Rating asignado correctamente.",
+        "data": {
+            "id": 1,
+            "name": "Tecnológico"
+        }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /stages/all GET list stages
+ * @apiName List Stages
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/stages/list
+ * @apiGroup STAGE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Listar.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK.",
+        ""data": [
+            {
+                "id": 1,
+                "stage": "Pre semilla",
+                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
+                "type": "startup"
+            },
+            {
+                "id": 2,
+                "stage": "Semilla",
+                "description": "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.",
+                "type": "startup"
+            },
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+ 
+ /**
+ *
+ * @api {POST} /stages/create POST create a stage
+ * @apiName Crear Stage
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/stages/create
+ * @apiGroup STAGE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Puntuar a un usuario.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesion y desea puntuar.
+ * @apiSuccess (Datos requeridos) {Number} rating Puntaje del 1 al 5 que asignó el usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+	{
+        "stage": "stage",
+        "description": "description",
+        "type":"type"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": {
+            "id": ...,
+            "stage": "stage",
+            "description": "description",
+            "type": "employee"
+        }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
     }
  *
  *

@@ -28,7 +28,7 @@ module.exports = (sequelize, DataType) => {
     last_login: DataType.DATE,
     photo: DataType.STRING,
     photo_dni: DataType.STRING,
-    avg_rating: DataType.DECIMAL,
+    avg_rating: DataType.FLOAT(3, 2),
     country_id: {
       type: DataType.INTEGER,
       references: {
@@ -71,11 +71,17 @@ module.exports = (sequelize, DataType) => {
     user.hasMany(models.order, {
       foreignKey: 'employee_id'
     });
-    user.hasMany(models.review, {
-      foreignKey: 'from_user_id'
+    user.belongsToMany(models.user, {
+      as: { singular: 'toUser', plural: 'toUsers' },
+      through: models.review,
+      foreignKey: 'from_user_id',
+      otherKey: 'to_user_id'
     });
-    user.hasMany(models.review, {
-      foreignKey: 'to_user_id'
+    user.belongsToMany(models.user, {
+      as: { singular: 'fromUser', plural: 'fromUsers' },
+      through: models.review,
+      foreignKey: 'to_user_id',
+      otherKey: 'from_user_id'
     });
     user.hasMany(models.chat, {
       foreignKey: 'from_id'
@@ -94,6 +100,12 @@ module.exports = (sequelize, DataType) => {
     });
     user.hasMany(models.favorite, {
       foreignKey: 'to_user_id'
+    });
+    user.belongsToMany(models.startup, {
+      as: { singular: 'toUserStartup', plural: 'toUserStartups' },
+      through: models.review_startup,
+      foreignKey: 'user_id',
+      otherKey: 'startup_id'
     });
   }
   return user

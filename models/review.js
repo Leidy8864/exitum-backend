@@ -4,6 +4,7 @@ module.exports = (sequelize, DataType) => {
         from_user_id: {
             type: DataType.INTEGER,
             allowNull: false,
+            primaryKey: true,
             references: {
                 model: 'user',
                 key: 'id'
@@ -12,13 +13,14 @@ module.exports = (sequelize, DataType) => {
         to_user_id: {
             type: DataType.INTEGER,
             allowNull: false,
+            primaryKey: true,
             references: {
                 model: 'user',
                 key: 'id'
             }
         },
-        review: DataType.STRING,
-        rating: DataType.INTEGER,
+        review: DataType.TEXT,
+        rating: DataType.BOOLEAN,
         state: {
             type: DataType.ENUM,
             values: ['active', 'pending', 'deleted']
@@ -29,15 +31,7 @@ module.exports = (sequelize, DataType) => {
         timestamps: false,
         omitNull: true,
         underscored: true
-
     });
-    review.associate = function (models) {
-        review.belongsTo(models.user, {
-            foreignKey: 'from_user_id'
-        });
-        review.belongsTo(models.user, {
-            foreignKey: 'to_user_id'
-        });
-    };
+    
     return review;
 };

@@ -1,41 +1,41 @@
 {
-    "development": {
-      "username": "exitum",
-      "password": "@@exitum2019",
-      "database": "exitum",
-      "host": "35.175.241.103",
-      "dialect": "mysql",
-      "operatorsAliases": false,
-      "pool": {
-        "max": 50,
-        "min": 0,
-        "idle": 600000
-      }
-    },
-    "test": { 
-      "username": "root",
-      "password": "Erquinio159",
-      "database": "exitum",
-      "host": "127.0.0.1",
-      "dialect": "mysql",
-      "operatorsAliases": false,
-      "pool": {
-        "max": 50,
-        "min": 0,
-        "idle": 600000
-      }
-    },
-    "production": {
-      "username": "exitum",
-      "password": "@@exitum2019",
-      "database": "exitum",
-      "host": "35.175.241.103",
-      "dialect": "mysql",
-      "operatorsAliases": false,
-      "pool": {
-        "max": 50,
-        "min": 0,
-        "idle": 600000
-      }
+  "development": {
+    "username": "exitum",
+    "password": "@@exitum2019",
+    "database": "exitum",
+    "host": "35.175.241.103",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 50,
+      "min": 0,
+      "idle": 600000
+    }
+  },
+  "test": {
+    "username": "exitum",
+    "password": "@@exitum2019",
+    "database": "exitum",
+    "host": "35.175.241.103",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 50,
+      "min": 0,
+      "idle": 600000
+    }
+  },
+  "production": {
+    "username": "exitum",
+    "password": "@@exitum2019",
+    "database": "exitum",
+    "host": "35.175.241.103",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 50,
+      "min": 0,
+      "idle": 600000
     }
   }
+}

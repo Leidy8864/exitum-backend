@@ -32,6 +32,7 @@ module.exports = {
                 ]
         }
     },
+
     createAdvert: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -64,6 +65,7 @@ module.exports = {
             });
         }
     },
+    
     updateAdvert: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
