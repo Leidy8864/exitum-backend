@@ -52,7 +52,7 @@ module.exports = {
                     if (sta) {
                         return res.json({ status: false, message: "Este nombre ya esta en uso" });
                     } else {
-                        await models.startup.create({
+                        models.startup.create({
                             name: name,
                             photo_url: fileName,
                             ruc: ruc,
