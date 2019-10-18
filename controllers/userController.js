@@ -347,7 +347,7 @@ module.exports = {
                                 }
                                 transporter.sendMail(mailOptions).then(() => {
                                     console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
-                                    res.json({ status: 200, message: "Un email de verificación ha sido enviado a " + user.email + " ." })
+                                    res.json({ status: true, message: "Un email de verificación ha sido enviado a " + user.email + " ." })
                                 }).catch(err => {
                                     console.log("Error: " + err)
                                     res.status(500).json({ status: false, message: err.message })
@@ -412,7 +412,7 @@ module.exports = {
                     }
                     transporter.sendMail(mailOptions).then(() => {
                         console.log('Un email de recuperación ha sido enviado a ' + req.body.email + '.');
-                        res.json({ status: 200, message: 'Un email de recuperación ha sido enviado a ' + req.body.email });
+                        res.json({ status: true, message: 'Un email de recuperación ha sido enviado a ' + req.body.email });
                     }).catch(err => {
                         console.log("Error: " + err)
                         res.status(500).json({ status: false, message: err.message })

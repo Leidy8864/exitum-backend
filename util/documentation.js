@@ -39,7 +39,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "accessData": {
             "id": id,
             "email": email,
@@ -81,7 +81,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "accessData": {
             "id": id,
             "email": email,
@@ -123,7 +123,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "accessData": {
             "id": id,
             "email": email,
@@ -152,7 +152,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Datos del usuario validado
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Su cuenta fue verificada.",
         "data": {
             "id": 49,
@@ -198,7 +198,7 @@
  * @apiSuccess (Datos obtenidos) {String} message.Indica el mensaje de exito
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": 'Un email de recuperación ha sido enviado a leidy.callupe@tecsup.edu.pe',
     }
  *
@@ -228,7 +228,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Su cambio el password.",
         "data": {
             "id": 49,
@@ -274,7 +274,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Indica el mensaje exitoso
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe ."
     }
  *
@@ -312,7 +312,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Usuario actualizado correctamente"
     }
  *
@@ -336,7 +336,7 @@
  * @apiSuccess (Datos obtenidos) {String} countries.currency_id Id de la moneda del país
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "countries": [
             {
                 "id": 1,
@@ -381,7 +381,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Startup creado correctamente"
     }
  *
@@ -411,7 +411,7 @@
  * @apiSuccess (Datos obtenidos) {String} startups.name Nombre completo de la startup
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "startups": [
             {
                 "id": 1,
@@ -446,7 +446,7 @@
  * @apiSuccess (Datos obtenidos) {String} startups.name Nombre completo de la startup
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Ok",
         "data": {
             "startups": [
@@ -575,7 +575,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Ok",
         "data": {
             "sectors": [
@@ -942,7 +942,7 @@
  * @apiSuccess (Datos obtenidos) {Object[]} data.employees Indica el array de empleados
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Comparación de dos impulsores exitosa",
         "data": {
             "employees": [
@@ -1694,7 +1694,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica la etapa recien creada
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Etapa creado correctamente.",
         "data": {
             "stage": "semilla",
@@ -1729,7 +1729,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el nivel recien creado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Nivel creado correctamente.",
         "data": {
             "id": 7,
@@ -1764,7 +1764,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el reto recien creado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Reto creado correctamente",
         "data": {
             "id": 2,
@@ -1802,7 +1802,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Reto superado guardado correctamente.",
         "data": {
             "check": [
@@ -1839,7 +1839,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Reto superado guardado correctamente.",
         "data": {
             "check": [
@@ -1868,7 +1868,7 @@
  * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Lista de retos de la startup",
         "data": [
             {
@@ -1936,7 +1936,7 @@
  * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Lista de retos del impulsor",
         "data": [
             {

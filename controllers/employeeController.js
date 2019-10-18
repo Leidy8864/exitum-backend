@@ -248,7 +248,7 @@ module.exports = {
             ]
         }).then(employees => {
             if (employees) {
-                res.json({ status: 200, message: "Comparación de dos impulsores exitosa", data: { employees } });
+                res.json({ status: true, message: "Comparación de dos impulsores exitosa", data: { employees } });
             } else {
                 res.json({ status: false, message: "No se encontro a los impulsores" });
             }
