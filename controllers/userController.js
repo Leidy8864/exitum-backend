@@ -53,6 +53,18 @@ module.exports = {
                 return [
                     check('token').exists()
                 ]
+            case 'createWorkshop':
+                return [
+                    check('title').exists().withMessage(message_exists),
+                    check('description').exists().withMessage(message_exists),
+                    check('day').exists().withMessage(message_exists),
+                    check('hour_start').exists().withMessage(message_exists),
+                    check('hour_end').exists().withMessage(message_exists),
+                    check('place').exists().withMessage(message_exists),
+                    // check('lat').isNumeric(),
+                    // check('lng').isNumeric(),
+                    check('user_id').exists().withMessage(withMessage)
+                ]
         }
     },
 
@@ -131,7 +143,7 @@ module.exports = {
                                     title: 'Bienvenido a bordo',
                                     name: req.body.name + ' ' + req.body.lastname,
                                     text: 'En Exitum estamos felices de tener tu confianza',
-                                    description: 'Por favor verifica tu cuenta dándole click al botón.',                                    
+                                    description: 'Por favor verifica tu cuenta dándole click al botón.',
                                     url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
@@ -340,7 +352,7 @@ module.exports = {
                                         title: 'Bienvenido a bordo',
                                         name: user.name + ' ' + user.lastname,
                                         text: 'En Exitum estamos felices de tener tu confianza',
-                                        description: 'Por favor verifica tu cuenta dándole click al botón.', 
+                                        description: 'Por favor verifica tu cuenta dándole click al botón.',
                                         url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
@@ -405,7 +417,7 @@ module.exports = {
                             title: 'Problemas al iniciar sesión',
                             name: user.name + ' ' + user.lastname,
                             text: 'Notamos que tienes problemas para iniciar sesión.',
-                            description: 'Por favor renueva tu contraseña dándole click al botón.',                            
+                            description: 'Por favor renueva tu contraseña dándole click al botón.',
                             url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
@@ -526,5 +538,34 @@ module.exports = {
                 return res.status(200).json({ status: false, message: "No hay paises registrados" })
             }
         })
-    }
+    },
+
+    // createWorkshop: (req, res) => {
+    //     const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
+    //     models.user.findOne({ where: { id: user_id } }).then(user => {
+    //         if (user) {
+    //             return res.json({ status: false, message: "Este usuario no existe." })
+    //         } else {
+    //             models.workshop.create({
+    //                 title: title,
+    //                 description: description,
+    //                 day: day,
+    //                 hour_start: hour_start,
+    //                 hour_end: hour_end,
+    //                 place: place,
+    //                 lat: lat,
+    //                 lng: lng,
+    //                 user_id: user.id
+    //             }).then(workshop => {
+    //                 if (workshop) {
+    //                     return res.json({ status: 200, message: "Taller creado correctamente", data: workshop })
+    //                 } else {
+    //                     return res.json({ status: false, message: "No se creo el taller" })
+    //                 }
+    //             }).catch(err => {
+    //                 return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
+    //             })
+    //         }
+    //     })
+    // }
 }
