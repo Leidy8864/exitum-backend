@@ -124,7 +124,7 @@ module.exports = {
                             var mailOptions = {
                                 from: index.emailExitum,
                                 to: req.body.email,
-                                subject: 'Verificacion de la cuenta',
+                                subject: 'Verificación de la cuenta',
                                 //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
