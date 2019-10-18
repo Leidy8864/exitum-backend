@@ -16,10 +16,10 @@ module.exports = {
         try {
             const skills = await models.skill.findAll();
 
-            return res.status(200).json({ status: true, message: "OK",data: skills });
+            return res.json({ status: true, message: "OK",data: skills });
 
         } catch (error) {
-            res.status(200).json({
+            res.json({
                 status: false,
                 message: "Error al listar skills"
             });
