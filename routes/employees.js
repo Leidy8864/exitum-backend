@@ -27,7 +27,7 @@ router.post('/update/skills', function (req, res) {
 router.post('/update/languages', function (req, res) {
     controller.updateLanguages(req, res);
 });
-
+    
 router.post('/update/types', function (req, res) {
     controller.updateTypes(req, res);
 });

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/userController');
+const controllerReview = require('../controllers/userReviewController');
 var passportConf = require('../libs/passport');
 var passport = require('passport');
 const passportGoogle = passport.authenticate('google-plus-token', { session: false, failureFlash: 'Invalid username or password.' });
@@ -56,5 +57,15 @@ router.post('/reset',
 router.get('/countries',
   controller.listCountry
 );
+
+router.post('/comment/:to_user_id',
+  controllerReview.validate('comment'),
+  controllerReview.comment
+)
+
+router.post('/rating/:to_user_id',
+  controllerReview.validate('rating'),
+  controllerReview.rating
+)
 
 module.exports = router;

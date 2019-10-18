@@ -43,7 +43,6 @@ module.exports = (sequelize, DataTypes) => {
             through: 'employee_language',
             foreignKey: 'employee_id'
         });
-
         employee.belongsToMany(models.test, {
             through: 'employee_test',
             foreignKey: 'employee_id'
@@ -86,9 +85,17 @@ module.exports = (sequelize, DataTypes) => {
         employee.belongsTo(models.stage, {
             foreignKey: 'stage_id'
         });
-        employee.belongsToMany(models.tip,{
-            through : 'employee_tip',
-            foreignKey : 'employee_id'
+        employee.belongsToMany(models.tip, {
+            as: { singular: 'tip', plural: 'tips'},
+            through: models.employee_tip,
+            foreignKey: 'employee_id',
+            otherKey: 'tip_id'
+        });
+        employee.belongsToMany(models.advertisement, {
+            as: { singular: 'proposal', plural: 'proposals'},
+            through: models.proposal,
+            foreignKey: 'employee_id',
+            otherKey: 'advertisement_id'
         });
     }
     return employee

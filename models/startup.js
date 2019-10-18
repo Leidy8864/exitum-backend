@@ -7,6 +7,7 @@ const model_startup = (sequelize, DataType) => {
         photo_url: DataType.STRING,
         ruc: DataType.STRING,
         description: DataType.STRING,
+        avg_rating: DataType.FLOAT(3, 2),
         entrepreneur_id: {
             type: DataType.INTEGER,
             references: {
@@ -67,6 +68,12 @@ const model_startup = (sequelize, DataType) => {
         startup.hasMany(models.team,{
             foreignKey : 'startup_id'
         });
+        startup.belongsToMany(models.user, {
+            as: { singular: 'toStartupUser', plural: 'toStartupUsers' },
+            through: models.review_startup,
+            foreignKey: 'startup_id',
+            otherKey: 'user_id'
+          });
     }
     return startup
 }

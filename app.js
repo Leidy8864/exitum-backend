@@ -14,8 +14,12 @@ var favoriteRouter = require('./routes/favorites');
 var experiencesRouter = require('./routes/experiences');
 var educationsRouter = require('./routes/educations');
 var advertisementsRouter = require('./routes/advertisements');
-
-const controller = require('./controllers/userController');
+var challengesRouter = require('./routes/challenges');
+var skillsRouter = require('./routes/skills');
+var stageRouter = require('./routes/stage');
+var categoryRouter = require('./routes/category');
+var proposalRouter = require('./routes/proposals');
+//const controller = require('./controllers/userController');
 
 var app = express();
 
@@ -40,11 +44,12 @@ app.use('/startups', startupRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/experiences', experiencesRouter);
 app.use('/educations', educationsRouter);
-app.use('/advertisements',advertisementsRouter);
-
-// app.get('/dashboard/:token', function (req, res) {
-//   controller.confirmation(req, res);
-// });
+app.use('/advertisements', advertisementsRouter);
+app.use('/challenges', challengesRouter);
+app.use('/skills', skillsRouter);
+app.use('/proposals', proposalRouter);
+app.use('/stages', stageRouter);
+app.use('/categories', categoryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

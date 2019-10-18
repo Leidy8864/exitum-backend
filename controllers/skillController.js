@@ -36,9 +36,9 @@ module.exports = {
 
             const skill = models.skill.create({
                 skill: req.body.skill
+            }).then(skill => {
+                return res.status(200).json({ status: true, message: "Skill creado correctamente", data: skill });
             });
-
-            return res.status(200).json({ status: true, message: "Skill creado correctamente",data: skill });
         } catch (error) {
 
             res.status(200).json({
@@ -46,5 +46,5 @@ module.exports = {
                 message: "Error al crear el skill"
             });
         }
-    }
+    },
 }

@@ -47,11 +47,10 @@ module.exports = (sequelize, DataType) => {
             through: 'advertisement_skill',
             foreignKey: 'advertisement_id'
         });
-        advertisement.hasMany(models.proposal, {
-            as: 'proposal',
+        advertisement.belongsToMany(models.employee, {
+            through: 'proposal',
             foreignKey: 'advertisement_id'
         });
-
     };
     return advertisement;
 };
