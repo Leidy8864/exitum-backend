@@ -14,7 +14,7 @@ module.exports = {
     },
     findAllSkill: async (res) => {
         try {
-            const skills = models.skill.findAll();
+            const skills = await models.skill.findAll();
 
             return res.status(200).json({ status: true, message: "OK",data: skills });
 
