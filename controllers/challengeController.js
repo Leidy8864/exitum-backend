@@ -154,5 +154,51 @@ module.exports = {
         } catch (error) {
             res.status(200).json({ status: false, message: "Error al crear un reto para el empleado." });
         }
+    },
+
+    listChallengeEmployee: async (req, res) => {
+        models.stage.findAll({
+            where: { type: 'employee' },
+            include: [
+                {
+                    model: models.step,
+                    include: [
+                        { model: models.tip }
+                    ]
+                }
+            ]
+        }).then(challenges => {
+            if (challenges) {
+                return res.json({ status: 200, message: "Lista de retos del impulsor", data: challenges })
+            } else {
+                return res.json({ status: false, message: "No hay retos registrados" })
+            }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Error al listar retos", data: { err } })
+        })
+    },
+
+    listChallengeStartup: async (req, res) => {
+        models.stage.findAll({
+            where: { type: 'startup' },
+            include: [
+                {
+                    model: models.step,
+                    include: [
+                        { model: models.tip }
+                    ]
+                }
+            ]
+        }).then(challenges => {
+            if (challenges) {
+                return res.json({ status: 200, message: "Lista de retos de la startup", data: challenges })
+            } else {
+                return res.json({ status: false, message: "No hay retos registrados" })
+            }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Error al listar retos", data: { err } })
+        })
     }
 }
