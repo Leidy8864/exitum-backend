@@ -47,7 +47,7 @@ module.exports = {
         const { stage, description, type } = req.body
         models.stage.findOne({ where: { stage: stage } }).then(st => {
             if (st) {
-                res.json({ status: false, message: "El nombre de este stage ya existe" });
+                res.json({ status: false, message: "El nombre de esta etapa ya existe" });
             } else {
                 models.stage.create({
                     stage: stage,
@@ -113,17 +113,6 @@ module.exports = {
                             return res.json({ status: 200, message: 'Reto superado guardado correctamente.', data: { check } })
                         } else {
                             return res.json({ status: false, message: 'Reto superado sin guardar.' })
-                        }
-                    });
-                    models.startup_tip.create({
-                        tip_id: req.body.tip_id,
-                        startup_id: req.body.startup_id,
-                        checked: req.body.checked
-                    }).then(checked => {
-                        if (checked) {
-                            return res.json({ status: 200, message: "Creado correctamente." })
-                        } else {
-                            return res.json({ status: false, message: "Error al crear" })
                         }
                     });
                 } else {

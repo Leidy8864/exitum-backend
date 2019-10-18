@@ -64,7 +64,7 @@ module.exports = {
             }
         } catch (error) {
             console.log("Errrror", error);
-            return res.json({ status: false, message: "Error al actualizar el usuario", });
+            return res.json({ status: false, message: "Error al crear la startup", data: {error}});
         }
     },
 

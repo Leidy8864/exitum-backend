@@ -209,10 +209,11 @@ module.exports = {
             res.status(200).json({ status: true, message: "Error al listar información de empleado" });
         }
     },
+    
     compareEmploye: async (req, res) => {
         const { employee_id_1, employee_id_2 } = req.body
         const Op = models.Sequelize.Op
-        models.employee.findAll({
+        models.employee.findAll({   
             where: {
                 [Op.or]: [
                     { id: employee_id_1 },
