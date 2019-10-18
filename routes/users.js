@@ -68,9 +68,13 @@ router.post('/rating/:to_user_id',
   controllerReview.rating
 )
 
-// router.post('/workshop', 
+// router.post('/createWorkshop', 
 //   controller.validate('createWorkshop'),
 //   controller.createWorkshop()
 // )
 
+// router.post('/updateWorkshop',
+//   controller.validate('createWorkshop'),
+//   controller.updateWorkshop
+// )
 module.exports = router;

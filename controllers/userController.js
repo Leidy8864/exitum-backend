@@ -540,32 +540,68 @@ module.exports = {
         })
     },
 
-    // createWorkshop: (req, res) => {
-    //     const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
-    //     models.user.findOne({ where: { id: user_id } }).then(user => {
-    //         if (user) {
-    //             return res.json({ status: false, message: "Este usuario no existe." })
-    //         } else {
-    //             models.workshop.create({
-    //                 title: title,
-    //                 description: description,
-    //                 day: day,
-    //                 hour_start: hour_start,
-    //                 hour_end: hour_end,
-    //                 place: place,
-    //                 lat: lat,
-    //                 lng: lng,
-    //                 user_id: user.id
-    //             }).then(workshop => {
-    //                 if (workshop) {
-    //                     return res.json({ status: 200, message: "Taller creado correctamente", data: workshop })
-    //                 } else {
-    //                     return res.json({ status: false, message: "No se creo el taller" })
-    //                 }
-    //             }).catch(err => {
-    //                 return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
-    //             })
-    //         }
-    //     })
-    // }
+    createWorkshop: (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
+        }
+
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
+        models.user.findOne({ where: { id: user_id } }).then(user => {
+            if (user) {
+                return res.json({ status: false, message: "Este usuario no existe." })
+            } else {
+                models.workshop.create({
+                    title: title,
+                    description: description,
+                    day: day,
+                    hour_start: hour_start,
+                    hour_end: hour_end,
+                    place: place,
+                    lat: lat,
+                    lng: lng,
+                    user_id: user.id
+                }).then(workshop => {
+                    if (workshop) {
+                        return res.json({ status: 200, message: "Taller creado correctamente", data: workshop })
+                    } else {
+                        return res.json({ status: false, message: "No se creo el taller" })
+                    }
+                }).catch(err => {
+                    return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
+                })
+            }
+        })
+    },
+
+    updateWorkshop: (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
+        }
+
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
+        models.user.findOne({ where: { id: user_id } }).then(user => {
+            if (user) {
+                return res.json({ status: false, message: "Este usuario no existe." })
+            } else {
+                models.workshop.update({
+                    title: title,
+                    description: description,
+                    day: day,
+                    hour_start: hour_start,
+                    hour_end: hour_end,
+                    place: place,
+                    lat: lat,
+                    lng: lng,
+                }, { where: { user_id: user.id } }).then(() => {
+                    return res.json({ status: 200, message: "Taller actualizado correctamente" })
+                }).catch(err => {
+                    return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
+                })
+            }
+        })
+    }
 }

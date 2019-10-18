@@ -1089,6 +1089,28 @@ CREATE TABLE IF NOT EXISTS `exitum`.`review_startup` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `mydb`.`workshop`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`workshop` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(145) NULL,
+  `description` TEXT NULL,
+  `day` DATE NULL,
+  `hour_start` TIME NULL,
+  `hour_end` TIME NULL,
+  `place` VARCHAR(200) NULL,
+  `lat` DECIMAL(10,8) NULL,
+  `lng` DECIMAL(11,8) NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_workshop_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_workshop_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

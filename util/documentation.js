@@ -323,7 +323,7 @@
  *
  * @api {GET} /users/countries GET list country
  * @apiName resendToken
- * @apiGroup COUNTRIES
+ * @apiGroup USER
  * 
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -345,6 +345,78 @@
                 "currency_id": 1
             }
         ]
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {POST} /users/createWorkshop POST create workshop
+ * @apiName create workshop
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Creación de un taller.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {String} title Titulo del taller.
+ * @apiParam {String} description Descripción del taller.
+ * @apiParam {Date} day Día del evento.
+ * @apiParam {Time} hour_start Hora de inicio del evento.
+ * @apiParam {Time} hour_end Hora de cierre del evento.
+ * @apiParam {String} place Dirección del evento.
+ * @apiParam {Decimal} lat Latitud.
+ * @apiParam {Decimal} lng Longitud.
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/createWorkshop
+    {
+        
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+	{
+        "status": 200,
+        "message": "Taller creado correctamente"
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {POST} /users/updateWorkshop POST update workshop
+ * @apiName update workshop
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualización de un taller.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {String} title Titulo del taller.
+ * @apiParam {String} description Descripción del taller.
+ * @apiParam {Date} day Día del evento.
+ * @apiParam {Time} hour_start Hora de inicio del evento.
+ * @apiParam {Time} hour_end Hora de cierre del evento.
+ * @apiParam {String} place Dirección del evento.
+ * @apiParam {Decimal} lat Latitud.
+ * @apiParam {Decimal} lng Longitud.
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/updateWorkshop
+    {
+        
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+	{
+        "status": 200,
+        "message": "Taller actualizado correctamente"
     }
  *
  *
