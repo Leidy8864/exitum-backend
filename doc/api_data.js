@@ -1220,6 +1220,168 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/challenges/listEmployee",
+    "title": "GET list challenges employee",
+    "name": "list_challenges_employee",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Lista de retos del empleado.</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/listEmployee",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de retos</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Lista de retos del impulsor\",\n    \"data\": [\n        {\n            \"id\": 7,\n            \"stage\": \"principiante\",\n            \"description\": \"Registra todos los datos del perfil\",\n            \"type\": \"employee\",\n            \"steps\": [\n                {\n                    \"id\": 1,\n                    \"icon\": \"bc9ca640-f1dd-11e9-a8f8-0123456789abmaria.PNG\",\n                    \"stage_id\": 7,\n                    \"tips\": [\n                        {\n                            \"id\": 1,\n                            \"tip\": \"Subir foto a mi perfil\",\n                            \"step_id\": 1\n                        },\n                        {\n                            \"id\": 2,\n                            \"tip\": \"Asociar mi cuenta con linkedin\",\n                            \"step_id\": 1\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/challenges/listStartup",
+    "title": "GET list challenges startup",
+    "name": "list_challenges_startup",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Lista de retos de la startup.</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/listStartup",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de retos</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Lista de retos de la startup\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"stage\": \"Pre semilla\",\n            \"description\": \"Etapa donde solo se tiene una idea superficial y se busca validarla.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 2,\n            \"stage\": \"Semilla\",\n            \"description\": \"Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 3,\n            \"stage\": \"Temprana\",\n            \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 4,\n            \"stage\": \"Crecimiento\",\n            \"description\": \"Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 5,\n            \"stage\": \"Expansión\",\n            \"description\": \"Etapa donde se busca alcanzar nuevos horizontes en otros mercados.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 6,\n            \"stage\": \"IPO\",\n            \"description\": \"Etapa donde se lanza al mercado acciones de nuestra empresa para conseguir acciones y expandir planes de negocio.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
     "name": "resendToken",
