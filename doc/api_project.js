@@ -8,11 +8,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-<<<<<<< HEAD
-    "time": "2019-10-16T15:50:37.986Z",
-=======
-    "time": "2019-10-16T17:12:15.770Z",
->>>>>>> sprint2
+    "time": "2019-10-18T21:56:05.313Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

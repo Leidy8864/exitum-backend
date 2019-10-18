@@ -1853,6 +1853,125 @@
 
  /**
  *
+ * @api {GET} /challenges/listStartup GET list challenges startup
+ * @apiName list challenges startup
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista de retos de la startup.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/listStartup
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Lista de retos de la startup",
+        "data": [
+            {
+                "id": 1,
+                "stage": "Pre semilla",
+                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 2,
+                "stage": "Semilla",
+                "description": "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 3,
+                "stage": "Temprana",
+                "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 4,
+                "stage": "Crecimiento",
+                "description": "Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 5,
+                "stage": "Expansión",
+                "description": "Etapa donde se busca alcanzar nuevos horizontes en otros mercados.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 6,
+                "stage": "IPO",
+                "description": "Etapa donde se lanza al mercado acciones de nuestra empresa para conseguir acciones y expandir planes de negocio.",
+                "type": "startup",
+                "steps": []
+            }
+        ]
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /challenges/listEmployee GET list challenges employee
+ * @apiName list challenges employee
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista de retos del empleado.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/listEmployee
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Lista de retos del impulsor",
+        "data": [
+            {
+                "id": 7,
+                "stage": "principiante",
+                "description": "Registra todos los datos del perfil",
+                "type": "employee",
+                "steps": [
+                    {
+                        "id": 1,
+                        "icon": "bc9ca640-f1dd-11e9-a8f8-0123456789abmaria.PNG",
+                        "stage_id": 7,
+                        "tips": [
+                            {
+                                "id": 1,
+                                "tip": "Subir foto a mi perfil",
+                                "step_id": 1
+                            },
+                            {
+                                "id": 2,
+                                "tip": "Asociar mi cuenta con linkedin",
+                                "step_id": 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+ *
+ *
+ */
+
+ /**
+ *
  * @api {POST} /proposals/create POST create proposal
  * @apiName create proposal
  * @apiGroup PROPOSALS
