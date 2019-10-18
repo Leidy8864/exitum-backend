@@ -835,7 +835,6 @@
  *
  */
 
-
  /**
  *
  * @api {POST} /employees/update/skills POST update employee skills 
@@ -915,6 +914,142 @@
     {
         "user_id" : 2,
         "types" : [1,2]
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /employees/compare POST compare employees
+ * @apiName compare employees
+ * @apiGroup EMPLOYEE
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Comparar a dos impulsores
+ * @apiParam {Int} employee_id_1 Id del impulsor 1.
+ * @apiParam {Int} employee_id_2 Id del impulsor 2.
+	* @apiParamExample {querystring} Ejemplo url
+    /employees/compare
+    {
+        "employee_id_1" : 1,
+        "employee_id_1" : 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica los datos obtenidos
+ * @apiSuccess (Datos obtenidos) {Object[]} data.employees Indica el array de empleados
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": 200,
+        "message": "Comparación de dos impulsores exitosa",
+        "data": {
+            "employees": [
+                {
+                    "id": 1,
+                    "user_id": 1,
+                    "category_id": 1,
+                    "stage_id": 1,
+                    "short_description": "Desarrollador Web",
+                    "about_me": "Soy un desarrollor web",
+                    "price_hour": "15.50",
+                    "behance_user": null,
+                    "behance_active": null,
+                    "linkedin_active": null,
+                    "category": {
+                        "id": 1,
+                        "name": "Tecnológico"
+                    },
+                    "education": [],
+                    "experience": [],
+                    "recommendation": [],
+                    "languages": [
+                        {
+                            "id": 1,
+                            "language": "Ingles",
+                            "employee_language": {
+                                "employee_id": 1,
+                                "language_id": 1,
+                                "level_id": 2,
+                                "employeeId": 1
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "language": "Espanol",
+                            "employee_language": {
+                                "employee_id": 1,
+                                "language_id": 2,
+                                "level_id": 3,
+                                "employeeId": 1
+                            }
+                        }
+                    ],
+                    "skills": [
+                        {
+                            "id": 1,
+                            "skill": "NodeJS",
+                            "employee_skill": {
+                                "employee_id": 1,
+                                "skill_id": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "user_id": 2,
+                    "category_id": 1,
+                    "stage_id": 1,
+                    "short_description": "Desarrollador Web",
+                    "about_me": "Soy un desarrollor web",
+                    "price_hour": "15.50",
+                    "behance_user": null,
+                    "behance_active": null,
+                    "linkedin_active": null,
+                    "category": {
+                        "id": 1,
+                        "name": "Tecnológico"
+                    },
+                    "education": [],
+                    "experience": [],
+                    "recommendation": [],
+                    "languages": [
+                        {
+                            "id": 1,
+                            "language": "Ingles",
+                            "employee_language": {
+                                "employee_id": 2,
+                                "language_id": 1,
+                                "level_id": 2,
+                                "employeeId": 2
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "language": "Espanol",
+                            "employee_language": {
+                                "employee_id": 2,
+                                "language_id": 2,
+                                "level_id": 3,
+                                "employeeId": 2
+                            }
+                        }
+                    ],
+                    "skills": [
+                        {
+                            "id": 1,
+                            "skill": "NodeJS",
+                            "employee_skill": {
+                                "employee_id": 2,
+                                "skill_id": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
     }
  *
  *
