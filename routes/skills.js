@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/skillController');
 
-router.get('/list',
-    controller.findAllSkill
-);
+router.get('/list', function (req, res) {
+    controller.findAllSkill(res)
+});
 
-router.post('/create',
-    controller.createSkill
-);
+router.post('/create', function (req, res) {
+    controller.createSkill(req, res)
+});
 
 module.exports = router;

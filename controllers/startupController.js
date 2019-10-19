@@ -48,23 +48,28 @@ module.exports = {
                 if (req.files) {
                     fileName = s3.putObject(NEW_BUCKET_NAME, req.files.photo);
                 }
-
-                await models.startup.create({
-                    name: name,
-                    photo_url: fileName,
-                    ruc: ruc,
-                    description: description,
-                    category_id: category_id,
-                    stage_id: stage_id,
-                    entrepreneur_id: entrepreneur.id
+                await models.startup.findOne({ where: { name: name, id: entrepreneur.id } }).then(sta => {
+                    if (sta) {
+                        return res.json({ status: false, message: "Este nombre ya esta en uso" });
+                    } else {
+                        models.startup.create({
+                            name: name,
+                            photo_url: fileName,
+                            ruc: ruc,
+                            description: description,
+                            category_id: category_id,
+                            stage_id: stage_id,
+                            entrepreneur_id: entrepreneur.id
+                        });
+                        return res.json({ status: true, message: "Startup creado correctamente" });
+                    }
                 });
-                return res.json({ status: 200, message: "Startup creado correctamente" });
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
         } catch (error) {
             console.log("Errrror", error);
-            return res.json({ status: false, message: "Error al actualizar el usuario", });
+            return res.json({ status: false, message: "Error al crear la startup", data: { error } });
         }
     },
 
@@ -103,7 +108,7 @@ module.exports = {
                         category_id: category_id,
                     }, { where: { id: startup.id } }).then(startup => {
                         if (startup) {
-                            res.json({ status: 200, message: "Startup actualizado correctamente" })
+                            res.json({ status: true, message: "Startup actualizado correctamente" })
                         } else {
                             res.json({ status: false, message: "No se pudo actualizar" })
                         }
@@ -158,7 +163,7 @@ module.exports = {
             if (entrepreneur) {
                 models.startup.findAll({ where: { entrepreneur_id: entrepreneur.id } }).then(startups => {
                     if (!startups) return res.json({ status: false, message: 'No tiene startups creados' });
-                    res.json({ status: 200, startups: startups })
+                    res.json({ status: true, startups: startups })
                 })
             } else {
                 res.json({ status: false, message: 'No existe emprededor con este usuario' })
@@ -172,7 +177,7 @@ module.exports = {
     list: (req, res) => {
         models.startup.findAll().then(startups => {
             if (!startups) return res.json({ status: false, message: 'No tiene startups creados' });
-            res.json({ status: 200, message: 'Ok', data: { startups: startups } })
+            res.json({ status: true, message: 'Ok', data: { startups: startups } })
         }).catch(err => {
             console.log("Error: " + err)
             res.status(400).json(err)
@@ -182,7 +187,7 @@ module.exports = {
     listSector: (req, res) => {
         models.sector.findAll().then(sectors => {
             if (sectors) {
-                res.json({ status: 200, message: 'Ok', data: { sectors: sectors } })
+                res.json({ status: true, message: 'Ok', data: { sectors: sectors } })
             } else {
                 res.json({ status: false, message: "No hay sectores" })
             }

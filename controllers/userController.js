@@ -53,6 +53,18 @@ module.exports = {
                 return [
                     check('token').exists()
                 ]
+            case 'createWorkshop':
+                return [
+                    check('title').exists().withMessage(message_exists),
+                    check('description').exists().withMessage(message_exists),
+                    check('day').exists().withMessage(message_exists),
+                    check('hour_start').exists().withMessage(message_exists),
+                    check('hour_end').exists().withMessage(message_exists),
+                    check('place').exists().withMessage(message_exists),
+                    // check('lat').isNumeric(),
+                    // check('lng').isNumeric(),
+                    check('user_id').exists().withMessage(withMessage)
+                ]
         }
     },
 
@@ -124,14 +136,14 @@ module.exports = {
                             var mailOptions = {
                                 from: index.emailExitum,
                                 to: req.body.email,
-                                subject: 'Verificacion de la cuenta',
+                                subject: 'Verificación de la cuenta',
                                 //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
                                     title: 'Bienvenido a bordo',
                                     name: req.body.name + ' ' + req.body.lastname,
                                     text: 'En Exitum estamos felices de tener tu confianza',
-                                    description: 'Por favor verifica tu cuenta dándole click al botón.',                                    
+                                    description: 'Por favor verifica tu cuenta dándole click al botón.',
                                     url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
@@ -340,14 +352,14 @@ module.exports = {
                                         title: 'Bienvenido a bordo',
                                         name: user.name + ' ' + user.lastname,
                                         text: 'En Exitum estamos felices de tener tu confianza',
-                                        description: 'Por favor verifica tu cuenta dándole click al botón.', 
+                                        description: 'Por favor verifica tu cuenta dándole click al botón.',
                                         url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
                                 }
                                 transporter.sendMail(mailOptions).then(() => {
                                     console.log('Un email de verificación ha sido enviado a ' + user.email + '.');
-                                    res.json({ status: 200, message: "Un email de verificación ha sido enviado a " + user.email + " ." })
+                                    res.json({ status: true, message: "Un email de verificación ha sido enviado a " + user.email + " ." })
                                 }).catch(err => {
                                     console.log("Error: " + err)
                                     res.status(500).json({ status: false, message: err.message })
@@ -405,14 +417,14 @@ module.exports = {
                             title: 'Problemas al iniciar sesión',
                             name: user.name + ' ' + user.lastname,
                             text: 'Notamos que tienes problemas para iniciar sesión.',
-                            description: 'Por favor renueva tu contraseña dándole click al botón.',                            
+                            description: 'Por favor renueva tu contraseña dándole click al botón.',
                             url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
                     transporter.sendMail(mailOptions).then(() => {
                         console.log('Un email de recuperación ha sido enviado a ' + req.body.email + '.');
-                        res.json({ status: 200, message: 'Un email de recuperación ha sido enviado a ' + req.body.email });
+                        res.json({ status: true, message: 'Un email de recuperación ha sido enviado a ' + req.body.email });
                     }).catch(err => {
                         console.log("Error: " + err)
                         res.status(500).json({ status: false, message: err.message })
@@ -524,6 +536,71 @@ module.exports = {
                 return res.status(200).json({ status: true, message: "OK", data: countries })
             } else {
                 return res.status(200).json({ status: false, message: "No hay paises registrados" })
+            }
+        })
+    },
+
+    createWorkshop: (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
+        }
+
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
+        models.user.findOne({ where: { id: user_id } }).then(user => {
+            if (user) {
+                return res.json({ status: false, message: "Este usuario no existe." })
+            } else {
+                models.workshop.create({
+                    title: title,
+                    description: description,
+                    day: day,
+                    hour_start: hour_start,
+                    hour_end: hour_end,
+                    place: place,
+                    lat: lat,
+                    lng: lng,
+                    user_id: user.id
+                }).then(workshop => {
+                    if (workshop) {
+                        return res.json({ status: 200, message: "Taller creado correctamente", data: workshop })
+                    } else {
+                        return res.json({ status: false, message: "No se creo el taller" })
+                    }
+                }).catch(err => {
+                    return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
+                })
+            }
+        })
+    },
+
+    updateWorkshop: (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
+        }
+
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
+        models.user.findOne({ where: { id: user_id } }).then(user => {
+            if (user) {
+                return res.json({ status: false, message: "Este usuario no existe." })
+            } else {
+                models.workshop.update({
+                    title: title,
+                    description: description,
+                    day: day,
+                    hour_start: hour_start,
+                    hour_end: hour_end,
+                    place: place,
+                    lat: lat,
+                    lng: lng,
+                }, { where: { user_id: user.id } }).then(() => {
+                    return res.json({ status: 200, message: "Taller actualizado correctamente" })
+                }).catch(err => {
+                    return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
+                })
             }
         })
     }

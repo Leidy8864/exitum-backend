@@ -28,8 +28,8 @@
             "group": "Parameter",
             "type": "Int",
             "optional": false,
-            "field": "category_id",
-            "description": "<p>Id de la categoria</p>"
+            "field": "area_id",
+            "description": "<p>Id del área</p>"
           },
           {
             "group": "Parameter",
@@ -50,7 +50,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/advertisement/create\n{\n    \"title\" : \"Programador en Java\",\n    \"description\" : \"Requiero un programador senior\",\n    \"category_id\" : 1,\n    \"startup_id\" : 1,\n    \"skills\" : [1,2,3]\n}",
+          "content": "/advertisement/create\n{\n    \"title\" : \"Programador en Java\",\n    \"description\" : \"Requiero un programador senior\",\n    \"area_id\" : 1,\n    \"startup_id\" : 1,\n    \"skills\" : [1,2,3]\n}",
           "type": "querystring"
         }
       ]
@@ -84,7 +84,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Anuncio creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Java\",\n        \"description\": \"Requiero un programador senior\",\n        \"state\": \"active\",\n        \"category_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.373Z\"\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Anuncio creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Java\",\n        \"description\": \"Requiero un programador senior\",\n        \"state\": \"active\",\n        \"area_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.373Z\"\n    }\n}",
           "type": "json"
         }
       ]
@@ -176,7 +176,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Javascript\",\n        \"description\": \"Conocimientos solidos en NODEJS Y REACT\",\n        \"state\": \"archived\",\n        \"category_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.000Z\",\n        \"skills\": [\n            {\n                \"id\": 1,\n                \"skill\": \"PHP\",\n                \"advertisement_skill\": {\n                    \"advertisement_id\": 2,\n                    \"skill_id\": 1\n                }\n            },\n            {\n                \"id\": 2,\n                \"skill\": \"Node JS\",\n                \"advertisement_skill\": {\n                    \"advertisement_id\": 2,\n                    \"skill_id\": 2\n                }\n            }\n        ],\n        \"category\": {\n            \"id\": 1,\n            \"name\": \"Programación y Tecnología\"\n        },\n        \"startup\": {\n            \"id\": 1,\n            \"name\": \"Proyecto Exitum\",\n            \"photo_url\": null,\n            \"ruc\": null,\n            \"description\": \"Proyecto que pretende ayudar startups\",\n            \"entrepreneur_id\": 1,\n            \"category_id\": 1,\n            \"stage_id\": 1\n        }\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Javascript\",\n        \"description\": \"Conocimientos solidos en NODEJS Y REACT\",\n        \"state\": \"archived\",\n        \"area_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.000Z\",\n        \"skills\": [\n            {\n                \"id\": 1,\n                \"skill\": \"PHP\",\n                \"advertisement_skill\": {\n                    \"advertisement_id\": 2,\n                    \"skill_id\": 1\n                }\n            },\n            {\n                \"id\": 2,\n                \"skill\": \"Node JS\",\n                \"advertisement_skill\": {\n                    \"advertisement_id\": 2,\n                    \"skill_id\": 2\n                }\n            }\n        ],\n        \"area\": {\n            \"id\": 1,\n            \"name\": \"Area 1\"\n        },\n        \"startup\": {\n            \"id\": 1,\n            \"name\": \"Proyecto Exitum\",\n            \"photo_url\": null,\n            \"ruc\": null,\n            \"description\": \"Proyecto que pretende ayudar startups\",\n            \"entrepreneur_id\": 1,\n            \"category_id\": 1,\n            \"stage_id\": 1\n        }\n    }\n}",
           "type": "json"
         }
       ]
@@ -339,8 +339,8 @@
             "group": "Parameter",
             "type": "Int",
             "optional": false,
-            "field": "category_id",
-            "description": "<p>Id de la categoria</p>"
+            "field": "area_id",
+            "description": "<p>Id del área</p>"
           },
           {
             "group": "Parameter",
@@ -354,7 +354,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/educations/update\n{\n    \"advertisement_id\" : 2,\n    \"title\" : \"Programador en Javascript\",\n    \"description\" : \"Conocimientos solidos en NODEJS Y REACT\",\n    \"state\" : \"archived\",\n    \"category_id\" : 1,\n    \"startup_id\" : 1\n}",
+          "content": "/educations/update\n{\n    \"advertisement_id\" : 2,\n    \"title\" : \"Programador en Javascript\",\n    \"description\" : \"Conocimientos solidos en NODEJS Y REACT\",\n    \"state\" : \"archived\",\n    \"area_id\" : 1,\n    \"startup_id\" : 1\n}",
           "type": "querystring"
         }
       ]
@@ -388,7 +388,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Anuncio actualizado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Javascript\",\n        \"description\": \"Conocimientos solidos en NODEJS Y REACT\",\n        \"state\": \"archived\",\n        \"category_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.000Z\"\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Anuncio actualizado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"title\": \"Programador en Javascript\",\n        \"description\": \"Conocimientos solidos en NODEJS Y REACT\",\n        \"state\": \"archived\",\n        \"area_id\": 1,\n        \"startup_id\": 1,\n        \"created_at\": \"2019-10-03T20:47:28.000Z\"\n    }\n}",
           "type": "json"
         }
       ]
@@ -487,7 +487,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"category_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Programación y Tecnología\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"area_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"area\": {\n                \"id\": 1,\n                \"name\": \"Área 1\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -586,7 +586,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"category_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Programación y Tecnología\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"area_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"area\": {\n                \"id\": 1,\n                \"name\": \"Área 1\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -667,7 +667,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"category_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Programación y Tecnología\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1\n            }\n        }\n    ]\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"area_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"area\": {\n                \"id\": 1,\n                \"name\": \"Área 1\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1\n            }\n        }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -1058,7 +1058,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": 200,\n    \"message\": \"Reto superado guardado correctamente.\",\n    \"data\": {\n        \"check\": [\n            1\n        ]\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto superado guardado correctamente.\",\n    \"data\": {\n        \"check\": [\n            1\n        ]\n    }\n}",
           "type": "json"
         }
       ]
@@ -1164,7 +1164,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": 200,\n    \"message\": \"Reto superado guardado correctamente.\",\n    \"data\": {\n        \"check\": [\n            1\n        ]\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto superado guardado correctamente.\",\n    \"data\": {\n        \"check\": [\n            1\n        ]\n    }\n}",
           "type": "json"
         }
       ]
@@ -1270,7 +1270,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": 200,\n    \"message\": \"Etapa creado correctamente.\",\n    \"data\": {\n        \"stage\": \"semilla\",\n        \"description\": \"Etapa semilla\",\n        \"type\": \"startup\"\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Etapa creado correctamente.\",\n    \"data\": {\n        \"stage\": \"semilla\",\n        \"description\": \"Etapa semilla\",\n        \"type\": \"startup\"\n    }\n}",
           "type": "json"
         }
       ]
@@ -1369,7 +1369,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": 200,\n    \"message\": \"Nivel creado correctamente.\",\n    \"data\": {\n        \"id\": 7,\n        \"icon\": \"892b95e0-eb8a-11e9-acef-0123456789abfoodU.png\",\n        \"stage_id\": \"1\"\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Nivel creado correctamente.\",\n    \"data\": {\n        \"id\": 7,\n        \"icon\": \"892b95e0-eb8a-11e9-acef-0123456789abfoodU.png\",\n        \"stage_id\": \"1\"\n    }\n}",
           "type": "json"
         }
       ]
@@ -1468,7 +1468,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": 200,\n    \"message\": \"Reto creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"tip\": \"Crear mi equipo de desarrollo\",\n        \"step_id\": 7\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto creado correctamente\",\n    \"data\": {\n        \"id\": 2,\n        \"tip\": \"Crear mi equipo de desarrollo\",\n        \"step_id\": 7\n    }\n}",
           "type": "json"
         }
       ]
@@ -1505,12 +1505,21 @@
   },
   {
     "type": "GET",
-    "url": "/users/countries",
-    "title": "GET list country",
-    "name": "resendToken",
-    "group": "COUNTRIES",
+    "url": "/challenges/listEmployee",
+    "title": "GET list challenges employee",
+    "name": "list_challenges_employee",
+    "group": "CHALLENGES",
     "version": "1.0.0",
-    "description": "<p>Retorna el listado de paises.</p>",
+    "description": "<p>Lista de retos del empleado.</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/listEmployee",
+          "type": "querystring"
+        }
+      ]
+    },
     "success": {
       "fields": {
         "Datos obtenidos": [
@@ -1523,51 +1532,111 @@
           },
           {
             "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
             "type": "Object[]",
             "optional": false,
-            "field": "countries",
-            "description": "<p>Lista de paises</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.id",
-            "description": "<p>Id del país</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.country",
-            "description": "<p>Nombre del país</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.code",
-            "description": "<p>Codigo del país</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.currency_id",
-            "description": "<p>Id de la moneda del país</p>"
+            "field": "data",
+            "description": "<p>Indica el listado de retos</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Lista de retos del impulsor\",\n    \"data\": [\n        {\n            \"id\": 7,\n            \"stage\": \"principiante\",\n            \"description\": \"Registra todos los datos del perfil\",\n            \"type\": \"employee\",\n            \"steps\": [\n                {\n                    \"id\": 1,\n                    \"icon\": \"bc9ca640-f1dd-11e9-a8f8-0123456789abmaria.PNG\",\n                    \"stage_id\": 7,\n                    \"tips\": [\n                        {\n                            \"id\": 1,\n                            \"tip\": \"Subir foto a mi perfil\",\n                            \"step_id\": 1\n                        },\n                        {\n                            \"id\": 2,\n                            \"tip\": \"Asociar mi cuenta con linkedin\",\n                            \"step_id\": 1\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
           "type": "json"
         }
       ]
     },
     "filename": "util/documentation.js",
-    "groupTitle": "COUNTRIES",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/challenges/listStartup",
+    "title": "GET list challenges startup",
+    "name": "list_challenges_startup",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Lista de retos de la startup.</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/listStartup",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de retos</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Lista de retos de la startup\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"stage\": \"Pre semilla\",\n            \"description\": \"Etapa donde solo se tiene una idea superficial y se busca validarla.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 2,\n            \"stage\": \"Semilla\",\n            \"description\": \"Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 3,\n            \"stage\": \"Temprana\",\n            \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 4,\n            \"stage\": \"Crecimiento\",\n            \"description\": \"Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 5,\n            \"stage\": \"Expansión\",\n            \"description\": \"Etapa donde se busca alcanzar nuevos horizontes en otros mercados.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        },\n        {\n            \"id\": 6,\n            \"stage\": \"IPO\",\n            \"description\": \"Etapa donde se lanza al mercado acciones de nuestra empresa para conseguir acciones y expandir planes de negocio.\",\n            \"type\": \"startup\",\n            \"steps\": []\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
     "error": {
       "fields": {
         "Estructura de Error": [
@@ -1822,6 +1891,112 @@
     },
     "filename": "util/documentation.js",
     "groupTitle": "EDUCATIONS",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/employees/compare",
+    "title": "POST compare employees",
+    "name": "compare_employees",
+    "group": "EMPLOYEE",
+    "version": "1.0.0",
+    "description": "<p>Comparar a dos impulsores</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "employee_id_1",
+            "description": "<p>Id del impulsor 1.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "employee_id_2",
+            "description": "<p>Id del impulsor 2.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/employees/compare\n{\n    \"employee_id_1\" : 1,\n    \"employee_id_1\" : 2\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos obtenidos</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data.employees",
+            "description": "<p>Indica el array de empleados</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Comparación de dos impulsores exitosa\",\n    \"data\": {\n        \"employees\": [\n            {\n                \"id\": 1,\n                \"user_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"short_description\": \"Desarrollador Web\",\n                \"about_me\": \"Soy un desarrollor web\",\n                \"price_hour\": \"15.50\",\n                \"behance_user\": null,\n                \"behance_active\": null,\n                \"linkedin_active\": null,\n                \"category\": {\n                    \"id\": 1,\n                    \"name\": \"Tecnológico\"\n                },\n                \"education\": [],\n                \"experience\": [],\n                \"recommendation\": [],\n                \"languages\": [\n                    {\n                        \"id\": 1,\n                        \"language\": \"Ingles\",\n                        \"employee_language\": {\n                            \"employee_id\": 1,\n                            \"language_id\": 1,\n                            \"level_id\": 2,\n                            \"employeeId\": 1\n                        }\n                    },\n                    {\n                        \"id\": 2,\n                        \"language\": \"Espanol\",\n                        \"employee_language\": {\n                            \"employee_id\": 1,\n                            \"language_id\": 2,\n                            \"level_id\": 3,\n                            \"employeeId\": 1\n                        }\n                    }\n                ],\n                \"skills\": [\n                    {\n                        \"id\": 1,\n                        \"skill\": \"NodeJS\",\n                        \"employee_skill\": {\n                            \"employee_id\": 1,\n                            \"skill_id\": 1\n                        }\n                    }\n                ]\n            },\n            {\n                \"id\": 2,\n                \"user_id\": 2,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"short_description\": \"Desarrollador Web\",\n                \"about_me\": \"Soy un desarrollor web\",\n                \"price_hour\": \"15.50\",\n                \"behance_user\": null,\n                \"behance_active\": null,\n                \"linkedin_active\": null,\n                \"category\": {\n                    \"id\": 1,\n                    \"name\": \"Tecnológico\"\n                },\n                \"education\": [],\n                \"experience\": [],\n                \"recommendation\": [],\n                \"languages\": [\n                    {\n                        \"id\": 1,\n                        \"language\": \"Ingles\",\n                        \"employee_language\": {\n                            \"employee_id\": 2,\n                            \"language_id\": 1,\n                            \"level_id\": 2,\n                            \"employeeId\": 2\n                        }\n                    },\n                    {\n                        \"id\": 2,\n                        \"language\": \"Espanol\",\n                        \"employee_language\": {\n                            \"employee_id\": 2,\n                            \"language_id\": 2,\n                            \"level_id\": 3,\n                            \"employeeId\": 2\n                        }\n                    }\n                ],\n                \"skills\": [\n                    {\n                        \"id\": 1,\n                        \"skill\": \"NodeJS\",\n                        \"employee_skill\": {\n                            \"employee_id\": 2,\n                            \"skill_id\": 1\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EMPLOYEE",
     "error": {
       "fields": {
         "Estructura de Error": [
@@ -3752,7 +3927,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Startup creado correctamente\"\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Startup creado correctamente\"\n    }",
           "type": "json"
         }
       ]
@@ -3932,7 +4107,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Ok\",\n        \"data\": {\n            \"startups\": [\n                {\n                    \"id\": 5,\n                    \"name\": \"NextMedicall\",\n                    \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                    \"ruc\": \"12312313\",\n                    \"description\": \"Startup de telemedicinaaa\",\n                    \"entrepreneur_id\": 5,\n                    \"category_id\": 1,\n                    \"stage_id\": 1\n                }\n            ]\n        }\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Ok\",\n        \"data\": {\n            \"startups\": [\n                {\n                    \"id\": 5,\n                    \"name\": \"NextMedicall\",\n                    \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                    \"ruc\": \"12312313\",\n                    \"description\": \"Startup de telemedicinaaa\",\n                    \"entrepreneur_id\": 5,\n                    \"category_id\": 1,\n                    \"stage_id\": 1\n                }\n            ]\n        }\n    }",
           "type": "json"
         }
       ]
@@ -4031,7 +4206,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"startups\": [\n            {\n                \"id\": 1,\n                \"name\": \"NextMedicall\",\n                \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                \"ruc\": \"12312313\",\n                \"description\": \"Startup de telemedicinaaa\",\n                \"entrepreneur_id\": 5,\n                \"category_id\": 1,\n                \"stage_id\": 1\n            }\n        ]\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"startups\": [\n            {\n                \"id\": 1,\n                \"name\": \"NextMedicall\",\n                \"photo_url\": \"3e309850-e613-11e9-aa7b-0123456789abCaptura2.PNG\",\n                \"ruc\": \"12312313\",\n                \"description\": \"Startup de telemedicinaaa\",\n                \"entrepreneur_id\": 5,\n                \"category_id\": 1,\n                \"stage_id\": 1\n            }\n        ]\n    }",
           "type": "json"
         }
       ]
@@ -4105,7 +4280,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": 200,\n    \"message\": \"Ok\",\n    \"data\": {\n        \"sectors\": [\n            {\n                \"id\": 1,\n                \"sector\": \"Medicina\"\n            }\n        ]\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Ok\",\n    \"data\": {\n        \"sectors\": [\n            {\n                \"id\": 1,\n                \"sector\": \"Medicina\"\n            }\n        ]\n    }\n}",
           "type": "json"
         }
       ]
@@ -4324,7 +4499,148 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Su cuenta fue verificada.\",\n        \"data\": {\n            \"id\": 49,\n            \"name\": \"Leidy\",\n            \"lastname\": \"Callupe\",\n            \"email\": \"leidy.callupe@tecsup.edu.pe\",\n            \"provider_id\": null,\n            \"confirmed\": false,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"password\": \"$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Su cuenta fue verificada.\",\n        \"data\": {\n            \"id\": 49,\n            \"name\": \"Leidy\",\n            \"lastname\": \"Callupe\",\n            \"email\": \"leidy.callupe@tecsup.edu.pe\",\n            \"provider_id\": null,\n            \"confirmed\": false,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"password\": \"$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/createWorkshop",
+    "title": "POST create workshop",
+    "name": "create_workshop",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Creación de un taller.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Titulo del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "day",
+            "description": "<p>Día del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_start",
+            "description": "<p>Hora de inicio del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_end",
+            "description": "<p>Hora de cierre del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "place",
+            "description": "<p>Dirección del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>Latitud.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lng",
+            "description": "<p>Longitud. *</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/createWorkshop\n    {\n        \n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Menssaje de éxito</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Taller creado correctamente\"\n    }",
           "type": "json"
         }
       ]
@@ -4458,7 +4774,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
           "type": "json"
         }
       ]
@@ -4592,7 +4908,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
           "type": "json"
         }
       ]
@@ -4677,7 +4993,100 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/users/countries",
+    "title": "GET list country",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Retorna el listado de paises.</p>",
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "countries",
+            "description": "<p>Lista de paises</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.id",
+            "description": "<p>Id del país</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.country",
+            "description": "<p>Nombre del país</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.code",
+            "description": "<p>Codigo del país</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.currency_id",
+            "description": "<p>Id de la moneda del país</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": true,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
           "type": "json"
         }
       ]
@@ -4776,7 +5185,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Su cambio el password.\",\n        \"data\": {\n            \"id\": 49,\n            \"name\": \"Leidy\",\n            \"lastname\": \"Callupe\",\n            \"email\": \"leidy.callupe@tecsup.edu.pe\",\n            \"provider_id\": null,\n            \"confirmed\": false,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"password\": \"$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Su cambio el password.\",\n        \"data\": {\n            \"id\": 49,\n            \"name\": \"Leidy\",\n            \"lastname\": \"Callupe\",\n            \"email\": \"leidy.callupe@tecsup.edu.pe\",\n            \"provider_id\": null,\n            \"confirmed\": false,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"password\": \"$2a$10$j0ivFo1F9Yud5sTTmYnEU.CDspnqPq4oa.vzySfLZOlbLZRGvKsEG\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
           "type": "json"
         }
       ]
@@ -4903,7 +5312,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
           "type": "json"
         }
       ]
@@ -4988,7 +5397,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": 'Un email de recuperación ha sido enviado a leidy.callupe@tecsup.edu.pe',\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": 'Un email de recuperación ha sido enviado a leidy.callupe@tecsup.edu.pe',\n    }",
           "type": "json"
         }
       ]
@@ -5108,7 +5517,148 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/updateWorkshop",
+    "title": "POST update workshop",
+    "name": "update_workshop",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Actualización de un taller.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Titulo del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "day",
+            "description": "<p>Día del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_start",
+            "description": "<p>Hora de inicio del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_end",
+            "description": "<p>Hora de cierre del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "place",
+            "description": "<p>Dirección del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>Latitud.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lng",
+            "description": "<p>Longitud. *</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/updateWorkshop\n    {\n        \n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Menssaje de éxito</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Taller actualizado correctamente\"\n    }",
           "type": "json"
         }
       ]

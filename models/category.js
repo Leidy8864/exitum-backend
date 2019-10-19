@@ -17,9 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         category.hasMany(models.subcategory, {
             foreignKey: 'category_id'
         });
-        category.hasMany(models.advertisement, {
-            foreignKey: 'category_id'
-        });
+        // category.hasMany(models.advertisement, {
+        //     foreignKey: 'category_id'
+        // });
         // category.hasMany(models.startup, {
         //     foreignKey: 'category_id'
         // });

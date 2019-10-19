@@ -4,10 +4,10 @@ module.exports = (sequelize, DataType) => {
     const tip = sequelize.define('tip', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
         tip: DataType.STRING,
-        stage_id: {
+        step_id: {
             type: DataType.INTEGER,
             references: {
-                model: 'stage',
+                model: 'step',
                 key: 'id'
             }
         },

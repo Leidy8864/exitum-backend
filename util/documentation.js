@@ -39,7 +39,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "accessData": {
             "id": id,
             "email": email,
@@ -81,7 +81,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "accessData": {
             "id": id,
             "email": email,
@@ -123,7 +123,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "accessData": {
             "id": id,
             "email": email,
@@ -152,7 +152,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Datos del usuario validado
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Su cuenta fue verificada.",
         "data": {
             "id": 49,
@@ -198,7 +198,7 @@
  * @apiSuccess (Datos obtenidos) {String} message.Indica el mensaje de exito
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": 'Un email de recuperación ha sido enviado a leidy.callupe@tecsup.edu.pe',
     }
  *
@@ -228,7 +228,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Su cambio el password.",
         "data": {
             "id": 49,
@@ -274,7 +274,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Indica el mensaje exitoso
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe ."
     }
  *
@@ -312,7 +312,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Usuario actualizado correctamente"
     }
  *
@@ -323,7 +323,7 @@
  *
  * @api {GET} /users/countries GET list country
  * @apiName resendToken
- * @apiGroup COUNTRIES
+ * @apiGroup USER
  * 
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -336,7 +336,7 @@
  * @apiSuccess (Datos obtenidos) {String} countries.currency_id Id de la moneda del país
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "countries": [
             {
                 "id": 1,
@@ -345,6 +345,78 @@
                 "currency_id": 1
             }
         ]
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {POST} /users/createWorkshop POST create workshop
+ * @apiName create workshop
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Creación de un taller.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {String} title Titulo del taller.
+ * @apiParam {String} description Descripción del taller.
+ * @apiParam {Date} day Día del evento.
+ * @apiParam {Time} hour_start Hora de inicio del evento.
+ * @apiParam {Time} hour_end Hora de cierre del evento.
+ * @apiParam {String} place Dirección del evento.
+ * @apiParam {Decimal} lat Latitud.
+ * @apiParam {Decimal} lng Longitud.
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/createWorkshop
+    {
+        
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+	{
+        "status": 200,
+        "message": "Taller creado correctamente"
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {POST} /users/updateWorkshop POST update workshop
+ * @apiName update workshop
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualización de un taller.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {String} title Titulo del taller.
+ * @apiParam {String} description Descripción del taller.
+ * @apiParam {Date} day Día del evento.
+ * @apiParam {Time} hour_start Hora de inicio del evento.
+ * @apiParam {Time} hour_end Hora de cierre del evento.
+ * @apiParam {String} place Dirección del evento.
+ * @apiParam {Decimal} lat Latitud.
+ * @apiParam {Decimal} lng Longitud.
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/updateWorkshop
+    {
+        
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+	{
+        "status": 200,
+        "message": "Taller actualizado correctamente"
     }
  *
  *
@@ -381,7 +453,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Startup creado correctamente"
     }
  *
@@ -411,7 +483,7 @@
  * @apiSuccess (Datos obtenidos) {String} startups.name Nombre completo de la startup
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "startups": [
             {
                 "id": 1,
@@ -446,7 +518,7 @@
  * @apiSuccess (Datos obtenidos) {String} startups.name Nombre completo de la startup
  * @apiSuccessExample {json} Datos obtenidos:
 	{
-        "status": 200,
+        "status": true,
         "message": "Ok",
         "data": {
             "startups": [
@@ -575,7 +647,7 @@
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Ok",
         "data": {
             "sectors": [
@@ -835,7 +907,6 @@
  *
  */
 
-
  /**
  *
  * @api {POST} /employees/update/skills POST update employee skills 
@@ -915,6 +986,142 @@
     {
         "user_id" : 2,
         "types" : [1,2]
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /employees/compare POST compare employees
+ * @apiName compare employees
+ * @apiGroup EMPLOYEE
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Comparar a dos impulsores
+ * @apiParam {Int} employee_id_1 Id del impulsor 1.
+ * @apiParam {Int} employee_id_2 Id del impulsor 2.
+	* @apiParamExample {querystring} Ejemplo url
+    /employees/compare
+    {
+        "employee_id_1" : 1,
+        "employee_id_1" : 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object} data Indica los datos obtenidos
+ * @apiSuccess (Datos obtenidos) {Object[]} data.employees Indica el array de empleados
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Comparación de dos impulsores exitosa",
+        "data": {
+            "employees": [
+                {
+                    "id": 1,
+                    "user_id": 1,
+                    "category_id": 1,
+                    "stage_id": 1,
+                    "short_description": "Desarrollador Web",
+                    "about_me": "Soy un desarrollor web",
+                    "price_hour": "15.50",
+                    "behance_user": null,
+                    "behance_active": null,
+                    "linkedin_active": null,
+                    "category": {
+                        "id": 1,
+                        "name": "Tecnológico"
+                    },
+                    "education": [],
+                    "experience": [],
+                    "recommendation": [],
+                    "languages": [
+                        {
+                            "id": 1,
+                            "language": "Ingles",
+                            "employee_language": {
+                                "employee_id": 1,
+                                "language_id": 1,
+                                "level_id": 2,
+                                "employeeId": 1
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "language": "Espanol",
+                            "employee_language": {
+                                "employee_id": 1,
+                                "language_id": 2,
+                                "level_id": 3,
+                                "employeeId": 1
+                            }
+                        }
+                    ],
+                    "skills": [
+                        {
+                            "id": 1,
+                            "skill": "NodeJS",
+                            "employee_skill": {
+                                "employee_id": 1,
+                                "skill_id": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "user_id": 2,
+                    "category_id": 1,
+                    "stage_id": 1,
+                    "short_description": "Desarrollador Web",
+                    "about_me": "Soy un desarrollor web",
+                    "price_hour": "15.50",
+                    "behance_user": null,
+                    "behance_active": null,
+                    "linkedin_active": null,
+                    "category": {
+                        "id": 1,
+                        "name": "Tecnológico"
+                    },
+                    "education": [],
+                    "experience": [],
+                    "recommendation": [],
+                    "languages": [
+                        {
+                            "id": 1,
+                            "language": "Ingles",
+                            "employee_language": {
+                                "employee_id": 2,
+                                "language_id": 1,
+                                "level_id": 2,
+                                "employeeId": 2
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "language": "Espanol",
+                            "employee_language": {
+                                "employee_id": 2,
+                                "language_id": 2,
+                                "level_id": 3,
+                                "employeeId": 2
+                            }
+                        }
+                    ],
+                    "skills": [
+                        {
+                            "id": 1,
+                            "skill": "NodeJS",
+                            "employee_skill": {
+                                "employee_id": 2,
+                                "skill_id": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
     }
  *
  *
@@ -1116,7 +1323,7 @@
  * @apiDescription Creacion del anuncio de trabajo.
  * @apiParam {String} title Titulo del anuncio
  * @apiParam {String} description Descripción del anuncio
- * @apiParam {Int} category_id Id de la categoria
+ * @apiParam {Int} area_id Id del área
  * @apiParam {Int} startup_id Id de la startup
  * @apiParam {Object} skills Id's de los skills
 	* @apiParamExample {querystring} Ejemplo url
@@ -1124,7 +1331,7 @@
     {
         "title" : "Programador en Java",
         "description" : "Requiero un programador senior",
-        "category_id" : 1,
+        "area_id" : 1,
         "startup_id" : 1,
         "skills" : [1,2,3]
     }	
@@ -1141,7 +1348,7 @@
             "title": "Programador en Java",
             "description": "Requiero un programador senior",
             "state": "active",
-            "category_id": 1,
+            "area_id": 1,
             "startup_id": 1,
             "created_at": "2019-10-03T20:47:28.373Z"
         }
@@ -1161,7 +1368,7 @@
  * @apiParam {Int} advertisement_id Id del empleado.
  * @apiParam {String} description Descripción
  * @apiParam {String} state Estado del anuncio
- * @apiParam {Int} category_id Id de la categoria
+ * @apiParam {Int} area_id Id del área
  * @apiParam {Int} startup_id Id de la startup
  * 
 	* @apiParamExample {querystring} Ejemplo url
@@ -1171,7 +1378,7 @@
         "title" : "Programador en Javascript",
         "description" : "Conocimientos solidos en NODEJS Y REACT",
         "state" : "archived",
-        "category_id" : 1,
+        "area_id" : 1,
         "startup_id" : 1
     }
  *
@@ -1187,7 +1394,7 @@
             "title": "Programador en Javascript",
             "description": "Conocimientos solidos en NODEJS Y REACT",
             "state": "archived",
-            "category_id": 1,
+            "area_id": 1,
             "startup_id": 1,
             "created_at": "2019-10-03T20:47:28.000Z"
         }
@@ -1250,7 +1457,7 @@
             "title": "Programador en Javascript",
             "description": "Conocimientos solidos en NODEJS Y REACT",
             "state": "archived",
-            "category_id": 1,
+            "area_id": 1,
             "startup_id": 1,
             "created_at": "2019-10-03T20:47:28.000Z",
             "skills": [
@@ -1271,9 +1478,9 @@
                     }
                 }
             ],
-            "category": {
+            "area": {
                 "id": 1,
-                "name": "Programación y Tecnología"
+                "name": "Area 1"
             },
             "startup": {
                 "id": 1,
@@ -1316,7 +1523,7 @@
                 "title": "Programador en Java",
                 "description": "Requiero un programador senior",
                 "state": "active",
-                "category_id": 1,
+                "area_id": 1,
                 "startup_id": 1,
                 "created_at": "2019-10-03T20:54:26.000Z",
                 "skills": [
@@ -1345,9 +1552,9 @@
                         }
                     }
                 ],
-                "category": {
+                "area": {
                     "id": 1,
-                    "name": "Programación y Tecnología"
+                    "name": "Área 1"
                 },
                 "startup": {
                     "id": 1,
@@ -1396,7 +1603,7 @@
                 "title": "Programador en Java",
                 "description": "Requiero un programador senior",
                 "state": "active",
-                "category_id": 1,
+                "area_id": 1,
                 "startup_id": 1,
                 "created_at": "2019-10-03T20:54:26.000Z",
                 "skills": [
@@ -1425,9 +1632,9 @@
                         }
                     }
                 ],
-                "category": {
+                "area": {
                     "id": 1,
-                    "name": "Programación y Tecnología"
+                    "name": "Área 1"
                 },
                 "startup": {
                     "id": 1,
@@ -1480,7 +1687,7 @@
                 "title": "Programador en Java",
                 "description": "Requiero un programador senior",
                 "state": "active",
-                "category_id": 1,
+                "area_id": 1,
                 "startup_id": 1,
                 "created_at": "2019-10-03T20:54:26.000Z",
                 "skills": [
@@ -1509,9 +1716,9 @@
                         }
                     }
                 ],
-                "category": {
+                "area": {
                     "id": 1,
-                    "name": "Programación y Tecnología"
+                    "name": "Área 1"
                 },
                 "startup": {
                     "id": 1,
@@ -1559,7 +1766,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica la etapa recien creada
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Etapa creado correctamente.",
         "data": {
             "stage": "semilla",
@@ -1594,7 +1801,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el nivel recien creado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Nivel creado correctamente.",
         "data": {
             "id": 7,
@@ -1629,7 +1836,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el reto recien creado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Reto creado correctamente",
         "data": {
             "id": 2,
@@ -1667,7 +1874,7 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Reto superado guardado correctamente.",
         "data": {
             "check": [
@@ -1704,13 +1911,132 @@
  * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
  * @apiSuccessExample {json} Datos obtenidos:
     {
-        "status": 200,
+        "status": true,
         "message": "Reto superado guardado correctamente.",
         "data": {
             "check": [
                 1
             ]
         }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /challenges/listStartup GET list challenges startup
+ * @apiName list challenges startup
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista de retos de la startup.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/listStartup
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Lista de retos de la startup",
+        "data": [
+            {
+                "id": 1,
+                "stage": "Pre semilla",
+                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 2,
+                "stage": "Semilla",
+                "description": "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 3,
+                "stage": "Temprana",
+                "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 4,
+                "stage": "Crecimiento",
+                "description": "Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 5,
+                "stage": "Expansión",
+                "description": "Etapa donde se busca alcanzar nuevos horizontes en otros mercados.",
+                "type": "startup",
+                "steps": []
+            },
+            {
+                "id": 6,
+                "stage": "IPO",
+                "description": "Etapa donde se lanza al mercado acciones de nuestra empresa para conseguir acciones y expandir planes de negocio.",
+                "type": "startup",
+                "steps": []
+            }
+        ]
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /challenges/listEmployee GET list challenges employee
+ * @apiName list challenges employee
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista de retos del empleado.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/listEmployee
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Lista de retos del impulsor",
+        "data": [
+            {
+                "id": 7,
+                "stage": "principiante",
+                "description": "Registra todos los datos del perfil",
+                "type": "employee",
+                "steps": [
+                    {
+                        "id": 1,
+                        "icon": "bc9ca640-f1dd-11e9-a8f8-0123456789abmaria.PNG",
+                        "stage_id": 7,
+                        "tips": [
+                            {
+                                "id": 1,
+                                "tip": "Subir foto a mi perfil",
+                                "step_id": 1
+                            },
+                            {
+                                "id": 2,
+                                "tip": "Asociar mi cuenta con linkedin",
+                                "step_id": 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
  *
  *

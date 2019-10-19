@@ -2,13 +2,20 @@
 
 module.exports = {
 
-    existById: async (model, value) => {
+    existById: async (model, value, ...select) => {
 
-        const response = await model.findOne({ where: { id: value } })
+        var response
+        console.log(select)
+        if (select.length > 0) {
+            response = await model.findByPk( value, { attributes: select } )
+        } else {
+            response = await model.findByPk( value )
+        }
 
         if (!response) {
             throw("No existe el elemento.");
         }
+
         return response
     },
 
