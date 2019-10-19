@@ -33,4 +33,11 @@ router.post('/checkEmployee',
     controller.checkChallengeEmployee
 );
 
+router.get('/listEmployee',
+    controller.listChallengeEmployee
+);
+
+router.get('/listStartup',
+    controller.listChallengeStartup
+);
 module.exports = router;

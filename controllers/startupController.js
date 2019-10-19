@@ -48,23 +48,28 @@ module.exports = {
                 if (req.files) {
                     fileName = s3.putObject(NEW_BUCKET_NAME, req.files.photo);
                 }
-
-                await models.startup.create({
-                    name: name,
-                    photo_url: fileName,
-                    ruc: ruc,
-                    description: description,
-                    category_id: category_id,
-                    stage_id: stage_id,
-                    entrepreneur_id: entrepreneur.id
+                await models.startup.findOne({ where: { name: name, id: entrepreneur.id } }).then(sta => {
+                    if (sta) {
+                        return res.json({ status: false, message: "Este nombre ya esta en uso" });
+                    } else {
+                        models.startup.create({
+                            name: name,
+                            photo_url: fileName,
+                            ruc: ruc,
+                            description: description,
+                            category_id: category_id,
+                            stage_id: stage_id,
+                            entrepreneur_id: entrepreneur.id
+                        });
+                        return res.json({ status: 200, message: "Startup creado correctamente" });
+                    }
                 });
-                return res.json({ status: 200, message: "Startup creado correctamente" });
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
         } catch (error) {
             console.log("Errrror", error);
-            return res.json({ status: false, message: "Error al actualizar el usuario", });
+            return res.json({ status: false, message: "Error al crear la startup", data: { error } });
         }
     },
 

@@ -1504,99 +1504,6 @@ define({ "api": [
     }
   },
   {
-    "type": "GET",
-    "url": "/users/countries",
-    "title": "GET list country",
-    "name": "resendToken",
-    "group": "COUNTRIES",
-    "version": "1.0.0",
-    "description": "<p>Retorna el listado de paises.</p>",
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "Object[]",
-            "optional": false,
-            "field": "countries",
-            "description": "<p>Lista de paises</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.id",
-            "description": "<p>Id del país</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.country",
-            "description": "<p>Nombre del país</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.code",
-            "description": "<p>Codigo del país</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "countries.currency_id",
-            "description": "<p>Id de la moneda del país</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": 200,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "COUNTRIES",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
     "type": "POST",
     "url": "/educations/create",
     "title": "POST educations create",
@@ -1822,6 +1729,112 @@ define({ "api": [
     },
     "filename": "util/documentation.js",
     "groupTitle": "EDUCATIONS",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/employees/compare",
+    "title": "POST compare employees",
+    "name": "compare_employees",
+    "group": "EMPLOYEE",
+    "version": "1.0.0",
+    "description": "<p>Comparar a dos impulsores</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "employee_id_1",
+            "description": "<p>Id del impulsor 1.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "employee_id_2",
+            "description": "<p>Id del impulsor 2.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/employees/compare\n{\n    \"employee_id_1\" : 1,\n    \"employee_id_1\" : 2\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos obtenidos</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data.employees",
+            "description": "<p>Indica el array de empleados</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": 200,\n    \"message\": \"Comparación de dos impulsores exitosa\",\n    \"data\": {\n        \"employees\": [\n            {\n                \"id\": 1,\n                \"user_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"short_description\": \"Desarrollador Web\",\n                \"about_me\": \"Soy un desarrollor web\",\n                \"price_hour\": \"15.50\",\n                \"behance_user\": null,\n                \"behance_active\": null,\n                \"linkedin_active\": null,\n                \"category\": {\n                    \"id\": 1,\n                    \"name\": \"Tecnológico\"\n                },\n                \"education\": [],\n                \"experience\": [],\n                \"recommendation\": [],\n                \"languages\": [\n                    {\n                        \"id\": 1,\n                        \"language\": \"Ingles\",\n                        \"employee_language\": {\n                            \"employee_id\": 1,\n                            \"language_id\": 1,\n                            \"level_id\": 2,\n                            \"employeeId\": 1\n                        }\n                    },\n                    {\n                        \"id\": 2,\n                        \"language\": \"Espanol\",\n                        \"employee_language\": {\n                            \"employee_id\": 1,\n                            \"language_id\": 2,\n                            \"level_id\": 3,\n                            \"employeeId\": 1\n                        }\n                    }\n                ],\n                \"skills\": [\n                    {\n                        \"id\": 1,\n                        \"skill\": \"NodeJS\",\n                        \"employee_skill\": {\n                            \"employee_id\": 1,\n                            \"skill_id\": 1\n                        }\n                    }\n                ]\n            },\n            {\n                \"id\": 2,\n                \"user_id\": 2,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"short_description\": \"Desarrollador Web\",\n                \"about_me\": \"Soy un desarrollor web\",\n                \"price_hour\": \"15.50\",\n                \"behance_user\": null,\n                \"behance_active\": null,\n                \"linkedin_active\": null,\n                \"category\": {\n                    \"id\": 1,\n                    \"name\": \"Tecnológico\"\n                },\n                \"education\": [],\n                \"experience\": [],\n                \"recommendation\": [],\n                \"languages\": [\n                    {\n                        \"id\": 1,\n                        \"language\": \"Ingles\",\n                        \"employee_language\": {\n                            \"employee_id\": 2,\n                            \"language_id\": 1,\n                            \"level_id\": 2,\n                            \"employeeId\": 2\n                        }\n                    },\n                    {\n                        \"id\": 2,\n                        \"language\": \"Espanol\",\n                        \"employee_language\": {\n                            \"employee_id\": 2,\n                            \"language_id\": 2,\n                            \"level_id\": 3,\n                            \"employeeId\": 2\n                        }\n                    }\n                ],\n                \"skills\": [\n                    {\n                        \"id\": 1,\n                        \"skill\": \"NodeJS\",\n                        \"employee_skill\": {\n                            \"employee_id\": 2,\n                            \"skill_id\": 1\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EMPLOYEE",
     "error": {
       "fields": {
         "Estructura de Error": [
@@ -4361,6 +4374,147 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/users/createWorkshop",
+    "title": "POST create workshop",
+    "name": "create_workshop",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Creación de un taller.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Titulo del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "day",
+            "description": "<p>Día del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_start",
+            "description": "<p>Hora de inicio del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_end",
+            "description": "<p>Hora de cierre del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "place",
+            "description": "<p>Dirección del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>Latitud.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lng",
+            "description": "<p>Longitud. *</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/createWorkshop\n    {\n        \n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Menssaje de éxito</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Taller creado correctamente\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/users/oauth/facebook",
     "title": "POST login facebook",
     "name": "login_facebook",
@@ -4678,6 +4832,99 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": 200,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/users/countries",
+    "title": "GET list country",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Retorna el listado de paises.</p>",
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "countries",
+            "description": "<p>Lista de paises</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.id",
+            "description": "<p>Id del país</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.country",
+            "description": "<p>Nombre del país</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.code",
+            "description": "<p>Codigo del país</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "countries.currency_id",
+            "description": "<p>Id de la moneda del país</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
           "type": "json"
         }
       ]
@@ -5109,6 +5356,147 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": 200,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/updateWorkshop",
+    "title": "POST update workshop",
+    "name": "update_workshop",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Actualización de un taller.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Titulo del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Descripción del taller.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "day",
+            "description": "<p>Día del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_start",
+            "description": "<p>Hora de inicio del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_end",
+            "description": "<p>Hora de cierre del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "place",
+            "description": "<p>Dirección del evento.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>Latitud.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Decimal",
+            "optional": false,
+            "field": "lng",
+            "description": "<p>Longitud. *</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/updateWorkshop\n    {\n        \n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Menssaje de éxito</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": 200,\n        \"message\": \"Taller actualizado correctamente\"\n    }",
           "type": "json"
         }
       ]

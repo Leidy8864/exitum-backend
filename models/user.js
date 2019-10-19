@@ -108,7 +108,9 @@ module.exports = (sequelize, DataType) => {
       otherKey: 'startup_id'
     });
     user.hasMany(models.available, {
-      as: 'toAvailable',
+      as: 'toAvailable'
+    });
+    user.hasMany(models.workshop, {
       foreignKey: 'user_id'
     });
   }
