@@ -54,7 +54,7 @@ module.exports = {
                     description: description,
                     type: type
                 }).then(stage => {
-                    return res.json({ status: 200, message: "Etapa creada correctamente.", data: stage })
+                    return res.json({ status: true, message: "Etapa creada correctamente.", data: stage })
                 }).catch(err => {
                     return res.json({ status: false, message: err })
                 });
@@ -77,7 +77,7 @@ module.exports = {
             icon: fileName,
             stage_id: stage_id
         }).then(step => {
-            return res.json({ status: 200, message: "Nivel creado correctamente.", data: step });
+            return res.json({ status: true, message: "Nivel creado correctamente.", data: step });
         }).catch(err => {
             return res.json({ status: false, message: err });
         });
@@ -93,7 +93,7 @@ module.exports = {
             tip: tip,
             step_id: step_id
         }).then(tip => {
-            return res.status(200).json({ status: 200, message: "Reto creado correctamente", data: tip });
+            return res.status(200).json({ status: true, message: "Reto creado correctamente", data: tip });
         }).catch(err => {
             return res.json({ status: false, message: err });
         });
@@ -110,7 +110,7 @@ module.exports = {
                 if (employee) {
                     employee.addTip(tip_id, { through: { checked: checked } }).then(check => {
                         if (check) {
-                            return res.json({ status: 200, message: 'Reto superado guardado correctamente.', data: { check } })
+                            return res.json({ status: true, message: 'Reto superado guardado correctamente.', data: { check } })
                         } else {
                             return res.json({ status: false, message: 'Reto superado sin guardar.' })
                         }
@@ -137,7 +137,7 @@ module.exports = {
                         if (startup) {
                             startup.addTip(tip_id, { through: { checked: checked } }).then(check => {
                                 if (check) {
-                                    return res.json({ status: 200, message: 'Reto superado guardado correctamente.', data: { check } })
+                                    return res.json({ status: true, message: 'Reto superado guardado correctamente.', data: { check } })
                                 } else {
                                     return res.json({ status: false, message: 'No se efectuaron cambios.' })
                                 }
@@ -169,7 +169,7 @@ module.exports = {
             ]
         }).then(challenges => {
             if (challenges) {
-                return res.json({ status: 200, message: "Lista de retos del impulsor", data: challenges })
+                return res.json({ status: true, message: "Lista de retos del impulsor", data: challenges })
             } else {
                 return res.json({ status: false, message: "No hay retos registrados" })
             }
@@ -192,7 +192,7 @@ module.exports = {
             ]
         }).then(challenges => {
             if (challenges) {
-                return res.json({ status: 200, message: "Lista de retos de la startup", data: challenges })
+                return res.json({ status: true, message: "Lista de retos de la startup", data: challenges })
             } else {
                 return res.json({ status: false, message: "No hay retos registrados" })
             }

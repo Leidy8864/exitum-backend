@@ -61,7 +61,7 @@ module.exports = {
                             stage_id: stage_id,
                             entrepreneur_id: entrepreneur.id
                         });
-                        return res.json({ status: 200, message: "Startup creado correctamente" });
+                        return res.json({ status: true, message: "Startup creado correctamente" });
                     }
                 });
             } else {
@@ -108,7 +108,7 @@ module.exports = {
                         category_id: category_id,
                     }, { where: { id: startup.id } }).then(startup => {
                         if (startup) {
-                            res.json({ status: 200, message: "Startup actualizado correctamente" })
+                            res.json({ status: true, message: "Startup actualizado correctamente" })
                         } else {
                             res.json({ status: false, message: "No se pudo actualizar" })
                         }
@@ -163,7 +163,7 @@ module.exports = {
             if (entrepreneur) {
                 models.startup.findAll({ where: { entrepreneur_id: entrepreneur.id } }).then(startups => {
                     if (!startups) return res.json({ status: false, message: 'No tiene startups creados' });
-                    res.json({ status: 200, startups: startups })
+                    res.json({ status: true, startups: startups })
                 })
             } else {
                 res.json({ status: false, message: 'No existe emprededor con este usuario' })
@@ -177,7 +177,7 @@ module.exports = {
     list: (req, res) => {
         models.startup.findAll().then(startups => {
             if (!startups) return res.json({ status: false, message: 'No tiene startups creados' });
-            res.json({ status: 200, message: 'Ok', data: { startups: startups } })
+            res.json({ status: true, message: 'Ok', data: { startups: startups } })
         }).catch(err => {
             console.log("Error: " + err)
             res.status(400).json(err)
@@ -187,7 +187,7 @@ module.exports = {
     listSector: (req, res) => {
         models.sector.findAll().then(sectors => {
             if (sectors) {
-                res.json({ status: 200, message: 'Ok', data: { sectors: sectors } })
+                res.json({ status: true, message: 'Ok', data: { sectors: sectors } })
             } else {
                 res.json({ status: false, message: "No hay sectores" })
             }
