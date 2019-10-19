@@ -1193,7 +1193,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`workshop` (
   `lng` DECIMAL(11,8) NULL,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_workshop_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_workshop_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_workshop_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `mydb`.`user` (`id`)

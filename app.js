@@ -20,6 +20,7 @@ var stageRouter = require('./routes/stage');
 var categoryRouter = require('./routes/category');
 var proposalRouter = require('./routes/proposals');
 var scheduleRouter = require('./routes/schedule');
+var areaRouter = require('./routes/area');
 //const controller = require('./controllers/userController');
 
 var app = express();
@@ -52,6 +53,7 @@ app.use('/proposals', proposalRouter);
 app.use('/stages', stageRouter);
 app.use('/categories', categoryRouter);
 app.use('/schedules', scheduleRouter);
+app.use('/areas', areaRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
