@@ -5,11 +5,11 @@ module.exports = (sequelize, DataType) => {
         title: DataType.STRING,
         description: DataType.TEXT,
         state: DataType.ENUM('active', 'closed', 'archived'),
-        category_id: {
+        area_id: {
             type: DataType.INTEGER,
             allowNull: false,
             references: {
-                model: 'category',
+                model: 'area',
                 key: 'id'
             }
         },
@@ -32,8 +32,8 @@ module.exports = (sequelize, DataType) => {
         advertisement.belongsTo(models.startup, {
             foreignKey: 'startup_id'
         });
-        advertisement.belongsTo(models.category, {
-            foreignKey: 'category_id'
+        advertisement.belongsTo(models.area, {
+            foreignKey: 'area_id'
         });
         advertisement.hasMany(models.invitation, {
             as: 'invitation',

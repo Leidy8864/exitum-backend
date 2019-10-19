@@ -16,7 +16,7 @@ module.exports = {
                 return [
                     check('title').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
-                    check('category_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('area_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                     check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                 ]
             case 'update':
@@ -24,7 +24,7 @@ module.exports = {
                 return [
                     check('title').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
-                    check('category_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('area_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                     check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                     check('state').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('advertisement_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
@@ -45,7 +45,7 @@ module.exports = {
                     title: req.body.title,
                     description: req.body.description,
                     state: 'active',
-                    category_id: req.body.category_id,
+                    area_id: req.body.area_id,
                     startup_id: req.body.startup_id,
                     created_at: Date.now()
                 }, { transaction: t });
@@ -82,7 +82,7 @@ module.exports = {
                     title: req.body.title,
                     description: req.body.description,
                     state: req.body.state,
-                    category_id: req.body.category_id,
+                    area_id: req.body.area_id,
                     startup_id: req.body.startup_id
                 });
 
@@ -147,7 +147,7 @@ module.exports = {
                     model: models.skill
                 },
                 {
-                    model: models.category
+                    model: models.area
                 },
                 {
                     model: models.startup
@@ -178,7 +178,7 @@ module.exports = {
                     model: models.skill
                 },
                 {
-                    model: models.category
+                    model: models.area
                 },
                 {
                     model: models.startup
@@ -216,7 +216,7 @@ module.exports = {
                             model: models.skill
                         },
                         {
-                            model: models.category
+                            model: models.area
                         },
                         {
                             model: models.startup,

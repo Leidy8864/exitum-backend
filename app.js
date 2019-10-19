@@ -19,6 +19,7 @@ var skillsRouter = require('./routes/skills');
 var stageRouter = require('./routes/stage');
 var categoryRouter = require('./routes/category');
 var proposalRouter = require('./routes/proposals');
+var scheduleRouter = require('./routes/schedule');
 //const controller = require('./controllers/userController');
 
 var app = express();
@@ -50,6 +51,7 @@ app.use('/skills', skillsRouter);
 app.use('/proposals', proposalRouter);
 app.use('/stages', stageRouter);
 app.use('/categories', categoryRouter);
+app.use('/schedules', scheduleRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -59,7 +61,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   res.status(404)
-  res.send({ error: 'Page Not found' })
+  res.send({ error: 'Page Not found'   })
   console.log(err)
   return
 });

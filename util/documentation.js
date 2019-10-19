@@ -1116,7 +1116,7 @@
  * @apiDescription Creacion del anuncio de trabajo.
  * @apiParam {String} title Titulo del anuncio
  * @apiParam {String} description Descripción del anuncio
- * @apiParam {Int} category_id Id de la categoria
+ * @apiParam {Int} area_id Id del área
  * @apiParam {Int} startup_id Id de la startup
  * @apiParam {Object} skills Id's de los skills
 	* @apiParamExample {querystring} Ejemplo url
@@ -1124,7 +1124,7 @@
     {
         "title" : "Programador en Java",
         "description" : "Requiero un programador senior",
-        "category_id" : 1,
+        "area_id" : 1,
         "startup_id" : 1,
         "skills" : [1,2,3]
     }	
@@ -1141,7 +1141,7 @@
             "title": "Programador en Java",
             "description": "Requiero un programador senior",
             "state": "active",
-            "category_id": 1,
+            "area_id": 1,
             "startup_id": 1,
             "created_at": "2019-10-03T20:47:28.373Z"
         }
@@ -1161,7 +1161,7 @@
  * @apiParam {Int} advertisement_id Id del empleado.
  * @apiParam {String} description Descripción
  * @apiParam {String} state Estado del anuncio
- * @apiParam {Int} category_id Id de la categoria
+ * @apiParam {Int} area_id Id del área
  * @apiParam {Int} startup_id Id de la startup
  * 
 	* @apiParamExample {querystring} Ejemplo url
@@ -1171,7 +1171,7 @@
         "title" : "Programador en Javascript",
         "description" : "Conocimientos solidos en NODEJS Y REACT",
         "state" : "archived",
-        "category_id" : 1,
+        "area_id" : 1,
         "startup_id" : 1
     }
  *
@@ -1187,7 +1187,7 @@
             "title": "Programador en Javascript",
             "description": "Conocimientos solidos en NODEJS Y REACT",
             "state": "archived",
-            "category_id": 1,
+            "area_id": 1,
             "startup_id": 1,
             "created_at": "2019-10-03T20:47:28.000Z"
         }
@@ -1250,7 +1250,7 @@
             "title": "Programador en Javascript",
             "description": "Conocimientos solidos en NODEJS Y REACT",
             "state": "archived",
-            "category_id": 1,
+            "area_id": 1,
             "startup_id": 1,
             "created_at": "2019-10-03T20:47:28.000Z",
             "skills": [
@@ -1271,9 +1271,9 @@
                     }
                 }
             ],
-            "category": {
+            "area": {
                 "id": 1,
-                "name": "Programación y Tecnología"
+                "name": "Area 1"
             },
             "startup": {
                 "id": 1,
@@ -1316,7 +1316,7 @@
                 "title": "Programador en Java",
                 "description": "Requiero un programador senior",
                 "state": "active",
-                "category_id": 1,
+                "area_id": 1,
                 "startup_id": 1,
                 "created_at": "2019-10-03T20:54:26.000Z",
                 "skills": [
@@ -1345,9 +1345,9 @@
                         }
                     }
                 ],
-                "category": {
+                "area": {
                     "id": 1,
-                    "name": "Programación y Tecnología"
+                    "name": "Área 1"
                 },
                 "startup": {
                     "id": 1,
@@ -1396,7 +1396,7 @@
                 "title": "Programador en Java",
                 "description": "Requiero un programador senior",
                 "state": "active",
-                "category_id": 1,
+                "area_id": 1,
                 "startup_id": 1,
                 "created_at": "2019-10-03T20:54:26.000Z",
                 "skills": [
@@ -1425,9 +1425,9 @@
                         }
                     }
                 ],
-                "category": {
+                "area": {
                     "id": 1,
-                    "name": "Programación y Tecnología"
+                    "name": "Área 1"
                 },
                 "startup": {
                     "id": 1,
@@ -1480,7 +1480,7 @@
                 "title": "Programador en Java",
                 "description": "Requiero un programador senior",
                 "state": "active",
-                "category_id": 1,
+                "area_id": 1,
                 "startup_id": 1,
                 "created_at": "2019-10-03T20:54:26.000Z",
                 "skills": [
@@ -1509,9 +1509,9 @@
                         }
                     }
                 ],
-                "category": {
+                "area": {
                     "id": 1,
-                    "name": "Programación y Tecnología"
+                    "name": "Área 1"
                 },
                 "startup": {
                     "id": 1,

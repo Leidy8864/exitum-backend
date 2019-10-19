@@ -107,6 +107,10 @@ module.exports = (sequelize, DataType) => {
       foreignKey: 'user_id',
       otherKey: 'startup_id'
     });
+    user.hasMany(models.available, {
+      as: 'toAvailable',
+      foreignKey: 'user_id'
+    });
   }
   return user
 };
