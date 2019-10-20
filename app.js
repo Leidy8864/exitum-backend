@@ -46,7 +46,7 @@ app.use('/startups', startupRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/experiences', experiencesRouter);
 app.use('/educations', educationsRouter);
-app.use('/advertisements', advertisementsRouter);
+app.use('/ads', advertisementsRouter);
 app.use('/challenges', challengesRouter);
 app.use('/skills', skillsRouter);
 app.use('/proposals', proposalRouter);

@@ -135,12 +135,21 @@ module.exports = {
         }
     },
 
-    findAllAdvertActive: async (req,res) => {
-
+    findAllAdvertActive: async (req,res) => {        
         try {
 
+
+            const page = parseInt(req.query.page);
+            const pageSize = parseInt(req.query.pageSize);
+
+            const offset = page * pageSize;
+            
+            const limit = offset + pageSize;
+            
+            console.log("LIMIT", limit);
             const advertisements = await models.advertisement.findAll({
-                offset: 15,
+                limit :limit,
+                offset : offset,
                 where: { state: 'active' },
 
                 include: [{
