@@ -1234,3 +1234,7 @@ VALUES (NULL, 'Startup', NULL, '12345678', NULL, NULL, '1', '1', '1'), (NULL, 'S
 (NULL, 'Startup3', NULL, '98765432', NULL, NULL, '1', '2', '2'), (NULL, 'Startup4', NULL, '56974563', NULL, NULL, '1', '1', '2');
 
 INSERT INTO `area` (`id`, `name`) VALUES (NULL, 'Área 1'), (NULL, 'Área 2'), (NULL, 'Área 3'), (NULL, 'Área 4');
+
+INSERT INTO `language` (`id`, `language`) VALUES ('1', 'ingles');
+INSERT INTO `language` (`id`, `language`) VALUES ('2', 'espanol');
+INSERT INTO `language` (`id`, `language`) VALUES ('3', 'portugues');

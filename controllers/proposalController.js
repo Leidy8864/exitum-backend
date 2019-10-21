@@ -45,5 +45,19 @@ module.exports = {
             console.log(error);
             res.status(200).json({ status: false, message: "Error al registrar la propuesta del impulsor." });
         }
+    },
+
+    list: async (req, res) => {
+        const { advertisement_id } = req.body
+        try {
+            models.proposal.findAll({ where: { advertisement_id: advertisement_id } }).then(proposal => {
+                if (proposal) {
+                    res.json({ status: true, message: "Listado de propuestas de impulsores", data: proposal })
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({ status: false, message: "Error al registrar la propuesta del impulsor." });
+        }
     }
 }

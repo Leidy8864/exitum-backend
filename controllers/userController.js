@@ -264,7 +264,8 @@ module.exports = {
                 } else {
                     const newUser = await models.user.update({ confirmed: true }, { where: { id: user.id } })
                     if (newUser) {
-                        return res.json({ status: true, message: "Su cuenta fue verificada.", data: newUser })
+                        const user_new = await models.user.findOne({ where: { id: token.user_id }, attributes: { exclude: ['provider_id', 'password', 'method', 'active', 'last_login', 'avg_rating', 'country_id', 'currency_id'] } })
+                        return res.json({ status: true, message: "Su cuenta fue verificada.", data: user_new })
                     }
                 }
             } else {
@@ -597,7 +598,7 @@ module.exports = {
                     lat: lat,
                     lng: lng,
                 }, { where: { user_id: user.id } }).then(() => {
-                    return res.json({ status: 200, message: "Taller actualizado correctamente" })
+                    return res.json({ status: true, message: "Taller actualizado correctamente" })
                 }).catch(err => {
                     return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
                 })
