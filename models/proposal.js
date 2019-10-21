@@ -26,5 +26,13 @@ module.exports = (sequelize, DataType) => {
         underscored: true
 
     });
+    proposal.associate = (models) => {
+        proposal.belongsTo(models.employee, {
+            foreignKey: 'employee_id'
+        });
+        proposal.belongsTo(models.advertisement, {
+            foreignKey: 'advertisement_id'
+        });
+    }
     return proposal
 };

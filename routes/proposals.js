@@ -7,4 +7,6 @@ router.post('/create',
     controller.create
 )
 
+router.get('/list/:advertisement_id', controller.list)
+
 module.exports = router;
