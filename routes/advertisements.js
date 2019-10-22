@@ -6,7 +6,7 @@ router.get('/list', function (req,res) {
     controller.findAllAdvertActive(req,res);
 });
 
-router.get('/user/:user_id/list', function (req, res) {
+router.get('/listByEntrepreneur', function (req, res) {
     controller.findAdvertByEntrepreneur(req, res);
 });
 

@@ -210,7 +210,7 @@ module.exports = {
     findAdvertByEntrepreneur: async (req, res) => {
 
         // console.log("Gaaaaaa");
-        const user_id = req.params.user_id;
+        const user_id = req.query.user_id;
 
         try {
 
@@ -220,7 +220,7 @@ module.exports = {
                 var advertisements = await models.advertisement.findAll(
                     {
                         limit: 15,
-                        where: { state: req.body.state },
+                        where: { state: req.query.state },
                         include: [{
                             model: models.skill
                         },
