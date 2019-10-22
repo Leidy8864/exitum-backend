@@ -48,10 +48,6 @@ const model_startup = (sequelize, DataType) => {
         startup.belongsTo(models.category, {
             foreignKey: 'category_id'
         });
-        startup.belongsToMany(models.tip,{
-            through : 'startup_tip',
-            foreignKey : 'startup_id'
-        });
         startup.belongsToMany(models.tip, {
             through: 'startup_tip',
             foreignKey: 'startup_id'
@@ -60,20 +56,20 @@ const model_startup = (sequelize, DataType) => {
             foreignKey: 'stage_id'
         });
         startup.hasMany(models.advertisement, {
-            foreignKey : 'startup_id'
+            foreignKey: 'startup_id'
         });
-        startup.hasMany(models.meeting,{
-            foreignKey : 'startup_id'
+        startup.hasMany(models.meeting, {
+            foreignKey: 'startup_id'
         });
-        startup.hasMany(models.team,{
-            foreignKey : 'startup_id'
+        startup.hasMany(models.team, {
+            foreignKey: 'startup_id'
         });
         startup.belongsToMany(models.user, {
             as: { singular: 'toStartupUser', plural: 'toStartupUsers' },
             through: models.review_startup,
             foreignKey: 'startup_id',
             otherKey: 'user_id'
-          });
+        });
     }
     return startup
 }

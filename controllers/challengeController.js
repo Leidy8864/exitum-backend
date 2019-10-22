@@ -135,7 +135,9 @@ module.exports = {
                 if (entrepreneur) {
                     models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } }).then(startup => {
                         if (startup) {
+                            console.log(startup)
                             startup.addTip(tip_id, { through: { checked: checked } }).then(check => {
+                                console.log(check)
                                 if (check) {
                                     return res.json({ status: true, message: 'Reto superado guardado correctamente.', data: { check } })
                                 } else {
@@ -150,9 +152,8 @@ module.exports = {
                     return res.json({ status: false, message: "No existe el emprendedor." })
                 }
             })
-
         } catch (error) {
-            res.status(200).json({ status: false, message: "Error al crear un reto para el empleado." });
+            res.status(200).json({ status: false, message: "Error al registrar el reto completado." });
         }
     },
 
@@ -202,21 +203,21 @@ module.exports = {
         })
     },
 
-    actualStage: async(req, res) => {
-        const {startup_id} = req.params
+    actualStage: async (req, res) => {
+        const { startup_id } = req.params
 
         var js = {
             id_stage: 1,
-            name_stage: "Presemilla", 
+            name_stage: "Presemilla",
             step: [
                 {
                     id_step: 1,
-                    name_step: "ideación", 
+                    name_step: "ideación",
                     icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
                 },
                 {
                     id_step: 2,
-                    name_step: "ideación2", 
+                    name_step: "ideación2",
                     icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
                 },
                 {
@@ -239,7 +240,7 @@ module.exports = {
         return res.json({ status: true, message: "Stage actual con sus steps", data: js })
     },
 
-    createSummary: async(req, res) => {
+    createSummary: async (req, res) => {
         const { startup_id, stage_id, step_id, tip_id, user_id } = req.body
         models.summary.create({
             startup_id: startup_id,
@@ -248,8 +249,32 @@ module.exports = {
             tip_id: tip_id,
             user_id: user_id,
         }).then(summary => {
-            if(summary){
-                return res.json({status:true, message: "Resumen registrado correctamente"})
+            if (summary) {
+                return res.json({ status: true, message: "Resumen registrado correctamente" })
+            }
+        })
+    },
+
+    listChallengeStartupCompleted: async (req, res) => {
+        const { startup_id } = req.params
+        models.startup_tip.findAll({
+            where: { startup_id: startup_id, checked: true },
+            include: [
+                {
+                    model: models.tip,
+                    include: [
+                        {
+                            model: models.step,
+                            include: [
+                                { model: models.stage }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }).then(startup_tip => {
+            if(startup_tip){
+                return res.json({status:true, message: "Listado de la etapa, nivel y retos completado", data: {startup_tip}})
             }
         })
     }

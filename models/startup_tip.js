@@ -7,16 +7,14 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'tip',
                 key: 'id'
-            },
-            primaryKey: true
+            }
         },
         startup_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'startup',
                 key: 'id'
-            },           
-            primaryKey: true
+            }           
         },
         checked: DataTypes.BOOLEAN
     },
