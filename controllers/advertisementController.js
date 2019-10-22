@@ -22,13 +22,7 @@ module.exports = {
             case 'update':
 
                 return [
-                    check('title').exists().withMessage(message_exists).isString().withMessage(message_string),
-                    check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
-                    check('area_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
-                    check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
-                    check('state').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('advertisement_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
-
                 ]
         }
     },
