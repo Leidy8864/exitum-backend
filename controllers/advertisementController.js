@@ -219,7 +219,7 @@ module.exports = {
             if (entrepreneur) {
                 var advertisements = await models.advertisement.findAll(
                     {
-                        offset: 15,
+                        limit: 15,
                         where: { state: req.body.state },
                         include: [{
                             model: models.skill
