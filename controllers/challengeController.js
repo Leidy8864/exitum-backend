@@ -236,6 +236,6 @@ module.exports = {
                 },
             ]
         }
-        return res.json({ status: true, message: "Stage actual con sus steps", data: JSON.stringify(js) })
+        return res.json({ status: true, message: "Stage actual con sus steps", data: js })
     }
 }
