@@ -40,4 +40,8 @@ router.get('/listEmployee',
 router.get('/listStartup',
     controller.listChallengeStartup
 );
+
+router.get('/actualStage/:id',
+    controller.actualStage
+);
 module.exports = router;

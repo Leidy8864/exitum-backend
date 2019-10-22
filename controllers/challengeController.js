@@ -200,5 +200,42 @@ module.exports = {
             console.log(err)
             return res.json({ status: false, message: "Error al listar retos", data: { err } })
         })
+    },
+
+    actualStage: async(req, res) => {
+        const {startup_id} = req.params
+
+        var js = {
+            id_stage: 1,
+            name_stage: "Presemilla", 
+            step: [
+                {
+                    id_step: 1,
+                    name_step: "ideación", 
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                },
+                {
+                    id_step: 2,
+                    name_step: "ideación2", 
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                },
+                {
+                    id_step: 3,
+                    name_step: "ideación3",
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                },
+                {
+                    id_step: 4,
+                    name_step: "ideación4",
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                },
+                {
+                    id_step: 5,
+                    name_step: "ideación5",
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                },
+            ]
+        }
+        return res.json({ status: true, message: "Stage actual con sus steps", data: JSON.stringify(js) })
     }
 }

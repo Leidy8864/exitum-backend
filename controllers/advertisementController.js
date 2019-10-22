@@ -207,7 +207,58 @@ module.exports = {
                 });
         }
     },
+    
     findAdvertByEntrepreneur: async (req, res) => {
+
+        // console.log("Gaaaaaa");
+        const user_id = req.query.user_id;
+
+        try {
+
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+
+            if (entrepreneur) {
+                var advertisements = await models.advertisement.findAll(
+                    {
+                        limit: 15,
+                        where: { state: req.query.state },
+                        include: [{
+                            model: models.skill
+                        },
+                        {
+                            model: models.area
+                        },
+                        {
+                            model: models.startup,
+                            include: [{
+                                model: models.entrepreneur,
+                                where: {
+                                    id: entrepreneur.id
+                                }
+                            }],
+                        }
+                        ]
+                    }
+                );
+                return res.status(200).json({ status : true, message : "OK", data: advertisements });
+
+            }else{
+                return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
+            }
+
+        } catch (error) {
+            console.log(error);
+
+            return res.status(200).json(
+                {
+                    status : false,
+                    message: "Error al listar anuncios"
+                });
+        }
+
+    },
+
+    findAdvertByEntrepreneurPagination: async (req, res) => {
 
         // console.log("Gaaaaaa");
         const user_id = req.query.user_id;
