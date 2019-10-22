@@ -237,5 +237,20 @@ module.exports = {
             ]
         }
         return res.json({ status: true, message: "Stage actual con sus steps", data: js })
+    },
+
+    createSummary: async(req, res) => {
+        const { startup_id, stage_id, step_id, tip_id, user_id } = req.body
+        models.summary.create({
+            startup_id: startup_id,
+            stage_id: stage_id,
+            step_id: step_id,
+            tip_id: tip_id,
+            user_id: user_id,
+        }).then(summary => {
+            if(summary){
+                return res.json({status:true, message: "Resumen registrado correctamente"})
+            }
+        })
     }
 }

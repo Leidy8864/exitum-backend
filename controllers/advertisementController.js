@@ -30,7 +30,7 @@ module.exports = {
     createAdvert: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(200).json({ status : false , message : "Campos incorrectos",data: errors.array() });
+            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
         try {
             const result = await models.sequelize.transaction(async (t) => {
@@ -54,22 +54,22 @@ module.exports = {
 
             console.log(error);
             res.status(200).json({
-                status : false,
+                status: false,
                 message: "Error al crear anuncio"
             });
         }
     },
-    
+
     updateAdvert: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(200).json({ status : false , message : "Campos incorrectos",data: errors.array() });
+            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
         const advertisement_id = req.body.advertisement_id;
 
         try {
             const advertisement = await models.advertisement.findByPk(advertisement_id);
-            
+
             if (advertisement) {
 
                 await advertisement.update({
@@ -80,8 +80,8 @@ module.exports = {
                     startup_id: req.body.startup_id
                 });
 
-                return res.status(200).json({ status: true, message: "Anuncio actualizado correctamente",data : advertisement });
-            
+                return res.status(200).json({ status: true, message: "Anuncio actualizado correctamente", data: advertisement });
+
             } else {
 
                 return res.status(200).json({ status: false, message: "No existe el anuncio" })
@@ -93,7 +93,7 @@ module.exports = {
 
             return res.status(200).json(
                 {
-                    status : false,
+                    status: false,
                     message: "Error al actualizar información del empleado",
                 });
         }
@@ -107,12 +107,12 @@ module.exports = {
         try {
             await models.advertisement_skill.destroy({ where: { advertisement_id: advertisement_id } });
 
-        
+
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
-            if (advertisement) {                
+            if (advertisement) {
                 advertisement.addSkill(skills);
-            }else{
+            } else {
                 return res.status(200).json({ status: false, message: "No se encontró el anuncio" });
             }
 
@@ -123,13 +123,13 @@ module.exports = {
 
             return res.status(200).json(
                 {
-                    status : false,
+                    status: false,
                     message: "Error al actualizar skills del anuncio"
                 });
         }
     },
 
-    findAllAdvertActive: async (req,res) => {        
+    findAllAdvertActive: async (req, res) => {
         try {
 
 
@@ -137,13 +137,13 @@ module.exports = {
             const pageSize = parseInt(req.query.pageSize);
 
             const offset = page * pageSize;
-            
+
             const limit = offset + pageSize;
-            
+
             console.log("LIMIT", limit);
             const advertisements = await models.advertisement.findAll({
-                limit :limit,
-                offset : offset,
+                limit: limit,
+                offset: offset,
                 where: { state: 'active' },
 
                 include: [{
@@ -158,14 +158,14 @@ module.exports = {
                 ]
             });
 
-            return res.status(200).json({ status : true, message : "OK", data: advertisements });
+            return res.status(200).json({ status: true, message: "OK", data: advertisements });
 
         } catch (error) {
 
             console.log("Error" + error);
             return res.status(200).json(
                 {
-                    status : false,
+                    status: false,
                     message: "Error al listar los anuncios"
                 });
         }
@@ -177,7 +177,7 @@ module.exports = {
         try {
 
             const advertisements = await models.advertisement.findByPk(advertisement_id, {
-                 include: [{
+                include: [{
                     model: models.skill
                 },
                 {
@@ -189,19 +189,19 @@ module.exports = {
                 ]
             });
 
-            return res.status(200).json({ status : true, message : "OK", data: advertisements });
+            return res.status(200).json({ status: true, message: "OK", data: advertisements });
 
         } catch (error) {
             console.log("Error" + error);
 
             return res.status(200).json(
-                {   
-                    status : false,
+                {
+                    status: false,
                     message: "Error al listar la informaciòn del anuncio"
                 });
         }
     },
-    
+
     findAdvertByEntrepreneur: async (req, res) => {
 
         // console.log("Gaaaaaa");
@@ -216,27 +216,13 @@ module.exports = {
                     {
                         limit: 15,
                         where: { state: req.query.state },
-                        include: [{
-                            model: models.skill
-                        },
-                        {
-                            model: models.area
-                        },
-                        {
-                            model: models.startup,
-                            include: [{
-                                model: models.entrepreneur,
-                                where: {
-                                    id: entrepreneur.id
-                                }
-                            }],
-                        }
-                        ]
+                        attributes: ['id', 'title', 'state', 'created_at'],
+                        order: [['created_at', 'DESC']]
                     }
                 );
-                return res.status(200).json({ status : true, message : "OK", data: advertisements });
+                return res.status(200).json({ status: true, message: "OK", data: advertisements });
 
-            }else{
+            } else {
                 return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
             }
 
@@ -245,7 +231,7 @@ module.exports = {
 
             return res.status(200).json(
                 {
-                    status : false,
+                    status: false,
                     message: "Error al listar anuncios"
                 });
         }
@@ -284,9 +270,9 @@ module.exports = {
                         ]
                     }
                 );
-                return res.status(200).json({ status : true, message : "OK", data: advertisements });
+                return res.status(200).json({ status: true, message: "OK", data: advertisements });
 
-            }else{
+            } else {
                 return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
             }
 
@@ -295,7 +281,7 @@ module.exports = {
 
             return res.status(200).json(
                 {
-                    status : false,
+                    status: false,
                     message: "Error al listar anuncios"
                 });
         }
