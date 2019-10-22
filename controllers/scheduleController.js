@@ -11,6 +11,10 @@ module.exports = {
 
         var from_hour = check('from_hour')
             .exists().withMessage('Es necesario una hora de inicio.')
+            var to_hour = check('from_hour')
+            .exists().withMessage('Es necesario una hora de inicio.')
+        var from_hour = check('from_hour')
+            .exists().withMessage('Es necesario una hora de inicio.')
 
         var to_hour = check('to_hour')
             .exists().withMessage("Es necesario una hora de fin.")

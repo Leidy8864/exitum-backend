@@ -113,6 +113,18 @@ module.exports = (sequelize, DataType) => {
     user.hasMany(models.workshop, {
       foreignKey: 'user_id'
     });
+    user.belongsToMany(models.hour, {
+      as: { singular: 'toUserHourSchedule', plural: 'toUserHourSchedules' },
+      through: models.schedule,
+      foreignKey: 'user_id',
+      otherKey: 'hour_id'
+    })
+    user.belongsToMany(models.hour, {
+      as: { singular: 'toUserHourAppointment', plural: 'toUserHourAppointments' },
+      through: models.appointment,
+      foreignKey: 'user_id',
+      otherKey: 'hour_id'
+    })
   }
   return user
 };
