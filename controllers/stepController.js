@@ -5,9 +5,9 @@ const { check, validationResult } = require('express-validator');
 
 module.exports = {
 
-    step:  async (req, res) => {
+    startup:  async (req, res) => {
         
-        const { proyecto_id } = req.body
+        const { project_id } = req.params
 
         return res.status(200).json({ status: true, message: "OK", data: 
             [ 
@@ -15,7 +15,18 @@ module.exports = {
                 { id_reto: 2, title : "Jeanpier kbro :v", status: "pendiente" },
                 { id_reto: 3, title : "Aldo manco", status: "pendiente" },
                 { id_reto: 3, title : "Diego1 kk", status: "observado" },
-            ] })
+            ] 
+        })
+
+    },
+
+    show: async(req, res) => {
+
+        const { step_id } = req.params
+
+        return res.status(200).json({ status: true, message: "OK", data: 
+                { title : "Diego llama", description: "description", files: [ { name: "llama.docx", file: "https://www.exitum.com/files/llama.docx"} ] }
+        })
 
     }
 }
