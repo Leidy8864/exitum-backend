@@ -246,29 +246,28 @@ module.exports = {
 
         try {
 
-            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+            var entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+
+
+            const whereConsult = { state: req.query.state, '$startup.entrepreneur.id$': entrepreneur.id };
 
             if (entrepreneur) {
                 models.advertisement.findAll(
                     {
-                        offset: ((perPage * page) - perPage),
-                        limit: perPage,
-                        where: { state: req.query.state },
+                        where: whereConsult,
+
                         include: [
                             {
                                 model: models.startup,
                                 include: [{
                                     model: models.entrepreneur,
-                                    where: {
-                                        id: entrepreneur.id
-                                    }
                                 }],
                             }
-                        ]
+                        ],
                     }
                 ).then(advertisements => {
                     models.advertisement.count({
-                        where : { state: req.query.state },
+                        where : whereConsult,
                         include: [
                             {
                                 model: models.startup,
