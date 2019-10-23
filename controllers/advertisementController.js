@@ -202,80 +202,109 @@ module.exports = {
         }
     },
 
+    // findAdvertByEntrepreneur: async (req, res) => {
+
+    //     // console.log("Gaaaaaa");
+    //     const user_id = req.query.user_id;
+
+    //     try {
+
+    //         const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+
+    //         if (entrepreneur) {
+    //             var advertisements = await models.advertisement.findAll(
+    //                 {
+    //                     limit: 15,
+    //                     where: { state: req.query.state },
+    //                     attributes: ['id', 'title', 'state', 'created_at'],
+    //                     order: [['created_at', 'DESC']]
+    //                 }
+    //             );
+    //             return res.status(200).json({ status: true, message: "OK", data: advertisements });
+
+    //         } else {
+    //             return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
+    //         }
+
+    //     } catch (error) {
+    //         console.log(error);
+
+    //         return res.status(200).json(
+    //             {
+    //                 status: false,
+    //                 message: "Error al listar anuncios"
+    //             });
+    //     }
+
+    // },
+
     findAdvertByEntrepreneur: async (req, res) => {
 
-        // console.log("Gaaaaaa");
         const user_id = req.query.user_id;
+        let perPage = 10;
+        let page = req.query.page || 1;
 
         try {
 
             const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
 
             if (entrepreneur) {
-                var advertisements = await models.advertisement.findAll(
+                models.advertisement.findAll(
                     {
-                        limit: 15,
+                        offset: (perPage * (page - 1)),
+                        limit: perPage,
                         where: { state: req.query.state },
-                        attributes: ['id', 'title', 'state', 'created_at'],
-                        order: [['created_at', 'DESC']]
-                    }
-                );
-                return res.status(200).json({ status: true, message: "OK", data: advertisements });
-
-            } else {
-                return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
-            }
-
-        } catch (error) {
-            console.log(error);
-
-            return res.status(200).json(
-                {
-                    status: false,
-                    message: "Error al listar anuncios"
-                });
-        }
-
-    },
-
-    findAdvertByEntrepreneurPagination: async (req, res) => {
-
-        // console.log("Gaaaaaa");
-        const user_id = req.query.user_id;
-
-        try {
-
-            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
-
-            if (entrepreneur) {
-                var advertisements = await models.advertisement.findAll(
-                    {
-                        limit: 15,
-                        where: { state: req.query.state },
-                        include: [{
-                            model: models.skill
-                        },
-                        {
-                            model: models.area
-                        },
-                        {
-                            model: models.startup,
-                            include: [{
-                                model: models.entrepreneur,
-                                where: {
-                                    id: entrepreneur.id
-                                }
-                            }],
-                        }
+                        order: [['created_at', 'DESC']],
+                        include: [
+                            {
+                                model: models.skill
+                            },
+                            {
+                                model: models.area
+                            },
+                            {
+                                model: models.startup,
+                                include: [{
+                                    model: models.entrepreneur,
+                                    where: {
+                                        id: entrepreneur.id
+                                    }
+                                }],
+                            }
                         ]
                     }
-                );
-                return res.status(200).json({ status: true, message: "OK", data: advertisements });
-
+                ).then(advertisements => {
+                    models.advertisement.count({
+                        where : { state: req.query.state },
+                        include: [
+                            {
+                                model: models.startup,
+                                include: [{
+                                    model: models.entrepreneur,
+                                    where: {
+                                        id: entrepreneur.id
+                                    }
+                                }],
+                            }
+                        ]
+                    }).then(totalRows => {
+                        console.log(advertisements.length)
+                        console.log(page)
+                        console.log(perPage)
+                        console.log((perPage * (page - 1)))
+                        console.log(Math.ceil(totalRows / perPage))
+                        console.log(totalRows)
+                        return res.status(200).json({
+                            status: true, message: "OK",
+                            data: advertisements,
+                            current: page, 
+                            pages: Math.ceil(totalRows / perPage)
+                        });
+                    })
+                });
             } else {
-                return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
+                return res.status(200).json({ status: false, message: "No se encontro al emprendedor" });
             }
-
         } catch (error) {
             console.log(error);
 

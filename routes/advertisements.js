@@ -26,7 +26,8 @@ router.post('/update/skills', function (req, res) {
     controller.updateSkills(req, res);
 });
 
-
-
+// router.get('/listByEntrepreneurPagination', function (req, res) {
+//     controller.findAdvertByEntrepreneurPagination(req, res);
+// });
 
 module.exports = router;

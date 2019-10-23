@@ -135,9 +135,7 @@ module.exports = {
                 if (entrepreneur) {
                     models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } }).then(startup => {
                         if (startup) {
-                            console.log(startup)
                             startup.addTip(tip_id, { through: { checked: checked } }).then(check => {
-                                console.log(check)
                                 if (check) {
                                     return res.json({ status: true, message: 'Reto superado guardado correctamente.', data: { check } })
                                 } else {
@@ -257,24 +255,15 @@ module.exports = {
 
     listChallengeStartupCompleted: async (req, res) => {
         const { startup_id } = req.params
+        console.log('fkdjfn')
         models.startup_tip.findAll({
-            where: { startup_id: startup_id, checked: true },
-            include: [
-                {
-                    model: models.tip,
-                    include: [
-                        {
-                            model: models.step,
-                            include: [
-                                { model: models.stage }
-                            ]
-                        }
-                    ]
-                }
-            ]
+            where: { startup_id: startup_id, checked: true }
         }).then(startup_tip => {
+            console.log('fskjfn')
             if(startup_tip){
                 return res.json({status:true, message: "Listado de la etapa, nivel y retos completado", data: {startup_tip}})
+            } else {
+                return res.json({ status:false, message: "No hay"})
             }
         })
     }

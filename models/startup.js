@@ -48,10 +48,10 @@ const model_startup = (sequelize, DataType) => {
         startup.belongsTo(models.category, {
             foreignKey: 'category_id'
         });
-        startup.belongsToMany(models.tip, {
-            through: 'startup_tip',
-            foreignKey: 'startup_id'
-        });
+        // startup.belongsToMany(models.tip, {
+        //     through: 'startup_tip',
+        //     foreignKey: 'startup_id'
+        // });
         startup.belongsTo(models.stage, {
             foreignKey: 'stage_id'
         });
@@ -69,6 +69,12 @@ const model_startup = (sequelize, DataType) => {
             through: models.review_startup,
             foreignKey: 'startup_id',
             otherKey: 'user_id'
+        });
+        startup.belongsToMany(models.tip, {
+            as: { singular: 'tip', plural: 'tips'},
+            through: models.startup_tip,
+            foreignKey: 'startup_id',
+            otherKey: 'tip_id'
         });
     }
     return startup
