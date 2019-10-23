@@ -11,10 +11,10 @@ module.exports = {
 
         return res.status(200).json({ status: true, message: "OK", data: 
             [ 
-                { id_reto: 1, title : "Diego llama", status: "completado" },
-                { id_reto: 2, title : "Jeanpier kbro :v", status: "pendiente" },
-                { id_reto: 3, title : "Aldo manco", status: "pendiente" },
-                { id_reto: 3, title : "Diego1 kk", status: "observado" },
+                { id_reto: 1, title : "Lorem Ipsum is simply dummy", status: "completado" },
+                { id_reto: 2, title : "It is a long established fact that a reader", status: "pendiente" },
+                { id_reto: 3, title : "Lorem Ipsum is therefore always free", status: "pendiente" },
+                { id_reto: 3, title : "The standard chunk of Lorem Ipsum", status: "observado" },
             ] 
         })
 
@@ -25,7 +25,10 @@ module.exports = {
         const { step_id } = req.params
 
         return res.status(200).json({ status: true, message: "OK", data: 
-                { title : "Diego llama", description: "description", files: [ { name: "llama.docx", file: "https://www.exitum.com/files/llama.docx"} ] }
+                {   title : "Contrary to popular belief", 
+                    description: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.", 
+                    files: [ { name: "file.docx", file: "https://www.exitum.com/files/file.docx" } ] 
+                }
         })
 
     }
