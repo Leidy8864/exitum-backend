@@ -48,4 +48,9 @@ router.get('/actualStage/:id',
 router.get('/listChallengeStartupCompleted/:startup_id',
     controller.listChallengeStartupCompleted
 );
+
+router.get('/listActualStage/:startup_id',
+    controller.listStageActual
+);
+
 module.exports = router;

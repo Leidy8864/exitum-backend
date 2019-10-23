@@ -251,16 +251,10 @@ module.exports = {
             if (entrepreneur) {
                 models.advertisement.findAll(
                     {
-                        offset: (perPage * (page - 1)),
+                        offset: ((perPage * page) - perPage),
                         limit: perPage,
                         where: { state: req.query.state },
                         include: [
-                            {
-                                model: models.skill
-                            },
-                            {
-                                model: models.area
-                            },
                             {
                                 model: models.startup,
                                 include: [{

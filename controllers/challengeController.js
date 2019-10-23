@@ -255,16 +255,42 @@ module.exports = {
 
     listChallengeStartupCompleted: async (req, res) => {
         const { startup_id } = req.params
-        console.log('fkdjfn')
         models.startup_tip.findAll({
             where: { startup_id: startup_id, checked: true }
         }).then(startup_tip => {
-            console.log('fskjfn')
-            if(startup_tip){
-                return res.json({status:true, message: "Listado de la etapa, nivel y retos completado", data: {startup_tip}})
+            if (startup_tip) {
+                return res.json({ status: true, message: "Listado de la etapa, nivel y retos completado", data: { startup_tip } })
             } else {
-                return res.json({ status:false, message: "No hay"})
+                return res.json({ status: false, message: "No hay" })
             }
         })
+    },
+
+    listStageActual: async (req, res) => {
+        const { startup_id } = req.params
+
+        models.startup.findOne({ where: { id: startup_id } }).then(startup => {
+            models.startup_tip.findAll({where: {startup_id: startup_id}}).then(check => {
+                //return res.json({status:true, message:"Retos completados segun la startup", data: check});
+                console.log(check)
+
+            })
+            models.stage.findOne({
+                where: { id: startup.stage_id, type: 'startup'  },
+                include: [
+                    {
+                        model: models.step
+                    }
+                ]
+            }).then(stage => {
+                return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
+            }).catch(err => {
+                console.log(err)
+                return res.json({status:false, message: {err}})
+            })
+        }).catch(err => {
+            console.log(err)
+            return res.json({status:false, message: {err}})
+        });
     }
 }
