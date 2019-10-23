@@ -241,7 +241,7 @@ module.exports = {
     findAdvertByEntrepreneur: async (req, res) => {
 
         const user_id = req.query.user_id;
-        let perPage = 10;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         try {
@@ -254,7 +254,6 @@ module.exports = {
                         offset: (perPage * (page - 1)),
                         limit: perPage,
                         where: { state: req.query.state },
-                        order: [['created_at', 'DESC']],
                         include: [
                             {
                                 model: models.skill
