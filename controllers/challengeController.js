@@ -211,27 +211,32 @@ module.exports = {
                 {
                     id_step: 1,
                     name_step: "ideación",
-                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    icon_count_tip: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg"
                 },
                 {
                     id_step: 2,
                     name_step: "ideación2",
-                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    icon_count_tip: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/3-reto.svg"
                 },
                 {
                     id_step: 3,
                     name_step: "ideación3",
-                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    icon_count_tip: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/2-reto.svg"
                 },
                 {
                     id_step: 4,
                     name_step: "ideación4",
-                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    icon_count_tip: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/1-reto.svg"
                 },
                 {
                     id_step: 5,
                     name_step: "ideación5",
-                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png"
+                    icon: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    icon_count_tip: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg"
                 },
             ]
         }
@@ -270,27 +275,38 @@ module.exports = {
         const { startup_id } = req.params
 
         models.startup.findOne({ where: { id: startup_id } }).then(startup => {
-            models.startup_tip.findAll({where: {startup_id: startup_id}}).then(check => {
+            models.startup_tip.findAll({ where: { startup_id: startup_id } }).then(check => {
                 //return res.json({status:true, message:"Retos completados segun la startup", data: check});
                 console.log(check)
-
-            })
-            models.stage.findOne({
-                where: { id: startup.stage_id, type: 'startup'  },
-                include: [
-                    {
-                        model: models.step
-                    }
-                ]
-            }).then(stage => {
-                return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
-            }).catch(err => {
-                console.log(err)
-                return res.json({status:false, message: {err}})
+                models.stage.findOne({
+                    where: { id: startup.stage_id, type: 'startup' },
+                    include: [
+                        {
+                            model: models.step,
+                            include: [
+                                {
+                                    model: models.tip,
+                                    include: [
+                                        { 
+                                            model: models.startup_tip,
+                                            attributes: ['checked'],
+                                            where: { startup_id: startup_id } 
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }).then(stage => {
+                    return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
+                }).catch(err => {
+                    console.log(err)
+                    return res.json({ status: false, message: { err } })
+                })
             })
         }).catch(err => {
             console.log(err)
-            return res.json({status:false, message: {err}})
+            return res.json({ status: false, message: { err } })
         });
     }
 }

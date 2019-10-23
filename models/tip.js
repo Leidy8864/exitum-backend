@@ -24,6 +24,9 @@ module.exports = (sequelize, DataType) => {
             through: 'startup_tip',
             foreignKey: 'tip_id'
         });
+        tip.hasMany(models.startup_tip, {
+            foreignKey: 'tip_id'
+        });
         tip.belongsTo(models.step, {
             foreignKey: 'step_id'
         });
