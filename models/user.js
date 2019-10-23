@@ -1,5 +1,8 @@
 'use strict'
 
+const Sequelize = require('sequelize')
+
+
 module.exports = (sequelize, DataType) => {
   const user = sequelize.define('user', {
     id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
@@ -42,7 +45,9 @@ module.exports = (sequelize, DataType) => {
         model: 'currency',
         key: 'id'
       }
-    }
+    },
+    from_hour: Sequelize.TIME,
+    to_hour: Sequelize.TIME,
   },
     {
       freezeTableName: true,
@@ -126,5 +131,15 @@ module.exports = (sequelize, DataType) => {
       otherKey: 'hour_id'
     })
   }
+  // Object.defineProperty(user.prototype, 'fullName', {
+  //   get() {
+  //     return this.name + ' ' + this.name
+  //   },
+  //   set(name) {
+  //     const names = name.split(' ')
+  //     this.lastname = names.pop()
+  //     this.name = names.join(' ')
+  //   }
+  // })
   return user
 };
