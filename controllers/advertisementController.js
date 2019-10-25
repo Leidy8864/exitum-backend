@@ -218,6 +218,11 @@ module.exports = {
                         offset: (perPage * (page - 1)),
                         limit: perPage,
                         where: whereConsult,
+<<<<<<< HEAD
+=======
+                        limit : perPage,
+                        offset : perPage*(page-1),
+>>>>>>> 3b23cc6a8766fc2e05370a206a5835d6949091b8
                         include: [
                             {
                                 model: models.startup,
@@ -228,16 +233,24 @@ module.exports = {
                         ],
                     }
                 ).then(advertisements => {
+
+                    
                     models.advertisement.count({
                         where: whereConsult,
                         include: [
                             {
                                 model: models.startup,
+<<<<<<< HEAD
                                 include: [
                                     {
                                         model: models.entrepreneur
                                     }
                                 ],
+=======
+                                include: [{
+                                    model: models.entrepreneur
+                                }],
+>>>>>>> 3b23cc6a8766fc2e05370a206a5835d6949091b8
                             }
                         ]
                     }).then(totalRows => {
