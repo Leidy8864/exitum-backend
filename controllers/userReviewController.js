@@ -24,36 +24,36 @@ module.exports = {
                 return [
                     from_user_id, to_user_id,
                     check('rating').exists().withMessage("Es necesario un puntaje")
-                    .isNumeric().withMessage("El tipo de dato no es el adecuado.")
-                    .custom(value=> value <= 5 && value > 0).withMessage("El valor debe estar entre el rango de 1 y 5.")
+                        .isNumeric().withMessage("El tipo de dato no es el adecuado.")
+                        .custom(value => value <= 5 && value > 0).withMessage("El valor debe estar entre el rango de 1 y 5.")
                 ]
         }
     },
 
-    comment:  async (req, res) => {
+    comment: async (req, res) => {
         var errors = validationResult(req)
 
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
         }
-        
+
         const { review, from_user_id } = req.body
         const { to_user_id } = req.params
 
         try {
 
-            const user = await existById( models.user, to_user_id )
-            user.addFromUser( from_user_id, { through: { review: review, created_at: Date.now() } } )
+            const user = await existById(models.user, to_user_id)
+            user.addFromUser(from_user_id, { through: { review: review, created_at: Date.now() } })
 
-            return res.status(200).json( { status: true, message: 'Comentario asignado correctamente.', data: {  } } )
+            return res.status(200).json({ status: true, message: 'Comentario asignado correctamente.', data: {} })
 
-        } catch ( err ) {
-            return res.status(500).json( { status: false, message: err.message, data: { err }  } )
+        } catch (err) {
+            return res.status(500).json({ status: false, message: err.message, data: { err } })
         }
 
     },
 
-    rating:  (req, res) => {
+    rating: (req, res) => {
         var errors = validationResult(req)
 
         const { rating, from_user_id } = req.body
@@ -63,37 +63,37 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
         }
 
-        models.user.findOne( { where: { id: to_user_id } } )
-        .then(user => {
+        models.user.findOne({ where: { id: to_user_id } })
+            .then(user => {
 
-            if ( !user )
-                return res.status(200).json( { status: false, message: "Usuario no existente", data: {  }  } )
+                if (!user)
+                    return res.status(200).json({ status: false, message: "Usuario no existente", data: {} })
 
-            user.addFromUser( from_user_id, { through: { rating: rating, created_at: Date.now() } } )
-            .then( response => {
+                user.addFromUser(from_user_id, { through: { rating: rating, created_at: Date.now() } })
+                    .then(response => {
 
-                models.review.findOne({
-                    where: { to_user_id: to_user_id  },
-                    attributes: [
-                        [  Sequelize.fn('sum', Sequelize.col('rating')), 'total'  ],
-                        [  Sequelize.fn('count', Sequelize.col('rating')), 'cantidad'  ],
-                    ]
-                })
-                .then(elements => {
-                    var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
-                    user.update({ avg_rating: avg_rating })
-                    return res.status(200).json( { status: true, message: 'Rating asignado correctamente.', data: {  } }  )
-                })
-                .catch( err => {
-                    return res.status(500).json( { status: false, message: err.message, data: err  } )
-                })
+                        models.review.findOne({
+                            where: { to_user_id: to_user_id },
+                            attributes: [
+                                [Sequelize.fn('sum', Sequelize.col('rating')), 'total'],
+                                [Sequelize.fn('count', Sequelize.col('rating')), 'cantidad'],
+                            ]
+                        })
+                            .then(elements => {
+                                var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
+                                user.update({ avg_rating: avg_rating })
+                                return res.status(200).json({ status: true, message: 'Rating asignado correctamente.', data: {} })
+                            })
+                            .catch(err => {
+                                return res.status(500).json({ status: false, message: err.message, data: err })
+                            })
+
+                    })
+                    .catch(err => {
+                        return res.status(500).json({ status: false, message: err.message, data: err })
+                    })
 
             })
-            .catch(err => {
-                return res.status(500).json( { status: false, message: err.message, data: err  } )
-            })
-
-        })
 
     }
 

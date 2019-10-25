@@ -134,17 +134,7 @@ module.exports = {
             models.entrepreneur.findOne({ where: { user_id: id } }).then(entrepreneur => {
                 if (entrepreneur) {
                     models.startup.findOne({ where: { id: startup_id, entrepreneur_id: entrepreneur.id } }).then(startup => {
-                        if (startup) {
-                            startup.addTip(tip_id, { through: { checked: checked } }).then(check => {
-                                if (check) {
-                                    return res.json({ status: true, message: 'Reto superado guardado correctamente.', data: { check } })
-                                } else {
-                                    return res.json({ status: false, message: 'No se efectuaron cambios.' })
-                                }
-                            })
-                        } else {
-                            return res.json({ status: false, message: 'No existe esta startup para el emprendedor.' })
-                        }
+                        models.challenges.create
                     })
                 } else {
                     return res.json({ status: false, message: "No existe el emprendedor." })
@@ -243,70 +233,127 @@ module.exports = {
         return res.json({ status: true, message: "Stage actual con sus steps", data: js })
     },
 
-    createSummary: async (req, res) => {
-        const { startup_id, stage_id, step_id, tip_id, user_id } = req.body
-        models.summary.create({
-            startup_id: startup_id,
-            stage_id: stage_id,
-            step_id: step_id,
-            tip_id: tip_id,
-            user_id: user_id,
-        }).then(summary => {
-            if (summary) {
-                return res.json({ status: true, message: "Resumen registrado correctamente" })
+    createChallenge: async (req, res) => {
+        var { startup_id, employee_id, tip_id, user_id, status, comment } = req.body
+        const tip = await models.tip.findOne({ attributes: ['id', 'step_id'], where: { id: tip_id } });
+        const step = await models.step.findOne({ attributes: ['id', 'stage_id'], where: { id: tip.step_id } });
+        var option = {}
+        if (employee_id !== null) {
+            option = {
+                user_id: user_id,
+                startup_id: startup_id,
+                tip_id: tip_id,
+                step_id: tip.step_id,
+                stage_id: step.stage_id,
+                status: status,
+                checked: true,
+                date: Date.now(),
+                comment: comment,
             }
+        }
+        if (startup_id == null) {
+            option = {
+                user_id: user_id,
+                employee_id: employee_id,
+                tip_id: tip_id,
+                step_id: tip.step_id,
+                stage_id: step.stage_id,
+                status: status,
+                checked: true,
+                date: Date.now(),
+                comment: comment,
+            }
+        }
+
+        models.challenge.create(option).then(challenge => {
+            if (challenge) {
+                return res.json({ status: true, message: "Reto validado registrado correctamente", data: challenge })
+            }
+        }).catch(err => {
+            return res.json({ status: false, data: err })
         })
     },
 
-    listChallengeStartupCompleted: async (req, res) => {
+    listStageStartup: async (req, res) => {
         const { startup_id } = req.params
-        models.startup_tip.findAll({
-            where: { startup_id: startup_id, checked: true }
-        }).then(startup_tip => {
-            if (startup_tip) {
-                return res.json({ status: true, message: "Listado de la etapa, nivel y retos completado", data: { startup_tip } })
-            } else {
-                return res.json({ status: false, message: "No hay" })
-            }
-        })
-    },
-
-    listStageActual: async (req, res) => {
-        const { startup_id } = req.params
-
-        models.startup.findOne({ where: { id: startup_id } }).then(startup => {
-            models.startup_tip.findAll({ where: { startup_id: startup_id } }).then(check => {
-                //return res.json({status:true, message:"Retos completados segun la startup", data: check});
-                console.log(check)
-                models.stage.findOne({
-                    where: { id: startup.stage_id, type: 'startup' },
-                    include: [
-                        {
-                            model: models.step,
-                            include: [
-                                {
-                                    model: models.tip,
-                                    include: [
-                                        { 
-                                            model: models.startup_tip,
-                                            attributes: ['checked'],
-                                            where: { startup_id: startup_id } 
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }).then(stage => {
-                    return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
-                }).catch(err => {
-                    console.log(err)
-                    return res.json({ status: false, message: { err } })
-                })
+        const startup = await models.startup.findOne({ where: { id: startup_id } })
+        if (startup) {
+            models.stage.findOne({
+                where: {
+                    id: startup.stage_id,
+                    type: 'startup',
+                },
+                include: [
+                    {
+                        model: models.step,
+                        include: [
+                            {
+                                model: models.challenge,
+                                where: { startup_id: startup.id },
+                                //attributes: [{ icon_tip_count: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg" }]
+                                // required: false,
+                                // where: [
+                                //     { checked: true }
+                                // ],
+                                // attributes: [
+                                //     [models.Sequelize.fn('COUNT', models.Sequelize.col('checked')), 'cantidad']
+                                // ]
+                            }
+                        ]
+                    }
+                ]
+            }).then(stage => {
+                return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
+            }).catch(err => {
+                console.log(err)
+                return res.json({ status: false, message: { err } })
             })
+        } else {
+            return res.json({ status: false, message: "No existe startup" })
+        }
+    },
+
+    listStepStartup: async (req, res) => {
+        const { startup_id } = req.params
+        const startup = await models.startup.findOne({ attributes: ['id', 'stage_id'], where: { id: startup_id } })
+        const step = await models.step.findOne({ where: { stage_id: startup.stage_id } })
+        models.step.findOne({
+            where: { id: step.id },
+            include: [
+                {
+                    model: models.challenge,
+                    where: { startup_id: startup.id }
+                }
+            ]
+        }).then(step => {
+            return res.json({ status: true, message: "Listado de retos por nivel de la startup", data: step })
         }).catch(err => {
             console.log(err)
-            return res.json({ status: false, message: { err } })
-        });
+            return res.json({ status: false, message: "Vuelva a intentarlo" })
+        })
+    },
+
+    detailTip: async (req, res) => {
+        const { startup_id, tip_id } = req.query
+        models.tip.findOne({
+            where: { id: tip_id },
+            include: [
+                {
+                    model: models.challenge,
+                    where: {
+                        startup_id: startup_id
+                    },
+                    include: [
+                        { model: models.file }
+                    ]
+                }
+            ]
+        }).then(tip => {
+            return res.json({ status: true, message: "Detalle del reto", data: tip })
+        })
+    },
+
+    listTipsEmployee: async (req, res) => {
+        const { employee_id } = req.params
     }
 }

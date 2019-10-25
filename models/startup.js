@@ -70,12 +70,12 @@ const model_startup = (sequelize, DataType) => {
             foreignKey: 'startup_id',
             otherKey: 'user_id'
         });
-        startup.belongsToMany(models.tip, {
-            as: { singular: 'tip', plural: 'tips'},
-            through: models.startup_tip,
-            foreignKey: 'startup_id',
-            otherKey: 'tip_id'
-        });
+        // startup.belongsToMany(models.tip, {
+        //     as: { singular: 'tip', plural: 'tips'},
+        //     through: models.startup_tip,
+        //     foreignKey: 'startup_id',
+        //     otherKey: 'tip_id'
+        // });
     }
     return startup
 }

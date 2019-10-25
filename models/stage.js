@@ -28,6 +28,9 @@ module.exports = (sequelize, DataType) => {
         stage.hasMany(models.employee, {
             foreignKey: 'stage_id'
         });
+        stage.hasMany(models.challenge, {
+            foreignKey: 'stage_id'
+        });
     }
     return stage
 };

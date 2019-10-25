@@ -113,6 +113,9 @@ module.exports = (sequelize, DataType) => {
     user.hasMany(models.workshop, {
       foreignKey: 'user_id'
     });
+    user.hasMany(models.challenge, {
+      foreignKey: 'user_id'
+    });
   }
   return user
 };

@@ -48,11 +48,13 @@ module.exports = {
                 if (req.files) {
                     fileName = s3.putObject(NEW_BUCKET_NAME, req.files.photo);
                 }
-                await models.startup.findOne({ where: { name: name, id: entrepreneur.id } }).then(sta => {
-                    if (sta) {
-                        return res.json({ status: false, message: "Este nombre ya esta en uso" });
-                    } else {
-                        models.startup.create({
+                const startup = await models.startup.findOne({ where: { name: name, id: entrepreneur.id } });
+                if (startup) {
+                    return res.json({ status: false, message: "Este nombre ya esta en uso" });
+                } else {
+                    var chlls = []
+                    await models.sequelize.transaction(async (t) => {
+                        const startup = await models.startup.create({
                             name: name,
                             photo_url: fileName,
                             ruc: ruc,
@@ -60,10 +62,45 @@ module.exports = {
                             category_id: category_id,
                             stage_id: stage_id,
                             entrepreneur_id: entrepreneur.id
-                        });
-                        return res.json({ status: true, message: "Startup creado correctamente" });
-                    }
-                });
+                        }, { transaction: t });
+
+                        await models.stage.findAll({
+                            include: [
+                                {
+                                    model: models.step,
+                                    include: [
+                                        {
+                                            model: models.tip
+                                        }
+                                    ]
+                                }
+                            ]
+                        }, { transaction: t }).then(stages => {
+                            for (var x = 0; x < stages.length; x++) {
+                                for (var y = 0; y < stages[x].steps.length; y++) {
+                                    for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
+                                        chlls.push(
+                                            {
+                                                user_id: id,
+                                                startup_id: startup.id,
+                                                stage_id: stages[x].id,
+                                                step_id: stages[x].steps[y].id,
+                                                tip_id: stages[x].steps[y].tips[z].id,
+                                                checked: false,
+                                                status: "Por verificar",
+                                                date: Date.now(),
+                                                comment: null
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                            console.log(chlls)
+                        })
+                        await models.challenge.bulkCreate(chlls, {transaction: t});
+                    });
+                    return res.json({ status: true, message: "Startup creado correctamente" });
+                }
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
@@ -71,6 +108,13 @@ module.exports = {
             console.log("Errrror", error);
             return res.json({ status: false, message: "Error al crear la startup", data: { error } });
         }
+    },
+
+    prueba: async (req, res) => {
+        var id = req.body.id
+        const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: id } });
+
+
     },
 
     update: async (req, res) => {

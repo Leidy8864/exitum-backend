@@ -202,42 +202,64 @@ module.exports = {
         }
     },
 
-    // findAdvertByEntrepreneur: async (req, res) => {
+    findAdvertByEntrepreneur: async (req, res) => {
+        const user_id = req.query.user_id;
+        let perPage = 20;
+        let page = req.query.page || 1;
 
-    //     // console.log("Gaaaaaa");
-    //     const user_id = req.query.user_id;
+        try {
 
-    //     try {
+            var entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+            const whereConsult = { state: req.query.state, '$startup.entrepreneur.id$': entrepreneur.id };
 
-    //         const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+            if (entrepreneur) {
+                models.advertisement.findAll(
+                    {
+                        offset: (perPage * (page - 1)),
+                        limit: perPage,
+                        where: whereConsult,
+                        include: [
+                            {
+                                model: models.startup,
+                                include: [{
+                                    model: models.entrepreneur,
+                                }]
+                            }
+                        ],
+                    }
+                ).then(advertisements => {
+                    models.advertisement.count({
+                        where: whereConsult,
+                        include: [
+                            {
+                                model: models.startup,
+                                include: [
+                                    {
+                                        model: models.entrepreneur
+                                    }
+                                ],
+                            }
+                        ]
+                    }).then(totalRows => {
+                        return res.status(200).json({
+                            status: true, message: "OK",
+                            data: advertisements,
+                            current: page,
+                            pages: Math.ceil(totalRows / perPage)
+                        });
+                    })
+                });
+            } else {
+                return res.status(200).json({ status: false, message: "No se encontro al emprendedor" });
+            }
+        } catch (error) {
+            console.log(error);
 
-    //         if (entrepreneur) {
-    //             var advertisements = await models.advertisement.findAll(
-    //                 {
-    //                     limit: 15,
-    //                     where: { state: req.query.state },
-    //                     attributes: ['id', 'title', 'state', 'created_at'],
-    //                     order: [['created_at', 'DESC']]
-    //                 }
-    //             );
-    //             return res.status(200).json({ status: true, message: "OK", data: advertisements });
-
-    //         } else {
-    //             return res.status(200).json({ status: false, message: "No se encontrò al emprendedor" });
-    //         }
-
-    //     } catch (error) {
-    //         console.log(error);
-
-    //         return res.status(200).json(
-    //             {
-    //                 status: false,
-    //                 message: "Error al listar anuncios"
-    //             });
-    //     }
-
-    // },
-
-
-
+            return res.status(200).json(
+                {
+                    status: false,
+                    message: "Error al listar anuncios"
+                });
+        }
+    },
 }

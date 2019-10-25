@@ -20,20 +20,20 @@ module.exports = (sequelize, DataType) => {
 
         });
     tip.associate = (models) => {
-        tip.belongsToMany(models.startup, {
-            through: 'startup_tip',
-            foreignKey: 'tip_id'
-        });
-        tip.hasMany(models.startup_tip, {
+        tip.hasMany(models.challenge, {
             foreignKey: 'tip_id'
         });
         tip.belongsTo(models.step, {
             foreignKey: 'step_id'
         });
-        tip.belongsToMany(models.employee, {
-            through: 'employee_tip',
-            foreignKey: 'tip_id'
-        });
+        // tip.belongsToMany(models.employee, {
+        //     through: 'employee_tip',
+        //     foreignKey: 'tip_id'
+        // });
+        // tip.belongsToMany(models.startup, {
+        //     through: 'startup_tip',
+        //     foreignKey: 'tip_id'
+        // });
     }
     return tip
 };

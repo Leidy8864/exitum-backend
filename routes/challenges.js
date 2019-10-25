@@ -45,12 +45,24 @@ router.get('/actualStage/:id',
     controller.actualStage
 );
 
-router.get('/listChallengeStartupCompleted/:startup_id',
-    controller.listChallengeStartupCompleted
+router.get('/actualStep/:id',
+    controller.actualStage
 );
 
-router.get('/listActualStage/:startup_id',
-    controller.listStageActual
+router.post('/create', 
+    controller.createChallenge
+);
+
+router.get('/listStage/:startup_id',
+    controller.listStageStartup
+);
+
+router.get('/listStep/:startup_id',
+    controller.listStepStartup
+);
+
+router.get('/detailTip', 
+    controller.detailTip 
 );
 
 module.exports = router;
