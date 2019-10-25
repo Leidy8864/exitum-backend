@@ -255,7 +255,8 @@ module.exports = {
                 models.advertisement.findAll(
                     {
                         where: whereConsult,
-
+                        limit : perPage,
+                        offset : perPage*(page-1),
                         include: [
                             {
                                 model: models.startup,
@@ -266,16 +267,15 @@ module.exports = {
                         ],
                     }
                 ).then(advertisements => {
+
+                    
                     models.advertisement.count({
                         where : whereConsult,
                         include: [
                             {
                                 model: models.startup,
                                 include: [{
-                                    model: models.entrepreneur,
-                                    where: {
-                                        id: entrepreneur.id
-                                    }
+                                    model: models.entrepreneur
                                 }],
                             }
                         ]
