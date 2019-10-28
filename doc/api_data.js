@@ -1858,7 +1858,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/challenges/listStep/:startup_id",
+    "url": "/challenges/listStep?step_id=ID&startup_id=IDD",
     "title": "GET list step startup",
     "name": "list_step_startup",
     "group": "CHALLENGES",
@@ -1873,13 +1873,20 @@ define({ "api": [
             "optional": false,
             "field": "startup_id",
             "description": "<p>Id de la startup.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "step_id",
+            "description": "<p>Id del step o nivel.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/challenges/listStep/5",
+          "content": "/challenges/listStep?step_id=1&startup_id=6",
           "type": "querystring"
         }
       ]

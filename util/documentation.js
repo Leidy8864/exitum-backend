@@ -2198,16 +2198,17 @@
 
  /**
  *
- * @api {GET} /challenges/listStep/:startup_id GET list step startup
+ * @api {GET} /challenges/listStep?step_id=ID&startup_id=IDD GET list step startup
  * @apiName list step startup
  * @apiGroup CHALLENGES
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription Lista del nivel y sus retos de la startup.
  * @apiParam {Int} startup_id Id de la startup.
+ * @apiParam {Int} step_id Id del step o nivel.
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /challenges/listStep/5
+    /challenges/listStep?step_id=1&startup_id=6
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud

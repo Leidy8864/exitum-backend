@@ -289,15 +289,25 @@ module.exports = {
                         include: [
                             {
                                 model: models.challenge,
+                                as: 'challenges',
                                 where: { startup_id: startup.id },
                                 //attributes: [{ icon_tip_count: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg" }]
                                 // required: false,
                                 // where: [
                                 //     { checked: true }
                                 // ],
-                                // attributes: [
-                                //     [models.Sequelize.fn('COUNT', models.Sequelize.col('checked')), 'cantidad']
-                                // ]
+                                attributes: [
+                                    [
+                                        'id',
+                                        'user_id',
+                                        'employee_id',
+                                        'startup_id','stage_id',
+                                        'step_id','tip_id',
+                                        'checked',
+                                        'status',
+                                        [models.Sequelize.fn('COUNT', models.Sequelize.col('challenges.checked')), 'cantidad']
+                                    ]
+                                ]
                             }
                         ]
                     }
@@ -450,11 +460,11 @@ module.exports = {
     },
 
     listStepStartup: async (req, res) => {
-        const { startup_id } = req.params
-        const startup = await models.startup.findOne({ attributes: ['id', 'stage_id'], where: { id: startup_id } })
-        const step = await models.step.findOne({ where: { stage_id: startup.stage_id } })
+        const { step_id, startup_id } = req.query
+        const startup = await models.startup.findOne({ attributes: ['id'], where: { id: startup_id } })
+        console.log(startup)
         models.step.findOne({
-            where: { id: step.id },
+            where: { id: step_id },
             include: [
                 {
                     model: models.challenge,

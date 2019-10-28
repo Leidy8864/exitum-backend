@@ -57,7 +57,7 @@ router.get('/listStage/:startup_id',
     controller.listStageStartup
 );
 
-router.get('/listStep/:startup_id',
+router.get('/listStep',
     controller.listStepStartup
 );
 
