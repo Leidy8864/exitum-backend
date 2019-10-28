@@ -468,7 +468,12 @@ module.exports = {
                     model: models.challenge,
                     where: { startup_id: startup.id },
                     include: [
-                        {model: models.tip}
+                        {
+                            model: models.tip,
+                            include: [
+                                { model: models.file_tip }
+                            ]
+                        }
                     ]
                 }
             ]
@@ -498,6 +503,10 @@ module.exports = {
         }).then(tip => {
             return res.json({ status: true, message: "Detalle del reto", data: tip })
         })
+    },
+
+    uploadFile: async (req, res) => {
+
     },
 
     listTipsEmployee: async (req, res) => {

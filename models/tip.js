@@ -4,6 +4,7 @@ module.exports = (sequelize, DataType) => {
     const tip = sequelize.define('tip', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
         tip: DataType.STRING,
+        description: DataType.STRING,
         step_id: {
             type: DataType.INTEGER,
             references: {
@@ -21,6 +22,9 @@ module.exports = (sequelize, DataType) => {
         });
     tip.associate = (models) => {
         tip.hasMany(models.challenge, {
+            foreignKey: 'tip_id'
+        });
+        tip.hasMany(models.file_tip, {
             foreignKey: 'tip_id'
         });
         tip.belongsTo(models.step, {

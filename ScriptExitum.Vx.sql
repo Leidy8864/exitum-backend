@@ -615,6 +615,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `exitum`.`tip` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `tip` VARCHAR(145) NULL DEFAULT NULL,
+  `description` TEXT NULL,
   `step_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_tip_step1_idx` (`step_id` ASC),
@@ -1237,7 +1238,7 @@ ENGINE = InnoDB;
 -- Table `exitum`.`file`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`file` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(145) NULL,
   `file` VARCHAR(245) NULL,
   `challenge_id` INT NOT NULL,
@@ -1249,6 +1250,24 @@ CREATE TABLE IF NOT EXISTS `exitum`.`file` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `exitum`.`file_tip`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
+  `id` INT NOT NULL,
+  `file` VARCHAR(60) NULL,
+  `name` VARCHAR(245) NULL,
+  `tip_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_file_tip_tip1_idx` (`tip_id` ASC),
+  CONSTRAINT `fk_file_tip_tip1`
+    FOREIGN KEY (`tip_id`)
+    REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -1504,3 +1523,30 @@ INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('125', 'Reto 1 Nivel 4 Etapa 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('126', 'Reto 2 Nivel 4 Etapa 3 employee', '36');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('127', 'Reto 3 Nivel 4 Etapa 3 employee', '36');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('128', 'Reto 4 Nivel 4 Etapa 3 employee', '36');
+
+insert into `exitum`.`file_tip`(id, name, file, tip_id) values 
+(1, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 1),
+(2, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 2),
+(3, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 3),
+(4, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 4),
+(5, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 5),
+(6, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 6),
+(7, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 7),
+(8, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 8),
+(9, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 9),
+(10, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 10),
+(11, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 11),
+(12, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 12),
+(13, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 13),
+(14, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 14),
+(15, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 15),
+(16, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 16),
+(17, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 17),
+(18, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 18),
+(19, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 19),
+(20, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 20),
+(21, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 21),
+(22, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 22),
+(23, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 23),
+(24, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 24),
+(25, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 25);
