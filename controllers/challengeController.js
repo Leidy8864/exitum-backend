@@ -296,18 +296,17 @@ module.exports = {
                                 // where: [
                                 //     { checked: true }
                                 // ],
-                                attributes: [
-                                    [
-                                        'id',
-                                        'user_id',
-                                        'employee_id',
-                                        'startup_id','stage_id',
-                                        'step_id','tip_id',
-                                        'checked',
-                                        'status',
-                                        [models.Sequelize.fn('COUNT', models.Sequelize.col('challenges.checked')), 'cantidad']
-                                    ]
-                                ]
+                                // attributes: [
+                                //     [
+                                //         'id',
+                                //         'user_id',
+                                //         'employee_id',
+                                //         'startup_id','stage_id',
+                                //         'step_id','tip_id',
+                                //         'checked',
+                                //         'status'
+                                //     ]
+                                // ]
                             }
                         ]
                     }
