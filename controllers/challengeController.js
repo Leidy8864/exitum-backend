@@ -313,6 +313,142 @@ module.exports = {
         }
     },
 
+    listPruebaStage: async(req, res) => {
+        const js = {
+            "status": true,
+            "message": "Etapa actual con sus niveles",
+            "data": {
+                "id": 1,
+                "stage": "Pre semilla",
+                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
+                "type": "startup",
+                "steps": [
+                    {
+                        "id": 1,
+                        "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                        "step": "Nivel 1 Etapa 1 startup",
+                        "stage_id": 1,
+                        "challenges": [
+                            {
+                                "id": 1,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 1,
+                                "tip_id": 1,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            },
+                            {
+                                "id": 2,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 1,
+                                "tip_id": 2,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            },
+                            {
+                                "id": 3,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 1,
+                                "tip_id": 3,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            },
+                            {
+                                "id": 4,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 1,
+                                "tip_id": 4,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            }
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                        "step": "Nivel 2 Etapa 1 startup",
+                        "stage_id": 1,
+                        "challenges": [
+                            {
+                                "id": 5,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 2,
+                                "tip_id": 5,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            },
+                            {
+                                "id": 6,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 2,
+                                "tip_id": 6,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            },
+                            {
+                                "id": 7,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 2,
+                                "tip_id": 7,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            },
+                            {
+                                "id": 8,
+                                "user_id": 7,
+                                "employee_id": null,
+                                "startup_id": 5,
+                                "stage_id": 1,
+                                "step_id": 2,
+                                "tip_id": 8,
+                                "checked": false,
+                                "status": "Por verificar",
+                                "date": "2019-10-25T21:42:00.000Z",
+                                "comment": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+        return res.json(js)
+    },
+
     listStepStartup: async (req, res) => {
         const { startup_id } = req.params
         const startup = await models.startup.findOne({ attributes: ['id', 'stage_id'], where: { id: startup_id } })
