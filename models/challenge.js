@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         checked: DataTypes.BOOLEAN,
         status: DataTypes.STRING,
         date: DataTypes.DATE,
+        count: DataTypes.INTEGER,
         comment: DataTypes.STRING
     },
     {

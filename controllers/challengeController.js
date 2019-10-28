@@ -289,24 +289,23 @@ module.exports = {
                         include: [
                             {
                                 model: models.challenge,
-                                as: 'challenges',
                                 where: { startup_id: startup.id },
+                                raw: true,
                                 //attributes: [{ icon_tip_count: "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg" }]
                                 // required: false,
                                 // where: [
                                 //     { checked: true }
                                 // ],
                                 // attributes: [
-                                //     [
-                                //         'id',
-                                //         'user_id',
-                                //         'employee_id',
-                                //         'startup_id','stage_id',
-                                //         'step_id','tip_id',
-                                //         'checked',
-                                //         'status'
-                                //     ]
-                                // ]
+                                //     'id',
+                                //     'user_id',
+                                //     'employee_id',
+                                //     'startup_id', 'stage_id',
+                                //     'step_id', 'tip_id',
+                                //     'checked',
+                                //     'status',
+                                // ],
+                                //group: 'step'
                             }
                         ]
                     }
@@ -322,7 +321,7 @@ module.exports = {
         }
     },
 
-    listPruebaStage: async(req, res) => {
+    listPruebaStage: async (req, res) => {
         const js = {
             "status": true,
             "message": "Etapa actual con sus niveles",
@@ -467,7 +466,10 @@ module.exports = {
             include: [
                 {
                     model: models.challenge,
-                    where: { startup_id: startup.id }
+                    where: { startup_id: startup.id },
+                    include: [
+                        {model: models.tip}
+                    ]
                 }
             ]
         }).then(step => {

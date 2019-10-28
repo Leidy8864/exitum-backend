@@ -4,6 +4,7 @@ module.exports = (sequelize, DataType) => {
     const step = sequelize.define('step', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
         icon: DataType.STRING,
+        icon_count_tip: DataType.STRING,
         step: DataType.STRING,
         stage_id: {
             type: DataType.INTEGER,
