@@ -1,9 +1,32 @@
 'use strict';
+
+const Sequelize = require('sequelize')
+
 module.exports = (sequelize, DataType) => {
     const appointment = sequelize.define('appointment', {
-        hour_id: { type: DataType.INTEGER, primaryKey: true },
-        user_id: { type: DataType.INTEGER, primaryKey: true },
-        date: DataType.DATEONLY,
+        id: {
+            autoIncrement: true,
+            type: DataType.INTEGER,
+            primaryKey: true,
+        },
+        from_user_id: { 
+            type: DataType.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'user',
+                key: 'id'
+            }
+         },
+        to_user_id: { 
+            type: DataType.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'user',
+                key: 'id'
+            }
+         },
+        date: Sequelize.DATE ,
+        time: Sequelize.TIME,
         type: {
             type: DataType.ENUM,
             values: ['reunion', 'recordatorio']

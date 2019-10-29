@@ -209,7 +209,6 @@ module.exports = {
     },
     findAdvertByEntrepreneur: async (req, res) => {
 
-        // console.log("Gaaaaaa");
         const user_id = req.params.user_id;
 
         try {

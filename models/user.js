@@ -112,23 +112,21 @@ module.exports = (sequelize, DataType) => {
       foreignKey: 'user_id',
       otherKey: 'startup_id'
     });
-    user.hasMany(models.available, {
-      as: 'toAvailable'
-    });
+    user.hasMany(models.unavailable, { as: 'unavailables' });
     user.hasMany(models.workshop, {
       foreignKey: 'user_id'
     });
-    user.belongsToMany(models.hour, {
-      as: { singular: 'toUserHourSchedule', plural: 'toUserHourSchedules' },
-      through: models.schedule,
-      foreignKey: 'user_id',
-      otherKey: 'hour_id'
-    })
-    user.belongsToMany(models.hour, {
-      as: { singular: 'toUserHourAppointment', plural: 'toUserHourAppointments' },
+    user.belongsToMany(models.user, {
+      as: { singular: 'fromUserAppointment', plural: 'fromUserAppointments' },
       through: models.appointment,
-      foreignKey: 'user_id',
-      otherKey: 'hour_id'
+      foreignKey: 'from_user_id',
+      otherKey: 'to_user_id'
+    })
+    user.belongsToMany(models.user, {
+      as: { singular: 'toUserAppointment', plural: 'toUserAppointments' },
+      through: models.appointment,
+      foreignKey: 'to_user_id',
+      otherKey: 'from_user_id'
     })
   }
   // Object.defineProperty(user.prototype, 'fullName', {

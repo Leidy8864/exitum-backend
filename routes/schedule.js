@@ -6,4 +6,18 @@ router.post('/create',
     controller.create
 );
 
+router.post('/not-available/:user_id',
+    controller.validate('unavailable'),
+    controller.unavailable
+);
+
+router.get('/schedule/:user_id',
+    controller.schedule
+);
+
+router.post('/schedule/:user_id',
+    controller.validate('scheduleDate'),
+    controller.scheduleDate
+);
+
 module.exports = router;
