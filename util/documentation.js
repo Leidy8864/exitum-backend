@@ -2076,6 +2076,29 @@
 
  /**
  *
+ * @api {POST} /challenges/download/:file POST reply tip
+ * @apiName reply tip
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista del nivel y sus retos de la startup.
+ * @apiParam {String} file Nomnbre del archivo.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/download/maria.PNG
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+    }
+ *
+ *
+ */
+
+ /**
+ *
  * @api {POST} /proposals/create POST create proposal
  * @apiName create proposal
  * @apiGroup PROPOSALS

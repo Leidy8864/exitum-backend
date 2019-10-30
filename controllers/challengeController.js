@@ -1,6 +1,6 @@
 const models = require('../models/index');
 const index = require('../config/index');
-const s3 = require('../libs/aws-s3');
+const { s3, getObject } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
 const { check, validationResult } = require('express-validator');
@@ -208,7 +208,13 @@ module.exports = {
 
     downloadFile: async (req, res) => {
         const { file } = req.params
-        return s3.downloadObject(FILES_TIP_BUCKET_NAME, file).pipe(res);
+        try {
+            res.attachment(file);
+            var fileStream = getObject(FILES_TIP_BUCKET_NAME, file)
+            fileStream.pipe(res)
+        } catch (error) {
+            return res.status(200).json({ status: false, message: error.message, data: {} })
+        }
     },
 
     replyTip: async (req, res) => {
