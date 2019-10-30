@@ -104,7 +104,7 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: {  } })
         } catch (err) {
-            return res.status(500).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
+            return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
         }
     },
 
