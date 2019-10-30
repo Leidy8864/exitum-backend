@@ -2076,8 +2076,8 @@
 
  /**
  *
- * @api {POST} /challenges/download/:file POST reply tip
- * @apiName reply tip
+ * @api {POST} /challenges/download/:file POST download file
+ * @apiName download file
  * @apiGroup CHALLENGES
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
