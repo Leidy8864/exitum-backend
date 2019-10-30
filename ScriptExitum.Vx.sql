@@ -330,22 +330,23 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`certification`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(145) NULL DEFAULT NULL,
   `issuing_company` VARCHAR(145) NULL DEFAULT NULL,
   `date_expedition` DATETIME NULL DEFAULT NULL,
   `date_expiration` DATETIME NULL DEFAULT NULL,
   `document_url` VARCHAR(255) NULL DEFAULT NULL,
-  `employee_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_certification_employee1_idx` (`employee_id` ASC),
-  CONSTRAINT `fk_certification_employee1`
-    FOREIGN KEY (`employee_id`)
-    REFERENCES `exitum`.`employee` (`id`)
+  INDEX `fk_certification_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_certification_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
 
 
 -- -----------------------------------------------------

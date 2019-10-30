@@ -64,5 +64,16 @@ module.exports = {
             .on('error', function (err) {
                 res.status(500).json({ error: "Error -> " + err });
             })
+    },
+    
+    getObject: (bucket, key) => {
+
+        var params = {
+            Bucket: bucket,
+            Key: key
+        }
+
+        return s3Bucket.getObject(params).createReadStream();
+
     }
 }

@@ -989,6 +989,314 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/certifications/create",
+    "title": "POST create a certification",
+    "name": "Crear_Certificaci_n",
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/certifications/create",
+        "type": "json"
+      }
+    ],
+    "group": "CERTIFICATION",
+    "version": "1.0.0",
+    "description": "<p>Asignar una certificación.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que inicio sesión.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>El nombre de la certificación.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "issuing_company",
+            "description": "<p>El nombre de la empresa que emitió el certificado.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "date_expedition",
+            "description": "<p>Fecha de la expedición del certificado.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "date_expiration",
+            "description": "<p>Fecha de vencimiento del certificado</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "File",
+            "optional": false,
+            "field": "document",
+            "description": "<p>Archivo que acredite el certificado</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n    \"user_id\": 1,\n    \"name\": \"Cisco Certification\",\n    \"issuing_company\": \"Cisco\",\n    \"date_expedition\": \"2015-12-12\"\n    \"date_expiration\": \"2019-12-12\",\n    \"file\": \"SO011.pdf\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CERTIFICATION"
+  },
+  {
+    "type": "GET",
+    "url": "/certifications/download/:fileName",
+    "title": "GET download certifications",
+    "name": "Descargar_certificaci_n",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "fileName",
+            "description": "<p>Nombre del archivo.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/certifications/download/pdf-name.pdf",
+        "type": "json"
+      }
+    ],
+    "group": "CERTIFICATION",
+    "version": "1.0.0",
+    "description": "<p>Descargar certificación.</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{ }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CERTIFICATION"
+  },
+  {
+    "type": "GET",
+    "url": "/certifications/find-by-id/:user_id",
+    "title": "GET show certifications user",
+    "name": "Lista_de_certificaciones_del_usuario_",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/certifications/find-by-id/1",
+        "type": "json"
+      }
+    ],
+    "group": "CERTIFICATION",
+    "version": "1.0.0",
+    "description": "<p>Show Certification User</p>",
+    "success": {
+      "fields": {
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"name\": \"Cisco Certification\",\n            \"issuing_company\": \"Cisco\",\n            \"expedition\": \"12/12/2015\",\n            \"expiration\": \"12/12/2019\",\n            \"document_url\": \"cde85510-fa94-11e9-bcbf-0123456789abSO011.pdf\"\n        }\n        ...\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CERTIFICATION"
+  },
+  {
+    "type": "POST",
     "url": "/challenges/createStage",
     "title": "POST create stage",
     "name": "create_stage",

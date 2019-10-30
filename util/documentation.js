@@ -2524,3 +2524,128 @@
  *
  *
  */
+
+  /**
+ *
+ * @api {GET} /certifications/find-by-id/:user_id GET show certifications user
+ * @apiName Lista de certificaciones del usuario.
+ * @apiParam {String} user_id ID del usuario.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/certifications/find-by-id/1
+ * @apiGroup CERTIFICATION
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription  Show Certification User
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": [
+            {
+                "id": 2,
+                "name": "Cisco Certification",
+                "issuing_company": "Cisco",
+                "expedition": "12/12/2015",
+                "expiration": "12/12/2019",
+                "document_url": "cde85510-fa94-11e9-bcbf-0123456789abSO011.pdf"
+            }
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /certifications/create POST create a certification
+ * @apiName Crear Certificación
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/certifications/create
+ * @apiGroup CERTIFICATION
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Asignar una certificación.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesión.
+ * @apiSuccess (Datos requeridos) {String} name El nombre de la certificación.
+ * @apiSuccess (Datos requeridos) {String} issuing_company El nombre de la empresa que emitió el certificado.
+ * @apiSuccess (Datos requeridos) {String} date_expedition Fecha de la expedición del certificado.
+ * @apiSuccess (Datos requeridos) {String} date_expiration Fecha de vencimiento del certificado
+ * @apiSuccess (Datos requeridos) {File} document Archivo que acredite el certificado
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "user_id": 1,
+        "name": "Cisco Certification",
+        "issuing_company": "Cisco",
+        "date_expedition": "2015-12-12"
+        "date_expiration": "2019-12-12",
+        "file": "SO011.pdf"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+  /**
+ *
+ * @api {GET} /certifications/download/:fileName GET download certifications
+ * @apiName Descargar certificación
+ * @apiParam {String} fileName Nombre del archivo.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/certifications/download/pdf-name.pdf
+ * @apiGroup CERTIFICATION
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription  Descargar certificación.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    { }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */

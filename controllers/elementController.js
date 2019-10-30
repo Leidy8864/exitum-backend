@@ -5,7 +5,6 @@ module.exports = {
     existById: async (model, value, ...select) => {
 
         var response
-        console.log(select)
         if (select.length > 0) {
             response = await model.findByPk( value, { attributes: select } )
         } else {

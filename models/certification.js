@@ -7,10 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         date_expedition: DataTypes.DATE,
         date_expiration: DataTypes.DATE,
         document_url: DataTypes.STRING,
-        employee_id: {
+        user_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'employee',
+                model: 'user',
                 key: 'id'
             }
         }
@@ -19,11 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
         omitNull: true,
         underscored: true
-
     });
     certification.associate = function (models) {
-        certification.belongsTo(models.employee, {
-            foreignKey: 'employee_id'
+        certification.belongsTo(models.user, {
+            foreignKey: 'user_id'
         });
     };
     return certification;
