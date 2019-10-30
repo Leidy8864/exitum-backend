@@ -20,8 +20,6 @@ module.exports = {
             .exists().withMessage("Es necesario una fecha de expedición del certificado.")
         var date_expiration = check('date_expiration')
             .exists().withMessage("Es necesario una fecha de vencimiento del certificado.")
-        var document = check('document')
-            .exists().withMessage("Es necesario un documento que acredite el certificado.")
         var fileName = check('filename')
             .exists().withMessage("Es necesario nombre del certificado.")
 
@@ -29,7 +27,7 @@ module.exports = {
             case 'listById':
                 return [ user_id ]
             case 'create':
-                return [ user_id, name, issuing_company, date_expedition, date_expiration, document ]
+                return [ user_id, name, issuing_company, date_expedition, date_expiration ]
             case 'download':
                 return [ fileName ]
         }
@@ -44,7 +42,6 @@ module.exports = {
 
         try {
            const user = await existById(models.user, user_id)
-
            var elements = await user.getCertifications({
                attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%d/%m/%Y' ), 'expedition' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%d/%m/%Y' ), 'expiration' ], 'document_url'  ]
@@ -74,10 +71,13 @@ module.exports = {
         if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
 
         const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
-        const { document } = req.files
 
         try {
            const user = await existById(models.user, user_id)
+
+           if (!req.files) throw('El campo document, que contiene un archivo que valide la certificación.')
+
+           const { document } = req.files
 
            var [ certificacion, created ] = await  models.certification.findOrCreate({
                 where: {
@@ -104,7 +104,7 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: {  } })
         } catch (err) {
-            return res.status(500).json({ status: false, message: err.message, data: {  } })
+            return res.status(500).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
         }
     },
 
