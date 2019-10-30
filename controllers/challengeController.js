@@ -155,7 +155,10 @@ module.exports = {
                         model: models.step,
                         include: [
                             {
-                                model: models.startup_step
+                                model: models.startup_step,
+                                where: {
+                                    startup_id: startup_id
+                                }
                             },
                             {
                                 model: models.challenge,

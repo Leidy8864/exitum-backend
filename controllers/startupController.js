@@ -53,6 +53,7 @@ module.exports = {
                     return res.json({ status: false, message: "Este nombre ya esta en uso" });
                 } else {
                     var chlls = []
+                    var steps = []
                     await models.sequelize.transaction(async (t) => {
                         const startup = await models.startup.create({
                             name: name,
@@ -93,18 +94,22 @@ module.exports = {
                                             }
                                         )
                                     }
+
+                                    steps.push(
+                                        {
+                                            startup_id: startup.id,
+                                            step_id: stages[x].steps[y].id,
+                                            tip_completed: 0,
+                                            icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                            state: 'incompleto'
+                                        }
+                                    )
                                 }
                             }
                         })
                         await models.challenge.bulkCreate(chlls, { transaction: t });
                         const step = await models.step.findOne({ attributes: ['id'], where: { stage_id: stage_id } })
-                        await models.startup_step.create({
-                            startup_id: startup.id,
-                            step_id: step.id,
-                            tip_completed: 0,
-                            icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                            state: 'incompleto'
-                        }, { transaction: t })
+                        await models.startup_step.bulkCreate(steps, { transaction: t })
                     });
                     return res.json({ status: true, message: "Startup creado correctamente" });
                 }
