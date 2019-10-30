@@ -1,6 +1,6 @@
 const models = require('../models/index');
 const index = require('../config/index');
-const s3 = require('../libs/aws-s3');
+const { s3, getObject } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
 const { check, validationResult } = require('express-validator');
@@ -143,6 +143,7 @@ module.exports = {
     listStageStartup: async (req, res) => {
         const { startup_id } = req.params
         const startup = await models.startup.findOne({ where: { id: startup_id } })
+        const step = await models.step.findOne({ where: { stage_id: startup.stage_id } })
         if (startup) {
             models.stage.findOne({
                 where: {
@@ -155,9 +156,8 @@ module.exports = {
                         include: [
                             {
                                 model: models.startup_step,
-                                where: { 
-                                    startup_id: startup_id,
-                                    //step_id: models.Sequelize.literal('step.id') 
+                                where: {
+                                    startup_id: startup_id
                                 }
                             },
                             {
@@ -208,7 +208,13 @@ module.exports = {
 
     downloadFile: async (req, res) => {
         const { file } = req.params
-        return s3.downloadObject(FILES_TIP_BUCKET_NAME, file).pipe(res);
+        try {
+            res.attachment(file);
+            var fileStream = getObject(FILES_TIP_BUCKET_NAME, file)
+            fileStream.pipe(res)
+        } catch (error) {
+            return res.status(200).json({ status: false, message: error.message, data: {} })
+        }
     },
 
     replyTip: async (req, res) => {
