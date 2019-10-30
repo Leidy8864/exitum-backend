@@ -143,6 +143,7 @@ module.exports = {
     listStageStartup: async (req, res) => {
         const { startup_id } = req.params
         const startup = await models.startup.findOne({ where: { id: startup_id } })
+        const step = await models.step.findOne({ where: { stage_id: startup.stage_id } })
         if (startup) {
             models.stage.findOne({
                 where: {
@@ -154,11 +155,7 @@ module.exports = {
                         model: models.step,
                         include: [
                             {
-                                model: models.startup_step,
-                                where: { 
-                                    startup_id: startup_id,
-                                    //step_id: models.Sequelize.literal('step.id') 
-                                }
+                                model: models.startup_step
                             },
                             {
                                 model: models.challenge,
