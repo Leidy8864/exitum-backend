@@ -65,7 +65,7 @@ module.exports = {
                 res.status(500).json({ error: "Error -> " + err });
             })
     },
-    
+
     getObject: (bucket, key) => {
 
         var params = {
@@ -75,5 +75,13 @@ module.exports = {
 
         return s3Bucket.getObject(params).createReadStream();
 
+    },
+
+    getDownloadUrl: (bucket, key) => {
+        var params = {
+            Bucket: bucket,
+            Key: key
+        }
+        return s3Bucket.getSignedUrl('getObject', params)
     }
 }

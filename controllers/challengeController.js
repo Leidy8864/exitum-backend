@@ -1,6 +1,6 @@
 const models = require('../models/index');
 const index = require('../config/index');
-const { s3, getObject } = require('../libs/aws-s3');
+const { getObject, putObject, getDownloadUrl } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
 const { check, validationResult } = require('express-validator');
@@ -211,7 +211,9 @@ module.exports = {
         try {
             res.attachment(file);
             var fileStream = getObject(FILES_TIP_BUCKET_NAME, file)
-            fileStream.pipe(res)
+            //fileStream.pipe(res)
+            const url = getDownloadUrl(fileStream)
+            return res.redirect(url)
         } catch (error) {
             return res.status(200).json({ status: false, message: error.message, data: {} })
         }
@@ -220,10 +222,11 @@ module.exports = {
     replyTip: async (req, res) => {
         var fileName = ""
         const { challenge_id, reply } = req.body
+        var name = ""
         if (req.files) {
             var file = req.files.file;
-            console.log(file)
-            fileName = s3.putObject(FILES_TIP_BUCKET_NAME, file);
+            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+            name = file.name
         }
         try {
             await models.sequelize.transaction(async (t) => {
@@ -232,21 +235,18 @@ module.exports = {
                     date: Date.now(),
                 }, { where: { id: challenge_id } }, { transaction: t });
 
-                console.log(fileName)
-                await models.file.create({
-                    name: file.name,
-                    file: fileName,
-                    challenge_id: challenge_id
-                }, { transaction: t });
-
+                if (file) {
+                    await models.file.create({
+                        name: name,
+                        file: fileName,
+                        challenge_id: challenge_id
+                    }, { transaction: t });
+                }
                 return res.json({ status: true, message: "Respuesta enviada correctamente" })
             });
         } catch (error) {
             console.log("Error" + error);
-            res.status(200).json({
-                status: false,
-                message: "Error al responder el reto"
-            });
+            res.status(200).json({ status: false, message: "Error al responder el reto" });
         }
     },
 
