@@ -323,6 +323,45 @@
 
 /**
  *
+ * @api {POST} /users/update-image POST update user image
+ * @apiName update user image
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualizar imagen del usuario.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {File} photo Imagen del usuario
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/update
+    {
+        "user_id": 2
+        "photo": "image.png"
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Usuario actualizado correctamente",
+        "data": {
+            "user_id": 2
+            "name": "Leidy Paula"
+            "lastname": "Callupe Santisteban"
+            "phone": "1523456789"
+            "active": "true"
+            "role": "entrepreneur"
+            "photo": "image.png"
+        }
+    }
+ *
+ *
+ */
+
+/**
+ *
  * @api {GET} /users/countries GET list country
  * @apiName resendToken
  * @apiGroup USER

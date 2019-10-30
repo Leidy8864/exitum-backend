@@ -9,7 +9,6 @@ module.exports = (sequelize, DataType) => {
     timestamps: false,
     omitNull: true,
     underscored: true
-
   });
   skill.associate = function (models) {
     skill.belongsToMany(models.advertisement, {

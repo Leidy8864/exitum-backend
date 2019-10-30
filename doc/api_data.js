@@ -5884,6 +5884,98 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/users/update-image",
+    "title": "POST update user image",
+    "name": "update_user_image",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Actualizar imagen del usuario.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "photo",
+            "description": "<p>Imagen del usuario *</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/update\n    {\n        \"user_id\": 2\n        \"photo\": \"image.png\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Menssaje de éxito</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Usuario actualizado correctamente\",\n    \"data\": {\n        \"user_id\": 2\n        \"name\": \"Leidy Paula\"\n        \"lastname\": \"Callupe Santisteban\"\n        \"phone\": \"1523456789\"\n        \"active\": \"true\"\n        \"role\": \"entrepreneur\"\n        \"photo\": \"image.png\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/users/updateWorkshop",
     "title": "POST update workshop",
     "name": "update_workshop",

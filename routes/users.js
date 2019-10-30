@@ -68,6 +68,10 @@ router.post('/rating/:to_user_id',
   controllerReview.rating
 )
 
+router.post('/update-image',
+  controller.updateImage
+)
+
 // router.post('/createWorkshop', 
 //   controller.validate('createWorkshop'),
 //   controller.createWorkshop()
