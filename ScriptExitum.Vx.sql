@@ -5,7 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema exitum
+-- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema exitum
@@ -18,10 +18,21 @@ CREATE SCHEMA IF NOT EXISTS `exitum` DEFAULT CHARACTER SET utf8 ;
 USE `exitum` ;
 
 -- -----------------------------------------------------
+-- Table `exitum`.`area`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`area` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `exitum`.`category`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`category` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(145) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -32,8 +43,8 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`currency`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`currency` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `currency` VARCHAR(145) NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `currency` VARCHAR(145) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -43,7 +54,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`country`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`country` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `country` VARCHAR(145) NULL DEFAULT NULL,
   `code` VARCHAR(145) NULL DEFAULT NULL,
   `currency_id` INT(11) NOT NULL,
@@ -62,7 +73,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`user` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NULL DEFAULT NULL,
   `lastname` VARCHAR(50) NULL DEFAULT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
@@ -78,8 +89,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   `photo_dni` VARCHAR(145) NULL DEFAULT NULL,
   `avg_rating` FLOAT(3,2) UNSIGNED NULL DEFAULT '0.00',
   `created_at` DATETIME NULL DEFAULT NULL,
-  `from_hour` TIME NULL,
-  `to_hour` TIME NULL,
+  `from_hour` TIME NULL DEFAULT NULL,
+  `to_hour` TIME NULL DEFAULT NULL,
   `country_id` INT(11) NOT NULL,
   `currency_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -104,7 +115,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`entrepreneur`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`entrepreneur` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC),
@@ -122,7 +133,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`stage`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`stage` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `stage` VARCHAR(100) NULL DEFAULT NULL,
   `description` TEXT NULL DEFAULT NULL,
   `type` ENUM('employee', 'startup') NULL DEFAULT NULL,
@@ -135,7 +146,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`startup`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`startup` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(145) NULL DEFAULT NULL,
   `photo_url` VARCHAR(145) NULL DEFAULT NULL,
   `ruc` VARCHAR(145) NULL DEFAULT NULL,
@@ -169,37 +180,27 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `exitum`.`area`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`area` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(100) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `exitum`.`advertisement`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`advertisement` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(120) NULL DEFAULT NULL,
   `description` TEXT NULL DEFAULT NULL,
   `state` ENUM('active', 'closed', 'archived') NULL DEFAULT NULL,
   `created_at` DATETIME NULL DEFAULT NULL,
   `startup_id` INT(11) NOT NULL,
-  `area_id` INT NOT NULL,
+  `area_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_project_startup1_idx` (`startup_id` ASC),
   INDEX `fk_advertisement_area1_idx` (`area_id` ASC),
-  CONSTRAINT `fk_project_startup1`
-    FOREIGN KEY (`startup_id`)
-    REFERENCES `exitum`.`startup` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_advertisement_area1`
     FOREIGN KEY (`area_id`)
     REFERENCES `exitum`.`area` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_project_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -210,9 +211,11 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`skill`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`skill` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `skill` VARCHAR(145) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `skill` VARCHAR(145) NOT NULL,
+  `icon` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `skill_UNIQUE` (`skill` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -244,7 +247,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`test`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`test` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(70) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -255,7 +258,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`question`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`question` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `question` VARCHAR(255) NULL DEFAULT NULL,
   `test_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -273,7 +276,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`answer`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`answer` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `answer` VARCHAR(255) NULL DEFAULT NULL,
   `correct` TINYINT(4) NULL DEFAULT NULL,
   `question_id` INT(11) NOT NULL,
@@ -289,10 +292,70 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`hour`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`hour` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `hour` TIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`appointment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`appointment` (
+  `hour_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `date` DATE NULL DEFAULT NULL,
+  `type` ENUM('reunion', 'recordatorio') NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `status` TINYINT(1) NULL DEFAULT '0',
+  PRIMARY KEY (`hour_id`, `user_id`),
+  INDEX `fk_hour_has_user_user1_idx` (`user_id` ASC),
+  INDEX `fk_hour_has_user_hour1_idx` (`hour_id` ASC),
+  CONSTRAINT `fk_hour_has_user_hour1`
+    FOREIGN KEY (`hour_id`)
+    REFERENCES `exitum`.`hour` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hour_has_user_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`certification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(145) NULL DEFAULT NULL,
+  `issuing_company` VARCHAR(145) NULL DEFAULT NULL,
+  `date_expedition` DATETIME NULL DEFAULT NULL,
+  `date_expiration` DATETIME NULL DEFAULT NULL,
+  `document_url` VARCHAR(255) NULL DEFAULT NULL,
+  `user_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_certification_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_certification_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `exitum`.`employee`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`employee` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `stage_id` INT(11) NOT NULL,
   `category_id` INT(11) NOT NULL,
@@ -327,33 +390,105 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `exitum`.`certification`
+-- Table `exitum`.`step`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
+CREATE TABLE IF NOT EXISTS `exitum`.`step` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(145) NULL DEFAULT NULL,
-  `issuing_company` VARCHAR(145) NULL DEFAULT NULL,
-  `date_expedition` DATETIME NULL DEFAULT NULL,
-  `date_expiration` DATETIME NULL DEFAULT NULL,
-  `document_url` VARCHAR(255) NULL DEFAULT NULL,
-  `user_id` INT(11) NOT NULL,
+  `step` VARCHAR(245) NULL DEFAULT NULL,
+  `icon` VARCHAR(120) NULL DEFAULT NULL,
+  `stage_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_certification_user1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_certification_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `exitum`.`user` (`id`)
+  INDEX `fk_step_stage1_idx` (`stage_id` ASC),
+  CONSTRAINT `fk_step_stage1`
+    FOREIGN KEY (`stage_id`)
+    REFERENCES `exitum`.`stage` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
+-- -----------------------------------------------------
+-- Table `exitum`.`tip`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`tip` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `tip` VARCHAR(145) NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `step_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tip_step1_idx` (`step_id` ASC),
+  CONSTRAINT `fk_tip_step1`
+    FOREIGN KEY (`step_id`)
+    REFERENCES `exitum`.`step` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`challenge`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `employee_id` INT(11) NULL DEFAULT NULL,
+  `startup_id` INT(11) NULL DEFAULT NULL,
+  `stage_id` INT(11) NOT NULL,
+  `step_id` INT(11) NOT NULL,
+  `tip_id` INT(11) NOT NULL,
+  `checked` TINYINT(4) NULL DEFAULT '0',
+  `status` VARCHAR(45) NULL DEFAULT NULL,
+  `date` DATETIME NULL DEFAULT NULL,
+  `comment` TEXT NULL DEFAULT NULL,
+  `reply` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tips_has_startup_startup1_idx` (`startup_id` ASC),
+  INDEX `fk_tips_has_startup_tips1_idx` (`tip_id` ASC),
+  INDEX `fk_startup_tip_step1_idx` (`step_id` ASC),
+  INDEX `fk_startup_tip_stage1_idx` (`stage_id` ASC),
+  INDEX `fk_challenge_employee1_idx` (`employee_id` ASC),
+  INDEX `fk_challenge_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_challenge_employee1`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `exitum`.`employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_challenge_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_startup_tip_stage1`
+    FOREIGN KEY (`stage_id`)
+    REFERENCES `exitum`.`stage` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_startup_tip_step1`
+    FOREIGN KEY (`step_id`)
+    REFERENCES `exitum`.`step` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tips_has_startup_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tips_has_startup_tips1`
+    FOREIGN KEY (`tip_id`)
+    REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 
 -- -----------------------------------------------------
 -- Table `exitum`.`chat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`chat` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `from_id` INT(11) NOT NULL,
   `to_id` INT(11) NOT NULL,
   `created_at` DATETIME NULL DEFAULT NULL,
@@ -378,7 +513,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`order`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`order` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `created_at` DATETIME NULL DEFAULT NULL,
   `employer_id` INT(11) NOT NULL,
   `employee_id` INT(11) NOT NULL,
@@ -403,7 +538,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`order_state`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`order_state` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) NOT NULL,
   `state` TINYINT(4) NULL DEFAULT NULL,
   `date_delivery` DATETIME NULL DEFAULT NULL,
@@ -422,7 +557,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`delivery`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`delivery` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `order_state_id` INT(11) NOT NULL,
   `file` VARCHAR(145) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -440,7 +575,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`department`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`department` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `department` VARCHAR(145) NULL DEFAULT NULL,
   `country_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -458,9 +593,11 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`university`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`university` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `university` VARCHAR(145) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `university` VARCHAR(192) NOT NULL,
+  `icon` VARCHAR(192) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `university_UNIQUE` (`university` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -469,24 +606,23 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`education`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`education` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `description` TEXT NULL DEFAULT NULL,
   `date_start` DATETIME NULL DEFAULT NULL,
   `date_end` DATETIME NULL DEFAULT NULL,
-  `university_id` INT(11) NULL DEFAULT NULL,
-  `employee_id` INT(11) NOT NULL,
-  `other_university` VARCHAR(145) NULL DEFAULT NULL,
+  `university_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_educations_universities1_idx` (`university_id` ASC),
-  INDEX `fk_education_employee1_idx` (`employee_id` ASC),
-  CONSTRAINT `fk_education_employee1`
-    FOREIGN KEY (`employee_id`)
-    REFERENCES `exitum`.`employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_education_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_educations_universities1`
     FOREIGN KEY (`university_id`)
     REFERENCES `exitum`.`university` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_education_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -497,9 +633,11 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`language`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`language` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `language` VARCHAR(145) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `language` VARCHAR(192) NOT NULL,
+  `icon` VARCHAR(192) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `language_UNIQUE` (`language` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -508,7 +646,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`level`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`level` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `level` VARCHAR(145) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -546,29 +684,6 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `exitum`.`employee_skill`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`employee_skill` (
-  `skill_id` INT(11) NOT NULL,
-  `employee_id` INT(11) NOT NULL,
-  PRIMARY KEY (`skill_id`, `employee_id`),
-  INDEX `fk_skill_has_employee_employee1_idx` (`employee_id` ASC),
-  INDEX `fk_skill_has_employee_skill1_idx` (`skill_id` ASC),
-  CONSTRAINT `fk_skill_has_employee_employee1`
-    FOREIGN KEY (`employee_id`)
-    REFERENCES `exitum`.`employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_skill_has_employee_skill1`
-    FOREIGN KEY (`skill_id`)
-    REFERENCES `exitum`.`skill` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
 -- Table `exitum`.`employee_test`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`employee_test` (
@@ -585,44 +700,6 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_test` (
   CONSTRAINT `fk_employee_has_certiification_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `exitum`.`step`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`step` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `step` VARCHAR(245) NULL,
-  `icon` VARCHAR(120) NULL DEFAULT NULL,
-  `stage_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_step_stage1_idx` (`stage_id` ASC),
-  CONSTRAINT `fk_step_stage1`
-    FOREIGN KEY (`stage_id`)
-    REFERENCES `exitum`.`stage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `exitum`.`tip`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`tip` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `tip` VARCHAR(145) NULL DEFAULT NULL,
-  `description` TEXT NULL,
-  `step_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tip_step1_idx` (`step_id` ASC),
-  CONSTRAINT `fk_tip_step1`
-    FOREIGN KEY (`step_id`)
-    REFERENCES `exitum`.`step` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -657,7 +734,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(145) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -688,22 +765,41 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`company`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`company` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(192) NOT NULL,
+  `icon` VARCHAR(192) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `exitum`.`experience`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`experience` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `position` VARCHAR(145) NULL DEFAULT NULL,
   `company` VARCHAR(145) NULL DEFAULT NULL,
   `date_start` DATETIME NULL DEFAULT NULL,
   `date_end` DATETIME NULL DEFAULT NULL,
   `description` VARCHAR(1024) NULL DEFAULT NULL,
   `current_job` TINYINT(4) NULL DEFAULT NULL,
-  `employee_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `company_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_experiencie_employee1_idx` (`employee_id` ASC),
-  CONSTRAINT `fk_experiencie_employee1`
-    FOREIGN KEY (`employee_id`)
-    REFERENCES `exitum`.`employee` (`id`)
+  INDEX `fk_experience_user1_idx` (`user_id` ASC),
+  INDEX `fk_experience_company1_idx` (`company_id` ASC),
+  CONSTRAINT `fk_experience_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_experience_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `exitum`.`company` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -728,6 +824,44 @@ CREATE TABLE IF NOT EXISTS `exitum`.`favorite` (
   CONSTRAINT `fk_favorite_user2`
     FOREIGN KEY (`to_user_id`)
     REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`file`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`file` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(145) NULL DEFAULT NULL,
+  `file` VARCHAR(245) NULL DEFAULT NULL,
+  `challenge_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_file_challenge_challenge1_idx` (`challenge_id` ASC),
+  CONSTRAINT `fk_file_challenge_challenge1`
+    FOREIGN KEY (`challenge_id`)
+    REFERENCES `exitum`.`challenge` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`file_tip`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
+  `id` INT(11) NOT NULL,
+  `file` VARCHAR(245) NULL DEFAULT NULL,
+  `name` VARCHAR(245) NULL DEFAULT NULL,
+  `tip_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_file_tip_tip1_idx` (`tip_id` ASC),
+  CONSTRAINT `fk_file_tip_tip1`
+    FOREIGN KEY (`tip_id`)
+    REFERENCES `exitum`.`tip` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -762,7 +896,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`recommendation`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`recommendation` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `description` TEXT NULL DEFAULT NULL,
   `employee_id` INT(11) NOT NULL,
   `total_likes` INT(11) NULL DEFAULT NULL,
@@ -829,7 +963,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`message` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `message` TEXT NULL DEFAULT NULL,
   `created_at` DATETIME NULL DEFAULT NULL,
   `viewed` TINYINT(4) NULL DEFAULT NULL,
@@ -849,7 +983,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`notification_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`notification_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(145) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -860,7 +994,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`notification`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`notification` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `notification_type_id` INT(11) NOT NULL,
   `notification` VARCHAR(145) NULL DEFAULT NULL,
@@ -887,7 +1021,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`notification_setting`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`notification_setting` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `active` TINYINT(4) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
   `notification_type_id` INT(11) NOT NULL,
@@ -912,7 +1046,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`order_detail`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`order_detail` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `advertisement_id` INT(11) NOT NULL,
   `order_id` INT(11) NOT NULL,
   `amount` DECIMAL(10,2) NULL DEFAULT NULL,
@@ -1014,6 +1148,30 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`schedule`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`schedule` (
+  `hour_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `break` TINYINT(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`hour_id`, `user_id`),
+  INDEX `fk_hour_has_user_user2_idx` (`user_id` ASC),
+  INDEX `fk_hour_has_user_hour2_idx` (`hour_id` ASC),
+  CONSTRAINT `fk_hour_has_user_hour2`
+    FOREIGN KEY (`hour_id`)
+    REFERENCES `exitum`.`hour` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hour_has_user_user2`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `exitum`.`startup_employee_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`startup_employee_type` (
@@ -1037,66 +1195,36 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `exitum`.`challenge`
+-- Table `exitum`.`startup_step`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `user_id` INT NOT NULL,
-  `employee_id` INT NULL,
-  `startup_id` INT NULL,
-  `stage_id` INT NOT NULL,
-  `step_id` INT NOT NULL,
-  `tip_id` INT NOT NULL,
-  `checked` TINYINT NULL DEFAULT 0,
-  `status` VARCHAR(45) NULL,
-  `date` DATETIME NULL,
-  `reply` TEXT NULL,
-  `comment` TEXT NULL,
-  INDEX `fk_tips_has_startup_startup1_idx` (`startup_id` ASC),
-  INDEX `fk_tips_has_startup_tips1_idx` (`tip_id` ASC),
-  INDEX `fk_startup_tip_step1_idx` (`step_id` ASC),
-  INDEX `fk_startup_tip_stage1_idx` (`stage_id` ASC),
-  PRIMARY KEY (`id`),
-  INDEX `fk_challenge_employee1_idx` (`employee_id` ASC),
-  INDEX `fk_challenge_user1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_tips_has_startup_tips1`
-    FOREIGN KEY (`tip_id`)
-    REFERENCES `exitum`.`tip` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tips_has_startup_startup1`
+CREATE TABLE IF NOT EXISTS `exitum`.`startup_step` (
+  `startup_id` INT(11) NOT NULL,
+  `step_id` INT(11) NOT NULL,
+  `tip_completed` INT(11) NULL DEFAULT NULL,
+  `icon_count_tip` VARCHAR(245) NULL DEFAULT NULL,
+  `state` ENUM('completado', 'incompleto') NULL DEFAULT 'incompleto',
+  PRIMARY KEY (`startup_id`, `step_id`),
+  INDEX `fk_startup_has_step_step1_idx` (`step_id` ASC),
+  INDEX `fk_startup_has_step_startup1_idx` (`startup_id` ASC),
+  CONSTRAINT `fk_startup_has_step_startup1`
     FOREIGN KEY (`startup_id`)
     REFERENCES `exitum`.`startup` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_startup_tip_step1`
+  CONSTRAINT `fk_startup_has_step_step1`
     FOREIGN KEY (`step_id`)
     REFERENCES `exitum`.`step` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_startup_tip_stage1`
-    FOREIGN KEY (`stage_id`)
-    REFERENCES `exitum`.`stage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_challenge_employee1`
-    FOREIGN KEY (`employee_id`)
-    REFERENCES `exitum`.`employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_challenge_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `exitum`.`user` (`id`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `exitum`.`subcategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`subcategory` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(145) NULL DEFAULT NULL,
   `category_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1138,7 +1266,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`token`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`token` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `token` VARCHAR(255) NULL DEFAULT NULL,
   `token_created_at` DATETIME NULL DEFAULT NULL,
   `token_password` VARCHAR(255) NULL DEFAULT NULL,
@@ -1156,77 +1284,19 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `exitum`.`hour`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`hour` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `hour` TIME NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `exitum`.`appointment`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`appointment` (
-  `hour_id` INT NOT NULL,
-  `user_id` INT(11) NOT NULL,
-  `date` DATE NULL,
-  `type` ENUM('reunion', 'recordatorio') NULL,
-  `description` TEXT NULL,
-  `status` TINYINT(1) NULL DEFAULT 0,
-  PRIMARY KEY (`hour_id`, `user_id`),
-  INDEX `fk_hour_has_user_user1_idx` (`user_id` ASC),
-  INDEX `fk_hour_has_user_hour1_idx` (`hour_id` ASC),
-  CONSTRAINT `fk_hour_has_user_hour1`
-    FOREIGN KEY (`hour_id`)
-    REFERENCES `exitum`.`hour` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_hour_has_user_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `exitum`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `exitum`.`schedule`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`schedule` (
-  `hour_id` INT NOT NULL,
-  `user_id` INT(11) NOT NULL,
-  `break` TINYINT(1) NULL,
-  PRIMARY KEY (`hour_id`, `user_id`),
-  INDEX `fk_hour_has_user_user2_idx` (`user_id` ASC),
-  INDEX `fk_hour_has_user_hour2_idx` (`hour_id` ASC),
-  CONSTRAINT `fk_hour_has_user_hour2`
-    FOREIGN KEY (`hour_id`)
-    REFERENCES `exitum`.`hour` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_hour_has_user_user2`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `exitum`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `exitum`.`workshop`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(145) NULL,
-  `description` TEXT NULL,
-  `day` DATE NULL,
-  `hour_start` TIME NULL,
-  `hour_end` TIME NULL,
-  `place` VARCHAR(200) NULL,
-  `lat` DECIMAL(10,8) NULL,
-  `lng` DECIMAL(11,8) NULL,
-  `user_id` INT NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(145) NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `day` DATE NULL DEFAULT NULL,
+  `hour_start` TIME NULL DEFAULT NULL,
+  `hour_end` TIME NULL DEFAULT NULL,
+  `place` VARCHAR(200) NULL DEFAULT NULL,
+  `lat` DECIMAL(10,8) NULL DEFAULT NULL,
+  `lng` DECIMAL(11,8) NULL DEFAULT NULL,
+  `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_workshop_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_workshop_user1`
@@ -1234,89 +1304,61 @@ CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
     REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 
 -- -----------------------------------------------------
--- Table `exitum`.`file`
+-- Table `exitum`.`user_verification_skill`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`file` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(145) NULL,
-  `file` VARCHAR(245) NULL,
-  `challenge_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_file_challenge_challenge1_idx` (`challenge_id` ASC),
-  CONSTRAINT `fk_file_challenge_challenge1`
-    FOREIGN KEY (`challenge_id`)
-    REFERENCES `exitum`.`challenge` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `exitum`.`file_tip`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
-  `id` INT NOT NULL,
-  `file` VARCHAR(60) NULL,
-  `name` VARCHAR(245) NULL,
-  `tip_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_file_tip_tip1_idx` (`tip_id` ASC),
-  CONSTRAINT `fk_file_tip_tip1`
-    FOREIGN KEY (`tip_id`)
-    REFERENCES `exitum`.`tip` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `exitum`.`startup_step`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`startup_step` (
-  `startup_id` INT NOT NULL,
-  `step_id` INT NOT NULL,
-  `tip_completed` INT NULL,
-  `icon_count_tip` VARCHAR(245) NULL,
-  `state` ENUM('completado', 'incompleto') NULL DEFAULT 'incompleto',
-  PRIMARY KEY (`startup_id`, `step_id`),
-  INDEX `fk_startup_has_step_step1_idx` (`step_id` ASC) VISIBLE,
-  INDEX `fk_startup_has_step_startup1_idx` (`startup_id` ASC) VISIBLE,
-  CONSTRAINT `fk_startup_has_step_startup1`
-    FOREIGN KEY (`startup_id`)
-    REFERENCES `exitum`.`startup` (`id`)
+CREATE TABLE IF NOT EXISTS `exitum`.`user_verification_skill` (
+  `to_user_id` INT(11) NOT NULL,
+  `from_user_id` INT(11) NOT NULL,
+  `skill_id` INT(11) NOT NULL,
+  PRIMARY KEY (`to_user_id`, `from_user_id`, `skill_id`),
+  INDEX `fk_user_has_skill_skill1_idx` (`skill_id` ASC),
+  INDEX `fk_user_has_skill_user1_idx` (`to_user_id` ASC),
+  INDEX `fk_user_has_skill_user2_idx` (`from_user_id` ASC),
+  CONSTRAINT `fk_user_has_skill_user1`
+    FOREIGN KEY (`to_user_id`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_startup_has_step_step1`
-    FOREIGN KEY (`step_id`)
-    REFERENCES `exitum`.`step` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `exitum`.`startup_step`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`startup_step` (
-  `startup_id` INT NOT NULL,
-  `step_id` INT NOT NULL,
-  `tip_completed` INT NULL,
-  `icon_count_tip` VARCHAR(245) NULL,
-  `state` ENUM('completado', 'incompleto') NULL DEFAULT 'incompleto',
-  PRIMARY KEY (`startup_id`, `step_id`),
-  INDEX `fk_startup_has_step_step1_idx` (`step_id` ASC),
-  INDEX `fk_startup_has_step_startup1_idx` (`startup_id` ASC),
-  CONSTRAINT `fk_startup_has_step_startup1`
-    FOREIGN KEY (`startup_id`)
-    REFERENCES `exitum`.`startup` (`id`)
+  CONSTRAINT `fk_user_has_skill_skill1`
+    FOREIGN KEY (`skill_id`)
+    REFERENCES `exitum`.`skill` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_startup_has_step_step1`
-    FOREIGN KEY (`step_id`)
-    REFERENCES `exitum`.`step` (`id`)
+  CONSTRAINT `fk_user_has_skill_user2`
+    FOREIGN KEY (`from_user_id`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`skill_user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`skill_user` (
+  `user_id` INT(11) NOT NULL,
+  `skill_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user_id`, `skill_id`),
+  INDEX `fk_user_has_skill_skill2_idx` (`skill_id` ASC),
+  INDEX `fk_user_has_skill_user3_idx` (`user_id` ASC),
+  CONSTRAINT `fk_user_has_skill_user3`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_skill_skill2`
+    FOREIGN KEY (`skill_id`)
+    REFERENCES `exitum`.`skill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

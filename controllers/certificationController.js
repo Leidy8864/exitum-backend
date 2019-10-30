@@ -125,6 +125,28 @@ module.exports = {
             return res.status(200).json({ status: false, message: error.message, data : {  } })
         }
 
+
+        // try {
+
+            // res.attachment(fileName);
+            // var element = getObject(NEW_BUCKET_NAME, fileName)
+            // var element = await getObject(NEW_BUCKET_NAME, fileName)
+
+            // res.setHeader('Content-disposition', 'attachment; filename=dedede.pdf')
+            // res.setHeader('Content-length', element.ContentLength)
+            // res.end(data.body)
+
+            // element.createReadStream()
+            // console.log(element)
+            // console.log(fileStream)
+            // element.pipe(res)
+
+            // return res.status(200).json({ status: true, message: 'OK', data : { element } })
+
+        // } catch (error) {
+        //     return res.status(200).json({ status: false, message: error.message, data : {  } })
+        // }
+
         // Guardar en proyecto
         // var s3 = new AWS.S3({apiVersion: '2006-03-01'});
         // var params = {Bucket: 'myBucket', Key: 'myImageFile.jpg'};

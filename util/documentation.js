@@ -296,6 +296,7 @@
  * @apiParam {String} phone Telefono del usuario actualizado.
  * @apiParam {Boolean} active False cuando se quiere eliminar al usuario.
  * @apiParam {String} rol Nuevo rol del usuario ('entrepreneur', 'employee', 'admin').
+ * @apiParam {File} photo Imagen del usuario
  * *
 	* @apiParamExample {querystring} Ejemplo url
 	/users/update
@@ -306,6 +307,7 @@
         "phone": "1523456789"
         "active": "true"
         "role": "entrepreneur"
+        "photo": "image.png"
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido

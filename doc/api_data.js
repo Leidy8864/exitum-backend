@@ -5806,14 +5806,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "rol",
-            "description": "<p>Nuevo rol del usuario ('entrepreneur', 'employee', 'admin'). *</p>"
+            "description": "<p>Nuevo rol del usuario ('entrepreneur', 'employee', 'admin').</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "photo",
+            "description": "<p>Imagen del usuario *</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "\t/users/update\n    {\n        \"user_id\": 2\n        \"name\": \"Leidy Paula\"\n        \"lastname\": \"Callupe Santisteban\"\n        \"phone\": \"1523456789\"\n        \"active\": \"true\"\n        \"role\": \"entrepreneur\"\n    }",
+          "content": "\t/users/update\n    {\n        \"user_id\": 2\n        \"name\": \"Leidy Paula\"\n        \"lastname\": \"Callupe Santisteban\"\n        \"phone\": \"1523456789\"\n        \"active\": \"true\"\n        \"role\": \"entrepreneur\"\n        \"photo\": \"image.png\"\n    }",
           "type": "querystring"
         }
       ]

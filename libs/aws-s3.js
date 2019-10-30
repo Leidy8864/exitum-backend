@@ -75,6 +75,13 @@ module.exports = {
 
         return s3Bucket.getObject(params).createReadStream();
 
+        // try {
+        //     const data = await s3Bucket.getObject(params).promise()
+        //     return data
+        // } catch (err) {
+        //     throw new Error(`No se pudo obtener el archivo ${err.message}`)
+        // }
+        // createReadStream
     },
 
     getDownloadUrl: (bucket, key) => {

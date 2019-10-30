@@ -493,10 +493,10 @@ module.exports = {
 
             if (user) {
 
-                if (user.photo) {
-                    console.log("Errrror papa", user.photo);
-                    s3.deleteObject(NEW_BUCKET_NAME, user.photo);
-                }
+                // if (user.photo) {
+                //     console.log("Errrror papa", user.photo);
+                //     s3.deleteObject(NEW_BUCKET_NAME, user.photo);
+                // }
                 if (req.files) {
                     var photo = req.files.photo;
                     fileName = s3.putObject(NEW_BUCKET_NAME, photo);

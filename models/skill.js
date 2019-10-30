@@ -3,6 +3,7 @@ module.exports = (sequelize, DataType) => {
   const skill = sequelize.define('skill', {
     id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
     skill: DataType.STRING,
+    icon: DataType.STRING,
   }, {
     freezeTableName: true,
     timestamps: false,
