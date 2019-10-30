@@ -229,7 +229,7 @@ module.exports = {
                     }
                 ).then(advertisements => {
 
-                    
+
                     models.advertisement.count({
                         where: whereConsult,
                         include: [
@@ -264,4 +264,22 @@ module.exports = {
                 });
         }
     },
+
+    findAdvertBySkill: async (req, res) => {
+        const { user_id } = req.body
+        await models.employee.findOne({
+            where: { user_id: user_id },
+            include: [
+                { model: models.skill }
+            ]
+        }).then(employee => {
+            return res.json({ status: true, data : employee })
+        })
+        await models.advertisement_skill.findAll({
+            // where: {
+            //     skill: 
+            // }
+        })
+
+    }
 }
