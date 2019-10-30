@@ -39,6 +39,4 @@ router.post('/rating/:startup_id',
   controllerReview.rating
 )
 
-router.post('/test', controller.prueba)
-
 module.exports = router;

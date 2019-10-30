@@ -1049,6 +1049,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
   `checked` TINYINT NULL DEFAULT 0,
   `status` VARCHAR(45) NULL,
   `date` DATETIME NULL,
+  `reply` TEXT NULL,
   `comment` TEXT NULL,
   INDEX `fk_tips_has_startup_startup1_idx` (`startup_id` ASC),
   INDEX `fk_tips_has_startup_tips1_idx` (`tip_id` ASC),
@@ -1264,6 +1265,54 @@ CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
   CONSTRAINT `fk_file_tip_tip1`
     FOREIGN KEY (`tip_id`)
     REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `exitum`.`startup_step`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`startup_step` (
+  `startup_id` INT NOT NULL,
+  `step_id` INT NOT NULL,
+  `tip_completed` INT NULL,
+  `icon_count_tip` VARCHAR(245) NULL,
+  `state` ENUM('completado', 'incompleto') NULL DEFAULT 'incompleto',
+  PRIMARY KEY (`startup_id`, `step_id`),
+  INDEX `fk_startup_has_step_step1_idx` (`step_id` ASC) VISIBLE,
+  INDEX `fk_startup_has_step_startup1_idx` (`startup_id` ASC) VISIBLE,
+  CONSTRAINT `fk_startup_has_step_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_startup_has_step_step1`
+    FOREIGN KEY (`step_id`)
+    REFERENCES `exitum`.`step` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `exitum`.`startup_step`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`startup_step` (
+  `startup_id` INT NOT NULL,
+  `step_id` INT NOT NULL,
+  `tip_completed` INT NULL,
+  `icon_count_tip` VARCHAR(245) NULL,
+  `state` ENUM('completado', 'incompleto') NULL DEFAULT 'incompleto',
+  PRIMARY KEY (`startup_id`, `step_id`),
+  INDEX `fk_startup_has_step_step1_idx` (`step_id` ASC),
+  INDEX `fk_startup_has_step_startup1_idx` (`startup_id` ASC),
+  CONSTRAINT `fk_startup_has_step_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_startup_has_step_step1`
+    FOREIGN KEY (`step_id`)
+    REFERENCES `exitum`.`step` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

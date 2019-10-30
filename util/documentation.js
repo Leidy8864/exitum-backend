@@ -1850,200 +1850,6 @@
 
  /**
  *
- * @api {POST} /challenges/checkStartup POST check challenge stratup
- * @apiName check challenge startup
- * @apiGroup CHALLENGES
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription Marca el reto cumplido por la startup.
- * @apiParam {Int} id Id del usuario impulsor.
- * @apiParam {Boolean} checked Marca 0 o 1 segun el cumplimiento del reto.
- * @apiParam {Int} tip_id Id del reto.
- * 
-	* @apiParamExample {querystring} Ejemplo url
-    /challenges/checkStartup
-    {
-        "id": 3,
-        "startup_id": 1,
-        "checked": 1,
-        "tip_id": 2
-    }
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
- * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-        "status": true,
-        "message": "Reto superado guardado correctamente.",
-        "data": {
-            "check": [
-                1
-            ]
-        }
-    }
- *
- *
- */
-
- /**
- *
- * @api {POST} /challenges/checkEmployee POST check challenge employee
- * @apiName check challenge employee
- * @apiGroup CHALLENGES
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription Marca el reto cumplido por el impulsor.
- * @apiParam {Int} id Id del usuario impulsor.
- * @apiParam {Boolean} checked Marca 0 o 1 segun el cumplimiento del reto.
- * @apiParam {Int} tip_id Id del reto.
- * 
-	* @apiParamExample {querystring} Ejemplo url
-    /challenges/checkEmployee
-    {
-        "id": 3,
-        "checked": 1,
-        "tip_id": 2
-    }
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
- * @apiSuccess (Datos obtenidos) {Object} data Indica el reto creado o actualizado
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-        "status": true,
-        "message": "Reto superado guardado correctamente.",
-        "data": {
-            "check": [
-                1
-            ]
-        }
-    }
- *
- *
- */
-
- /**
- *
- * @api {GET} /challenges/listStartup GET list challenges startup
- * @apiName list challenges startup
- * @apiGroup CHALLENGES
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription Lista de retos de la startup.
- * 
-	* @apiParamExample {querystring} Ejemplo url
-    /challenges/listStartup
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
- * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-        "status": true,
-        "message": "Lista de retos de la startup",
-        "data": [
-            {
-                "id": 1,
-                "stage": "Pre semilla",
-                "description": "Etapa donde solo se tiene una idea superficial y se busca validarla.",
-                "type": "startup",
-                "steps": []
-            },
-            {
-                "id": 2,
-                "stage": "Semilla",
-                "description": "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.",
-                "type": "startup",
-                "steps": []
-            },
-            {
-                "id": 3,
-                "stage": "Temprana",
-                "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
-                "type": "startup",
-                "steps": []
-            },
-            {
-                "id": 4,
-                "stage": "Crecimiento",
-                "description": "Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.",
-                "type": "startup",
-                "steps": []
-            },
-            {
-                "id": 5,
-                "stage": "Expansión",
-                "description": "Etapa donde se busca alcanzar nuevos horizontes en otros mercados.",
-                "type": "startup",
-                "steps": []
-            },
-            {
-                "id": 6,
-                "stage": "IPO",
-                "description": "Etapa donde se lanza al mercado acciones de nuestra empresa para conseguir acciones y expandir planes de negocio.",
-                "type": "startup",
-                "steps": []
-            }
-        ]
-    }
- *
- *
- */
-
- /**
- *
- * @api {GET} /challenges/listEmployee GET list challenges employee
- * @apiName list challenges employee
- * @apiGroup CHALLENGES
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription Lista de retos del empleado.
- * 
-	* @apiParamExample {querystring} Ejemplo url
-    /challenges/listEmployee
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
- * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-        "status": true,
-        "message": "Lista de retos del impulsor",
-        "data": [
-            {
-                "id": 7,
-                "stage": "principiante",
-                "description": "Registra todos los datos del perfil",
-                "type": "employee",
-                "steps": [
-                    {
-                        "id": 1,
-                        "icon": "bc9ca640-f1dd-11e9-a8f8-0123456789abmaria.PNG",
-                        "stage_id": 7,
-                        "tips": [
-                            {
-                                "id": 1,
-                                "tip": "Subir foto a mi perfil",
-                                "step_id": 1
-                            },
-                            {
-                                "id": 2,
-                                "tip": "Asociar mi cuenta con linkedin",
-                                "step_id": 1
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
- *
- *
- */
-
- /**
- *
  * @api {GET} /challenges/listStage/:startup_id GET list stage startup
  * @apiName list stage startup
  * @apiGroup CHALLENGES
@@ -2074,118 +1880,71 @@
                     "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
                     "step": "Nivel 1 Etapa 1 startup",
                     "stage_id": 1,
+                    "startup_steps": [
+                        {
+                            "startup_id": 9,
+                            "step_id": 1,
+                            "tip_completed": 0,
+                            "icon_count_tip": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg",
+                            "state": "incompleto"
+                        }
+                    ],
                     "challenges": [
                         {
                             "id": 1,
                             "user_id": 7,
                             "employee_id": null,
-                            "startup_id": 5,
+                            "startup_id": 9,
                             "stage_id": 1,
                             "step_id": 1,
                             "tip_id": 1,
                             "checked": false,
                             "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
+                            "date": "2019-10-30T14:33:25.000Z",
+                            "comment": null,
+                            "reply": null
                         },
                         {
                             "id": 2,
                             "user_id": 7,
                             "employee_id": null,
-                            "startup_id": 5,
+                            "startup_id": 9,
                             "stage_id": 1,
                             "step_id": 1,
                             "tip_id": 2,
                             "checked": false,
                             "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
+                            "date": "2019-10-30T14:33:25.000Z",
+                            "comment": null,
+                            "reply": null
                         },
                         {
                             "id": 3,
                             "user_id": 7,
                             "employee_id": null,
-                            "startup_id": 5,
+                            "startup_id": 9,
                             "stage_id": 1,
                             "step_id": 1,
                             "tip_id": 3,
                             "checked": false,
                             "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
+                            "date": "2019-10-30T14:33:25.000Z",
+                            "comment": null,
+                            "reply": null
                         },
                         {
                             "id": 4,
                             "user_id": 7,
                             "employee_id": null,
-                            "startup_id": 5,
+                            "startup_id": 9,
                             "stage_id": 1,
                             "step_id": 1,
                             "tip_id": 4,
                             "checked": false,
                             "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
-                        }
-                    ]
-                },
-                {
-                    "id": 2,
-                    "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
-                    "step": "Nivel 2 Etapa 1 startup",
-                    "stage_id": 1,
-                    "challenges": [
-                        {
-                            "id": 5,
-                            "user_id": 7,
-                            "employee_id": null,
-                            "startup_id": 5,
-                            "stage_id": 1,
-                            "step_id": 2,
-                            "tip_id": 5,
-                            "checked": false,
-                            "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
-                        },
-                        {
-                            "id": 6,
-                            "user_id": 7,
-                            "employee_id": null,
-                            "startup_id": 5,
-                            "stage_id": 1,
-                            "step_id": 2,
-                            "tip_id": 6,
-                            "checked": false,
-                            "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
-                        },
-                        {
-                            "id": 7,
-                            "user_id": 7,
-                            "employee_id": null,
-                            "startup_id": 5,
-                            "stage_id": 1,
-                            "step_id": 2,
-                            "tip_id": 7,
-                            "checked": false,
-                            "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
-                        },
-                        {
-                            "id": 8,
-                            "user_id": 7,
-                            "employee_id": null,
-                            "startup_id": 5,
-                            "stage_id": 1,
-                            "step_id": 2,
-                            "tip_id": 8,
-                            "checked": false,
-                            "status": "Por verificar",
-                            "date": "2019-10-25T21:42:00.000Z",
-                            "comment": null
+                            "date": "2019-10-30T14:33:25.000Z",
+                            "comment": null,
+                            "reply": null
                         }
                     ]
                 }
@@ -2282,19 +2041,26 @@
  *
  */
 
+
  /**
  *
- * @api {GET} /challenges/detailTip?startup_id=5&tip_id=1 GET detail tip
- * @apiName detail tip
+ * @api {POST} /challenges/reply POST reply tip
+ * @apiName reply tip
  * @apiGroup CHALLENGES
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription Lista del nivel y sus retos de la startup.
- * @apiParam {Int} startup_id Id de la startup.
- * @apiParam {Int} tip_id Id del reto.
+ * @apiParam {File} file Archivo.
+ * @apiParam {Int} challenge_id Id del reto.
+ * @apiParam {String} reply Respuesta.
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /challenges/detailTip?startup_id=5&tip_id=1
+    /challenges/reply
+    {
+        "file": "Documento.docx",
+        "challenge_id": 1,
+        "reply": "Respuesta al reto"
+    }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
@@ -2302,28 +2068,7 @@
  * @apiSuccessExample {json} Datos obtenidos:
     {
         "status": true,
-        "message": "Detalle del reto",
-        "data": {
-            "id": 1,
-            "tip": "Reto 1 Nivel 1 Etapa 1 startup",
-            "step_id": 1,
-            "challenges": [
-                {
-                    "id": 1,
-                    "user_id": 7,
-                    "employee_id": null,
-                    "startup_id": 5,
-                    "stage_id": 1,
-                    "step_id": 1,
-                    "tip_id": 1,
-                    "checked": false,
-                    "status": "Por verificar",
-                    "date": "2019-10-25T21:42:00.000Z",
-                    "comment": null,
-                    "files": []
-                }
-            ]
-        }
+        "message": "Respuesta enviada correctamente"
     }
  *
  *

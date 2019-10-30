@@ -23,32 +23,6 @@ router.post('/createTip',
     controller.createTip
 );
 
-router.post('/checkStartup',
-    controller.validate('checkStartup'),
-    controller.checkChallengeStartup
-);
-
-router.post('/checkEmployee',
-    controller.validate('checkEmployee'),
-    controller.checkChallengeEmployee
-);
-
-router.get('/listEmployee',
-    controller.listChallengeEmployee
-);
-
-router.get('/listStartup',
-    controller.listChallengeStartup
-);
-
-router.get('/actualStage/:id',
-    controller.actualStage
-);
-
-router.get('/actualStep/:id',
-    controller.actualStage
-);
-
 router.post('/create', 
     controller.createChallenge
 );
@@ -61,8 +35,12 @@ router.get('/listStep',
     controller.listStepStartup
 );
 
-router.get('/detailTip', 
-    controller.detailTip 
+router.get('/download/:file',
+    controller.downloadFile
+);
+
+router.post('/reply',
+    controller.replyTip
 );
 
 module.exports = router;

@@ -48,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
         checked: DataTypes.BOOLEAN,
         status: DataTypes.STRING,
         date: DataTypes.DATE,
-        count: DataTypes.INTEGER,
-        comment: DataTypes.STRING
+        comment: DataTypes.STRING,
+        reply: DataTypes.STRING
     },
     {
         freezeTableName: true,

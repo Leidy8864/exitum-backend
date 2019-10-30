@@ -95,9 +95,16 @@ module.exports = {
                                     }
                                 }
                             }
-                            console.log(chlls)
                         })
-                        await models.challenge.bulkCreate(chlls, {transaction: t});
+                        await models.challenge.bulkCreate(chlls, { transaction: t });
+                        const step = await models.step.findOne({ attributes: ['id'], where: { stage_id: stage_id } })
+                        await models.startup_step.create({
+                            startup_id: startup.id,
+                            step_id: step.id,
+                            tip_completed: 0,
+                            icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                            state: 'incompleto'
+                        }, { transaction: t })
                     });
                     return res.json({ status: true, message: "Startup creado correctamente" });
                 }
@@ -108,13 +115,6 @@ module.exports = {
             console.log("Errrror", error);
             return res.json({ status: false, message: "Error al crear la startup", data: { error } });
         }
-    },
-
-    prueba: async (req, res) => {
-        var id = req.body.id
-        const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: id } });
-
-
     },
 
     update: async (req, res) => {
