@@ -51,9 +51,16 @@ module.exports = {
                 return data;
             }
         });
+    },
 
+    getObject : (bucket,key) => {
 
-
+        var params = {
+            Bucket : bucket,
+            Key : key
+        }
+        
+        return  s3Bucket.getObject(params).createReadStream();
         
     }
 }

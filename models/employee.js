@@ -79,9 +79,9 @@ module.exports = (sequelize, DataTypes) => {
             as: 'education',
             foreignKey: 'employee_id'
         });
-        employee.hasMany(models.certification, {
-            foreignKey: 'employee_id'
-        });
+        // employee.hasMany(models.certification, {
+        //     foreignKey: 'employee_id'
+        // });
         employee.belongsTo(models.stage, {
             foreignKey: 'stage_id'
         });
