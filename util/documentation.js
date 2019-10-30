@@ -2550,11 +2550,11 @@
 
   /**
  *
- * @api {GET} /certifications/find-by-id/:user_id GET show certifications user
+ * @api {GET} /certifications/list-by-id/:user_id GET show certifications user
  * @apiName Lista de certificaciones del usuario.
  * @apiParam {String} user_id ID del usuario.
  * @apiExample Request parameter
- * http://35.175.241.103:8081/certifications/find-by-id/1
+ * http://35.175.241.103:8081/certifications/list-by-id/1
  * @apiGroup CERTIFICATION
  * 
  * @apiVersion 1.0.0

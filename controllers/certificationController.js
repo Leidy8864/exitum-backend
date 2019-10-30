@@ -20,7 +20,7 @@ module.exports = {
             .exists().withMessage("Es necesario una fecha de expedición del certificado.")
         var date_expiration = check('date_expiration')
             .exists().withMessage("Es necesario una fecha de vencimiento del certificado.")
-        var fileName = check('filename')
+        var fileName = check('fileName')
             .exists().withMessage("Es necesario nombre del certificado.")
 
         switch (certificacion) {
@@ -60,7 +60,7 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: elements })
         } catch (err) {
-            return res.status(500).json({ status: false, message: err.message, data: {  } })
+            return res.status(200).json({ status: false, message: err.message, data: {  } })
         }
 
     },

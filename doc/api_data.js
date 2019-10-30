@@ -1198,7 +1198,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/certifications/find-by-id/:user_id",
+    "url": "/certifications/list-by-id/:user_id",
     "title": "GET show certifications user",
     "name": "Lista_de_certificaciones_del_usuario_",
     "parameter": {
@@ -1217,7 +1217,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/certifications/find-by-id/1",
+        "content": "http://35.175.241.103:8081/certifications/list-by-id/1",
         "type": "json"
       }
     ],
