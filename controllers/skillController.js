@@ -1,5 +1,6 @@
 const models = require('../models/index');
 const { existById } = require('./elementController');
+const Sequelize = require('sequelize');
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
@@ -56,20 +57,39 @@ module.exports = {
 
             const { user_id, skills } = req.body
 
-            const user = existById(models.user, user_id)
+            const user = await existById(models.user, user_id)
 
-            // var skills_id = await skills.map( element => {
+           
+            var skills_id = await Promise.all(  skills.map(  async element => {
+                    var [ response, created ] = await  models.skill.findOrCreate({
+                        where: { skill: { [Sequelize.Op.like]  : '%' + element + '%'} },
+                        defaults: {
+                            skill: element
+                        }
+                    })
+                    return await response.id
+                } 
+            ))
 
-            //     var [response, created ] = models.skill.findOrCreate({
-            //         where: { skill:  { [Sequelize.Op.like]  : '%' + element + '%'} } ,
-            //         defaults: { skill: element }
-            //     })
+            user.addToUserSkills(skills_id)
 
-            //     return response.id
+            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: {  } });
 
-            // })
+        } catch (error) {
+            res.status(200).json({ status: false, message: (error.message) ? error.message : error });
+        }
+    },
 
-            // return res.status(200).json({ status: true, message: "Skill creado correctamente", data: skills_id });
+    listById : async (req, res) => {
+
+        try {
+
+            const { user_id } = req.params
+            const user = await existById(models.user, user_id)
+
+            var skills = await user.getToUserSkills()
+
+            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: skills });
 
         } catch (error) {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error });
