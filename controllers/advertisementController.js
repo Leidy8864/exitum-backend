@@ -267,7 +267,10 @@ module.exports = {
     },
 
     advertsBySkill: async (req, res) => {
-        const { user_id } = req.query
+        let user_id = req.query.user_id
+        let perPage = 20;
+        let page = req.query.page || 1;
+
         const user = await models.user.findOne({
             attributes: ['id'],
             where: { id: user_id },
@@ -284,6 +287,8 @@ module.exports = {
             skill_user.push(user.toUserSkills[i].skill)
         }
         await models.advertisement.findAll({
+            offset: (perPage * (page - 1)),
+            limit: perPage,
             where: {
                 state: 'active'
             },
@@ -302,7 +307,27 @@ module.exports = {
                 }
             ]
         }).then(ads => {
-            return res.json({ status: true, message: "Listado de anuncios por skill", ads })
+            models.advertisement.count({
+                where: {
+                    state: 'active'
+                },
+                include: [
+                    {
+                        model: models.skill,
+                        where: {
+                            skill: { [models.Sequelize.Op.or]: [skill_user] }
+                        }
+                    },
+                    {
+                        model: models.startup,
+                        include: [{
+                            model: models.entrepreneur,
+                        }]
+                    }
+                ]
+            }).then(totalRows => {
+                return res.json({ status: true, message: "Listado de anuncios por skill", data: ads, current: page, pages: Math.ceil(totalRows / perPage) })
+            })
         })
 
 
