@@ -41,6 +41,7 @@ module.exports = {
         const { user_id } = req.params
 
         try {
+
            const user = await existById(models.user, user_id)
            var elements = await user.getCertifications({
                attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%d/%m/%Y' ), 'expedition' ],
@@ -152,6 +153,35 @@ module.exports = {
         // var params = {Bucket: 'myBucket', Key: 'myImageFile.jpg'};
         // var file = require('fs').createWriteStream(__dirname+'/path/to/file.jpg');
         // s3.getObject(params).createReadStream().pipe(file);
+    },
+
+    update: async (req, res) => {
+
+        const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
+
+        try {
+
+            const user = await existById(models.user, user_id)
+            const certification = await models.certification.findByPk(certification_id)
+            var fileName = certification.document_url
+           
+            if (req.files) {
+                fileName = putObject(NEW_BUCKET_NAME, document);
+           }
+
+            certification.update({
+                user_id: user.id,
+                name: name,
+                issuing_company: issuing_company,
+                date_expedition: new Date(date_expedition),
+                date_expiration: new Date(date_expiration),
+                document_url: fileName
+            })
+
+        } catch (error) {
+            return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
+        }
+
     }
 
 }
