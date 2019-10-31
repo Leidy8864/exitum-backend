@@ -296,6 +296,7 @@
  * @apiParam {String} phone Telefono del usuario actualizado.
  * @apiParam {Boolean} active False cuando se quiere eliminar al usuario.
  * @apiParam {String} rol Nuevo rol del usuario ('entrepreneur', 'employee', 'admin').
+ * @apiParam {File} photo Imagen del usuario
  * *
 	* @apiParamExample {querystring} Ejemplo url
 	/users/update
@@ -306,6 +307,7 @@
         "phone": "1523456789"
         "active": "true"
         "role": "entrepreneur"
+        "photo": "image.png"
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -314,6 +316,45 @@
 	{
         "status": true,
         "message": "Usuario actualizado correctamente"
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {POST} /users/update-image POST update user image
+ * @apiName update user image
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualizar imagen del usuario.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {File} photo Imagen del usuario
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/update
+    {
+        "user_id": 2
+        "photo": "image.png"
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Usuario actualizado correctamente",
+        "data": {
+            "user_id": 2
+            "name": "Leidy Paula"
+            "lastname": "Callupe Santisteban"
+            "phone": "1523456789"
+            "active": "true"
+            "role": "entrepreneur"
+            "photo": "image.png"
+        }
     }
  *
  *
@@ -2550,11 +2591,11 @@
 
   /**
  *
- * @api {GET} /certifications/find-by-id/:user_id GET show certifications user
+ * @api {GET} /certifications/list-by-id/:user_id GET show certifications user
  * @apiName Lista de certificaciones del usuario.
  * @apiParam {String} user_id ID del usuario.
  * @apiExample Request parameter
- * http://35.175.241.103:8081/certifications/find-by-id/1
+ * http://35.175.241.103:8081/certifications/list-by-id/1
  * @apiGroup CERTIFICATION
  * 
  * @apiVersion 1.0.0

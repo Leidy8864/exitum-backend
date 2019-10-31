@@ -12,9 +12,18 @@ router.post('/create',
     controller.create
 );
 
+router.post('/update',
+    controller.validate('update'),
+    controller.update
+);
+
 router.get('/download/:fileName',
     controller.validate('download'),
     controller.downloadFile
+);
+
+router.post('/delete',
+    controller.delete
 );
 
 module.exports = router;

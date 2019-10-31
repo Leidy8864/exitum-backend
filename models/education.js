@@ -15,16 +15,15 @@ module.exports = (sequelize, DataTypes) => {
             },
             allowNull : true
         },
-        employee_id: {
+        user_id: {
             type: DataTypes.INTEGER,
             references: {
                 references: {
-                    model: 'employee',
+                    model: 'user',
                     key: 'id'
                 }
             }
-        },
-        other_university: DataTypes.STRING
+        }
     },
     {
         freezeTableName: true,
@@ -36,8 +35,8 @@ module.exports = (sequelize, DataTypes) => {
         education.belongsTo(models.university, {
             foreignKey : 'university_id'
         });
-        education.belongsTo(models.employee, {
-            foreignKey: 'employee_id'
+        education.belongsTo(models.user, {
+            foreignKey: 'user_id'
         });
     }
     return education

@@ -122,6 +122,20 @@ module.exports = (sequelize, DataType) => {
 		user.hasMany(models.certification, {
 			foreignKey: 'user_id'
 		});
+		user.hasMany(models.experience, {
+            as: 'experience',
+            foreignKey: 'user_id'
+		});
+		user.hasMany(models.education, {
+            as: 'education',
+            foreignKey: 'user_id'
+		});
+		user.belongsToMany(models.skill, {
+			as: { singular: 'toUserSkill', plural: 'toUserSkills' },
+			through: models.skill_user,
+			foreignKey: 'user_id',
+			otherKey: 'skill_id'
+		});
 	};
 	return user;
 };

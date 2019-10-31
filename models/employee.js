@@ -65,20 +65,20 @@ module.exports = (sequelize, DataTypes) => {
             as: 'recommendation',
             foreignKey: 'employee_id'
         });
-        employee.hasMany(models.experience, {
-            as: 'experience',
-            foreignKey: 'employee_id'
-        });
+        // employee.hasMany(models.experience, {
+        //     as: 'experience',
+        //     foreignKey: 'employee_id'
+        // });
         employee.hasMany(models.meeting, {
             foreignKey: 'employee_id'
         });
         employee.hasMany(models.team, {
             foreignKey: 'employee_id'
         });
-        employee.hasMany(models.education, {
-            as: 'education',
-            foreignKey: 'employee_id'
-        });
+        // employee.hasMany(models.education, {
+        //     as: 'education',
+        //     foreignKey: 'employee_id'
+        // });
         // employee.hasMany(models.certification, {
         //     foreignKey: 'employee_id'
         // });

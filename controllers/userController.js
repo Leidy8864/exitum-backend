@@ -479,6 +479,40 @@ module.exports = {
         })
     },
 
+    updateImage: async (req, res) => {
+
+        try {
+            const user = await models.user.findOne({ where: { id: req.body.user_id } });
+            if(user) {
+
+                if (!req.files) {
+                    throw('Se necesita una imagen.')
+                }
+                
+                var photo = req.files.photo;
+                fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+
+                await user.update({
+                    name: req.body.name,
+                    lastname: req.body.lastname,
+                    phone: req.body.phone,
+                    photo: fileName,
+                    active: req.body.active || true,
+                    role: req.body.role
+                });
+
+                return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
+
+            } else {
+                throw('El usuario no existe!')
+            }
+
+        } catch(error) {
+            return res.status(200).json({ status: false, message: (error.message) ? error.message : error });
+        }
+
+    },
+
     updateUser: async (req, res) => {
 
         var errors = validationResult(req);
@@ -493,10 +527,10 @@ module.exports = {
 
             if (user) {
 
-                if (user.photo) {
-                    console.log("Errrror papa", user.photo);
-                    s3.deleteObject(NEW_BUCKET_NAME, user.photo);
-                }
+                // if (user.photo) {
+                //     console.log("Errrror papa", user.photo);
+                //     s3.deleteObject(NEW_BUCKET_NAME, user.photo);
+                // }
                 if (req.files) {
                     var photo = req.files.photo;
                     fileName = s3.putObject(NEW_BUCKET_NAME, photo);

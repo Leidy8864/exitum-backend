@@ -1,22 +1,22 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-    const university = sequelize.define('university', {
+    const company = sequelize.define('company', {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        university: DataTypes.STRING,
-        icon: DataTypes.STRING,
+        name: DataTypes.STRING,
+        icon: DataTypes.STRING
     },
     {
         freezeTableName: true,
         timestamps: false,
         omitNull: true,
         underscored: true
-
     })
-    university.associate = (models) => {
-        university.hasMany(models.education, {
-            foreignKey:'university_id'
+
+    company.associate = function (models) {
+        company.hasMany(models.experience, {
+            foreignKey: 'company_id'
         });
     }
-    return university
+    return company
 };

@@ -18,7 +18,8 @@ module.exports = {
             email : user.email,
             accessToken : accessToken,
             role : user.role,
-            confirmed: user.confirmed
+            confirmed: user.confirmed,
+            photo: user.photo
             // expiresIn : expiresIn
         }
 

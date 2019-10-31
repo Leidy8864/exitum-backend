@@ -1,4 +1,6 @@
 const models = require('../models/index');
+const Sequelize = require('sequelize');
+const { existById } = require('./elementController')
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
@@ -8,36 +10,68 @@ module.exports = {
         switch (method) {
             case 'create':
                 return [
-                    check('employee_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('university_name').exists().withMessage(message_exists),
+                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('description').exists().withMessage(message_exists),
                     check('date_start').exists().withMessage(message_exists),
                     check('date_end').exists().withMessage(message_exists)
                 ]
             case 'update':
                 return [
-                    check('employee_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('university_name').exists().withMessage(message_exists),
+                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('education_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('date_start').exists().withMessage(message_exists),
                     check('date_end').exists().withMessage(message_exists)
                 ]
         }
     },
+
+    all: async (req, res) => {
+
+        const { user_id } = req.params
+
+        try {
+
+            const user = await existById(models.user, user_id)
+            var education = await user.getEducation({
+                attributes: [ 'id', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%d/%m/%Y' ), 'date_start' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%d/%m/%Y' ), 'date_end' ] ],
+                include: [ 
+                    {model: models.university}
+                ]
+            })
+
+            return res.json({ status: true, message: "OK.", data: education });
+
+        } catch (error) {
+            return res.json({ status: false, message: (error.message) ? error.message : error, data: {  } });
+        }
+    },
+
     createEducation: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
-        var employee_id = req.body.employee_id
+        var user_id = req.body.user_id
         try {
-            const employee = await models.employee.findByPk(employee_id);
-            if (employee) {
+            const user = await models.user.findByPk(user_id);
+            if (user) {
+
+                var [ university, created ] = await  models.university.findOrCreate({
+                    where: { university: { [Sequelize.Op.like]  : '%' + req.body.university_name + '%'} },
+                    defaults: {
+                        university: req.body.university_name
+                    }
+                })
 
                 const education = await models.education.create({
-                    employee_id: employee.id,
+                    user_id: user.id,
                     description: req.body.description,
                     date_start: req.body.date_start,
                     date_end: req.body.date_end,
-                    university_id: req.body.university_id,
-                    other_university: req.body.other_university
+                    university_id: university.id
                 });
 
                 return res.status(200).json({ status: true, message: "Educación del empleado creada correctamente", data: education });
@@ -57,12 +91,18 @@ module.exports = {
         try {
             const education = await models.education.findByPk(education_id);
 
+            var [ university, created ] = await  models.university.findOrCreate({
+                where: { university: { [Sequelize.Op.like]  : '%' + req.body.university_name + '%'} },
+                defaults: {
+                    university: req.body.university_name
+                }
+            })
+
             await education.update({
                 description: req.body.description,
                 date_start: req.body.date_start,
                 date_end: req.body.date_end,
-                university_id: req.body.university_id,
-                other_university: req.body.other_university
+                university_id: university.id
             }, { where: { id: education_id } });
 
             return res.status(200).json({ status: true, message: "Educación actualizada actualizada correctamente", data: education });
