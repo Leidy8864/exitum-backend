@@ -1,12 +1,12 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-    const employee_skill = sequelize.define('employee_skill', {
-        employee_id: {
+    const skill_user = sequelize.define('skill_user', {
+        user_id: {
             type: DataTypes.INTEGER,
             references: {
                 references: {
-                    model: 'employee',
+                    model: 'user',
                     key: 'id'
                 }
             }
@@ -24,5 +24,5 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
         omitNull: true
     });
-    return employee_skill
+    return skill_user
 }

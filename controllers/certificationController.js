@@ -109,7 +109,8 @@ module.exports = {
                 certificacion.update({ document_url: fileName })
             } else { throw('Oops! Certificación ya existente') }
 
-            return res.status(200).json({ status: true, message: 'OK', data: {  } })
+            return res.status(200).json({ status: true, message: 'OK', data: certificacion })
+            
         } catch (err) {
             return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
         }
@@ -183,6 +184,8 @@ module.exports = {
                 date_expiration: new Date(date_expiration),
                 document_url: fileName
             })
+
+            return res.status(200).json({ status: true, message: 'OK', data: certification })
 
         } catch (error) {
             return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
