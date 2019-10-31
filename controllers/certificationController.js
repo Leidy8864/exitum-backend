@@ -80,11 +80,14 @@ module.exports = {
         const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
         try {
+
            const user = await existById(models.user, user_id)
+           var fileName = ''
 
-           if (!req.files) throw('El campo document, que contiene un archivo que valide la certificación.')
-
-           const { document } = req.files
+           if (req.files) {
+                const { document } = req.files
+                fileName = putObject(NEW_BUCKET_NAME, document);
+           }
 
            var [ certificacion, created ] = await  models.certification.findOrCreate({
                 where: {
@@ -100,14 +103,12 @@ module.exports = {
                     name: name,
                     issuing_company: issuing_company,
                     date_expedition: new Date(date_expedition),
-                    date_expiration: new Date(date_expiration)
+                    date_expiration: new Date(date_expiration),
+                    document_url: fileName
                 }
             })
 
-            if (created) {
-                var fileName = putObject(NEW_BUCKET_NAME, document);
-                certificacion.update({ document_url: fileName })
-            } else { throw('Oops! Certificación ya existente') }
+            if (!created) throw('Oops! Certificación ya existente')
 
             return res.status(200).json({ status: true, message: 'OK', data: certificacion })
             
