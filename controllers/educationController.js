@@ -1,5 +1,6 @@
 const models = require('../models/index');
 const Sequelize = require('sequelize');
+const { existById } = require('./elementController')
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
@@ -25,6 +26,29 @@ module.exports = {
                 ]
         }
     },
+
+    all: async (req, res) => {
+
+        const { user_id } = req.params
+
+        try {
+
+            const user = await existById(models.user, user_id)
+            var education = await user.getEducation({
+                attributes: [ 'id', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%d/%m/%Y' ), 'date_start' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%d/%m/%Y' ), 'date_end' ] ],
+                include: [ 
+                    {model: models.university}
+                ]
+            })
+
+            return res.json({ status: true, message: "OK.", data: education });
+
+        } catch (error) {
+            return res.json({ status: false, message: (error.message) ? error.message : error, data: {  } });
+        }
+    },
+
     createEducation: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
