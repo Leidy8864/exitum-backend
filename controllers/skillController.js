@@ -30,7 +30,7 @@ module.exports = {
         var errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            return res.status(200).json({ status : false , message : "Campos incorrectos",data: errors.array() });
+            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
 
         const { skill } = req.body
@@ -40,9 +40,9 @@ module.exports = {
             await models.skill.create({ skill: skill })
             return res.status(200).json({ status: true, message: "Skill creado correctamente", data: skill });
 
-        } catch (error) { 
+        } catch (error) {
             res.status(200).json({ status: false, message: "Error al crear el skill" });
-         }
+        }
 
     },
 
@@ -50,7 +50,7 @@ module.exports = {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(200).json({ status : false, message : "Campos incorrectos", data: errors.array() });
+            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
 
         try {
@@ -59,28 +59,27 @@ module.exports = {
 
             const user = await existById(models.user, user_id)
 
-           
-            var skills_id = await Promise.all(  skills.map(  async element => {
-                    var [ response, created ] = await  models.skill.findOrCreate({
-                        where: { skill: { [Sequelize.Op.like]  : '%' + element + '%'} },
-                        defaults: {
-                            skill: element
-                        }
-                    })
-                    return await response.id
-                } 
+            var skills_id = await Promise.all(skills.map(async element => {
+                var [response, created] = await models.skill.findOrCreate({
+                    where: { skill: { [Sequelize.Op.like]: '%' + element + '%' } },
+                    defaults: {
+                        skill: element
+                    }
+                })
+                return await response.id
+            }
             ))
 
             user.addToUserSkills(skills_id)
 
-            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: {  } });
+            return res.status(200).json({ status: true, message: "Skill creado correctamente" });
 
         } catch (error) {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error });
         }
     },
 
-    listById : async (req, res) => {
+    listById: async (req, res) => {
 
         try {
 
@@ -103,31 +102,33 @@ module.exports = {
 
             const { user_id, skill_id } = req.body
 
-            var skill_user = await models.skill_user.findOne({ 
-                where: { 
-                [ Sequelize.Op.and ]: [
-                    {user_id: user_id},
-                    {skill_id: skill_id}
-                ] }
+            var skill_user = await models.skill_user.findOne({
+                where: {
+                    [Sequelize.Op.and]: [
+                        { user_id: user_id },
+                        { skill_id: skill_id }
+                    ]
+                }
             })
 
             if (skill_user == null || skill_user === undefined) {
-                throw('Ooop! No se encontraron los registrados.')
+                throw ('Ooop! No se encontraron los registrados.')
             }
-            
-    
-            await models.skill_user.destroy({ 
-                where: { 
-                [ Sequelize.Op.and ]: [
-                    {user_id: user_id},
-                    {skill_id: skill_id}
-                ] }
+
+
+            await models.skill_user.destroy({
+                where: {
+                    [Sequelize.Op.and]: [
+                        { user_id: user_id },
+                        { skill_id: skill_id }
+                    ]
+                }
             })
 
-            return res.status(200).json({ status: true, message: "Skill borrado correctamente", data: {  } });
-            
+            return res.status(200).json({ status: true, message: "Skill borrado correctamente", data: {} });
+
         } catch (error) {
-            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data:  {  } });
+            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {} });
         }
 
     }
