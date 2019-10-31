@@ -68,7 +68,7 @@ module.exports = {
                     issuing_company: element.issuing_company,
                     date_expedition : element.date_expedition,
                     date_expiration : element.date_expiration,
-                    url : (element.document_url || element.document_url == null) ? `http://35.175.241.103:8081/certifications/download/${(element.document_url).split('/')[6]}`:'' 
+                    url : (element.document_url == null) ? null : `http://35.175.241.103:8081/certifications/download/${(element.document_url).split('/')[6]}`
                }
             } ))
 
