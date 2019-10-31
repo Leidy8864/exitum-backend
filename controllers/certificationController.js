@@ -22,7 +22,7 @@ module.exports = {
             .exists().withMessage("Es necesario una fecha de vencimiento del certificado.")
         var fileName = check('fileName')
             .exists().withMessage("Es necesario nombre del certificado.")
-        var fileName = check('certification_id')
+        var certification_id = check('certification_id')
             .exists().withMessage("Es necesario el ID del certificado.")
 
         switch (certificacion) {
