@@ -23,6 +23,7 @@ router.get('/download/:fileName',
 );
 
 router.post('/delete',
+    controller.validate('delete'),
     controller.delete
 );
 

@@ -33,6 +33,8 @@ module.exports = {
                 return [ user_id, name, issuing_company, date_expedition, date_expiration ]
             case 'update':
                 return [ user_id, name, issuing_company, date_expedition, date_expiration, certification_id ]
+            case 'delete':
+                return [ user_id, certification_id ]
             case 'download':
                 return [ fileName ]
         }
@@ -224,6 +226,9 @@ module.exports = {
 
     delete: async (req, res) => {
 
+        var errors = validationResult(req)
+        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
+
         try {
 
             const { certification_id } = req.body
@@ -240,7 +245,7 @@ module.exports = {
     
             await certification.destroy()
 
-            return res.status(200).json({ status: true, message: "Skill borrado correctamente" });
+            return res.status(200).json({ status: true, message: "Certificado borrado correctamente.", data: {  } });
             
         } catch (error) {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error });
