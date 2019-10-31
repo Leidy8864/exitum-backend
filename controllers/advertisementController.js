@@ -61,12 +61,8 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
         } catch (error) {
-
             console.log(error);
-            res.status(200).json({
-                status: false,
-                message: "Error al crear anuncio"
-            });
+            res.status(200).json({ status: false, message: "Error al crear anuncio" });
         }
     },
 
@@ -266,30 +262,51 @@ module.exports = {
             }
         } catch (error) {
             console.log(error);
-
-            return res.status(200).json(
-                {
-                    status: false,
-                    message: "Error al listar anuncios"
-                });
+            return res.status(200).json({ status: false, message: "Error al listar anuncios" });
         }
     },
 
-    findAdvertBySkill: async (req, res) => {
-        const { user_id } = req.body
-        await models.employee.findOne({
-            where: { user_id: user_id },
+    advertsBySkill: async (req, res) => {
+        const { user_id } = req.query
+        const user = await models.user.findOne({
+            attributes: ['id'],
+            where: { id: user_id },
             include: [
-                { model: models.skill }
+                {
+                    model: models.skill,
+                    as: "toUserSkills",
+                    attributes: ['id', 'skill']
+                }
             ]
-        }).then(employee => {
-            return res.json({ status: true, data : employee })
         })
-        await models.advertisement_skill.findAll({
-            // where: {
-            //     skill: 
-            // }
+        var skill_user = []
+        for (var i = 0; i < user.toUserSkills.length; i++) {
+            skill_user.push(user.toUserSkills[i].skill)
+        }
+        await models.advertisement.findAll({
+            where: {
+                state: 'active'
+            },
+            include: [
+                {
+                    model: models.skill,
+                    where: {
+                        skill: { [models.Sequelize.Op.or]: [skill_user] }
+                    }
+                },
+                {
+                    model: models.startup,
+                    include: [{
+                        model: models.entrepreneur,
+                    }]
+                }
+            ]
+        }).then(ads => {
+            return res.json({ status: true, message: "Listado de anuncios por skill", ads })
         })
+
+
+
 
     }
 }

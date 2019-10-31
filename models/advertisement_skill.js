@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             references: {
                 references: {
-                    model: 'advertisement',
+                    model: 'advertisement_skill',
                     key: 'id'
                 }
             }
@@ -24,5 +24,10 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
         omitNull: true
     });
+    advertisement_skill.associate = function (models) {
+        advertisement_skill.belongsTo(models.skill, {
+            foreignKey: 'skill_id'
+        });
+    };
     return advertisement_skill
 }

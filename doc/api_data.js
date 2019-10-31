@@ -1,7 +1,99 @@
 define({ "api": [
   {
     "type": "POST",
-    "url": "/advertisements/create",
+    "url": "/ads/listBySkill?user_id=10",
+    "title": "POST ads by skill",
+    "name": "ads_by_skill",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Creacion del anuncio de trabajo.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/ads/listBySkill?user_id=10",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Listado de anuncios por skill\",\n    \"ads\": [\n        {\n            \"id\": 10,\n            \"title\": \"Desarrollo de plataforma web\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 2,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:45:42.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 10,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 11,\n            \"title\": \"Desarrollo de plataforma web\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 4,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:46:13.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 11,\n                        \"skill_id\": 4\n                    }\n                },\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 11,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 12,\n            \"title\": \"Desarrollo de aplicación móvil en Android\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 3,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:46:27.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 12,\n                        \"skill_id\": 4\n                    }\n                },\n                {\n                    \"id\": 5,\n                    \"skill\": \"qqqq\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 12,\n                        \"skill_id\": 5\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 13,\n            \"title\": \"Descripción del proyecto\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 2,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:46:43.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 13,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 16,\n            \"title\": \"Desarrollo de aplicación móvil en Android\",\n            \"description\": \"Descripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 2,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:48:56.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 16,\n                        \"skill_id\": 4\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 23,\n            \"title\": \"asdsad1d21dasd\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 2,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:52:17.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 23,\n                        \"skill_id\": 4\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 25,\n            \"title\": \"12edasddzczx\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nzxcxzcxzcxzc\",\n            \"state\": \"active\",\n            \"area_id\": 3,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:53:08.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 25,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 26,\n            \"title\": \"dsadsadc1\",\n            \"description\": \"zxczcxzcxzcxz\",\n            \"state\": \"active\",\n            \"area_id\": 3,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:53:25.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 26,\n                        \"skill_id\": 4\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/ads/create",
     "title": "POST advertisement create",
     "name": "advertisement_create",
     "group": "ADVERTISEMENT",
@@ -121,7 +213,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/advertisements/:id/detail",
+    "url": "/ads/:id/detail",
     "title": "GET advertisement detail",
     "name": "advertisement_detail",
     "group": "ADVERTISEMENT",
@@ -142,7 +234,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/advertisements/2/detail",
+          "content": "/ads/2/detail",
           "type": "querystring"
         }
       ]
@@ -213,7 +305,7 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/advertisements/update/skills",
+    "url": "/ads/update/skills",
     "title": "POST advertisement skill update",
     "name": "advertisement_skill_update",
     "group": "ADVERTISEMENT",
@@ -241,7 +333,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/advertisements/update/skills\n{\n    \"advertisement_id\" : 2,\n    \"skills\" : [1,2]\n}",
+          "content": "/ads/update/skills\n{\n    \"advertisement_id\" : 2,\n    \"skills\" : [1,2]\n}",
           "type": "querystring"
         }
       ]
@@ -305,7 +397,7 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/advertisements/update",
+    "url": "/ads/update",
     "title": "POST advertisement update",
     "name": "advertisement_update",
     "group": "ADVERTISEMENT",
@@ -425,7 +517,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/advertisements/user/:id/list",
+    "url": "/ads/user/:id/list",
     "title": "GET advertisements by id",
     "name": "advertisements_by_id",
     "group": "ADVERTISEMENT",
@@ -453,7 +545,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "    /advertisements/user/4/list\n    {\n\t    \"state\" : \"active\"\n    }",
+          "content": "    /ads/user/4/list\n    {\n\t    \"state\" : \"active\"\n    }",
           "type": "querystring"
         }
       ]
@@ -524,7 +616,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/advertisements/user/:id/list",
+    "url": "/ads/user/:id/list",
     "title": "GET advertisements by id",
     "name": "advertisements_by_id",
     "group": "ADVERTISEMENT",
@@ -552,7 +644,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "    /advertisements/user/4/list\n    {\n\t    \"state\" : \"active\"\n    }",
+          "content": "    /ads/user/4/list\n    {\n\t    \"state\" : \"active\"\n    }",
           "type": "querystring"
         }
       ]
@@ -623,7 +715,7 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/advertisements/list",
+    "url": "/ads/list",
     "title": "GET advertisements list",
     "name": "advertisements_list",
     "group": "ADVERTISEMENT",
@@ -633,7 +725,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/advertisements/list",
+          "content": "/ads/list",
           "type": "querystring"
         }
       ]
@@ -5267,91 +5359,6 @@ define({ "api": [
     }
   },
   {
-    "type": "POST",
-    "url": "/users/resend",
-    "title": "POST resendToken user",
-    "name": "resendToken",
-    "group": "USER",
-    "version": "1.0.0",
-    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email para el reenvio de token.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el mensaje exitoso</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "USER",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
@@ -5410,6 +5417,91 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": true,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/resend",
+    "title": "POST resendToken user",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email para el reenvio de token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el mensaje exitoso</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
           "type": "json"
         }
       ]

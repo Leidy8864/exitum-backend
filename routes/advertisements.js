@@ -26,10 +26,9 @@ router.post('/update/skills', function (req, res) {
     controller.updateSkills(req, res);
 });
 
-router.get('/listBySkill/:user_id', function (req, res) {
-    controller.advertBySkills(req, res);
+router.get('/listBySkill', function (req, res) {
+    controller.advertsBySkill(req, res);
 });
-
 // router.get('/listByEntrepreneurPagination', function (req, res) {
 //     controller.findAdvertByEntrepreneurPagination(req, res);
 // });

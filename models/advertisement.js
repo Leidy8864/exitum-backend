@@ -51,6 +51,9 @@ module.exports = (sequelize, DataType) => {
             through: 'proposal',
             foreignKey: 'advertisement_id'
         });
+        advertisement.hasMany(models.advertisement_skill, {
+            foreignKey: 'advertisement_id'
+        });
     };
     return advertisement;
 };

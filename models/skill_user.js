@@ -24,5 +24,10 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
         omitNull: true
     });
+    skill_user.associate = function (models) {
+        skill_user.belongsTo(models.skill, {
+            foreignKey: 'skill_id'
+        });
+    };
     return skill_user
 }

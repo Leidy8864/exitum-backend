@@ -17,10 +17,10 @@ module.exports = (sequelize, DataType) => {
     });
     skill.belongsToMany(models.user, {
       as: { singular: 'toSkillUser', plural: 'toSkillUsers' },
-			through: models.skill_user,
-			foreignKey: 'skill_id',
-			otherKey: 'user_id'
-  });
+      through: models.skill_user,
+      foreignKey: 'skill_id',
+      otherKey: 'user_id'
+    });
   };
   return skill;
 };

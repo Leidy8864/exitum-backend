@@ -1356,7 +1356,7 @@
 
  /**
  *
- * @api {POST} /advertisements/create POST advertisement create
+ * @api {POST} /ads/create POST advertisement create
  * @apiName advertisement create
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1400,7 +1400,7 @@
 
 /**
  *
- * @api {POST} /advertisements/update POST advertisement update
+ * @api {POST} /ads/update POST advertisement update
  * @apiName advertisement update
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1446,7 +1446,7 @@
 
 /**
  *
- * @api {POST} /advertisements/update/skills POST advertisement skill update
+ * @api {POST} /ads/update/skills POST advertisement skill update
  * @apiName advertisement skill update
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1456,7 +1456,7 @@
  * @apiParam {Object[]} skills Id's de las habilidades
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /advertisements/update/skills
+    /ads/update/skills
     {
         "advertisement_id" : 2,
         "skills" : [1,2]
@@ -1475,7 +1475,7 @@
 
 /**
  *
- * @api {GET} /advertisements/:id/detail GET advertisement detail
+ * @api {GET} /ads/:id/detail GET advertisement detail
  * @apiName advertisement detail
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1484,7 +1484,7 @@
  * @apiParam {Int} id Id del anuncio.
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /advertisements/2/detail
+    /ads/2/detail
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
@@ -1541,7 +1541,7 @@
 
 /**
  *
- * @api {GET} /advertisements/list GET advertisements list
+ * @api {GET} /ads/list GET advertisements list
  * @apiName advertisements list
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1549,7 +1549,7 @@
  * @apiDescription Listado de anuncios
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /advertisements/list
+    /ads/list
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
@@ -1616,7 +1616,7 @@
 
 /**
  *
- * @api {GET} /advertisements/user/:id/list GET advertisements by id
+ * @api {GET} /ads/user/:id/list GET advertisements by id
  * @apiName advertisements by id
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1626,7 +1626,7 @@
  * @apiParam {String} active Estado del anuncio
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /advertisements/user/4/list
+    /ads/user/4/list
     {
 	    "state" : "active"
     }
@@ -1700,7 +1700,7 @@
 
 /**
  *
- * @api {GET} /advertisements/user/:id/list GET advertisements by id
+ * @api {GET} /ads/user/:id/list GET advertisements by id
  * @apiName advertisements by id
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
@@ -1710,7 +1710,7 @@
  * @apiParam {String} active Estado del anuncio
  * 
 	* @apiParamExample {querystring} Ejemplo url
-    /advertisements/user/4/list
+    /ads/user/4/list
     {
 	    "state" : "active"
     }
@@ -1773,6 +1773,330 @@
                     "entrepreneur": {
                         "id": 1,
                         "user_id": 4
+                    }
+                }
+            }
+        ]
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /ads/listBySkill?user_id=10 POST ads by skill
+ * @apiName ads by skill
+ * @apiGroup ADVERTISEMENT
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creacion del anuncio de trabajo.
+ * @apiParam {Int} user_id Id del usuario
+	* @apiParamExample {querystring} Ejemplo url
+    /ads/listBySkill?user_id=10
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct} data Indica los datos del anuncio 
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Listado de anuncios por skill",
+        "ads": [
+            {
+                "id": 10,
+                "title": "Desarrollo de plataforma web",
+                "description": "Descripción del proyecto\nDescripción del proyecto\nDescripción del proyecto",
+                "state": "active",
+                "area_id": 2,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:45:42.000Z",
+                "skills": [
+                    {
+                        "id": 7,
+                        "skill": "eee",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 10,
+                            "skill_id": 7
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 11,
+                "title": "Desarrollo de plataforma web",
+                "description": "Descripción del proyecto\nDescripción del proyecto\nDescripción del proyecto",
+                "state": "active",
+                "area_id": 4,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:46:13.000Z",
+                "skills": [
+                    {
+                        "id": 4,
+                        "skill": "ddsd",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 11,
+                            "skill_id": 4
+                        }
+                    },
+                    {
+                        "id": 7,
+                        "skill": "eee",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 11,
+                            "skill_id": 7
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 12,
+                "title": "Desarrollo de aplicación móvil en Android",
+                "description": "Descripción del proyecto\nDescripción del proyecto\nDescripción del proyecto\nDescripción del proyecto",
+                "state": "active",
+                "area_id": 3,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:46:27.000Z",
+                "skills": [
+                    {
+                        "id": 4,
+                        "skill": "ddsd",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 12,
+                            "skill_id": 4
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "skill": "qqqq",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 12,
+                            "skill_id": 5
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 13,
+                "title": "Descripción del proyecto",
+                "description": "Descripción del proyecto\nDescripción del proyecto\nDescripción del proyecto",
+                "state": "active",
+                "area_id": 2,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:46:43.000Z",
+                "skills": [
+                    {
+                        "id": 7,
+                        "skill": "eee",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 13,
+                            "skill_id": 7
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 16,
+                "title": "Desarrollo de aplicación móvil en Android",
+                "description": "Descripción del proyecto",
+                "state": "active",
+                "area_id": 2,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:48:56.000Z",
+                "skills": [
+                    {
+                        "id": 4,
+                        "skill": "ddsd",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 16,
+                            "skill_id": 4
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 23,
+                "title": "asdsad1d21dasd",
+                "description": "Descripción del proyecto\nDescripción del proyecto\nDescripción del proyecto\nDescripción del proyecto",
+                "state": "active",
+                "area_id": 2,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:52:17.000Z",
+                "skills": [
+                    {
+                        "id": 4,
+                        "skill": "ddsd",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 23,
+                            "skill_id": 4
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 25,
+                "title": "12edasddzczx",
+                "description": "Descripción del proyecto\nDescripción del proyecto\nzxcxzcxzcxzc",
+                "state": "active",
+                "area_id": 3,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:53:08.000Z",
+                "skills": [
+                    {
+                        "id": 7,
+                        "skill": "eee",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 25,
+                            "skill_id": 7
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            },
+            {
+                "id": 26,
+                "title": "dsadsadc1",
+                "description": "zxczcxzcxzcxz",
+                "state": "active",
+                "area_id": 3,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:53:25.000Z",
+                "skills": [
+                    {
+                        "id": 4,
+                        "skill": "ddsd",
+                        "icon": null,
+                        "advertisement_skill": {
+                            "advertisement_id": 26,
+                            "skill_id": 4
+                        }
+                    }
+                ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
                     }
                 }
             }
