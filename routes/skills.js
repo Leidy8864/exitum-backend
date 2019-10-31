@@ -18,7 +18,7 @@ router.get('/list-by-id/:user_id',
     controller.listById
 );
 
-router.delete('/delete',
+router.post('/delete',
     controller.delete
 );
 

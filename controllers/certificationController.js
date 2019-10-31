@@ -47,25 +47,31 @@ module.exports = {
         try {
 
            const user = await existById(models.user, user_id)
+        //    var elements = await user.getCertifications({
+        //        attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'expedition' ],
+        //                             [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'expiration' ],
+        //                             [Sequelize.fn('CONCAT', 'http://35.175.241.103:8081/certifications/download/', Sequelize.fn('SUBSTRING_INDEX', Sequelize.col('document_url'), '/',  '-1' )), 'url']    
+        //                         ]
+        //     } )
            var elements = await user.getCertifications({
-               attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'expedition' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'expiration' ],
-                                    [Sequelize.fn('CONCAT', 'http://35.175.241.103:8081/certifications/download/', Sequelize.fn('SUBSTRING_INDEX', Sequelize.col('document_url'), '/',  '-1' )), 'url']    
+               attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'date_expiration' ], 'document_url'
                                 ]
             } )
 
-        //    var certifications = elements.map(element => {
-        //        return {
-        //             id: element.id,
-        //             name: element.name,
-        //             issuing_company: element.issuing_company,
-        //             date_expedition : new Date(element.date_expedition).toLocaleDateString(),
-        //             date_expiration : new Date(element.date_expiration).toLocaleDateString(),
-        //             document_url : element.document_url,
-        //        }
-        //    })
 
-            return res.status(200).json({ status: true, message: 'OK', data: elements })
+            const valor = await Promise.all(  elements.map(  async element => {
+                return {
+                    id: element.id,
+                    name: element.name,
+                    issuing_company: element.issuing_company,
+                    date_expedition : element.date_expedition,
+                    date_expiration : element.date_expiration,
+                    url : (element.document_url || element.document_url == null) ? `http://35.175.241.103:8081/certifications/download/${(element.document_url).split('/')[6]}`:'' 
+               }
+            } ))
+
+            return res.status(200).json({ status: true, message: 'OK', data: valor })
         } catch (err) {
             return res.status(200).json({ status: false, message: err.message, data: {  } })
         }
@@ -82,14 +88,17 @@ module.exports = {
         try {
 
            const user = await existById(models.user, user_id)
-           var fileName = ''
+           var fileName = null
 
            if (req.files) {
                 const { document } = req.files
                 fileName = putObject(NEW_BUCKET_NAME, document);
            }
 
-           var [ certificacion, created ] = await  models.certification.findOrCreate({
+           var [ certification, created ] = await  models.certification.findOrCreate({
+                attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'date_expiration' ], 'document_url'
+                                ],
                 where: {
                     [ Sequelize.Op.and ] : [
                         { user_id: user.id },
@@ -110,7 +119,16 @@ module.exports = {
 
             if (!created) throw('Oops! Certificación ya existente')
 
-            return res.status(200).json({ status: true, message: 'OK', data: certificacion })
+            const data = {
+                id: certification.id,
+                name: certification.name,
+                issuing_company: certification.issuing_company,
+                date_expedition : certification.date_expedition,
+                date_expiration : certification.date_expiration,
+                url : (certification.document_url || certification.document_url == null) ? `http://35.175.241.103:8081/certifications/download/${(certification.document_url).split('/')[6]}`:'' 
+            } 
+
+            return res.status(200).json({ status: true, message: 'OK', data: data })
             
         } catch (err) {
             return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
@@ -186,7 +204,16 @@ module.exports = {
                 document_url: fileName
             })
 
-            return res.status(200).json({ status: true, message: 'OK', data: certification })
+            const data = {
+                id: certification.id,
+                name: certification.name,
+                issuing_company: certification.issuing_company,
+                date_expedition : certification.date_expedition,
+                date_expiration : certification.date_expiration,
+                url : (certification.document_url || certification.document_url == null) ? `http://35.175.241.103:8081/certifications/download/${(certification.document_url).split('/')[6]}`:'' 
+            } 
+
+            return res.status(200).json({ status: true, message: 'OK', data: data })
 
         } catch (error) {
             return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
