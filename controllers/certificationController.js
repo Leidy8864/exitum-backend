@@ -49,7 +49,9 @@ module.exports = {
            const user = await existById(models.user, user_id)
            var elements = await user.getCertifications({
                attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%d/%m/%Y' ), 'expedition' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%d/%m/%Y' ), 'expiration' ], 'document_url'  ]
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%d/%m/%Y' ), 'expiration' ],
+                                    [Sequelize.fn('CONCAT', 'http://35.175.241.103:8081/certifications/download/', Sequelize.fn('SUBSTRING_INDEX', Sequelize.col('document_url'), '/',  '-1' )), 'url']    
+                                ]
             } )
 
         //    var certifications = elements.map(element => {
@@ -103,7 +105,7 @@ module.exports = {
             })
 
             if (created) {
-                fileName = putObject(NEW_BUCKET_NAME, document);
+                var fileName = putObject(NEW_BUCKET_NAME, document);
                 certificacion.update({ document_url: fileName })
             } else { throw('Oops! Certificación ya existente') }
 

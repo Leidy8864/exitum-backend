@@ -3,7 +3,8 @@
 module.exports = (sequelize, DataTypes) => {
     const university = sequelize.define('university', {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        university: DataTypes.STRING
+        university: DataTypes.STRING,
+        icon: DataTypes.STRING,
     },
     {
         freezeTableName: true,
