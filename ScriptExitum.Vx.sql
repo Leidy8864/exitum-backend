@@ -1257,8 +1257,7 @@ ENGINE = InnoDB;
 -- Table `exitum`.`file_tip`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
-  `id` INT NOT NULL,
-  `file` VARCHAR(60) NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(245) NULL,
   `tip_id` INT NOT NULL,
   PRIMARY KEY (`id`),

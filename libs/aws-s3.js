@@ -67,14 +67,11 @@ module.exports = {
     },
 
     getObject: (bucket, key) => {
-
         var params = {
             Bucket: bucket,
             Key: key
         }
-
         return s3Bucket.getObject(params).createReadStream();
-
     },
 
     getDownloadUrl: (bucket, key) => {
