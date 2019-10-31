@@ -13,14 +13,14 @@ module.exports = {
                     check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('position', message_exists).exists(),
                     check('date_start', message_exists).exists(),
-                    check('name_company', message_exists).exists(),
+                    check('company_name', message_exists).exists(),
                 ]
             case 'update':
 
                 return [
                     check('experience_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('position', message_exists).exists(),
-                    check('name_company', message_exists).exists(),
+                    check('company_name', message_exists).exists(),
                     check('date_start', message_exists).exists(),
 
                 ]
@@ -41,9 +41,9 @@ module.exports = {
             if (user) {
 
                 var [ company, created ] = await  models.company.findOrCreate({
-                    where: { name: { [Sequelize.Op.like]  : '%' + req.body.name_company + '%'} },
+                    where: { name: { [Sequelize.Op.like]  : '%' + req.body.company_name + '%'} },
                     defaults: {
-                        name: req.body.name_company
+                        name: req.body.company_name
                     }
                 })
 

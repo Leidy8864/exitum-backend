@@ -125,6 +125,10 @@ module.exports = (sequelize, DataType) => {
 		user.hasMany(models.experience, {
             as: 'experience',
             foreignKey: 'user_id'
+		});
+		user.hasMany(models.education, {
+            as: 'education',
+            foreignKey: 'user_id'
         });
 	};
 	return user;
