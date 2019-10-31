@@ -17,8 +17,6 @@ module.exports = {
                     check('about_me', message_exists).exists(),
                     check('short_description', message_exists).exists(),
                     check('languages', message_exists).exists().withMessage(message_exists).isArray().withMessage(message_array),
-                    check('skills', message_exists).exists().withMessage(message_exists).isArray().withMessage(message_array),
-                    check('types', message_exists).exists().withMessage(message_exists).isArray().withMessage(message_array)
                 ]
             case 'update':
                 return [
@@ -53,8 +51,7 @@ module.exports = {
                     price_hour: req.body.price_hour,
                     stage_id: 1
                 }, { transaction: t });
-                await employee.addSkill(req.body.skills, { transaction: t });
-                await employee.addType(req.body.types, { transaction: t });
+                await employee.addType(req.body.types || 1, { transaction: t });
 
                 for (let i = 0; i < languages.length; i++) {
                     employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } }, { transaction: t });
@@ -65,11 +62,7 @@ module.exports = {
 
         } catch (error) {
             console.log("Error" + error);
-
-            res.status(200).json({
-                status: false,
-                message: "Error al crear impulsor"
-            });
+            res.status(200).json({ status: false, message: "Error al crear impulsor" });
         }
     },
     updateEmployee: async (req, res) => {
@@ -209,11 +202,11 @@ module.exports = {
             res.status(200).json({ status: true, message: "Error al listar información de empleado" });
         }
     },
-    
+
     compareEmploye: async (req, res) => {
         const { employee_id_1, employee_id_2 } = req.body
         const Op = models.Sequelize.Op
-        models.employee.findAll({   
+        models.employee.findAll({
             where: {
                 [Op.or]: [
                     { id: employee_id_1 },

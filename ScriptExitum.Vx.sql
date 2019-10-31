@@ -1657,3 +1657,5 @@ insert into `exitum`.`file_tip`(id, name, file, tip_id) values
 (23, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 23),
 (24, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 24),
 (25, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 25);
+
+INSERT INTO `exitum`.`type` (`id`, `type`) VALUES ('1', 'Hormiga');
