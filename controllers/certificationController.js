@@ -48,8 +48,8 @@ module.exports = {
 
            const user = await existById(models.user, user_id)
            var elements = await user.getCertifications({
-               attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%d/%m/%Y' ), 'expedition' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%d/%m/%Y' ), 'expiration' ],
+               attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'expedition' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'expiration' ],
                                     [Sequelize.fn('CONCAT', 'http://35.175.241.103:8081/certifications/download/', Sequelize.fn('SUBSTRING_INDEX', Sequelize.col('document_url'), '/',  '-1' )), 'url']    
                                 ]
             } )
