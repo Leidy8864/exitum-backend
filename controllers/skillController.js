@@ -95,5 +95,40 @@ module.exports = {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error });
         }
 
+    },
+
+    delete: async (req, res) => {
+
+        try {
+
+            const { user_id, skill_id } = req.body
+
+            var skill_user = await models.skill_user.findOne({ 
+                where: { 
+                [ Sequelize.Op.and ]: [
+                    {user_id: user_id},
+                    {skill_id: skill_id}
+                ] }
+            })
+
+            if (skill_user == null || skill_user === undefined) {
+                throw('Ooop! No se encontraron los registrados.')
+            }
+            
+    
+            await models.skill_user.destroy({ 
+                where: { 
+                [ Sequelize.Op.and ]: [
+                    {user_id: user_id},
+                    {skill_id: skill_id}
+                ] }
+            })
+
+            return res.status(200).json({ status: true, message: "Skill borrado correctamente", data: {  } });
+            
+        } catch (error) {
+            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data:  {  } });
+        }
+
     }
 }

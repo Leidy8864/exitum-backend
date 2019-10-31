@@ -18,4 +18,8 @@ router.get('/list-by-id/:user_id',
     controller.listById
 );
 
+router.delete('/delete',
+    controller.delete
+);
+
 module.exports = router;
