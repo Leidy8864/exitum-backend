@@ -22,12 +22,16 @@ module.exports = {
             .exists().withMessage("Es necesario una fecha de vencimiento del certificado.")
         var fileName = check('fileName')
             .exists().withMessage("Es necesario nombre del certificado.")
+        var fileName = check('certification_id')
+            .exists().withMessage("Es necesario el ID del certificado.")
 
         switch (certificacion) {
             case 'listById':
                 return [ user_id ]
             case 'create':
                 return [ user_id, name, issuing_company, date_expedition, date_expiration ]
+            case 'update':
+                return [ user_id, name, issuing_company, date_expedition, date_expiration, certification_id ]
             case 'download':
                 return [ fileName ]
         }
