@@ -22,4 +22,8 @@ router.get('/download/:fileName',
     controller.downloadFile
 );
 
+router.post('/delete',
+    controller.delete
+);
+
 module.exports = router;

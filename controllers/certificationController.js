@@ -1,5 +1,6 @@
 const { putObject, getObject } = require('../libs/aws-s3');
 const Sequelize = require('sequelize');
+const s3 = require('../libs/aws-s3');
 const index = require('../config/index');
 const models = require('../models/index')
 const { existById } = require('../controllers/elementController');
@@ -217,6 +218,32 @@ module.exports = {
 
         } catch (error) {
             return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
+        }
+
+    },
+
+    delete: async (req, res) => {
+
+        try {
+
+            const { certification_id } = req.body
+
+            var certification = await models.certification.findByPk(certification_id)
+
+            if (certification == null || certification === undefined) {
+                throw('Ooop! No se encontraron los registrados.')
+            }
+
+            if (certification.document_url != null) {
+                s3.deleteObject(NEW_BUCKET_NAME, "cb843490-fbcc-11e9-95db-0123456789abTarea.pptx");
+            }
+    
+            await certification.destroy()
+
+            return res.status(200).json({ status: true, message: "Skill borrado correctamente", data: {  } });
+            
+        } catch (error) {
+            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data:  {  } });
         }
 
     }
