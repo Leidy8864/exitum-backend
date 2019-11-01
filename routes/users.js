@@ -72,13 +72,17 @@ router.post('/update-image',
   controller.updateImage
 )
 
-// router.post('/createWorkshop', 
-//   controller.validate('createWorkshop'),
-//   controller.createWorkshop()
-// )
+router.post('/createWorkshop', 
+  controller.validate('createWorkshop'),
+  controller.createWorkshop
+)
 
-// router.post('/updateWorkshop',
-//   controller.validate('createWorkshop'),
-//   controller.updateWorkshop
-// )
+router.post('/updateWorkshop',
+  controller.updateWorkshop
+)
+
+router.post('/deleteWorkshop', 
+  controller.deleteWorkshop
+)
+
 module.exports = router;

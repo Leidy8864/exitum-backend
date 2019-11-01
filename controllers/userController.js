@@ -63,7 +63,11 @@ module.exports = {
                     check('place').exists().withMessage(message_exists),
                     // check('lat').isNumeric(),
                     // check('lng').isNumeric(),
-                    check('user_id').exists().withMessage(withMessage)
+                    check('user_id').exists().withMessage(message_exists)
+                ]
+            case 'deleteWorkshop':
+                return [
+                    check('workshop_id').exists().withMessage(message_exists),
                 ]
         }
     },
@@ -483,12 +487,12 @@ module.exports = {
 
         try {
             const user = await models.user.findOne({ where: { id: req.body.user_id } });
-            if(user) {
+            if (user) {
 
                 if (!req.files) {
-                    throw('Se necesita una imagen.')
+                    throw ('Se necesita una imagen.')
                 }
-                
+
                 var photo = req.files.photo;
                 fileName = s3.putObject(NEW_BUCKET_NAME, photo);
 
@@ -504,10 +508,10 @@ module.exports = {
                 return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
 
             } else {
-                throw('El usuario no existe!')
+                throw ('El usuario no existe!')
             }
 
-        } catch(error) {
+        } catch (error) {
             return res.status(200).json({ status: false, message: (error.message) ? error.message : error });
         }
 
@@ -578,13 +582,12 @@ module.exports = {
     createWorkshop: (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(400).json({ errors: errors.array() });
             res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
 
         const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
         models.user.findOne({ where: { id: user_id } }).then(user => {
-            if (user) {
+            if (!user) {
                 return res.json({ status: false, message: "Este usuario no existe." })
             } else {
                 models.workshop.create({
@@ -613,30 +616,42 @@ module.exports = {
     updateWorkshop: (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(400).json({ errors: errors.array() });
             res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id } = req.body
-        models.user.findOne({ where: { id: user_id } }).then(user => {
-            if (user) {
-                return res.json({ status: false, message: "Este usuario no existe." })
-            } else {
-                models.workshop.update({
-                    title: title,
-                    description: description,
-                    day: day,
-                    hour_start: hour_start,
-                    hour_end: hour_end,
-                    place: place,
-                    lat: lat,
-                    lng: lng,
-                }, { where: { user_id: user.id } }).then(() => {
-                    return res.json({ status: true, message: "Taller actualizado correctamente" })
-                }).catch(err => {
-                    return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
-                })
-            }
+        const { title, description, day, hour_start, hour_end, place, lat, lng, workshop_id } = req.body
+        models.workshop.update({
+            title: title,
+            description: description,
+            day: day,
+            hour_start: hour_start,
+            hour_end: hour_end,
+            place: place,
+            lat: lat,
+            lng: lng,
+        }, { where: { id: workshop_id } }).then(() => {
+            return res.json({ status: true, message: "Taller actualizado correctamente" })
+        }).catch(err => {
+            return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
         })
+    },
+
+    deleteWorkshop: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
+        }
+        const { workshop_id } = req.body
+        try {
+            const workshop = await models.workshop.findByPk(workshop_id);
+            const del = await workshop.destroy()
+            if (del) {
+                return res.json({ status: true, message: "Eliminado correctamente" })
+            }
+        } catch (err) {
+            console.log(err)
+            return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
+        }
+
     }
 }

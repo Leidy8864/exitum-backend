@@ -400,7 +400,7 @@
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription  Creación de un taller.
- * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {Int} user_id Id del taller.
  * @apiParam {String} title Titulo del taller.
  * @apiParam {String} description Descripción del taller.
  * @apiParam {Date} day Día del evento.
@@ -413,15 +413,35 @@
 	* @apiParamExample {querystring} Ejemplo url
 	/users/createWorkshop
     {
-        
+        "title": "Taller de costura",
+        "description": "DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion",
+        "day": "12-12-19",
+        "hour_start": "12:00",
+        "hour_end": "15:00",
+        "place": "Av. Atahualpa 123",
+        "lat": -0.1515321,
+        "lng": 68.5646464,
+        "user_id": 10
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
  * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
  * @apiSuccessExample {json} Datos obtenidos:
-	{
+    {
         "status": 200,
-        "message": "Taller creado correctamente"
+        "message": "Taller creado correctamente",
+        "data": {
+            "id": 2,
+            "title": "Taller de costura",
+            "description": "DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion",
+            "day": "2019-12-12T05:00:00.000Z",
+            "hour_start": "12:00",
+            "hour_end": "15:00",
+            "place": "Av. Atahualpa 123",
+            "lat": -0.1515321,
+            "lng": 68.5646464,
+            "user_id": 10
+        }
     }
  *
  *
@@ -436,7 +456,7 @@
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription  Actualización de un taller.
- * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {Int} workshop_id Id del taller.
  * @apiParam {String} title Titulo del taller.
  * @apiParam {String} description Descripción del taller.
  * @apiParam {Date} day Día del evento.
@@ -449,7 +469,15 @@
 	* @apiParamExample {querystring} Ejemplo url
 	/users/updateWorkshop
     {
-        
+        "title": "Taller de costuraaaa2",
+        "description": "DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion",
+        "day": "12-12-19",
+        "hour_start": "12:00",
+        "hour_end": "15:00",
+        "place": "Av. Atahualpa 123",
+        "lat": -0.1515321,
+        "lng": 68.5646464,
+        "workshop_id": 2
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -458,6 +486,34 @@
 	{
         "status": 200,
         "message": "Taller actualizado correctamente"
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {POST} /users/deleteWorkshop POST delete workshop
+ * @apiName delete workshop
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Actualización de un taller.
+ * @apiParam {Int} workshop_id Id del taller.
+ * *
+	* @apiParamExample {querystring} Ejemplo url
+	/users/deleteWorkshop
+    {
+        "workshop_id": 2
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
+ * @apiSuccessExample {json} Datos obtenidos:
+	{
+        "status": 200,
+        "message": "Eliminado correctamente"
     }
  *
  *
@@ -769,7 +825,6 @@
  * @apiParam {Int} category_id Id de la categoria de la startup.
  * @apiParam {String} short_description Descripción del empleado.
  * @apiParam {Double} price_hour Precio por hora.
- * @apiParam {Object} skills[] Id's de las habilidades.
  * @apiParam {Object} types[] Id's de los tipos de empleado.
  * @apiParam {Object} languages[] Id's de los tipos de empleado.
  * * @apiParam {Int} languages.language_id Id del lenguaje.
@@ -783,7 +838,6 @@
         "about_me" : "Soy un desarrollor web",
         "short_description" : "Desarrollador Web",
         "price_hour" : 15,
-        "skills" : [1],
         "types" : [1],
         "languages" : [
                 {

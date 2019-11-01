@@ -19,11 +19,11 @@ module.exports = (sequelize, DataType) => {
             }
         }
     },
-        {
-            freezeTableName: true,
-            timestamps: false,
-            omitNull: true
-        })
+    {
+        freezeTableName: true,
+        timestamps: false,
+        omitNull: true
+    })
     workshop.associate = (models) => {
         workshop.belongsTo(models.user, {
             foreignKey: 'user_id'
