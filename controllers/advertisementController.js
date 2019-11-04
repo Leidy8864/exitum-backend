@@ -236,9 +236,9 @@ module.exports = {
                                     model: models.entrepreneur,
                                 }]
                             },
-                            {
-                                model: models.proposal
-                            }
+                            // {
+                            //     model: models.proposal
+                            // }
                         ]
                     }
                 ).then(advertisements => {
