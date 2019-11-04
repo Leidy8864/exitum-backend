@@ -29,6 +29,11 @@ router.post('/update/skills', function (req, res) {
 router.get('/listBySkill', function (req, res) {
     controller.advertsBySkill(req, res);
 });
+
+router.get('/listByProposal', function (req, res) {
+    controller.advertsByProposal(req, res);
+});
+
 // router.get('/listByEntrepreneurPagination', function (req, res) {
 //     controller.findAdvertByEntrepreneurPagination(req, res);
 // });

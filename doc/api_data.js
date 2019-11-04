@@ -1,98 +1,6 @@
 define({ "api": [
   {
     "type": "POST",
-    "url": "/ads/listBySkill?user_id=10",
-    "title": "POST ads by skill",
-    "name": "ads_by_skill",
-    "group": "ADVERTISEMENT",
-    "version": "1.0.0",
-    "description": "<p>Creacion del anuncio de trabajo.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>Id del usuario</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "/ads/listBySkill?user_id=10",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "Obejct",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Indica los datos del anuncio</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Listado de anuncios por skill\",\n    \"data\": [\n        {\n            \"id\": 10,\n            \"title\": \"Desarrollo de plataforma web\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 2,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:45:42.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 10,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 11,\n            \"title\": \"Desarrollo de plataforma web\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 4,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:46:13.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 11,\n                        \"skill_id\": 4\n                    }\n                },\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 11,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        }\n    ],\n    \"current\": 1,\n    \"pages\": 1\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "ADVERTISEMENT",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "POST",
     "url": "/ads/create",
     "title": "POST advertisement create",
     "name": "advertisement_create",
@@ -679,6 +587,190 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"title\": \"Programador en Java\",\n            \"description\": \"Requiero un programador senior\",\n            \"state\": \"active\",\n            \"area_id\": 1,\n            \"startup_id\": 1,\n            \"created_at\": \"2019-10-03T20:54:26.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 1,\n                    \"skill\": \"PHP\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 1\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"skill\": \"Node JS\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 2\n                    }\n                },\n                {\n                    \"id\": 3,\n                    \"skill\": \"Javascript\",\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 3,\n                        \"skill_id\": 3\n                    }\n                }\n            ],\n            \"area\": {\n                \"id\": 1,\n                \"name\": \"Área 1\"\n            },\n            \"startup\": {\n                \"id\": 1,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": null,\n                \"ruc\": null,\n                \"description\": \"Proyecto que pretende ayudar startups\",\n                \"entrepreneur_id\": 1,\n                \"category_id\": 1,\n                \"stage_id\": 1,\n                \"entrepreneur\": {\n                    \"id\": 1,\n                    \"user_id\": 4\n                }\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/ads/listByProposal?user_id=10",
+    "title": "GET advertisements by proposal",
+    "name": "advertisements_by_proposal",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Creacion del anuncio de trabajo.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/ads/listByProposal?user_id=10",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Listado de anuncios por postulación\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"title\": \"titulo\",\n            \"description\": \"descripciondescripciondescripciondescripciondescripciondescripciondescripcion\",\n            \"state\": \"archived\",\n            \"area_id\": 1,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:32:00.000Z\",\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        }\n    ],\n    \"current\": 1,\n    \"pages\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/ads/listBySkill?user_id=10",
+    "title": "GET advertisements by skill",
+    "name": "advertisements_by_skill",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Creacion del anuncio de trabajo.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/ads/listBySkill?user_id=10",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Listado de anuncios por skill\",\n    \"data\": [\n        {\n            \"id\": 10,\n            \"title\": \"Desarrollo de plataforma web\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 2,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:45:42.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 10,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        },\n        {\n            \"id\": 11,\n            \"title\": \"Desarrollo de plataforma web\",\n            \"description\": \"Descripción del proyecto\\nDescripción del proyecto\\nDescripción del proyecto\",\n            \"state\": \"active\",\n            \"area_id\": 4,\n            \"startup_id\": 5,\n            \"created_at\": \"2019-10-31T15:46:13.000Z\",\n            \"skills\": [\n                {\n                    \"id\": 4,\n                    \"skill\": \"ddsd\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 11,\n                        \"skill_id\": 4\n                    }\n                },\n                {\n                    \"id\": 7,\n                    \"skill\": \"eee\",\n                    \"icon\": null,\n                    \"advertisement_skill\": {\n                        \"advertisement_id\": 11,\n                        \"skill_id\": 7\n                    }\n                }\n            ],\n            \"startup\": {\n                \"id\": 5,\n                \"name\": \"Proyecto Exitum\",\n                \"photo_url\": \"\",\n                \"ruc\": null,\n                \"description\": \"Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.\",\n                \"avg_rating\": 0,\n                \"entrepreneur_id\": 4,\n                \"category_id\": 1,\n                \"stage_id\": 2,\n                \"entrepreneur\": {\n                    \"id\": 4,\n                    \"user_id\": 9\n                }\n            }\n        }\n    ],\n    \"current\": 1,\n    \"pages\": 1\n}",
           "type": "json"
         }
       ]
@@ -3322,27 +3414,13 @@ define({ "api": [
             "optional": false,
             "field": "advertisement_id",
             "description": "<p>Id del anuncio.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "proposal",
-            "description": "<p>Descripción de la propuesta.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Decimal",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>Cantidad o precio a ofertar.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/proposals/create\n{\n    \"id\": 3,\n    \"advertisement_id\": 1,\n    \"proposal\": \"Tengo experiencia en el desarrollo de software\",\n    \"amount\": 2100\n}",
+          "content": "/proposals/create\n{\n    \"id\": 3,\n    \"advertisement_id\": 1\n}",
           "type": "querystring"
         }
       ]
@@ -3376,7 +3454,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Propuesta creada correctamente.\",\n    \"data\": [\n        {\n            \"proposal\": \"Tengo experiencia en el desarrollo de software\",\n            \"amount\": 2100,\n            \"viewed\": false,\n            \"created_at\": \"2019-10-11T21:02:32.747Z\",\n            \"employee_id\": 1,\n            \"advertisement_id\": 1\n        }\n    ]\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Propuesta creada correctamente.\",\n    \"data\": [\n        {\n            \"accepted\": false,\n            \"created_at\": \"2019-11-04T02:46:40.640Z\",\n            \"employee_id\": 3,\n            \"advertisement_id\": 2\n        }\n    ]\n}",
           "type": "json"
         }
       ]

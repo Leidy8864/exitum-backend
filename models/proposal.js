@@ -19,20 +19,20 @@ module.exports = (sequelize, DataType) => {
             }
         },
     },
-    {
-        freezeTableName: true,
-        timestamps: false,
-        omitNull: true,
-        underscored: true
+        {
+            freezeTableName: true,
+            timestamps: false,
+            omitNull: true,
+            underscored: true
 
-    });
-    proposal.associate = (models) => {
+        });
+    proposal.associate = function (models) {
         proposal.belongsTo(models.employee, {
             foreignKey: 'employee_id'
         });
         proposal.belongsTo(models.advertisement, {
             foreignKey: 'advertisement_id'
         });
-    }
+    };
     return proposal
 };

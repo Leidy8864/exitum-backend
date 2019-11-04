@@ -1838,8 +1838,8 @@
 
  /**
  *
- * @api {POST} /ads/listBySkill?user_id=10 POST ads by skill
- * @apiName ads by skill
+ * @api {GET} /ads/listBySkill?user_id=10 GET advertisements by skill
+ * @apiName advertisements by skill
  * @apiGroup ADVERTISEMENT
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
@@ -1919,6 +1919,58 @@
                         }
                     }
                 ],
+                "startup": {
+                    "id": 5,
+                    "name": "Proyecto Exitum",
+                    "photo_url": "",
+                    "ruc": null,
+                    "description": "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.",
+                    "avg_rating": 0,
+                    "entrepreneur_id": 4,
+                    "category_id": 1,
+                    "stage_id": 2,
+                    "entrepreneur": {
+                        "id": 4,
+                        "user_id": 9
+                    }
+                }
+            }
+        ],
+        "current": 1,
+        "pages": 1
+    }
+ *
+ *
+ */
+
+  /**
+ *
+ * @api {GET} /ads/listByProposal?user_id=10 GET advertisements by proposal
+ * @apiName advertisements by proposal
+ * @apiGroup ADVERTISEMENT
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creacion del anuncio de trabajo.
+ * @apiParam {Int} user_id Id del usuario
+	* @apiParamExample {querystring} Ejemplo url
+    /ads/listByProposal?user_id=10
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct} data Indica los datos del anuncio 
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Listado de anuncios por postulación",
+        "data": [
+            {
+                "id": 2,
+                "title": "titulo",
+                "description": "descripciondescripciondescripciondescripciondescripciondescripciondescripcion",
+                "state": "archived",
+                "area_id": 1,
+                "startup_id": 5,
+                "created_at": "2019-10-31T15:32:00.000Z",
                 "startup": {
                     "id": 5,
                     "name": "Proyecto Exitum",
@@ -2309,16 +2361,12 @@
  * @apiDescription Se crea o actualiza una propuesta para un anuncio.
  * @apiParam {Int} id Id del usuario impulsor.
  * @apiParam {Int} advertisement_id Id del anuncio.
- * @apiParam {String} proposal Descripción de la propuesta.
- * @apiParam {Decimal} amount Cantidad o precio a ofertar.
  * 
 	* @apiParamExample {querystring} Ejemplo url
     /proposals/create
     {
         "id": 3,
-        "advertisement_id": 1,
-        "proposal": "Tengo experiencia en el desarrollo de software",
-        "amount": 2100
+        "advertisement_id": 1
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -2330,12 +2378,10 @@
         "message": "Propuesta creada correctamente.",
         "data": [
             {
-                "proposal": "Tengo experiencia en el desarrollo de software",
-                "amount": 2100,
-                "viewed": false,
-                "created_at": "2019-10-11T21:02:32.747Z",
-                "employee_id": 1,
-                "advertisement_id": 1
+                "accepted": false,
+                "created_at": "2019-11-04T02:46:40.640Z",
+                "employee_id": 3,
+                "advertisement_id": 2
             }
         ]
     }

@@ -176,6 +176,7 @@ module.exports = {
                 });
         }
     },
+
     AdvertDetail: async (req, res) => {
 
         const advertisement_id = req.params.advertisement_id;
@@ -216,7 +217,11 @@ module.exports = {
         try {
 
             var entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
-            const whereConsult = { state: req.query.state, '$startup.entrepreneur.id$': entrepreneur.id };
+            console.log(entrepreneur.id)
+            const whereConsult = { 
+                state: req.query.state,
+                '$startup.entrepreneur.id$': entrepreneur.id 
+            };
 
             if (entrepreneur) {
                 models.advertisement.findAll(
@@ -230,12 +235,13 @@ module.exports = {
                                 include: [{
                                     model: models.entrepreneur,
                                 }]
+                            },
+                            {
+                                model: models.proposal
                             }
-                        ],
+                        ]
                     }
                 ).then(advertisements => {
-
-
                     models.advertisement.count({
                         where: whereConsult,
                         include: [
@@ -256,12 +262,14 @@ module.exports = {
                             pages: Math.ceil(totalRows / perPage)
                         });
                     })
+                }).catch(err => {
+                    console.log(err)
                 });
             } else {
                 return res.status(200).json({ status: false, message: "No se encontro al emprendedor" });
             }
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            console.log(err);
             return res.status(200).json({ status: false, message: "Error al listar anuncios" });
         }
     },
@@ -333,5 +341,61 @@ module.exports = {
 
 
 
+    },
+
+    advertsByProposal: async (req, res) => {
+        let user_id = req.query.user_id
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } });
+        const proposal = await models.proposal.findAll({
+            attributes: ['advertisement_id'],
+            where: { employee_id: employee.id },
+        })
+        var ads_ids = []
+        for (var i = 0; i < proposal.length; i++) {
+            ads_ids.push(proposal[i].advertisement_id)
+        }
+        await models.advertisement.findAll({
+            offset: (perPage * (page - 1)),
+            limit: perPage,
+            where: {
+                // state: 'active',
+                id: { [models.Sequelize.Op.or]: [ads_ids] }
+            },
+            include: [
+                // {
+                //     model: models.skill
+                // },
+                {
+                    model: models.startup,
+                    include: [{
+                        model: models.entrepreneur,
+                    }]
+                }
+            ]
+        }).then(ads => {
+            models.advertisement.count({
+                where: {
+                    //state: 'active',
+                    id: { [models.Sequelize.Op.or]: [ads_ids] }
+                },
+                include: [
+                    // {
+                    //     model: models.skill
+                    // },
+                    {
+                        model: models.startup,
+                        include: [{
+                            model: models.entrepreneur,
+                        }]
+                    }
+                ]
+            }).then(totalRows => {
+                return res.json({ status: true, message: "Listado de anuncios por postulación", data: ads, current: page, pages: Math.ceil(totalRows / perPage) })
+            })
+        })
     }
+
 }

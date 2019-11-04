@@ -48,7 +48,11 @@ module.exports = (sequelize, DataType) => {
             foreignKey: 'advertisement_id'
         });
         advertisement.belongsToMany(models.employee, {
-            through: 'proposal',
+			through: models.proposal,
+			foreignKey: 'advertisement_id',
+			otherKey: 'employee_id'
+        });
+        advertisement.hasMany(models.proposal, {
             foreignKey: 'advertisement_id'
         });
         advertisement.hasMany(models.advertisement_skill, {
