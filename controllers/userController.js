@@ -486,7 +486,9 @@ module.exports = {
     updateImage: async (req, res) => {
 
         try {
+            
             const user = await models.user.findOne({ where: { id: req.body.user_id } });
+
             if (user) {
 
                 if (!req.files) {
@@ -497,15 +499,10 @@ module.exports = {
                 fileName = s3.putObject(NEW_BUCKET_NAME, photo);
 
                 await user.update({
-                    name: req.body.name,
-                    lastname: req.body.lastname,
-                    phone: req.body.phone,
-                    photo: fileName,
-                    active: req.body.active || true,
-                    role: req.body.role
+                    photo: fileName
                 });
 
-                return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
+                return res.status(200).json({ status: true, message: "Imagen actualizada correctamente.", data: user });
 
             } else {
                 throw ('El usuario no existe!')
@@ -577,6 +574,36 @@ module.exports = {
                 return res.status(200).json({ status: false, message: "No hay paises registrados" })
             }
         })
+    },
+
+    show: async(req, res) => {
+
+        var errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(200).json({ status: false, message: 'Campos incorrectos', data: errors.array() });
+        }
+
+        const { user_id } = req.params
+        
+        try {
+
+            const user = await models.user.findByPk( user_id, 
+                { 
+                    attributes: { exclude:  ['password', 'method', 'photo'] },
+                    include:  [
+                        {
+                            model: models.skill,
+                            as: 'toUserSkills',
+                            attributes: { exclude: [ 'icon' ] }
+                        }
+                    ],
+
+                } ) 
+            return res.status(200).json({ status: true, message: 'OK', data: user })
+
+        } catch (error) { return res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {  } }) }
+
     },
 
     createWorkshop: (req, res) => {

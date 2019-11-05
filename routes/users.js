@@ -85,4 +85,8 @@ router.post('/deleteWorkshop',
   controller.deleteWorkshop
 )
 
+router.get('/show/:user_id',
+  controller.show
+)
+
 module.exports = router;
