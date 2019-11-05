@@ -128,6 +128,12 @@ module.exports = (sequelize, DataType) => {
       foreignKey: 'to_user_id',
       otherKey: 'from_user_id'
     })
+    user.belongsToMany(models.skill, {
+      as: { singular: 'toUserSkill', plural: 'toUserSkills' },
+      through: models.skill_user,
+      foreignKey: 'user_id',
+      otherKey: 'skill_id'
+    });
   }
   // Object.defineProperty(user.prototype, 'fullName', {
   //   get() {
