@@ -887,6 +887,147 @@
     }
   },
   {
+    "type": "POST",
+    "url": "/appointments/create/:to_user_id",
+    "title": "POST reservation",
+    "name": "Reserva_de_horario",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "to_user_id",
+            "description": "<p>ID del usuario al que se realizará la reserva.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/appointments/create/1",
+        "type": "json"
+      }
+    ],
+    "group": "APPOINTMENTS",
+    "version": "1.0.0",
+    "description": "<p>Horas disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "from_user_id",
+            "description": "<p>ID del usuario que realizará la reserva.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Date",
+            "optional": false,
+            "field": "date",
+            "description": "<p>Fecha en la cual se realizará la reserva.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Time",
+            "optional": false,
+            "field": "time",
+            "description": "<p>Hora en la cual se realizará la reserva.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Tipo de reserva que realizará [reunion o recordatorio].</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Detalle de la reserva.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n    \"from_user_id\": 2,\n    \"date\": \"2019-12-10\",\n    \"time\": \"6:00 PM\",\n    \"type\": \"reunion\",\n    \"description\": \"description\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"(...)\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "APPOINTMENTS"
+  },
+  {
     "type": "GET",
     "url": "/categories/list",
     "title": "GET list categories",
@@ -3502,7 +3643,7 @@
             "type": "Number",
             "optional": false,
             "field": "startup_id",
-            "description": "<p>ID usuario del usuario al que se puntuará.</p>"
+            "description": "<p>ID del usuario al que se puntuará.</p>"
           }
         ]
       }
@@ -3742,7 +3883,7 @@
             "type": "Number",
             "optional": false,
             "field": "to_user_id",
-            "description": "<p>ID usuario del usuario al que se puntuará.</p>"
+            "description": "<p>ID del usuario al que se puntuará.</p>"
           }
         ]
       }
@@ -3862,7 +4003,7 @@
             "type": "Number",
             "optional": false,
             "field": "to_user_id",
-            "description": "<p>ID usuario del usuario al que se comentará.</p>"
+            "description": "<p>ID del usuario al que se comentará.</p>"
           }
         ]
       }
@@ -3968,6 +4109,359 @@
     },
     "filename": "util/documentation.js",
     "groupTitle": "REVIEW_USER"
+  },
+  {
+    "type": "POST",
+    "url": "/schedules/create/:user_id",
+    "title": "POST availability time user",
+    "name": "Horario_de_disponibilidad",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario al que se asignará el horario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/schedules/create/1",
+        "type": "json"
+      }
+    ],
+    "group": "SCHEDULE",
+    "version": "1.0.0",
+    "description": "<p>Asignar una horario de disponiblidad.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que inicio sesión.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Date",
+            "optional": false,
+            "field": "from_hour",
+            "description": "<p>Hora de inicio de trabajo de un usuario.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Date",
+            "optional": false,
+            "field": "to_hour",
+            "description": "<p>Hora final de trabajo del usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n    \"from_hour\": \"7:00 am\",\n    \"to_hour\": \"10:00 pm\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "SCHEDULE"
+  },
+  {
+    "type": "POST",
+    "url": "/schedules/not-available/:user_id",
+    "title": "POST not available time user",
+    "name": "Horario_no_disponible",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario al que se asignará el horario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/schedules/not-available/1",
+        "type": "json"
+      }
+    ],
+    "group": "SCHEDULE",
+    "version": "1.0.0",
+    "description": "<p>Asignar una hora no disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Time",
+            "optional": false,
+            "field": "not_available",
+            "description": "<p>Hora no disponible.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n    \"not_available\": \"1:00 PM\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "SCHEDULE"
+  },
+  {
+    "type": "POST",
+    "url": "/schedules/schedule/:user_id",
+    "title": "POST available hours user",
+    "name": "Horas_disponible",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario al que se asignará el horario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/schedules/schedule/1",
+        "type": "json"
+      }
+    ],
+    "group": "SCHEDULE",
+    "version": "1.0.0",
+    "description": "<p>Horas disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Date",
+            "optional": false,
+            "field": "date",
+            "description": "<p>Fecha en la cual se quiere obtener las horas disponible.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n    \"date\": \"2019-12-10\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\": [\n        \"7:00 AM\",\n        \"8:00 AM\"\n        ...\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "SCHEDULE"
   },
   {
     "type": "POST",
@@ -4929,6 +5423,218 @@
     }
   },
   {
+    "type": "POST",
+    "url": "/users/update-image/:user_id",
+    "title": "POST update user image profile",
+    "name": "Actualizaci_n_de_imagen_de_p_rfil",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que actualizará su imagen.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/users/update-image/1",
+        "type": "json"
+      }
+    ],
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Horas disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "File",
+            "optional": false,
+            "field": "photo",
+            "description": "<p>Nueva imagen de perfil de usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n    \"file\": \"nueva-image\",\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"(...)\",\n    \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER"
+  },
+  {
+    "type": "GET",
+    "url": "/users/show/:user_id",
+    "title": "GET show user data",
+    "name": "Lista_de_certificaciones_del_usuario_",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/users/show/1",
+        "type": "json"
+      }
+    ],
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Show User</p>",
+    "success": {
+      "fields": {
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si la petición fue existosa.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"OK\",\n    \"data\":\"data\": {\n        \"id\": 1,\n        \"name\": \"Usuario\",\n        \"lastname\": \"Usuario\",\n        \"email\": \"usuario@gmail.com\",\n        \"provider_id\": null,\n        \"confirmed\": true,\n        \"phone\": null,\n        \"role\": \"employee\",\n        \"active\": true,\n        \"last_login\": null,\n        \"photo_dni\": null,\n        \"avg_rating\": null,\n        \"from_hour\": \"07:00:00\",\n        \"to_hour\": \"22:00:00\",\n        \"country_id\": 1,\n        \"currency_id\": 1,\n        \"toUserSkills\": []\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER"
+  },
+  {
     "type": "GET",
     "url": "/users/authentication/:token",
     "title": "GET confirmation user",
@@ -5835,7 +6541,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "\t/users/signUp\n    {\n        \"name\":\"Leidy\",\n        \"lastname\": \"Callupe\",\n        \"email\":\"leidy.callupe@tecsup.edu.pe\",\n        \"password\":\"leidy123\",\n    }",
+          "content": "{\n    \"name\":\"Leidy\",\n    \"lastname\": \"Callupe\",\n    \"email\":\"leidy.callupe@tecsup.edu.pe\",\n    \"password\":\"leidy123\",\n}",
           "type": "querystring"
         }
       ]
@@ -5883,7 +6589,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"accessData\": {\n            \"id\": id,\n            \"email\": email,\n            \"accessToken\": accessToken\n        }\n    }",
+          "content": "{\n    \"status\": true,\n    \"accessData\": {\n        \"id\": id,\n        \"email\": email,\n        \"accessToken\": accessToken\n    }\n}",
           "type": "json"
         }
       ]
@@ -6096,98 +6802,6 @@
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": true,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "USER",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "POST",
-    "url": "/users/update-image",
-    "title": "POST update user image",
-    "name": "update_user_image",
-    "group": "USER",
-    "version": "1.0.0",
-    "description": "<p>Actualizar imagen del usuario.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>Id del usuario.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "File",
-            "optional": false,
-            "field": "photo",
-            "description": "<p>Imagen del usuario *</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "\t/users/update\n    {\n        \"user_id\": 2\n        \"photo\": \"image.png\"\n    }",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Menssaje de éxito</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Usuario actualizado correctamente\",\n    \"data\": {\n        \"user_id\": 2\n        \"name\": \"Leidy Paula\"\n        \"lastname\": \"Callupe Santisteban\"\n        \"phone\": \"1523456789\"\n        \"active\": \"true\"\n        \"role\": \"entrepreneur\"\n        \"photo\": \"image.png\"\n    }\n}",
           "type": "json"
         }
       ]

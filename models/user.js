@@ -1,5 +1,7 @@
 'use strict';
 
+const Sequelize = require('sequelize')
+
 module.exports = (sequelize, DataType) => {
   const user = sequelize.define(
     'user',
@@ -31,6 +33,8 @@ module.exports = (sequelize, DataType) => {
       photo: DataType.STRING,
       photo_dni: DataType.STRING,
       avg_rating: DataType.FLOAT(3, 2),
+      from_hour: Sequelize.TIME,
+      to_hour: Sequelize.TIME,
       country_id: {
         type: DataType.INTEGER,
         references: {
@@ -135,6 +139,19 @@ module.exports = (sequelize, DataType) => {
       through: models.skill_user,
       foreignKey: 'user_id',
       otherKey: 'skill_id'
+    });
+    user.hasMany(models.unavailable, { as: 'unavailables' });
+    user.belongsToMany(models.user, {
+      as: { singular: 'fromUserAppointment', plural: 'fromUserAppointments' },
+      through: models.appointment,
+      foreignKey: 'from_user_id',
+      otherKey: 'to_user_id'
+    });
+    user.belongsToMany(models.user, {
+      as: { singular: 'toUserAppointment', plural: 'toUserAppointments' },
+      through: models.appointment,
+      foreignKey: 'to_user_id',
+      otherKey: 'from_user_id'
     });
   };
   return user;

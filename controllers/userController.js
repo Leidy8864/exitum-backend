@@ -485,9 +485,11 @@ module.exports = {
 
     updateImage: async (req, res) => {
 
+        const { user_id } = req.params
+
         try {
             
-            const user = await models.user.findOne({ where: { id: req.body.user_id } });
+            const user = await models.user.findOne({ where: { id: user_id } });
 
             if (user) {
 

@@ -22,9 +22,7 @@
  * @apiParam {String} lastname Apellidos(s) del usuario.
  * @apiParam {String} email Email del usuario.
  * @apiParam {String} password Contrasena del usuario.
- *
-	* @apiParamExample {querystring} Ejemplo url
-	/users/signUp
+ * @apiParamExample {querystring} Ejemplo url
     {
         "name":"Leidy",
         "lastname": "Callupe",
@@ -38,7 +36,7 @@
  * @apiSuccess (Datos obtenidos) {String} accessData.email email
  * @apiSuccess (Datos obtenidos) {String} accessData.accessToken accessToken
  * @apiSuccessExample {json} Datos obtenidos:
-	{
+    {
         "status": true,
         "accessData": {
             "id": id,
@@ -323,45 +321,6 @@
 
 /**
  *
- * @api {POST} /users/update-image POST update user image
- * @apiName update user image
- * @apiGroup USER
- * 
- * @apiVersion 1.0.0
- * @apiUse ErrorGeneral
- * @apiDescription  Actualizar imagen del usuario.
- * @apiParam {Int} user_id Id del usuario.
- * @apiParam {File} photo Imagen del usuario
- * *
-	* @apiParamExample {querystring} Ejemplo url
-	/users/update
-    {
-        "user_id": 2
-        "photo": "image.png"
-    }
- *
- * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
- * @apiSuccess (Datos obtenidos) {String} message Menssaje de éxito
- * @apiSuccessExample {json} Datos obtenidos:
-    {
-        "status": true,
-        "message": "Usuario actualizado correctamente",
-        "data": {
-            "user_id": 2
-            "name": "Leidy Paula"
-            "lastname": "Callupe Santisteban"
-            "phone": "1523456789"
-            "active": "true"
-            "role": "entrepreneur"
-            "photo": "image.png"
-        }
-    }
- *
- *
- */
-
-/**
- *
  * @api {GET} /users/countries GET list country
  * @apiName resendToken
  * @apiGroup USER
@@ -514,6 +473,101 @@
 	{
         "status": 200,
         "message": "Eliminado correctamente"
+    }
+ *
+ *
+ */
+
+/** 
+ *
+ * @api {POST} /users/update-image/:user_id POST update user image profile
+ * @apiName Actualización de imagen de pérfil
+ * @apiParam {Number} user_id ID del usuario que actualizará su imagen.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/update-image/1
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Horas disponible.
+ * @apiSuccess (Datos requeridos) {File} photo Nueva imagen de perfil de usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "file": "nueva-image",
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "(...)",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+/**
+ *
+ * @api {GET} /users/show/:user_id GET show user data
+ * @apiName Lista de certificaciones del usuario.
+ * @apiParam {String} user_id ID del usuario.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/show/1
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription  Show User
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data":"data": {
+            "id": 1,
+            "name": "Usuario",
+            "lastname": "Usuario",
+            "email": "usuario@gmail.com",
+            "provider_id": null,
+            "confirmed": true,
+            "phone": null,
+            "role": "employee",
+            "active": true,
+            "last_login": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "from_hour": "07:00:00",
+            "to_hour": "22:00:00",
+            "country_id": 1,
+            "currency_id": 1,
+            "toUserSkills": []
+        }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
     }
  *
  *
@@ -2393,7 +2447,7 @@
  *
  * @api {POST} /users/comment/:to_user_id POST create and update comment
  * @apiName comentario
- * @apiParam {Number} to_user_id ID usuario del usuario al que se comentará.
+ * @apiParam {Number} to_user_id ID del usuario al que se comentará.
  * @apiExample Request parameter
  * http://35.175.241.103:8081/users/comment/1
  * @apiGroup REVIEW USER
@@ -2436,7 +2490,7 @@
  *
  * @api {POST} /users/rating/:to_user_id POST create and update rating
  * @apiName Puntuar
- * @apiParam {Number} to_user_id ID usuario del usuario al que se puntuará.
+ * @apiParam {Number} to_user_id ID del usuario al que se puntuará.
  * @apiExample Request parameter
  * http://35.175.241.103:8081/users/rating/1
  * @apiGroup REVIEW USER
@@ -2522,7 +2576,7 @@
  *
  * @api {POST} /startups/rating/:startup_id POST create and update rating
  * @apiName Puntuar Startup
- * @apiParam {Number} startup_id ID usuario del usuario al que se puntuará.
+ * @apiParam {Number} startup_id ID del usuario al que se puntuará.
  * @apiExample Request parameter
  * http://35.175.241.103:8081/startups/rating/1
  * @apiGroup REVIEW STARTUP
@@ -2906,6 +2960,185 @@
  *@apiSuccessExample { json } Datos retornados
     HTTP/1.1 200 OK
     { }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /schedules/create/:user_id POST availability time user
+ * @apiName Horario de disponibilidad
+ * @apiParam {Number} user_id ID del usuario al que se asignará el horario.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/schedules/create/1
+ * @apiGroup SCHEDULE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Asignar una horario de disponiblidad.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesión.
+ * @apiSuccess (Datos requeridos) {Date} from_hour Hora de inicio de trabajo de un usuario.
+ * @apiSuccess (Datos requeridos) {Date} to_hour Hora final de trabajo del usuario.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "from_hour": "7:00 am",
+        "to_hour": "10:00 pm"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+  /**
+ *
+ * @api {POST} /schedules/not-available/:user_id POST not available time user
+ * @apiName Horario no disponible
+ * @apiParam {Number} user_id ID del usuario al que se asignará el horario.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/schedules/not-available/1
+ * @apiGroup SCHEDULE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Asignar una hora no disponible.
+ * @apiSuccess (Datos requeridos) {Time} not_available Hora no disponible.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "not_available": "1:00 PM"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+  /**
+ *
+ * @api {POST} /schedules/schedule/:user_id POST available hours user
+ * @apiName Horas disponible
+ * @apiParam {Number} user_id ID del usuario al que se asignará el horario.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/schedules/schedule/1
+ * @apiGroup SCHEDULE
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Horas disponible.
+ * @apiSuccess (Datos requeridos) {Date} date Fecha en la cual se quiere obtener las horas disponible.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "date": "2019-12-10"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": [
+            "7:00 AM",
+            "8:00 AM"
+            ...
+        ]
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
+  /**
+ *
+ * @api {POST} /appointments/create/:to_user_id POST reservation
+ * @apiName Reserva de horario
+ * @apiParam {Number} to_user_id ID del usuario al que se realizará la reserva.
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/appointments/create/1
+ * @apiGroup APPOINTMENTS
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Horas disponible.
+ * @apiSuccess (Datos requeridos) {Number} from_user_id ID del usuario que realizará la reserva.
+ * @apiSuccess (Datos requeridos) {Date} date Fecha en la cual se realizará la reserva.
+ * @apiSuccess (Datos requeridos) {Time} time Hora en la cual se realizará la reserva.
+ * @apiSuccess (Datos requeridos) {String} type Tipo de reserva que realizará [reunion o recordatorio].
+ * @apiSuccess (Datos requeridos) {String} description Detalle de la reserva.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "from_user_id": 2,
+        "date": "2019-12-10",
+        "time": "6:00 PM",
+        "type": "reunion",
+        "description": "description"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "(...)",
+        "data": {  }
+    }
  *
  *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
  *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
