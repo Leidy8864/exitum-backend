@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/scheduleController');
 
-router.post('/create',
+router.post('/create/:user_id',
+    controller.validate('create'),
     controller.create
 );
 

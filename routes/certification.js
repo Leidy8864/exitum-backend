@@ -14,7 +14,7 @@ router.post('/create',
 
 router.post('/update',
     controller.validate('update'),
-    controller.update
+    controller.updateUserCertification
 );
 
 router.get('/download/:fileName',

@@ -58,10 +58,11 @@ module.exports = {
             const { user_id, skills } = req.body
 
             const user = await existById(models.user, user_id)
+            const user_skill = user.getToUserSkills()
 
             var skills_id = await Promise.all(skills.map(async element => {
                 var [response, created] = await models.skill.findOrCreate({
-                    where: { skill: { [Sequelize.Op.like]: '%' + element + '%' } },
+                    where: { skill: element },
                     defaults: {
                         skill: element
                     }
@@ -70,9 +71,13 @@ module.exports = {
             }
             ))
 
+            if (user_skill.length != 0) {
+                console.log("elemento"+user_skill.length)
+            }
+
             user.addToUserSkills(skills_id)
 
-            return res.status(200).json({ status: true, message: "Skill creado correctamente" });
+            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: {  } });
 
         } catch (error) {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error });

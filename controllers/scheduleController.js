@@ -22,6 +22,7 @@ function availableHours(startTime, endTime, not_available) {
 }
 
 module.exports = {
+
     validate: (schedule) => {
 
         var user_id = check('user_id')
@@ -45,7 +46,6 @@ module.exports = {
             case 'scheduleDate':
                 return [ user_id, date ]
         }
-
             
     },
 
@@ -57,7 +57,8 @@ module.exports = {
             returnError( res, 'Campos incorrectos, por favor intentelo nuevamente.', errors.array() )
         }
 
-        const { user_id, from_hour, to_hour } = req.body
+        const { from_hour, to_hour } = req.body
+        const { user_id } = req.params
 
         try {
 
@@ -132,7 +133,7 @@ module.exports = {
 
             successful(res, 'OK', available)
 
-        } catch (err) { returnError(res, error) }
+        } catch (error) { returnError(res, error) }
         
     }, 
     
@@ -174,7 +175,7 @@ module.exports = {
 
             successful(res, 'OK', hours_available)
 
-        } catch (err) { returnError(res, error) }
+        } catch (error) { returnError(res, error) }
         
     }
 

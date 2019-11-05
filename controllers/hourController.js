@@ -61,5 +61,9 @@ module.exports = {
 
         if (now.getHours() >= hour[0]) throw('Ooops!, la hora no es válida, debe de ser superior a la actual.')
 
+    },
+
+    getTimeHMS: (time) => {
+
     }
 }
