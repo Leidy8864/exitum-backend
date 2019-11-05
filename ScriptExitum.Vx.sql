@@ -5,7 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema exitum
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema exitum
@@ -1402,6 +1402,30 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Table `exitum`.`employee_step`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`employee_step` (
+  `employee_id` INT NOT NULL,
+  `step_id` INT NOT NULL,
+  `tip_completed` INT NULL,
+  `icon_count_tip` VARCHAR(245) NULL,
+  `state` ENUM('completado', 'incompleto') NULL,
+  PRIMARY KEY (`employee_id`, `step_id`),
+  INDEX `fk_employee_has_step_step1_idx` (`step_id` ASC) ,
+  INDEX `fk_employee_has_step_employee1_idx` (`employee_id` ASC) ,
+  CONSTRAINT `fk_employee_has_step_employee1`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `exitum`.`employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_employee_has_step_step1`
+    FOREIGN KEY (`step_id`)
+    REFERENCES `exitum`.`step` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 INSERT INTO `currency` (`id`, `currency`) VALUES (NULL, 'PEN'), (NULL, 'USD');

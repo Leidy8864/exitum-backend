@@ -374,9 +374,12 @@ module.exports = {
                 id: { [models.Sequelize.Op.or]: [ads_ids] }
             },
             include: [
-                // {
-                //     model: models.skill
-                // },
+                {
+                    model: models.skill
+                },
+                {
+                    model: models.area
+                },
                 {
                     model: models.startup,
                     include: [{
@@ -391,9 +394,6 @@ module.exports = {
                     id: { [models.Sequelize.Op.or]: [ads_ids] }
                 },
                 include: [
-                    // {
-                    //     model: models.skill
-                    // },
                     {
                         model: models.startup,
                         include: [{
