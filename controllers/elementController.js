@@ -1,10 +1,10 @@
 
-
 module.exports = {
 
     existById: async (model, value, ...select) => {
 
         var response
+        
         if (select.length > 0) {
             response = await model.findByPk( value, { attributes: select } )
         } else {
@@ -19,7 +19,7 @@ module.exports = {
     },
 
     toDecimal: (number, length) => {
-        function pad(input, length, padding) { 
+        function pad(input, length, padding) {
             var str = input + "";
             return (length <= str.length) ? str : pad(str + padding, length, padding);
         }
@@ -30,6 +30,29 @@ module.exports = {
         var decimals = isDecimal ? str.substr(dot+1)  : "";
         decimals = pad(decimals, length, 0);
         return integer + '.' + decimals;
-    }
+    },
+
+    arr_diff: (a1, a2) =>  {
+
+        var a = [], diff = [];
+    
+        for (var i = 0; i < a1.length; i++) {
+            a[a1[i]] = true;
+        }
+    
+        for (var i = 0; i < a2.length; i++) {
+            if (a[a2[i]]) {
+                delete a[a2[i]];
+            } else {
+                a[a2[i]] = true;
+            }
+        }
+    
+        for (var k in a) {
+            diff.push(k);
+        }
+    
+        return diff;
+    },
 
 }

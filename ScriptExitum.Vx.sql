@@ -1375,22 +1375,22 @@ CREATE TABLE IF NOT EXISTS `exitum`.`skill_user` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+
 INSERT INTO `currency` (`id`, `currency`) VALUES (NULL, 'PEN'), (NULL, 'USD');
 INSERT INTO `country` (`id`, `country`, `code`, `currency_id`) VALUES (NULL, 'Perú', 'PE', 1), (NULL, 'Estados Unidos', 'EEUU', 2);
 INSERT INTO `user` (`id`, `name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `phone`, `role`, `method`, `active`, `last_login`, `photo`, `photo_dni`, `avg_rating`, `created_at`, `country_id`, `currency_id`, `from_hour`, `to_hour`)
-VALUES (NULL, 'Usuario', 'Usuario', 'usuario@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '09:00:00', '19:00:00'),
-(NULL, 'Usuaria', 'Usuaria', 'usuaria@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '09:00:00', '19:00:00'),
-(NULL, 'Usuarito', 'Usuarito', 'usuarito@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '09:00:00', '19:00:00'),
-(NULL, 'Usuarita', 'Usuarita', 'usuarita@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '09:00:00', '19:00:00');
+VALUES (NULL, 'Usuario', 'Usuario', 'usuario@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL),
+(NULL, 'Usuaria', 'Usuaria', 'usuaria@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL),
+(NULL, 'Usuarito', 'Usuarito', 'usuarito@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL),
+(NULL, 'Usuarita', 'Usuarita', 'usuarita@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL);
 
 INSERT INTO `user` (`id`, `name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `phone`, `role`, `method`, `active`, `last_login`, `photo`, `photo_dni`, `avg_rating`, `created_at`, `country_id`, `currency_id`, `from_hour`, `to_hour`)
-VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1', '09:00:00', '19:00:00'),
-(NULL, 'Emprendedora', 'Emprendedora', 'emprendedora@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '2', '2', '09:00:00', '19:00:00');
+VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1', NULL, NULL),
+(NULL, 'Emprendedora', 'Emprendedora', 'emprendedora@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, NULL, '2019-10-11 00:00:00', '2', '2', NULL, NULL);
 
 INSERT INTO `entrepreneur` (`id`, `user_id`) VALUES (NULL, '5'), (NULL, '6');
 
