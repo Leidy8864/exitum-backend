@@ -143,7 +143,6 @@ module.exports = {
     listStageStartup: async (req, res) => {
         const { startup_id } = req.params
         const startup = await models.startup.findOne({ where: { id: startup_id } })
-        const step = await models.step.findOne({ where: { stage_id: startup.stage_id } })
         if (startup) {
             models.stage.findOne({
                 where: {
@@ -250,7 +249,38 @@ module.exports = {
         }
     },
 
-    listTipsEmployee: async (req, res) => {
-        const { employee_id } = req.params
+    listStageEmployee: async (req, res) => {
+        const { user_id } = req.params
+        const employee = await models.employee.findOne({ attributes: ['id', 'stage_id'], where: { id: user_id } })
+        if (employee) {
+            models.stage.findOne({
+                where: {
+                    id: employee.stage_id,
+                    type: 'employee',
+                },
+                include: [
+                    {
+                        model: models.step,
+                        include: [
+                            {
+                                model: models.employee_step,
+                                where: { employee_id: employee.id }
+                            },
+                            {
+                                model: models.challenge,
+                                where: { employee_id: employee.id }
+                            }
+                        ]
+                    }
+                ]
+            }).then(stage => {
+                return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
+            }).catch(err => {
+                console.log(err)
+                return res.json({ status: false, message: "Ocurrio un problema, vuelva a intentarlo." })
+            })
+        } else {
+            return res.json({ status: false, message: "No existe el inpulsor" })
+        }
     }
 }
