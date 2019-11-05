@@ -1,5 +1,7 @@
 'use strict'
 
+const Sequelize = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
     const skill_user = sequelize.define('skill_user', {
         user_id: {
@@ -17,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'skill',
                 key: 'id'
             }
-        }
+        },
+        // highlight: {
+        //     type: Sequelize.TINYINT
+        // }
     },
     {
         freezeTableName: true,

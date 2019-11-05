@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   `created_at` DATETIME NULL DEFAULT NULL,
   `from_hour` TIME NULL DEFAULT NULL,
   `to_hour` TIME NULL DEFAULT NULL,
+  `birthday` DATE NULL,
   `country_id` INT(11) NOT NULL,
   `currency_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1166,30 +1167,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
--- -- -----------------------------------------------------
--- -- Table `exitum`.`schedule`
--- -- -----------------------------------------------------
--- CREATE TABLE IF NOT EXISTS `exitum`.`schedule` (
---   `hour_id` INT(11) NOT NULL,
---   `user_id` INT(11) NOT NULL,
---   `break` TINYINT(1) NULL DEFAULT NULL,
---   PRIMARY KEY (`hour_id`, `user_id`),
---   INDEX `fk_hour_has_user_user2_idx` (`user_id` ASC),
---   INDEX `fk_hour_has_user_hour2_idx` (`hour_id` ASC),
---   CONSTRAINT `fk_hour_has_user_hour2`
---     FOREIGN KEY (`hour_id`)
---     REFERENCES `exitum`.`hour` (`id`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION,
---   CONSTRAINT `fk_hour_has_user_user2`
---     FOREIGN KEY (`user_id`)
---     REFERENCES `exitum`.`user` (`id`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION)
--- ENGINE = InnoDB
--- DEFAULT CHARACTER SET = utf8;
-
-
 -- -----------------------------------------------------
 -- Table `exitum`.`startup_employee_type`
 -- -----------------------------------------------------
@@ -1382,17 +1359,18 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `exitum`.`skill_user` (
   `user_id` INT(11) NOT NULL,
   `skill_id` INT(11) NOT NULL,
+  `highlight` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`user_id`, `skill_id`),
   INDEX `fk_user_has_skill_skill2_idx` (`skill_id` ASC),
   INDEX `fk_user_has_skill_user3_idx` (`user_id` ASC),
-  CONSTRAINT `fk_user_has_skill_user3`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `exitum`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_has_skill_skill2`
     FOREIGN KEY (`skill_id`)
     REFERENCES `exitum`.`skill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_skill_user3`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

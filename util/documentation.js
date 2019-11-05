@@ -2975,6 +2975,48 @@
  *
  */
 
+  /**
+ *
+ * @api {POST} /certifications/delete POST delete a certification
+ * @apiName Eliminar Certificación
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/certifications/delete
+ * @apiGroup CERTIFICATION
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Eliminar una certificación.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que inicio sesión.
+ * @apiSuccess (Datos requeridos) {Number} certification_id ID del certificado.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "user_id": 1,
+        "certification_id": "Cisco Certification"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "OK",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
  /**
  *
  * @api {POST} /schedules/create/:user_id POST availability time user

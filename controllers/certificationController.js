@@ -9,7 +9,7 @@ const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/certifications';
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
-    validate: (certificacion) => {
+    validate: (certification) => {
 
         var user_id = check('user_id')
             .exists().withMessage('Es necesario el id del usuario.')
@@ -26,7 +26,7 @@ module.exports = {
         var certification_id = check('certification_id')
             .exists().withMessage("Es necesario el ID del certificado.")
 
-        switch (certificacion) {
+        switch (certification) {
             case 'listById':
                 return [ user_id ]
             case 'create':
@@ -184,18 +184,40 @@ module.exports = {
         // s3.getObject(params).createReadStream().pipe(file);
     },
 
-    update: async (req, res) => {
+    updateUserCertification: async (req, res) => {
+
+        var errors = validationResult(req)
+        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
 
         const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
         try {
 
             const user = await existById(models.user, user_id)
-            const certification = await models.certification.findByPk(certification_id)
+            const certification = await models.certification.findOne({
+                where: {
+                    [ Sequelize.Op.and ] : [
+                        { id: certification_id },
+                        { user_id: user_id }
+                    ]
+                },
+            })
+
+            if (!certification) {
+                throw('No existe el certificado.')
+            }
+
             var fileName = certification.document_url
            
             if (req.files) {
+
+                if (certification.document_url != null ) {
+                    s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6]);
+                }
+
+                const { document } = req.files
                 fileName = putObject(NEW_BUCKET_NAME, document);
+
            }
 
             certification.update({
@@ -213,13 +235,13 @@ module.exports = {
                 issuing_company: certification.issuing_company,
                 date_expedition : certification.date_expedition,
                 date_expiration : certification.date_expiration,
-                url : (certification.document_url || certification.document_url == null) ? `http://35.175.241.103:8081/certifications/download/${(certification.document_url).split('/')[6]}`:'' 
+                url : (certification.document_url == null) ? '':`http://35.175.241.103:8081/certifications/download/${(certification.document_url).split('/')[6]}` 
             } 
 
             return res.status(200).json({ status: true, message: 'OK', data: data })
 
         } catch (error) {
-            return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
+            return res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {  } })
         }
 
     },
@@ -231,12 +253,19 @@ module.exports = {
 
         try {
 
-            const { certification_id } = req.body
+            const { user_id, certification_id } = req.body
 
-            var certification = await models.certification.findByPk(certification_id)
+            var certification = await models.certification.findOne({
+                where: { 
+                    [ Sequelize.Op.and ] : [
+                        { id: certification_id },
+                        { user_id: user_id }
+                    ]
+                }
+            })
 
             if (certification == null || certification === undefined) {
-                throw('Ooop! No se encontraron los registrados.')
+                throw('Oops! No se encontró certificado existente.')
             }
 
             if (certification.document_url != null) {
