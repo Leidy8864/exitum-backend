@@ -218,9 +218,9 @@ module.exports = {
 
             var entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
             console.log(entrepreneur.id)
-            const whereConsult = { 
+            const whereConsult = {
                 state: req.query.state,
-                '$startup.entrepreneur.id$': entrepreneur.id 
+                '$startup.entrepreneur.id$': entrepreneur.id
             };
 
             if (entrepreneur) {
@@ -294,11 +294,20 @@ module.exports = {
         for (var i = 0; i < user.toUserSkills.length; i++) {
             skill_user.push(user.toUserSkills[i].skill)
         }
+        const employee = await models.employee.findOne({ where: { user_id: user_id } });
+        console.log(employee.id)
+        var prop_ads_id = []
+        const proposal = await models.proposal.findAll();
+        for (var i = 0; i < proposal.length; i++) {
+            prop_ads_id.push(proposal[i].advertisement_id)
+        }
         await models.advertisement.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
             where: {
-                state: 'active'
+                state: 'active',
+                id: { [models.Sequelize.Op.notIn]: prop_ads_id }
+                //'$proposals.employee_id$': { [models.Sequelize.Op.notIn]: [employee.id] }
             },
             include: [
                 {
@@ -337,10 +346,6 @@ module.exports = {
                 return res.json({ status: true, message: "Listado de anuncios por skill", data: ads, current: page, pages: Math.ceil(totalRows / perPage) })
             })
         })
-
-
-
-
     },
 
     advertsByProposal: async (req, res) => {
