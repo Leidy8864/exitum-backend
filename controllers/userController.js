@@ -500,7 +500,7 @@ module.exports = {
                     throw ('Se necesita una imagen.')
                 }
 
-                if (user.photo != null) {
+                if (user.photo != null || user.photo != '') {
                     s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[6]);
                 }
 
@@ -532,7 +532,7 @@ module.exports = {
         }
         try {
 
-            var fileName = '';
+            var fileName = null;
             const user = await models.user.findOne({ where: { id: req.body.user_id } });
 
             if (user) {
