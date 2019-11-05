@@ -1581,7 +1581,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "{\n    \"user_id\": 1,\n    \"certification_id\": \"Cisco Certification\"\n}",
+          "content": "{\n    \"user_id\": 1,\n    \"certification_id\": 1\n}",
           "type": "json"
         },
         {
@@ -5531,26 +5531,13 @@
   },
   {
     "type": "POST",
-    "url": "/users/update-image/:user_id",
-    "title": "POST update user image profile",
-    "name": "Actualizaci_n_de_imagen_de_p_rfil",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>ID del usuario que actualizará su imagen.</p>"
-          }
-        ]
-      }
-    },
+    "url": "/users/update-image",
+    "title": "POST update image user",
+    "name": "Actualizar_imagen_de_usuario",
     "examples": [
       {
         "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/users/update-image/1",
+        "content": "http://35.175.241.103:8081/users/update-image",
         "type": "json"
       }
     ],
@@ -5562,10 +5549,17 @@
         "Datos requeridos": [
           {
             "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que realizará que desea actualizar.</p>"
+          },
+          {
+            "group": "Datos requeridos",
             "type": "File",
             "optional": false,
             "field": "photo",
-            "description": "<p>Nueva imagen de perfil de usuario.</p>"
+            "description": "<p>Imagen la cual desea actualizar.</p>"
           }
         ],
         "Datos retornados": [
@@ -5595,7 +5589,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "{\n    \"file\": \"nueva-image\",\n}",
+          "content": "{\n    \"user_id\": 1,\n    \"photo\": \"image.png\"\n}",
           "type": "json"
         },
         {

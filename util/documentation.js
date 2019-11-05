@@ -319,6 +319,48 @@
  *
  */
 
+  /**
+ *
+ * @api {POST} /users/update-image POST update image user
+ * @apiName Actualizar imagen de usuario
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/update-image
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Horas disponible.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que realizará que desea actualizar.
+ * @apiSuccess (Datos requeridos) {File} photo Imagen la cual desea actualizar.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "user_id": 1,
+        "photo": "image.png"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "(...)",
+        "data": {  }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+    }
+ *
+ *
+ */
+
 /**
  *
  * @api {GET} /users/countries GET list country
@@ -473,47 +515,6 @@
 	{
         "status": 200,
         "message": "Eliminado correctamente"
-    }
- *
- *
- */
-
-/** 
- *
- * @api {POST} /users/update-image/:user_id POST update user image profile
- * @apiName Actualización de imagen de pérfil
- * @apiParam {Number} user_id ID del usuario que actualizará su imagen.
- * @apiExample Request parameter
- * http://35.175.241.103:8081/users/update-image/1
- * @apiGroup USER
- * 
- * @apiVersion 1.0.0
- * @apiDescription Horas disponible.
- * @apiSuccess (Datos requeridos) {File} photo Nueva imagen de perfil de usuario.
- * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
- * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
- * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
- * @apiSuccessExample {json} Datos requeridos
-    {
-        "file": "nueva-image",
-    }
- *@apiSuccessExample { json } Datos retornados
-    HTTP/1.1 200 OK
-    {
-        "status": true,
-        "message": "(...)",
-        "data": {  }
-    }
- *
- *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
- *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
- *@apiError (Error retornado) {Object}  data Contenido retornado
- *@apiErrorExample  Error
-    HTTP/1.1 4xx Error
-    {
-        "status" : false,
-        "message": "(...)",
-        "data":  { }
     }
  *
  *
@@ -2993,7 +2994,7 @@
  * @apiSuccessExample {json} Datos requeridos
     {
         "user_id": 1,
-        "certification_id": "Cisco Certification"
+        "certification_id": 1
     }
  *@apiSuccessExample { json } Datos retornados
     HTTP/1.1 200 OK

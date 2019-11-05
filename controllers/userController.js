@@ -485,16 +485,23 @@ module.exports = {
 
     updateImage: async (req, res) => {
 
-        const { user_id } = req.params
+        const { user_id } = req.body
 
         try {
             
-            const user = await models.user.findOne({ where: { id: user_id } });
+            const user = await models.user.findOne({ 
+                where: { id: user_id } ,
+                attributes: ['id', 'photo']
+            });
 
             if (user) {
 
                 if (!req.files) {
                     throw ('Se necesita una imagen.')
+                }
+
+                if (user.photo != null) {
+                    s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[6]);
                 }
 
                 var photo = req.files.photo;
