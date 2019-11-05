@@ -829,45 +829,6 @@ CREATE TABLE IF NOT EXISTS `exitum`.`favorite` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-
--- -----------------------------------------------------
--- Table `exitum`.`file`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`file` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(145) NULL DEFAULT NULL,
-  `file` VARCHAR(245) NULL DEFAULT NULL,
-  `challenge_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_file_challenge_challenge1_idx` (`challenge_id` ASC),
-  CONSTRAINT `fk_file_challenge_challenge1`
-    FOREIGN KEY (`challenge_id`)
-    REFERENCES `exitum`.`challenge` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `exitum`.`file_tip`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
-  `id` INT(11) NOT NULL,
-  `file` VARCHAR(245) NULL DEFAULT NULL,
-  `name` VARCHAR(245) NULL DEFAULT NULL,
-  `tip_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_file_tip_tip1_idx` (`tip_id` ASC),
-  CONSTRAINT `fk_file_tip_tip1`
-    FOREIGN KEY (`tip_id`)
-    REFERENCES `exitum`.`tip` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
 -- -----------------------------------------------------
 -- Table `exitum`.`invitation`
 -- -----------------------------------------------------
@@ -1325,6 +1286,22 @@ CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `exitum`.`file`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`file` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(145) NULL DEFAULT NULL,
+  `challenge_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_file_challenge_challenge1_idx` (`challenge_id` ASC),
+  CONSTRAINT `fk_file_challenge_challenge1`
+    FOREIGN KEY (`challenge_id`)
+    REFERENCES `exitum`.`challenge` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `exitum`.`file_tip`
@@ -1338,6 +1315,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
   CONSTRAINT `fk_file_tip_tip1`
     FOREIGN KEY (`tip_id`)
     REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -1701,31 +1680,31 @@ INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('126', 'Reto 2 Nivel 4 Etapa 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('127', 'Reto 3 Nivel 4 Etapa 3 employee', '36');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('128', 'Reto 4 Nivel 4 Etapa 3 employee', '36');
 
-insert into `exitum`.`file_tip`(id, name, file, tip_id) values 
-(1, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 1),
-(2, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 2),
-(3, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 3),
-(4, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 4),
-(5, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 5),
-(6, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 6),
-(7, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 7),
-(8, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 8),
-(9, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 9),
-(10, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 10),
-(11, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 11),
-(12, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 12),
-(13, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 13),
-(14, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 14),
-(15, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 15),
-(16, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 16),
-(17, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 17),
-(18, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 18),
-(19, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 19),
-(20, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 20),
-(21, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 21),
-(22, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 22),
-(23, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 23),
-(24, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 24),
-(25, "Business_Model_Canvas.docx", "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/4-reto.svg", 25);
+insert into `exitum`.`file_tip`(id, name, tip_id) values 
+( 1, "Business_Model_Canvas.docx", 1),
+( 2, "Business_Model_Canvas.docx", 2),
+( 3, "Business_Model_Canvas.docx", 3),
+( 4, "Business_Model_Canvas.docx", 4),
+( 5, "Business_Model_Canvas.docx", 5),
+( 6, "Business_Model_Canvas.docx", 6),
+( 7, "Business_Model_Canvas.docx", 7),
+( 8, "Business_Model_Canvas.docx", 8),
+( 9, "Business_Model_Canvas.docx", 9),
+(10, "Business_Model_Canvas.docx", 10),
+(11, "Business_Model_Canvas.docx", 11),
+(12, "Business_Model_Canvas.docx", 12),
+(13, "Business_Model_Canvas.docx", 13),
+(14, "Business_Model_Canvas.docx", 14),
+(15, "Business_Model_Canvas.docx", 15),
+(16, "Business_Model_Canvas.docx", 16),
+(17, "Business_Model_Canvas.docx", 17),
+(18, "Business_Model_Canvas.docx", 18),
+(19, "Business_Model_Canvas.docx", 19),
+(20, "Business_Model_Canvas.docx", 20),
+(21, "Business_Model_Canvas.docx", 21),
+(22, "Business_Model_Canvas.docx", 22),
+(23, "Business_Model_Canvas.docx", 23),
+(24, "Business_Model_Canvas.docx", 24),
+(25, "Business_Model_Canvas.docx", 25);
 
 INSERT INTO `exitum`.`type` (`id`, `type`) VALUES ('1', 'Hormiga');

@@ -33,38 +33,97 @@ module.exports = {
                 ]
         }
     },
+    
     create: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
-        var languages = req.body.languages;
 
-        try {
-            const result = await models.sequelize.transaction(async (t) => {
+        const employee = await models.employee.findOne({ where: { user_id: req.body.user_id } });
 
-                const employee = await models.employee.create({
-                    user_id: req.body.user_id,
-                    category_id: req.body.category_id,
-                    about_me: req.body.about_me,
-                    short_description: req.body.short_description,
-                    price_hour: req.body.price_hour,
-                    stage_id: 1
-                }, { transaction: t });
-                await employee.addType(req.body.types || 1, { transaction: t });
+        if (employee) {
+            return res.json({ status: false, message: "Ya fue registrado como impulsor" })
+        } else {
+            var languages = req.body.languages;
 
-                for (let i = 0; i < languages.length; i++) {
-                    employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } }, { transaction: t });
-                }
-                return employee;
-            });
-            return res.status(200).json({ status: true, message: "Impulsor creado correctamente", data: result });
+            try {
+                const result = await models.sequelize.transaction(async (t) => {
 
-        } catch (error) {
-            console.log("Error" + error);
-            res.status(200).json({ status: false, message: "Error al crear impulsor" });
+                    const employee = await models.employee.create({
+                        user_id: req.body.user_id,
+                        category_id: req.body.category_id,
+                        about_me: req.body.about_me,
+                        short_description: req.body.short_description,
+                        price_hour: req.body.price_hour,
+                        stage_id: 1
+                    }, { transaction: t });
+
+                    await employee.addType(req.body.types || 1, { transaction: t });
+                    var chlls = []
+                    var steps = []
+
+                    await models.stage.findAll({
+                        where: {
+                            type: 'employee'
+                        },
+                        include: [
+                            {
+                                model: models.step,
+                                include: [
+                                    {
+                                        model: models.tip
+                                    }
+                                ]
+                            }
+                        ]
+                    }, { transaction: t }).then(stages => {
+                        for (var x = 0; x < stages.length; x++) {
+                            for (var y = 0; y < stages[x].steps.length; y++) {
+                                for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
+                                    chlls.push(
+                                        {
+                                            user_id: req.body.user_id,
+                                            employee_id: employee.id,
+                                            stage_id: stages[x].id,
+                                            step_id: stages[x].steps[y].id,
+                                            tip_id: stages[x].steps[y].tips[z].id,
+                                            checked: false,
+                                            status: "Por verificar",
+                                            date: Date.now(),
+                                            comment: null
+                                        }
+                                    )
+                                }
+
+                                steps.push(
+                                    {
+                                        employee_id: employee.id,
+                                        step_id: stages[x].steps[y].id,
+                                        tip_completed: 0,
+                                        icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                        state: 'incompleto'
+                                    }
+                                )
+                            }
+                        }
+                    })
+                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                    await models.employee_step.bulkCreate(steps, { transaction: t });
+                    for (let i = 0; i < languages.length; i++) {
+                        await employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } }, { transaction: t });
+                    }
+                    return employee;
+                });
+                return res.status(200).json({ status: true, message: "Impulsor creado correctamente", data: result });
+
+            } catch (err) {
+                console.log(err);
+                res.status(200).json({ status: false, message: "Error al crear impulsor" });
+            }
         }
     },
+
     updateEmployee: async (req, res) => {
         const user_id = req.body.user_id;
         try {
@@ -137,6 +196,7 @@ module.exports = {
                 });
         }
     },
+
     updateTypes: async (req, res) => {
         const user_id = req.body.user_id;
         const types = req.body.types;
@@ -157,6 +217,7 @@ module.exports = {
                 });
         }
     },
+
     listEmployeeById: async (req, res) => {
 
         var user_id = req.params.user_id;

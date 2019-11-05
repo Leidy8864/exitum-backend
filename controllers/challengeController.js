@@ -282,5 +282,33 @@ module.exports = {
         } else {
             return res.json({ status: false, message: "No existe el inpulsor" })
         }
-    }
+    },
+
+    listStepEmployee: async (req, res) => {
+        const { step_id, user_id } = req.query
+        const employee = await models.employee.findOne({ attributes: ['id'], where: { id: user_id } })
+        models.step.findOne({
+            where: { id: step_id },
+            include: [
+                {
+                    model: models.challenge,
+                    where: { employee_id: employee.id },
+                    include: [
+                        {
+                            model: models.tip,
+                            include: [
+                                { model: models.file_tip }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }).then(step => {
+            return res.json({ status: true, message: "Listado de retos por nivel del impulsor", data: step })
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Vuelva a intentarlo" })
+        })
+    },
+
 }
