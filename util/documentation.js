@@ -292,12 +292,13 @@
  * @apiParam {String} name Nombre(s) del usuario actualizado.
  * @apiParam {String} lastname Apellido(s) del usuario actualizado.
  * @apiParam {String} phone Telefono del usuario actualizado.
+ * @apiParam {Date} birthday Fecha de nacimiento del usuario.
+ * @apiParam {Number} skill_id Skill que desean destacar [opcional].
  * @apiParam {Boolean} active False cuando se quiere eliminar al usuario.
  * @apiParam {String} rol Nuevo rol del usuario ('entrepreneur', 'employee', 'admin').
  * @apiParam {File} photo Imagen del usuario
  * *
 	* @apiParamExample {querystring} Ejemplo url
-	/users/update
     {
         "user_id": 2
         "name": "Leidy Paula"
@@ -305,7 +306,9 @@
         "phone": "1523456789"
         "active": "true"
         "role": "entrepreneur"
-        "photo": "image.png"
+        "photo": "image.png",
+        "birthday": '1998-05-20,
+        "skill_id": 1
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -314,6 +317,27 @@
 	{
         "status": true,
         "message": "Usuario actualizado correctamente"
+        "data": {
+            "id": 1,
+            "name": "Usuario",
+            "lastname": "Usuario",
+            "email": "usuario@gmail.com",
+            "provider_id": null,
+            "confirmed": true,
+            "phone": null,
+            "role": "employee",
+            "method": "local",
+            "active": true,
+            "last_login": null,
+            "photo": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "from_hour": "07:00:00",
+            "to_hour": "22:00:00",
+            "birthday": "1999-12-12",
+            "country_id": 1,
+            "currency_id": 1
+        }
     }
  *
  *
@@ -344,7 +368,27 @@
     {
         "status": true,
         "message": "(...)",
-        "data": {  }
+        "data": {
+            "id": 1,
+            "name": "Usuario",
+            "lastname": "Usuario",
+            "email": "usuario@gmail.com",
+            "provider_id": null,
+            "confirmed": true,
+            "phone": null,
+            "role": "employee",
+            "method": "local",
+            "active": true,
+            "last_login": null,
+            "photo": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "from_hour": "07:00:00",
+            "to_hour": "22:00:00",
+            "birthday": "1999-12-12",
+            "country_id": 1,
+            "currency_id": 1
+        }
     }
  *
  *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.

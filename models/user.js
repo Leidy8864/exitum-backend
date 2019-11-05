@@ -35,7 +35,7 @@ module.exports = (sequelize, DataType) => {
       avg_rating: DataType.FLOAT(3, 2),
       from_hour: Sequelize.TIME,
       to_hour: Sequelize.TIME,
-      // birthday: DataType.DATE,
+      birthday: DataType.DATE,
       country_id: {
         type: DataType.INTEGER,
         references: {

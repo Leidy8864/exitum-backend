@@ -58,7 +58,7 @@ module.exports = {
             const { user_id, skills } = req.body
 
             const user = await existById(models.user, user_id)
-            const user_skill = user.getToUserSkills()
+            const user_skill = await user.getToUserSkills()
 
             var skills_id = await Promise.all(skills.map(async element => {
                 var [response, created] = await models.skill.findOrCreate({
@@ -71,13 +71,23 @@ module.exports = {
             }
             ))
 
-            if (user_skill.length != 0) {
-                console.log("elemento"+user_skill.length)
+            await user.addToUserSkills(skills_id)
+            
+            if (user_skill.length <= 0) {
+                await models.skill_user.update(
+                    { highlight: 1 },
+                    { where: {
+                        [Sequelize.Op.and]: [
+                            { user_id: user.id },
+                            { skill_id: skills_id[0] },
+                        ]
+                    }
+                })
             }
+            
 
-            user.addToUserSkills(skills_id)
 
-            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: {  } });
+            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: user_skill.da });
 
         } catch (error) {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error });
@@ -136,5 +146,29 @@ module.exports = {
             res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {} });
         }
 
+    },
+
+    highlight: async (user_id, skill_id) => {
+
+        const highlight = await models.skill_user.findOne({ 
+            where: { [Sequelize.Op.and]: [
+                { user_id: user_id },
+                { highlight: 1 }
+            ]}
+         })
+
+        if(highlight.skill_id != skill_id && skill_id != null && highlight != null) {
+            await highlight.update({ highlight: 0 })
+            await models.skill_user.update(
+                { highlight: 1 },
+                { where: {
+                    [Sequelize.Op.and]: [
+                        { user_id: user_id },
+                        { skill_id: skill_id },
+                    ]
+                }
+            })
+        }
+        
     }
 }

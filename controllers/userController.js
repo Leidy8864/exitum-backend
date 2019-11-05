@@ -1,5 +1,7 @@
 const helper = require('../libs/helper');
 const models = require('../models/index');
+const { highlight } = require('./skillController')
+const Sequelize = require('sequelize')
 const config = require('../config/index');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -491,7 +493,7 @@ module.exports = {
             
             const user = await models.user.findOne({ 
                 where: { id: user_id } ,
-                attributes: ['id', 'photo']
+                attributes: { exclude: ['password'] }
             });
 
             if (user) {
@@ -500,7 +502,7 @@ module.exports = {
                     throw ('Se necesita una imagen.')
                 }
 
-                if (user.photo != null || user.photo != '') {
+                if (user.photo != null || user.phocto != '') {
                     s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[6]);
                 }
 
@@ -527,21 +529,24 @@ module.exports = {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(400).json({ errors: errors.array() });
             res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
+
         try {
 
             var fileName = null;
-            const user = await models.user.findOne({ where: { id: req.body.user_id } });
+            const user = await models.user.findOne({ 
+                where: { id: req.body.user_id },
+                attributes: { exclude: ['password'] }
+            });
 
             if (user) {
 
-                // if (user.photo) {
-                //     console.log("Errrror papa", user.photo);
-                //     s3.deleteObject(NEW_BUCKET_NAME, user.photo);
-                // }
                 if (req.files) {
+
+                    if (user.photo) {
+                        s3.deleteObject(NEW_BUCKET_NAME, user.photo);
+                    }
                     var photo = req.files.photo;
                     fileName = s3.putObject(NEW_BUCKET_NAME, photo);
                 }
@@ -552,8 +557,11 @@ module.exports = {
                     phone: req.body.phone,
                     photo: fileName,
                     active: req.body.active || true,
-                    role: req.body.role
+                    role: req.body.role,
+                    birthday: req.body.birthday
                 });
+
+                await highlight(user.id, req.body.skill_id || null)
 
                 if (req.body.role === "entrepreneur") {
 
@@ -565,13 +573,14 @@ module.exports = {
                         });
                     }
                 }
+
                 return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
         } catch (error) {
             console.log("Errrror", error);
-            return res.json({ status: false, message: "Error al actualizar el usuario", });
+            return res.json({ status: false, message: "Error al actualizar el usuario", data: error });
         }
     },
 
@@ -605,6 +614,10 @@ module.exports = {
                             model: models.skill,
                             as: 'toUserSkills',
                             attributes: { exclude: [ 'icon' ] }
+                        },
+                        {
+                            model: models.experience,
+                            as: 'experience'
                         }
                     ],
 

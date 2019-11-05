@@ -5594,7 +5594,7 @@
         },
         {
           "title": "Datos retornados",
-          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"(...)\",\n    \"data\": {  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"status\": true,\n    \"message\": \"(...)\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Usuario\",\n        \"lastname\": \"Usuario\",\n        \"email\": \"usuario@gmail.com\",\n        \"provider_id\": null,\n        \"confirmed\": true,\n        \"phone\": null,\n        \"role\": \"employee\",\n        \"method\": \"local\",\n        \"active\": true,\n        \"last_login\": null,\n        \"photo\": null,\n        \"photo_dni\": null,\n        \"avg_rating\": null,\n        \"from_hour\": \"07:00:00\",\n        \"to_hour\": \"22:00:00\",\n        \"birthday\": \"1999-12-12\",\n        \"country_id\": 1,\n        \"currency_id\": 1\n    }\n}",
           "type": "json"
         }
       ]
@@ -6851,6 +6851,20 @@
           },
           {
             "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "birthday",
+            "description": "<p>Fecha de nacimiento del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_id",
+            "description": "<p>Skill que desean destacar [opcional].</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Boolean",
             "optional": false,
             "field": "active",
@@ -6875,7 +6889,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "\t/users/update\n    {\n        \"user_id\": 2\n        \"name\": \"Leidy Paula\"\n        \"lastname\": \"Callupe Santisteban\"\n        \"phone\": \"1523456789\"\n        \"active\": \"true\"\n        \"role\": \"entrepreneur\"\n        \"photo\": \"image.png\"\n    }",
+          "content": "{\n    \"user_id\": 2\n    \"name\": \"Leidy Paula\"\n    \"lastname\": \"Callupe Santisteban\"\n    \"phone\": \"1523456789\"\n    \"active\": \"true\"\n    \"role\": \"entrepreneur\"\n    \"photo\": \"image.png\",\n    \"birthday\": '1998-05-20,\n    \"skill_id\": 1\n}",
           "type": "querystring"
         }
       ]
@@ -6902,7 +6916,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"message\": \"Usuario actualizado correctamente\"\n    }",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Usuario actualizado correctamente\"\n        \"data\": {\n            \"id\": 1,\n            \"name\": \"Usuario\",\n            \"lastname\": \"Usuario\",\n            \"email\": \"usuario@gmail.com\",\n            \"provider_id\": null,\n            \"confirmed\": true,\n            \"phone\": null,\n            \"role\": \"employee\",\n            \"method\": \"local\",\n            \"active\": true,\n            \"last_login\": null,\n            \"photo\": null,\n            \"photo_dni\": null,\n            \"avg_rating\": null,\n            \"from_hour\": \"07:00:00\",\n            \"to_hour\": \"22:00:00\",\n            \"birthday\": \"1999-12-12\",\n            \"country_id\": 1,\n            \"currency_id\": 1\n        }\n    }",
           "type": "json"
         }
       ]
