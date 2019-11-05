@@ -321,12 +321,16 @@ module.exports = {
                     include: [{
                         model: models.entrepreneur,
                     }]
+                },
+                {
+                    model: models.area
                 }
             ]
         }).then(ads => {
             models.advertisement.count({
                 where: {
-                    state: 'active'
+                    state: 'active',
+                    id: { [models.Sequelize.Op.notIn]: prop_ads_id }
                 },
                 include: [
                     {
