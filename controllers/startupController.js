@@ -66,6 +66,9 @@ module.exports = {
                         }, { transaction: t });
 
                         await models.stage.findAll({
+                            where: {
+                                type: 'startup'
+                            },
                             include: [
                                 {
                                     model: models.step,
@@ -108,8 +111,7 @@ module.exports = {
                             }
                         })
                         await models.challenge.bulkCreate(chlls, { transaction: t });
-                        const step = await models.step.findOne({ attributes: ['id'], where: { stage_id: stage_id } })
-                        await models.startup_step.bulkCreate(steps, { transaction: t })
+                        await models.startup_step.bulkCreate(steps, { transaction: t });
                     });
                     return res.json({ status: true, message: "Startup creado correctamente" });
                 }

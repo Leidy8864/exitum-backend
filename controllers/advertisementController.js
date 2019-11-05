@@ -217,10 +217,9 @@ module.exports = {
         try {
 
             var entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
-            console.log(entrepreneur.id)
             const whereConsult = {
                 state: req.query.state,
-                '$startup.entrepreneur.id$': entrepreneur.id
+                //'$startup.entrepreneur.id$': entrepreneur.id
             };
 
             if (entrepreneur) {
@@ -234,27 +233,35 @@ module.exports = {
                                 model: models.startup,
                                 include: [{
                                     model: models.entrepreneur,
+                                    where: {
+                                        id: entrepreneur.id
+                                    }
                                 }]
                             },
-                            // {
-                            //     model: models.proposal
-                            // }
+                            {
+                                model: models.proposal
+                            }
                         ]
                     }
                 ).then(advertisements => {
                     models.advertisement.count({
-                        where: whereConsult,
+                        where: {
+                            state: req.query.state,
+                            '$startup.entrepreneur.id$': entrepreneur.id
+                        },
                         include: [
                             {
                                 model: models.startup,
-                                include: [
-                                    {
-                                        model: models.entrepreneur
+                                include: [{
+                                    model: models.entrepreneur,
+                                    where: {
+                                        id: entrepreneur.id
                                     }
-                                ],
+                                }]
                             }
                         ]
                     }).then(totalRows => {
+                        console.log(totalRows)
                         return res.status(200).json({
                             status: true, message: "OK",
                             data: advertisements,
