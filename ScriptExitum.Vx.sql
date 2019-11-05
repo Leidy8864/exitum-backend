@@ -1148,6 +1148,24 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`unavailable`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`unavailable` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `time` TIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_unavailable_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_unavailable_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `exitum`.`schedule`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`schedule` (
@@ -1370,6 +1388,34 @@ CREATE TABLE IF NOT EXISTS `exitum`.`skill_user` (
   CONSTRAINT `fk_user_has_skill_skill2`
     FOREIGN KEY (`skill_id`)
     REFERENCES `exitum`.`skill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `exitum`.`appointment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`appointment` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `from_user_id` INT(11) NOT NULL,
+  `to_user_id` INT(11) NOT NULL,
+  `date` DATE NULL,
+  `time` TIME NULL,
+  `type` ENUM('reunion', 'recordatorio') NULL,
+  `description` TEXT NULL,
+  `status` TINYINT(1) NULL,
+  INDEX `fk_user_has_user_user2_idx` (`to_user_id` ASC),
+  INDEX `fk_user_has_user_user1_idx` (`from_user_id` ASC),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_user_has_user_user1`
+    FOREIGN KEY (`from_user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_user_user2`
+    FOREIGN KEY (`to_user_id`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
