@@ -561,7 +561,8 @@ module.exports = {
                     birthday: req.body.birthday
                 });
 
-                await highlight(user.id, req.body.skill_id || null)
+
+                await highlight(user, req.body.skill_id)
 
                 if (req.body.role === "entrepreneur") {
 

@@ -148,26 +148,32 @@ module.exports = {
 
     },
 
-    highlight: async (user_id, skill_id) => {
+    highlight: async (user, skill_id) => {
 
-        const highlight = await models.skill_user.findOne({ 
-            where: { [Sequelize.Op.and]: [
-                { user_id: user_id },
-                { highlight: 1 }
-            ]}
-         })
+        var data = await user.getToUserSkills();
 
-        if(highlight.skill_id != skill_id && skill_id != null && highlight != null) {
-            await highlight.update({ highlight: 0 })
-            await models.skill_user.update(
-                { highlight: 1 },
-                { where: {
-                    [Sequelize.Op.and]: [
-                        { user_id: user_id },
-                        { skill_id: skill_id },
-                    ]
-                }
-            })
+        if (data.length > 0) {
+
+            const highlight = await models.skill_user.findOne({ 
+                where: { [Sequelize.Op.and]: [
+                    { user_id: user.id },
+                    { highlight: 1 }
+                ]}
+             })
+    
+            if(highlight.skill_id != skill_id && skill_id != null && highlight != null) {
+                await highlight.update({ highlight: 0 })
+                await models.skill_user.update(
+                    { highlight: 1 },
+                    { where: {
+                        [Sequelize.Op.and]: [
+                            { user_id: user.id },
+                            { skill_id: skill_id },
+                        ]
+                    }
+                })
+            }
+            
         }
         
     }
