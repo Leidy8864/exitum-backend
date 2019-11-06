@@ -1,3 +1,4 @@
+const text = require('../libs/text')
 const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { existById } = require('./elementController')
@@ -11,7 +12,6 @@ module.exports = {
         var message_numeric = "Este campo debe ser numérico";
         switch (method) {
             case 'create':
-
                 return [
                     check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('position', message_exists).exists(),
@@ -19,9 +19,8 @@ module.exports = {
                     check('company_name', message_exists).exists(),
                 ]
             case 'update':
-
                 return [
-                    check('experience_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('experience_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                 ]
         }
