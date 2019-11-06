@@ -268,16 +268,16 @@ module.exports = {
                 throw('Oops! No se encontró certificado existente.')
             }
 
-            if (certification.document_url != null) {
+            if (certification.document_url  && certification.document_url != '') {
                 s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6]);
             }
     
             await certification.destroy()
 
-            return res.status(200).json({ status: true, message: "Certificado borrado correctamente.", data: {  } });
+            return res.status(200).json({ status: true, message: "Certificado borrado correctamente.", data: certification });
             
         } catch (error) {
-            res.status(200).json({ status: false, message: (error.message) ? error.message : error });
+            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: error });
         }
 
     }

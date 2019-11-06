@@ -292,12 +292,13 @@
  * @apiParam {String} name Nombre(s) del usuario actualizado.
  * @apiParam {String} lastname Apellido(s) del usuario actualizado.
  * @apiParam {String} phone Telefono del usuario actualizado.
+ * @apiParam {Date} birthday Fecha de nacimiento del usuario.
+ * @apiParam {Number} skill_id Skill que desean destacar [opcional].
  * @apiParam {Boolean} active False cuando se quiere eliminar al usuario.
  * @apiParam {String} rol Nuevo rol del usuario ('entrepreneur', 'employee', 'admin').
  * @apiParam {File} photo Imagen del usuario
  * *
 	* @apiParamExample {querystring} Ejemplo url
-	/users/update
     {
         "user_id": 2
         "name": "Leidy Paula"
@@ -305,7 +306,9 @@
         "phone": "1523456789"
         "active": "true"
         "role": "entrepreneur"
-        "photo": "image.png"
+        "photo": "image.png",
+        "birthday": '1998-05-20,
+        "skill_id": 1
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -314,6 +317,89 @@
 	{
         "status": true,
         "message": "Usuario actualizado correctamente"
+        "data": {
+            "id": 1,
+            "name": "Usuario",
+            "lastname": "Usuario",
+            "email": "usuario@gmail.com",
+            "provider_id": null,
+            "confirmed": true,
+            "phone": null,
+            "role": "employee",
+            "method": "local",
+            "active": true,
+            "last_login": null,
+            "photo": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "from_hour": "07:00:00",
+            "to_hour": "22:00:00",
+            "birthday": "1999-12-12",
+            "country_id": 1,
+            "currency_id": 1
+        }
+    }
+ *
+ *
+ */
+
+  /**
+ *
+ * @api {POST} /users/update-image POST update image user
+ * @apiName Actualizar imagen de usuario
+ * @apiExample Request parameter
+ * http://35.175.241.103:8081/users/update-image
+ * @apiGroup USER
+ * 
+ * @apiVersion 1.0.0
+ * @apiDescription Horas disponible.
+ * @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que realizará que desea actualizar.
+ * @apiSuccess (Datos requeridos) {File} photo Imagen la cual desea actualizar.
+ * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+ * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+ * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+ * @apiSuccessExample {json} Datos requeridos
+    {
+        "user_id": 1,
+        "photo": "image.png"
+    }
+ *@apiSuccessExample { json } Datos retornados
+    HTTP/1.1 200 OK
+    {
+        "status": true,
+        "message": "(...)",
+        "data": {
+            "id": 1,
+            "name": "Usuario",
+            "lastname": "Usuario",
+            "email": "usuario@gmail.com",
+            "provider_id": null,
+            "confirmed": true,
+            "phone": null,
+            "role": "employee",
+            "method": "local",
+            "active": true,
+            "last_login": null,
+            "photo": null,
+            "photo_dni": null,
+            "avg_rating": null,
+            "from_hour": "07:00:00",
+            "to_hour": "22:00:00",
+            "birthday": "1999-12-12",
+            "country_id": 1,
+            "currency_id": 1
+        }
+    }
+ *
+ *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+ *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+ *@apiError (Error retornado) {Object}  data Contenido retornado
+ *@apiErrorExample  Error
+    HTTP/1.1 4xx Error
+    {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
     }
  *
  *
@@ -473,47 +559,6 @@
 	{
         "status": 200,
         "message": "Eliminado correctamente"
-    }
- *
- *
- */
-
-/** 
- *
- * @api {POST} /users/update-image/:user_id POST update user image profile
- * @apiName Actualización de imagen de pérfil
- * @apiParam {Number} user_id ID del usuario que actualizará su imagen.
- * @apiExample Request parameter
- * http://35.175.241.103:8081/users/update-image/1
- * @apiGroup USER
- * 
- * @apiVersion 1.0.0
- * @apiDescription Horas disponible.
- * @apiSuccess (Datos requeridos) {File} photo Nueva imagen de perfil de usuario.
- * @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
- * @apiSuccess (Datos retornados) {String} message Mensaje retornado.
- * @apiSuccess (Datos retornados) {Object} data Contenido retornado.
- * @apiSuccessExample {json} Datos requeridos
-    {
-        "file": "nueva-image",
-    }
- *@apiSuccessExample { json } Datos retornados
-    HTTP/1.1 200 OK
-    {
-        "status": true,
-        "message": "(...)",
-        "data": {  }
-    }
- *
- *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
- *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
- *@apiError (Error retornado) {Object}  data Contenido retornado
- *@apiErrorExample  Error
-    HTTP/1.1 4xx Error
-    {
-        "status" : false,
-        "message": "(...)",
-        "data":  { }
     }
  *
  *
@@ -2993,7 +3038,7 @@
  * @apiSuccessExample {json} Datos requeridos
     {
         "user_id": 1,
-        "certification_id": "Cisco Certification"
+        "certification_id": 1
     }
  *@apiSuccessExample { json } Datos retornados
     HTTP/1.1 200 OK

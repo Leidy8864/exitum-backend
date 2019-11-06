@@ -20,9 +20,9 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id'
             }
         },
-        // highlight: {
-        //     type: Sequelize.TINYINT
-        // }
+        highlight: {
+            type: Sequelize.TINYINT
+        }
     },
     {
         freezeTableName: true,

@@ -35,28 +35,33 @@ module.exports = {
         try {
             const result = await models.sequelize.transaction(async (t) => {
 
-                const advertisement = await models.advertisement.create({
-                    title: req.body.title,
-                    description: req.body.description,
-                    state: 'active',
-                    area_id: req.body.area_id,
-                    startup_id: req.body.startup_id,
-                    created_at: Date.now()
-                }, { transaction: t });
+                const ads = await models.advertisement.findOne({ where: { title: req.body.title } });
+                if (ads) {
+                    return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." })
+                } else {
+                    const advertisement = await models.advertisement.create({
+                        title: req.body.title,
+                        description: req.body.description,
+                        state: 'active',
+                        area_id: req.body.area_id,
+                        startup_id: req.body.startup_id,
+                        created_at: Date.now()
+                    }, { transaction: t });
 
-                const { skills } = req.body
-                var skills_id = await Promise.all(skills.map(async element => {
-                    var [response, created] = await models.skill.findOrCreate({
-                        where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
-                        defaults: {
-                            skill: element
-                        }
-                    })
-                    return await response.id
+                    const { skills } = req.body
+                    var skills_id = await Promise.all(skills.map(async element => {
+                        var [response, created] = await models.skill.findOrCreate({
+                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                            defaults: {
+                                skill: element
+                            }
+                        })
+                        return await response.id
+                    }
+                    ))
+                    await advertisement.addSkill(skills_id, { transaction: t });
+                    return advertisement;
                 }
-                ))
-                await advertisement.addSkill(skills_id, { transaction: t });
-                return advertisement;
             });
 
             return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
@@ -241,19 +246,24 @@ module.exports = {
                             {
                                 model: models.proposal
                             },
-                            {
-                                model: models.advertisement_skill,
-                                as: 'advertisement_skill',
-                                include: [
-                                    {
-                                        model: models.skill,
-                                        as: 'toUserSkill',
-                                        include: [
-                                            { model: models.user }
-                                        ]
-                                    }
-                                ]
-                            }
+                            // {
+                            //     model: models.advertisement_skill,
+                            //     as: 'advertisement_skills',
+                            //     include: [
+                            //         {
+                            //             model: models.skill,
+                            //             as: 'skill',
+                            //             include: [
+                            //                 {
+                            //                     model: models.user,
+                            //                     as: 'toSkillUsers',
+                            //                     attributes: ['id', 'name']
+                            //                 }
+                            //             ]
+                            //         }
+                            //     ],
+                            //     group: ['advertisement_id']
+                            // },
                         ]
                     }
                 ).then(advertisements => {
@@ -274,6 +284,7 @@ module.exports = {
                             }
                         ]
                     }).then(totalRows => {
+                        console.log(advertisements.length)
                         console.log(totalRows)
                         return res.status(200).json({
                             status: true, message: "OK",

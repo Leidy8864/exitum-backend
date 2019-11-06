@@ -13,4 +13,9 @@ router.post('/create', controller.validate('create'), function (req, res) {
 router.post('/update',  controller.validate('update'), function (req, res) {
     controller.updateEducation(req, res);
 });
+
+router.post('/delete',
+  controller.delete
+);
+
 module.exports = router;

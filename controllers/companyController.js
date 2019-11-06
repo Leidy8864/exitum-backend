@@ -7,6 +7,17 @@ const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/company-icons';
 
 const { check, validationResult } = require('express-validator');
 
+async function createCompany (name) {
+
+    var [ company, created ] = await  models.company.findOrCreate({
+        where: { name: name },
+        defaults: {
+            name: name,
+        }
+    })
+    return await company
+}
+
 module.exports = {
     validate: (company) => {
 
@@ -33,18 +44,15 @@ module.exports = {
         }
     },
 
+    createCompany: createCompany,
+
     create: async(req, res) => {
 
         const { name } = req.body
 
         try {
             
-            var [ company, created ] = await  models.company.findOrCreate({
-                where: { name: name },
-                defaults: {
-                    name: name,
-                }
-            })
+            const company = await createCompany(name)
 
             if ( !created ) deleteObject(NEW_BUCKET_NAME, company.icon);
             if (req.files) {
