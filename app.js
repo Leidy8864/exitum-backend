@@ -61,7 +61,7 @@ app.use('/areas', areaRouter);
 app.use('/certifications', certificationRouter);
 app.use('/companies', companyRouter);
 app.use('/appointments', appointmentRouter);
-app.use('/university', universityRouter);
+app.use('/universities', universityRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
