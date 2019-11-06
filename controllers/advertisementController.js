@@ -3,19 +3,19 @@ const models = require('../models/index');
 
 const { check, validationResult } = require('express-validator');
 
-function generateSlug(string){
+function generateSlug(string) {
     const a = 'àáäâãåăæçèéëêǵḧìíïîḿńǹñòóöôœøṕŕßśșțùúüûǘẃẍÿź·/_,:;'
     const b = 'aaaaaaaaceeeeghiiiimnnnooooooprssstuuuuuwxyz------'
     const p = new RegExp(a.split('').join('|'), 'g')
-  
+
     return string.toString().toLowerCase()
-      .replace(/\s+/g, '-') // Replace spaces with -
-      .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
-      .replace(/&/g, '-and-') // Replace & with 'and'
-      .replace(/[^\w\-]+/g, '') // Remove all non-word characters
-      .replace(/\-\-+/g, '-') // Replace multiple - with single -
-      .replace(/^-+/, '') // Trim - from start of text
-      .replace(/-+$/, '') // Trim - from end of text
+        .replace(/\s+/g, '-') // Replace spaces with -
+        .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+        .replace(/&/g, '-and-') // Replace & with 'and'
+        .replace(/[^\w\-]+/g, '') // Remove all non-word characters
+        .replace(/\-\-+/g, '-') // Replace multiple - with single -
+        .replace(/^-+/, '') // Trim - from start of text
+        .replace(/-+$/, '') // Trim - from end of text
 }
 
 module.exports = {
@@ -47,7 +47,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
-        const ads = await models.advertisement.findOne({ where: { title: req.body.title } });
+        const ads = await models.advertisement.findOne({ where: { startup_id: req.body.startup_id, title: req.body.title } });
         if (ads) {
             return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." })
         } else {
