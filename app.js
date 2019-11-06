@@ -24,6 +24,7 @@ var areaRouter = require('./routes/area');
 var certificationRouter = require('./routes/certification');
 var companyRouter = require('./routes/company');
 var appointmentRouter = require('./routes/appointment');
+var universityRouter = require('./routes/university');
 //const controller = require('./controllers/userController');
 
 var app = express();
@@ -60,6 +61,7 @@ app.use('/areas', areaRouter);
 app.use('/certifications', certificationRouter);
 app.use('/companies', companyRouter);
 app.use('/appointments', appointmentRouter);
+app.use('/universities', universityRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
