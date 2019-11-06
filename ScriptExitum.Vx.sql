@@ -192,7 +192,6 @@ CREATE TABLE IF NOT EXISTS `exitum`.`advertisement` (
   `slug` VARCHAR(255) NULL DEFAULT NULL,
   `startup_id` INT(11) NOT NULL,
   `area_id` INT(11) NOT NULL,
-  `slug` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_project_startup1_idx` (`startup_id` ASC),
   INDEX `fk_advertisement_area1_idx` (`area_id` ASC),
