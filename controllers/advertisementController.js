@@ -3,6 +3,21 @@ const models = require('../models/index');
 
 const { check, validationResult } = require('express-validator');
 
+function generateSlug(string) {
+    const a = 'àáäâãåăæçèéëêǵḧìíïîḿńǹñòóöôœøṕŕßśșțùúüûǘẃẍÿź·/_,:;'
+    const b = 'aaaaaaaaceeeeghiiiimnnnooooooprssstuuuuuwxyz------'
+    const p = new RegExp(a.split('').join('|'), 'g')
+
+    return string.toString().toLowerCase()
+        .replace(/\s+/g, '-') // Replace spaces with -
+        .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+        .replace(/&/g, '-and-') // Replace & with 'and'
+        .replace(/[^\w\-]+/g, '') // Remove all non-word characters
+        .replace(/\-\-+/g, '-') // Replace multiple - with single -
+        .replace(/^-+/, '') // Trim - from start of text
+        .replace(/-+$/, '') // Trim - from end of text
+}
+
 module.exports = {
     //Función encargada de validar los campos que se reciben desde el FrontEnd
     validate: (method) => {
@@ -32,37 +47,44 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
-        try {
-            const result = await models.sequelize.transaction(async (t) => {
+        const ads = await models.advertisement.findOne({ where: { startup_id: req.body.startup_id, title: req.body.title } });
+        if (ads) {
+            return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." })
+        } else {
+            try {
+                const result = await models.sequelize.transaction(async (t) => {
+                    const advertisement = await models.advertisement.create({
+                        title: req.body.title,
+                        description: req.body.description,
+                        state: 'active',
+                        area_id: req.body.area_id,
+                        startup_id: req.body.startup_id,
+                        created_at: Date.now(),
+                        slug: generateSlug(req.body.title)
+                    }, { transaction: t });
 
-                const advertisement = await models.advertisement.create({
-                    title: req.body.title,
-                    description: req.body.description,
-                    state: 'active',
-                    area_id: req.body.area_id,
-                    startup_id: req.body.startup_id,
-                    created_at: Date.now()
-                }, { transaction: t });
-
-                const { skills } = req.body
-                var skills_id = await Promise.all(skills.map(async element => {
-                    var [response, created] = await models.skill.findOrCreate({
-                        where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
-                        defaults: {
-                            skill: element
+                    const { skills } = req.body
+                    if (skills) {
+                        var skills_id = await Promise.all(skills.map(async element => {
+                            var [response, created] = await models.skill.findOrCreate({
+                                where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    skill: element
+                                }
+                            })
+                            return await response.id
                         }
-                    })
-                    return await response.id
-                }
-                ))
-                await advertisement.addSkill(skills_id, { transaction: t });
-                return advertisement;
-            });
+                        ))
+                    }
+                    await advertisement.addSkill(skills_id, { transaction: t });
+                    return advertisement;
 
-            return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
-        } catch (error) {
-            console.log(error);
-            res.status(200).json({ status: false, message: "Error al crear anuncio" });
+                });
+                return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
+            } catch (error) {
+                console.log(error);
+                res.status(200).json({ status: false, message: "Error al crear anuncio" });
+            }
         }
     },
 
@@ -240,7 +262,25 @@ module.exports = {
                             },
                             {
                                 model: models.proposal
-                            }
+                            },
+                            // {
+                            //     model: models.advertisement_skill,
+                            //     as: 'advertisement_skills',
+                            //     include: [
+                            //         {
+                            //             model: models.skill,
+                            //             as: 'skill',
+                            //             include: [
+                            //                 {
+                            //                     model: models.user,
+                            //                     as: 'toSkillUsers',
+                            //                     attributes: ['id', 'name']
+                            //                 }
+                            //             ]
+                            //         }
+                            //     ],
+                            //     group: ['advertisement_id']
+                            // },
                         ]
                     }
                 ).then(advertisements => {
@@ -261,6 +301,7 @@ module.exports = {
                             }
                         ]
                     }).then(totalRows => {
+                        console.log(advertisements.length)
                         console.log(totalRows)
                         return res.status(200).json({
                             status: true, message: "OK",

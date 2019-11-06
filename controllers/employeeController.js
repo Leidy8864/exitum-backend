@@ -33,7 +33,7 @@ module.exports = {
                 ]
         }
     },
-    
+
     create: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -111,7 +111,7 @@ module.exports = {
                     await models.challenge.bulkCreate(chlls, { transaction: t });
                     await models.employee_step.bulkCreate(steps, { transaction: t });
                     for (let i = 0; i < languages.length; i++) {
-                        await employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } }, { transaction: t });
+                        employee.addLanguage(languages[i].language_id, { through: { level_id: languages[i].level_id } }, { transaction: t });
                     }
                     return employee;
                 });

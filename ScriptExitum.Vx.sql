@@ -189,6 +189,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`advertisement` (
   `description` TEXT NULL DEFAULT NULL,
   `state` ENUM('active', 'closed', 'archived') NULL DEFAULT NULL,
   `created_at` DATETIME NULL DEFAULT NULL,
+  `slug` VARCHAR(255) NULL DEFAULT NULL,
   `startup_id` INT(11) NOT NULL,
   `area_id` INT(11) NOT NULL,
   `slug` VARCHAR(255) NULL DEFAULT NULL,
@@ -1675,3 +1676,7 @@ insert into `exitum`.`file_tip`(id, name, tip_id) values
 (25, "Business_Model_Canvas.docx", 25);
 
 INSERT INTO `exitum`.`type` (`id`, `type`) VALUES ('1', 'Hormiga');
+
+INSERT INTO `exitum`.`level` (`id`, `level`) VALUES ('1', 'Basico');
+INSERT INTO `exitum`.`level` (`id`, `level`) VALUES ('2', 'Intermedio');
+INSERT INTO `exitum`.`level` (`id`, `level`) VALUES ('3', 'Avanzado');

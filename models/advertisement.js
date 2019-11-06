@@ -5,6 +5,7 @@ module.exports = (sequelize, DataType) => {
         title: DataType.STRING,
         description: DataType.TEXT,
         state: DataType.ENUM('active', 'closed', 'archived'),
+        slug: DataType.STRING,
         area_id: {
             type: DataType.INTEGER,
             allowNull: false,
