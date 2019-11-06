@@ -1,7 +1,9 @@
-const models = require('../models/index');
 const Sequelize = require('sequelize');
+const models = require('../models/index');
 const { existById } = require('./elementController')
+const { createUniversity } = require('./universityController')
 const { check, validationResult } = require('express-validator');
+const  { successful, returnError } = require('./responseController')
 
 module.exports = {
     validate: (method) => {
@@ -18,11 +20,8 @@ module.exports = {
                 ]
             case 'update':
                 return [
-                    check('university_name').exists().withMessage(message_exists),
-                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check('education_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
-                    check('date_start').exists().withMessage(message_exists),
-                    check('date_end').exists().withMessage(message_exists)
+                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric)
                 ]
         }
     },
@@ -34,82 +33,110 @@ module.exports = {
         try {
 
             const user = await existById(models.user, user_id)
+
             var education = await user.getEducation({
-                attributes: [ 'id', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%d/%m/%Y' ), 'date_start' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%d/%m/%Y' ), 'date_end' ] ],
-                include: [ 
-                    {model: models.university}
-                ]
+                attributes: [ 'id', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ] ],
+                include: [ { model: models.university } ]
             })
 
             return res.json({ status: true, message: "OK.", data: education });
 
-        } catch (error) {
-            return res.json({ status: false, message: (error.message) ? error.message : error, data: {  } });
-        }
+        } catch (error) { return res.json({ status: false, message: (error.message) ? error.message : error, data: {  } }); }
+        
     },
 
     createEducation: async (req, res) => {
+
         var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
-        }
-        var user_id = req.body.user_id
+        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+
+        const { user_id, university_name, description, date_start, date_end } = req.body
         try {
-            const user = await models.user.findByPk(user_id);
-            if (user) {
+            
+            const user = await existById(models.user, user_id);
 
-                var [ university, created ] = await  models.university.findOrCreate({
-                    where: { university: { [Sequelize.Op.like]  : '%' + req.body.university_name + '%'} },
-                    defaults: {
-                        university: req.body.university_name
-                    }
-                })
+            const university = await createUniversity(university_name)
 
-                const education = await models.education.create({
-                    user_id: user.id,
-                    description: req.body.description,
-                    date_start: req.body.date_start,
-                    date_end: req.body.date_end,
-                    university_id: university.id
-                });
+            const education = await models.education.create({
+                user_id: user.id,
+                description: description,
+                date_start: date_start,
+                date_end: date_end,
+                university_id: university.id
+            });
 
-                return res.status(200).json({ status: true, message: "Educación del empleado creada correctamente", data: education });
-            }
-            else {
-                return res.status(200).json({ status: false, message: "No existe el empleado" });
-            }
+            successful(res, 'Educación asignada correctamente.', education)
 
-        } catch (error) {
-            console.log(error);
-            res.status(200).json({ status: false, message: "Error al registrar la educación del empleado" });
-        }
+        } catch (error) { returnError(res, error) }
+        
     },
 
     updateEducation: async (req, res) => {
-        const education_id = req.body.education_id;
-        try {
-            const education = await models.education.findByPk(education_id);
 
-            var [ university, created ] = await  models.university.findOrCreate({
-                where: { university: { [Sequelize.Op.like]  : '%' + req.body.university_name + '%'} },
-                defaults: {
-                    university: req.body.university_name
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+
+        const { education_id, user_id, university_name, description, date_start, date_end } = req.body
+        
+        try {
+
+            var education = await models.education.findOne({
+                where: {
+                    [Sequelize.Op.and]: [
+                        { id: education_id},
+                        { user_id: user_id}
+                    ]
+                },
+                include: [ { 
+                    model: models.university,
+                    attributes: ['university']
+                } ],
+            });
+
+            if (!education) {
+                throw(`Lo sentimos, nuestros registros no coiniciden con experience_id: ${experience_id} y user_id: ${user_id}`)
+            }
+
+            const university = await createUniversity(university_name || education.university.university)
+
+            await education.update({
+                description: description,
+                date_start: date_start,
+                date_end: date_end,
+                university_id: university.id
+            });
+
+            successful(res, 'Educación actualizada satisfactoriamente.', education)
+
+        } catch (error) { returnError(res, error) }
+    },
+
+    delete: async (req, res) => {
+
+        const { user_id, education_id } = req.body
+
+        try {
+
+            const education = await models.education.findOne({
+                where: { 
+                    [Sequelize.Op.and]: [
+                        { id: education_id },
+                        { user_id: user_id }
+                    ]
                 }
             })
 
-            await education.update({
-                description: req.body.description,
-                date_start: req.body.date_start,
-                date_end: req.body.date_end,
-                university_id: university.id
-            }, { where: { id: education_id } });
+            if (!education) {
+                throw(`Lo sentimos, nuestros registros no coiniciden con education_id: ${education_id} y user_id: ${user_id}`)
+            }
 
-            return res.status(200).json({ status: true, message: "Educación actualizada actualizada correctamente", data: education });
+            await education.destroy()
 
-        } catch (error) {
-            console.log(error);
-            res.status(200).json({ status: false, message: "Error al actualizar la educación del empleado" });
-        }
-    },
+            successful(res)
+            
+        } catch (error) { returnError(res, error) }
+
+    }
+
 }

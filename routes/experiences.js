@@ -12,8 +12,13 @@ router.post('/create', controller.validate('create'), function (req, res) {
   controller.createExperience(req, res);
 });
 
-router.post('/update', controller.validate('update'), function (req, res) {
+router.post('/update', 
+  controller.validate('update'), function (req, res) {
   controller.updateExperience(req, res);
 });
+
+router.post('/delete',
+  controller.delete
+);
 
 module.exports = router;

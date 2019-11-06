@@ -1,7 +1,9 @@
-const models = require('../models/index');
 const Sequelize = require('sequelize');
+const models = require('../models/index');
 const { existById } = require('./elementController')
+const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
+const  { successful, returnError } = require('./responseController')
 
 module.exports = {
     validate: (method) => {
@@ -20,10 +22,7 @@ module.exports = {
 
                 return [
                     check('experience_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
-                    check('position', message_exists).exists(),
-                    check('company_name', message_exists).exists(),
-                    check('date_start', message_exists).exists(),
-
+                    check('experience_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                 ]
         }
     },
@@ -35,96 +34,128 @@ module.exports = {
         try {
 
             const user = await existById(models.user, user_id)
+
             var expereriences = await user.getExperience({
-                attributes: [ 'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%d/%m/%Y' ), 'date_start' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%d/%m/%Y' ), 'date_end' ], 'description', 'current_job'  ],
-                include: [ 
-                    {model: models.company}
-                ]
+                attributes: [ 'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job'  ],
+                include: [ { 
+                    model: models.company,
+                    attributes: ['name']
+                 } ]
             })
 
-            return res.json({ status: true, message: "OK.", data: expereriences });
+            successful(res, 'OK', expereriences)
 
-        } catch (error) {
-            return res.json({ status: false, message: (error.message) ? error.message : error, data: {  } });
-        }
+        } catch (error) { returnError(res, error) }
+
     },
 
     createExperience: async (req, res) => {
+
         var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
-        }
+        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
         
-        var user_id = req.body.user_id;
+        const { user_id, position, company_name, description, date_start, date_end } = req.body
 
         try {
 
-            const user = await models.user.findByPk(user_id);
+            const user = await existById(models.user, user_id);
 
-            if (user) {
+            const company = await createCompany(company_name)
 
-                var [ company, created ] = await  models.company.findOrCreate({
-                    where: { name: { [Sequelize.Op.like]  : '%' + req.body.company_name + '%'} },
-                    defaults: {
-                        name: req.body.company_name
-                    }
-                })
-
-                const experience = await models.experience.create({
+            var [experience, created] = await models.experience.findOrCreate({
+                where: { [Sequelize.Op.and]: [
+                    { user_id: user.id },
+                    { company_id: company.id }
+                ]},
+                defaults: {
                     user_id: user.id,
-                    position: req.body.position,
+                    position: position,
                     company_id: company.id,
-                    description: req.body.description,
-                    date_start: req.body.date_start,
-                    date_end: req.body.date_end,
-                    current_job: req.body.current_job
-                });
+                    description: description,
+                    date_start: date_start,
+                    date_end: date_end,
+                    current_job: (date_end) ? 0 : 1
+                }
+            });
 
-                return res.status(200).json({ status: true, message: "Experiencia del empleado creada correctamente", data: experience });
+            if (!created) {
+                throw('Oops! Al parecer ya existe el registro.')
             }
-            else {
-                return res.status(200).json({ status: false, message: "No se encontró al empleado" });
-            }
-        } catch (error) {
 
-            console.log(error);
-            return res.status(200).json({ status: false, message: "Error al crear la experiencia del empleado" });
-        }
+            successful(res, 'Experiencia asignada satisfactoriamente.', experience)
+
+        } catch (error) { returnError(res, error) }
+
     },
 
     updateExperience: async (req, res) => {
-        var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
-        }
 
-        const experience_id = req.body.experience_id;
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+
+        const { experience_id, user_id, position, company_name, description, date_start, date_end, current_job } = req.body
+
         try {
 
-            const experience = await models.experience.findByPk(experience_id);
+            var experience = await models.experience.findOne({
+                where: {
+                    [Sequelize.Op.and]: [
+                        { id: experience_id},
+                        { user_id: user_id}
+                    ]
+                },
+                include: [ { 
+                    model: models.company,
+                    attributes: ['name']
+                } ],
+            });
 
-            var [ company, created ] = await  models.company.findOrCreate({
-                where: { name: { [Sequelize.Op.like]  : '%' + req.body.name_company + '%'} },
-                defaults: {
-                    name: req.body.name_company,
+            if (!experience) {
+                throw(`Lo sentimos, nuestros registros no coiniciden con experience_id: ${experience_id} y user_id: ${user_id}`)
+            }
+
+            const company = await createCompany(company_name || experience.experience.name)
+
+            await experience.update({
+                position: position,
+                company_id: company.id,
+                description: description,
+                date_start: date_start,
+                date_end: date_end,
+                current_job: current_job
+            });
+
+            successful(res, 'Experiencia actualizada satisfactoriamente.', experience)
+
+        } catch (error) { returnError(res, error) }
+        
+    },
+
+    delete: async (req, res) => {
+
+        const { user_id, expererience_id } = req.body
+
+        try {
+
+            const experience = await models.experience.findOne({
+                where: { 
+                    [Sequelize.Op.and]: [
+                        { id: expererience_id },
+                        { user_id: user_id }
+                    ]
                 }
             })
 
-            await experience.update({
-                position: req.body.position,
-                company_id: company.id,
-                description: req.body.description,
-                date_start: req.body.date_start,
-                date_end: req.body.date_end,
-                current_job: req.body.current_job
-            }, { where: { id: experience_id } });
+            if (!experience) {
+                throw(`Lo sentimos, nuestros registros no coiniciden con experience_id: ${experience_id} y user_id: ${user_id}`)
+            }
 
-            return res.status(200).json({ status: true, message: "Experiencia actualizada creada correctamente", data: experience });
+            await experience.destroy()
 
-        } catch (error) {
-            console.log(error);
-            return res.status(200).json({ status: false, message: "Error al actualizar la experiencia del empleado" });
-        }
-    },
+            successful(res)
+            
+        } catch (error) { returnError(res, error) }
+
+    }
 }
