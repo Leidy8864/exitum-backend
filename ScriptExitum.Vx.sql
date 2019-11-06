@@ -189,6 +189,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`advertisement` (
   `description` TEXT NULL DEFAULT NULL,
   `state` ENUM('active', 'closed', 'archived') NULL DEFAULT NULL,
   `created_at` DATETIME NULL DEFAULT NULL,
+  `slug` VARCHAR(255) NULL DEFAULT NULL,
   `startup_id` INT(11) NOT NULL,
   `area_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),

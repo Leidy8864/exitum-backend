@@ -3,6 +3,21 @@ const models = require('../models/index');
 
 const { check, validationResult } = require('express-validator');
 
+function generateSlug(string){
+    const a = 'àáäâãåăæçèéëêǵḧìíïîḿńǹñòóöôœøṕŕßśșțùúüûǘẃẍÿź·/_,:;'
+    const b = 'aaaaaaaaceeeeghiiiimnnnooooooprssstuuuuuwxyz------'
+    const p = new RegExp(a.split('').join('|'), 'g')
+  
+    return string.toString().toLowerCase()
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+      .replace(/&/g, '-and-') // Replace & with 'and'
+      .replace(/[^\w\-]+/g, '') // Remove all non-word characters
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, '') // Trim - from end of text
+}
+
 module.exports = {
     //Función encargada de validar los campos que se reciben desde el FrontEnd
     validate: (method) => {
@@ -44,7 +59,8 @@ module.exports = {
                         state: 'active',
                         area_id: req.body.area_id,
                         startup_id: req.body.startup_id,
-                        created_at: Date.now()
+                        created_at: Date.now(),
+                        slug: generateSlug(req.body.title)
                     }, { transaction: t });
 
                     const { skills } = req.body
