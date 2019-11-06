@@ -64,16 +64,18 @@ module.exports = {
                     }, { transaction: t });
 
                     const { skills } = req.body
-                    var skills_id = await Promise.all(skills.map(async element => {
-                        var [response, created] = await models.skill.findOrCreate({
-                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
-                            defaults: {
-                                skill: element
-                            }
-                        })
-                        return await response.id
+                    if (skills) {
+                        var skills_id = await Promise.all(skills.map(async element => {
+                            var [response, created] = await models.skill.findOrCreate({
+                                where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    skill: element
+                                }
+                            })
+                            return await response.id
+                        }
+                        ))
                     }
-                    ))
                     await advertisement.addSkill(skills_id, { transaction: t });
                     return advertisement;
 
