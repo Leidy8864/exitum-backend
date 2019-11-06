@@ -32,13 +32,12 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
-        try {
-            const result = await models.sequelize.transaction(async (t) => {
-
-                const ads = await models.advertisement.findOne({ where: { title: req.body.title } });
-                if (ads) {
-                    return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." })
-                } else {
+        const ads = await models.advertisement.findOne({ where: { title: req.body.title } });
+        if (ads) {
+            return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." })
+        } else {
+            try {
+                const result = await models.sequelize.transaction(async (t) => {
                     const advertisement = await models.advertisement.create({
                         title: req.body.title,
                         description: req.body.description,
@@ -61,13 +60,13 @@ module.exports = {
                     ))
                     await advertisement.addSkill(skills_id, { transaction: t });
                     return advertisement;
-                }
-            });
 
-            return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
-        } catch (error) {
-            console.log(error);
-            res.status(200).json({ status: false, message: "Error al crear anuncio" });
+                });
+                return res.status(200).json({ status: true, message: "Anuncio creado correctamente", data: result });
+            } catch (error) {
+                console.log(error);
+                res.status(200).json({ status: false, message: "Error al crear anuncio" });
+            }
         }
     },
 
