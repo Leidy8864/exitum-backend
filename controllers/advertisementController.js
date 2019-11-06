@@ -240,6 +240,19 @@ module.exports = {
                             },
                             {
                                 model: models.proposal
+                            },
+                            {
+                                model: models.advertisement_skill,
+                                as: 'advertisement_skill',
+                                include: [
+                                    {
+                                        model: models.skill,
+                                        as: 'toUserSkill',
+                                        include: [
+                                            { model: models.user }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }

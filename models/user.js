@@ -3,54 +3,52 @@
 const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataType) => {
-  const user = sequelize.define(
-    'user',
-    {
-      id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-      name: DataType.STRING,
-      lastname: DataType.STRING,
-      email: {
-        type: DataType.STRING,
-        allowNull: false,
-        unique: true
-      },
-      provider_id: DataType.STRING,
-      confirmed: DataType.BOOLEAN,
-      phone: DataType.STRING,
-      role: {
-        type: DataType.ENUM,
-        values: ['entrepreneur', 'employee', 'admin', 'undefined'],
-        allowNull: false
-      },
-      method: {
-        type: DataType.ENUM,
-        values: ['local', 'google', 'facebook'],
-        allowNull: false
-      },
-      password: DataType.STRING,
-      active: DataType.BOOLEAN,
-      last_login: DataType.DATE,
-      photo: DataType.STRING,
-      photo_dni: DataType.STRING,
-      avg_rating: DataType.FLOAT(3, 2),
-      from_hour: Sequelize.TIME,
-      to_hour: Sequelize.TIME,
-      // birthday: DataType.DATE,
-      country_id: {
-        type: DataType.INTEGER,
-        references: {
-          model: 'country',
-          key: 'id'
-        }
-      },
-      currency_id: {
-        type: DataType.INTEGER,
-        references: {
-          model: 'currency',
-          key: 'id'
-        }
+  const user = sequelize.define('user', {
+    id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
+    name: DataType.STRING,
+    lastname: DataType.STRING,
+    email: {
+      type: DataType.STRING,
+      allowNull: false,
+      unique: true
+    },
+    provider_id: DataType.STRING,
+    confirmed: DataType.BOOLEAN,
+    phone: DataType.STRING,
+    role: {
+      type: DataType.ENUM,
+      values: ['entrepreneur', 'employee', 'admin', 'undefined'],
+      allowNull: false
+    },
+    method: {
+      type: DataType.ENUM,
+      values: ['local', 'google', 'facebook'],
+      allowNull: false
+    },
+    password: DataType.STRING,
+    active: DataType.BOOLEAN,
+    last_login: DataType.DATE,
+    photo: DataType.STRING,
+    photo_dni: DataType.STRING,
+    avg_rating: DataType.FLOAT(3, 2),
+    from_hour: Sequelize.TIME,
+    to_hour: Sequelize.TIME,
+    // birthday: DataType.DATE,
+    country_id: {
+      type: DataType.INTEGER,
+      references: {
+        model: 'country',
+        key: 'id'
       }
     },
+    currency_id: {
+      type: DataType.INTEGER,
+      references: {
+        model: 'currency',
+        key: 'id'
+      }
+    }
+  },
     {
       freezeTableName: true,
       timestamps: false,
