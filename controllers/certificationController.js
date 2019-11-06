@@ -268,7 +268,7 @@ module.exports = {
                 throw('Oops! No se encontró certificado existente.')
             }
 
-            if (certification.document_url != null || certification.document_url !== undefined || certification.document_url != '') {
+            if (certification.document_url  && certification.document_url != '') {
                 s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6]);
             }
     
