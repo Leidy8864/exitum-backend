@@ -1,3 +1,4 @@
+const text = require('../libs/text')
 const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { existById } = require('./elementController')
@@ -6,27 +7,33 @@ const { check, validationResult } = require('express-validator');
 const  { successful, returnError } = require('./responseController')
 
 module.exports = {
+
     validate: (method) => {
-        var message_exists = "Este campo es obligatorio";
-        var message_numeric = "Este campo debe ser numérico";
+
+        var user_id = check('user_id').exists().withMessage(text.id('usuario')).isNumeric().withMessage(text.numeric)
+
         switch (method) {
+            case 'by-user-id':
+                return [ user_id ]
             case 'create':
                 return [
-                    check('university_name').exists().withMessage(message_exists),
-                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
-                    check('description').exists().withMessage(message_exists),
-                    check('date_start').exists().withMessage(message_exists),
-                    check('date_end').exists().withMessage(message_exists)
+                    check('university_name').exists().withMessage(text.name('universidad')),
+                    check('description').exists().withMessage(text.description),
+                    check('date_start').exists().withMessage(text.date_start),
+                    check('date_end').exists().withMessage(text.date_end)
                 ]
             case 'update':
                 return [
-                    check('education_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
-                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric)
+                    user_id, check('education_id').exists().withMessage(text.id('educación')).isNumeric().withMessage(text.numeric),
                 ]
         }
+
     },
 
-    all: async (req, res) => {
+    findUserId: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id } = req.params
 
@@ -40,33 +47,42 @@ module.exports = {
                 include: [ { model: models.university } ]
             })
 
-            return res.json({ status: true, message: "OK.", data: education });
+            successful(res, 'Ok', education)
 
-        } catch (error) { return res.json({ status: false, message: (error.message) ? error.message : error, data: {  } }); }
+        } catch (error) { returnError(res, error) }
         
     },
 
     createEducation: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id, university_name, description, date_start, date_end } = req.body
+
         try {
             
             const user = await existById(models.user, user_id);
 
             const university = await createUniversity(university_name)
 
-            const education = await models.education.create({
-                user_id: user.id,
-                description: description,
-                date_start: date_start,
-                date_end: date_end,
-                university_id: university.id
-            });
+            var [education, created] = await models.education.findOrCreate({
+                    where: { [Sequelize.Op.and]: [
+                        { user_id: user.id },
+                        { university_id: university.id }
+                    ]},
+                    defaults: {
+                        user_id: user.id,
+                        description: description,
+                        date_start: date_start,
+                        date_end: date_end,
+                        university_id: university.id
+                    }
+                });
 
-            successful(res, 'Educación asignada correctamente.', education)
+            if (!created) throw(text.duplicate_element)
+
+            successful(res, text.success_create('educación'), education)
 
         } catch (error) { returnError(res, error) }
         
@@ -75,7 +91,7 @@ module.exports = {
     updateEducation: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { education_id, user_id, university_name, description, date_start, date_end } = req.body
         
@@ -94,9 +110,7 @@ module.exports = {
                 } ],
             });
 
-            if (!education) {
-                throw(`Lo sentimos, nuestros registros no coiniciden con experience_id: ${experience_id} y user_id: ${user_id}`)
-            }
+            if (!education) throw(text.not_found_element)
 
             const university = await createUniversity(university_name || education.university.university)
 
@@ -107,12 +121,15 @@ module.exports = {
                 university_id: university.id
             });
 
-            successful(res, 'Educación actualizada satisfactoriamente.', education)
+            successful(res, text.success_update('educación'), education)
 
         } catch (error) { returnError(res, error) }
     },
 
     delete: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id, education_id } = req.body
 
@@ -127,9 +144,7 @@ module.exports = {
                 }
             })
 
-            if (!education) {
-                throw(`Lo sentimos, nuestros registros no coiniciden con education_id: ${education_id} y user_id: ${user_id}`)
-            }
+            if (!education) throw(text.not_found_element)
 
             await education.destroy()
 

@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         company.hasMany(models.experience, {
             foreignKey: 'company_id'
         });
+        company.hasMany(models.certification, {
+            foreignKey: 'company_id'
+        });
     }
     return company
 };

@@ -3,8 +3,8 @@ const router = express.Router();
 const controller = require('../controllers/certificationController');
 
 router.get('/list-by-id/:user_id',
-    controller.validate('listById'),
-    controller.listById
+    controller.validate('by-user-id'),
+    controller.findUserId
 );
 
 router.post('/create',
@@ -17,13 +17,13 @@ router.post('/update',
     controller.updateUserCertification
 );
 
-router.get('/download/:fileName',
+router.get('/download/:file_name',
     controller.validate('download'),
     controller.downloadFile
 );
 
 router.post('/delete',
-    controller.validate('delete'),
+    controller.validate('update'),
     controller.delete
 );
 

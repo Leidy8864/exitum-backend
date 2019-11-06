@@ -7,26 +7,32 @@ const { check, validationResult } = require('express-validator');
 const  { successful, returnError } = require('./responseController')
 
 module.exports = {
+
     validate: (method) => {
-        var message_exists = "Este campo es obligatorio";
-        var message_numeric = "Este campo debe ser numérico";
+
+        var user_id = check('user_id').exists().withMessage(text.id('usuario')).isNumeric().withMessage(text.numeric)
+
         switch (method) {
+            case 'by-user-id':
+                return [ user_id ]
             case 'create':
                 return [
-                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
-                    check('position', message_exists).exists(),
-                    check('date_start', message_exists).exists(),
-                    check('company_name', message_exists).exists(),
+                    check('date_start').exists().withMessage(text.date_start),
+                    user_id, check('position').exists().withMessage(text.position),
+                    check('company_name').exists().withMessage(text.name('empresa')),
                 ]
             case 'update':
                 return [
-                    check('user_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
-                    check('experience_id').exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
+                    user_id, check('experience_id').exists().withMessage(text.id('experiencia')).isNumeric().withMessage(text.numeric),
                 ]
         }
+        
     },
 
-    all: async (req, res) => {
+    findUserId: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id } = req.params
 
@@ -52,7 +58,7 @@ module.exports = {
     createExperience: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
         
         const { user_id, position, company_name, description, date_start, date_end } = req.body
 
@@ -78,11 +84,9 @@ module.exports = {
                 }
             });
 
-            if (!created) {
-                throw('Oops! Al parecer ya existe el registro.')
-            }
+            if (!created) throw(text.duplicate_element)
 
-            successful(res, 'Experiencia asignada satisfactoriamente.', experience)
+            successful(res, text.success_create('experiencia'), experience)
 
         } catch (error) { returnError(res, error) }
 
@@ -91,7 +95,7 @@ module.exports = {
     updateExperience: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, "Lo sentimos, necesitamos algunos datos obligatorios.", errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { experience_id, user_id, position, company_name, description, date_start, date_end, current_job } = req.body
 
@@ -110,11 +114,9 @@ module.exports = {
                 } ],
             });
 
-            if (!experience) {
-                throw(`Lo sentimos, nuestros registros no coiniciden con experience_id: ${experience_id} y user_id: ${user_id}`)
-            }
+            if (!experience) throw(text.not_found_element)
 
-            const company = await createCompany(company_name || experience.experience.name)
+            const company = await createCompany(company_name || experience.company.name)
 
             await experience.update({
                 position: position,
@@ -122,10 +124,10 @@ module.exports = {
                 description: description,
                 date_start: date_start,
                 date_end: date_end,
-                current_job: current_job
+                current_job: (date_end) ? 0 : 1
             });
 
-            successful(res, 'Experiencia actualizada satisfactoriamente.', experience)
+            successful(res, text.success_update('experiencia'), experience)
 
         } catch (error) { returnError(res, error) }
         
@@ -133,22 +135,23 @@ module.exports = {
 
     delete: async (req, res) => {
 
-        const { user_id, expererience_id } = req.body
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+
+        const { user_id, experience_id } = req.body
 
         try {
 
             const experience = await models.experience.findOne({
                 where: { 
                     [Sequelize.Op.and]: [
-                        { id: expererience_id },
+                        { id: experience_id },
                         { user_id: user_id }
                     ]
                 }
             })
 
-            if (!experience) {
-                throw(`Lo sentimos, nuestros registros no coiniciden con experience_id: ${experience_id} y user_id: ${user_id}`)
-            }
+            if (!experience) throw(text.not_found_element)
 
             await experience.destroy()
 

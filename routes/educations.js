@@ -1,21 +1,24 @@
-
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/educationController');
 
-/* GET employee listing. */
 router.get('/list-by-id/:user_id',
-    controller.all
+    controller.validate('by-user-id'),
+    controller.findUserId
 );
-router.post('/create', controller.validate('create'), function (req, res) {
-    controller.createEducation(req, res);
-});
-router.post('/update',  controller.validate('update'), function (req, res) {
-    controller.updateEducation(req, res);
-});
+router.post('/create', 
+    controller.validate('create'),
+    controller.createEducation
+);
+
+router.post('/update', 
+    controller.validate('update'),
+    controller.updateEducation
+);
 
 router.post('/delete',
-  controller.delete
+    controller.validate('update'),
+    controller.delete
 );
 
 module.exports = router;

@@ -31,11 +31,11 @@ module.exports = (sequelize, DataType) => {
       active: DataType.BOOLEAN,
       last_login: DataType.DATE,
       photo: DataType.STRING,
-      photo_dni: DataType.STRING,
       avg_rating: DataType.FLOAT(3, 2),
       from_hour: Sequelize.TIME,
       to_hour: Sequelize.TIME,
-      birthday: DataType.DATE,
+      birthday: Sequelize.DATE,
+      description: DataType.STRING,
       country_id: {
         type: DataType.INTEGER,
         references: {

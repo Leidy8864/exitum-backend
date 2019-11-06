@@ -502,7 +502,7 @@ module.exports = {
                     throw ('Se necesita una imagen.')
                 }
 
-                if (user.photo != null || user.phocto != '') {
+                if (user.photo && user.photo != '') {
                     s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[6]);
                 }
 
@@ -532,11 +532,13 @@ module.exports = {
             res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
 
+        const { user_id, name, lastname, phone, role, birthday, description, skill_id, active } = req.body
+
         try {
 
             var fileName = null;
             const user = await models.user.findOne({ 
-                where: { id: req.body.user_id },
+                where: { id: user_id },
                 attributes: { exclude: ['password'] }
             });
 
@@ -552,17 +554,18 @@ module.exports = {
                 }
 
                 await user.update({
-                    name: req.body.name,
-                    lastname: req.body.lastname,
-                    phone: req.body.phone,
+                    name: name,
+                    lastname: lastname,
+                    phone: phone,
                     photo: fileName,
-                    active: req.body.active || true,
-                    role: req.body.role,
-                    birthday: req.body.birthday
+                    active: active || true,
+                    role: role,
+                    birthday: birthday,
+                    description: description
                 });
 
 
-                await highlight(user, req.body.skill_id)
+                await highlight(user, skill_id)
 
                 if (req.body.role === "entrepreneur") {
 
@@ -609,7 +612,9 @@ module.exports = {
 
             const user = await models.user.findByPk( user_id, 
                 { 
-                    attributes: { exclude:  ['password', 'method', 'photo'] },
+                    attributes: [ 'id', 'name', 'lastname', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
+                        'to_hour',  [ Sequelize.fn( 'Date_format', Sequelize.col('birthday'), '%Y-%m-%d' ), 'birthday' ], 'description'
+                    ],
                     include:  [
                         {
                             model: models.skill,
@@ -619,6 +624,10 @@ module.exports = {
                         {
                             model: models.experience,
                             as: 'experience'
+                        },
+                        {
+                            model: models.country,
+                            attributes: ['country']
                         }
                     ],
 

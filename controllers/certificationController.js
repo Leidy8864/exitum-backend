@@ -1,9 +1,12 @@
-const { putObject, getObject } = require('../libs/aws-s3');
-const Sequelize = require('sequelize');
+const text = require('../libs/text')
 const s3 = require('../libs/aws-s3');
+const Sequelize = require('sequelize');
 const index = require('../config/index');
 const models = require('../models/index')
+const { putObject, getObject } = require('../libs/aws-s3');
+const { createCompany } = require('./companyController')
 const { existById } = require('../controllers/elementController');
+const  { successful, returnError } = require('./responseController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/certifications';
 
 const { check, validationResult } = require('express-validator');
@@ -11,80 +14,68 @@ const { check, validationResult } = require('express-validator');
 module.exports = {
     validate: (certification) => {
 
-        var user_id = check('user_id')
-            .exists().withMessage('Es necesario el id del usuario.')
-        var name = check('name')
-            .exists().withMessage("Es necesario el nombre de la certificación.")
-        var issuing_company = check('issuing_company')
-            .exists().withMessage("Es necesario el nombre la empresa que emitió el certificado.")
-        var date_expedition = check('date_expedition')
-            .exists().withMessage("Es necesario una fecha de expedición del certificado.")
-        var date_expiration = check('date_expiration')
-            .exists().withMessage("Es necesario una fecha de vencimiento del certificado.")
-        var fileName = check('fileName')
-            .exists().withMessage("Es necesario nombre del certificado.")
-        var certification_id = check('certification_id')
-            .exists().withMessage("Es necesario el ID del certificado.")
+        var user_id = check('user_id').exists().withMessage(text.id('usuario')).isNumeric().withMessage(text.numeric)
 
         switch (certification) {
-            case 'listById':
+            case 'by-user-id':
                 return [ user_id ]
             case 'create':
-                return [ user_id, name, issuing_company, date_expedition, date_expiration ]
+                return [
+                    user_id, check('name').exists().withMessage(text.name('certificado')),
+                    check('issuing_company').exists().withMessage(text.name('empresa')),
+                    check('date_expedition').exists().withMessage(text.date_expedition)
+                ]
             case 'update':
-                return [ user_id, name, issuing_company, date_expedition, date_expiration, certification_id ]
-            case 'delete':
-                return [ user_id, certification_id ]
+                return [ user_id, check('certification_id').exists().withMessage(text.id('certificado')).isNumeric().withMessage(text.numeric) ]
             case 'download':
-                return [ fileName ]
+                return [ check('file_name').exists().withMessage(text.name('documento')) ]
         }
     },
 
-    listById: async(req, res) => {
+    findUserId: async(req, res) => {
 
-        var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id } = req.params
 
         try {
 
            const user = await existById(models.user, user_id)
-        //    var elements = await user.getCertifications({
-        //        attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'expedition' ],
-        //                             [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'expiration' ],
-        //                             [Sequelize.fn('CONCAT', 'http://35.175.241.103:8081/certifications/download/', Sequelize.fn('SUBSTRING_INDEX', Sequelize.col('document_url'), '/',  '-1' )), 'url']    
-        //                         ]
-        //     } )
+
            var elements = await user.getCertifications({
-               attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
+               attributes: [ 'id', 'name', 'company_id', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'date_expiration' ], 'document_url'
-                                ]
+                                ],
+                include: [
+                    {
+                        model: models.company
+                    }
+                ]
             } )
 
-
-            const valor = await Promise.all(  elements.map(  async element => {
+            const valor = await Promise.all(elements.map(async element => {
                 return {
                     id: element.id,
                     name: element.name,
-                    issuing_company: element.issuing_company,
+                    company_id: element.company_id,
                     date_expedition : element.date_expedition,
                     date_expiration : element.date_expiration,
-                    url : (element.document_url == null) ? null : `http://35.175.241.103:8081/certifications/download/${(element.document_url).split('/')[6]}`
+                    url : (element.document_url  && element.document_url != '') ? text.download_document(element.document_url) : null,
+                    issuing_company: element.company.name
                }
             } ))
 
-            return res.status(200).json({ status: true, message: 'OK', data: valor })
-        } catch (err) {
-            return res.status(200).json({ status: false, message: err.message, data: {  } })
-        }
+            successful(res, 'OK', valor)
+
+        } catch (error) { returnError(res, error) }
 
     },
 
     create:  async(req, res) => {
 
-        var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
@@ -98,84 +89,58 @@ module.exports = {
                 fileName = putObject(NEW_BUCKET_NAME, document);
            }
 
+           const company = await createCompany(issuing_company)
+
            var [ certification, created ] = await  models.certification.findOrCreate({
-                attributes: [ 'id', 'name', 'issuing_company', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'date_expiration' ], 'document_url'
-                                ],
                 where: {
                     [ Sequelize.Op.and ] : [
                         { user_id: user.id },
                         { name: name },
-                        { issuing_company: issuing_company },
+                        {  company_id: company.id },
                         { date_expedition: new Date(date_expedition) }
                     ]
                 },
                 defaults: {
                     user_id: user.id,
                     name: name,
-                    issuing_company: issuing_company,
+                    company_id: company.id,
                     date_expedition: new Date(date_expedition),
                     date_expiration: new Date(date_expiration),
                     document_url: fileName
                 }
             })
 
-            if (!created) throw('Oops! Certificación ya existente')
+            if (!created) throw(text.duplicate_element)
 
             const data = {
                 id: certification.id,
                 name: certification.name,
-                issuing_company: certification.issuing_company,
+                company_id: company.id,
                 date_expedition : certification.date_expedition,
                 date_expiration : certification.date_expiration,
-                url : (certification.document_url || certification.document_url == null) ? `http://35.175.241.103:8081/certifications/download/${(certification.document_url).split('/')[6]}`:'' 
+                url : (certification.document_url  && certification.document_url != '') ? text.download_document(certification.document_url): null,
             } 
 
-            return res.status(200).json({ status: true, message: 'OK', data: data })
+            successful(res, text.success_create('certificado'), data)
             
-        } catch (err) {
-            return res.status(200).json({ status: false, message: (err.message) ? err.message : err, data: {  } })
-        }
+        } catch (error) { returnError(res, error) }
+
     },
 
     downloadFile: async(req, res) => {
 
-        var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
-        const { fileName } = req.params
+        const { file_name } = req.params
 
         try {
 
-            res.attachment(fileName);
-            var  fileStream = getObject(NEW_BUCKET_NAME, fileName)
+            res.attachment(file_name);
+            var  fileStream = getObject(NEW_BUCKET_NAME, file_name)
             fileStream.pipe(res)
 
-        } catch (error) {
-            return res.status(200).json({ status: false, message: error.message, data : {  } })
-        }
-
-
-        // try {
-
-            // res.attachment(fileName);
-            // var element = getObject(NEW_BUCKET_NAME, fileName)
-            // var element = await getObject(NEW_BUCKET_NAME, fileName)
-
-            // res.setHeader('Content-disposition', 'attachment; filename=dedede.pdf')
-            // res.setHeader('Content-length', element.ContentLength)
-            // res.end(data.body)
-
-            // element.createReadStream()
-            // console.log(element)
-            // console.log(fileStream)
-            // element.pipe(res)
-
-            // return res.status(200).json({ status: true, message: 'OK', data : { element } })
-
-        // } catch (error) {
-        //     return res.status(200).json({ status: false, message: error.message, data : {  } })
-        // }
+        } catch (error) { returnError(res, error) }
 
         // Guardar en proyecto
         // var s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -186,14 +151,13 @@ module.exports = {
 
     updateUserCertification: async (req, res) => {
 
-        var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
         try {
 
-            const user = await existById(models.user, user_id)
             const certification = await models.certification.findOne({
                 where: {
                     [ Sequelize.Op.and ] : [
@@ -201,29 +165,33 @@ module.exports = {
                         { user_id: user_id }
                     ]
                 },
+                include: [
+                    {
+                        model: models.company,
+                        attributes: ['name']
+                    }
+                ]
             })
 
-            if (!certification) {
-                throw('No existe el certificado.')
-            }
+            if (!certification) throw(text.not_found_element)
+
+            const company = await createCompany(issuing_company || certification.company.name)
 
             var fileName = certification.document_url
            
             if (req.files) {
 
-                if (certification.document_url != null ) {
-                    s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6]);
-                }
-
+                if (certification.document_url) s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6])
+                
                 const { document } = req.files
                 fileName = putObject(NEW_BUCKET_NAME, document);
 
            }
 
-            certification.update({
-                user_id: user.id,
+            await certification.update({
+                user_id: user_id,
                 name: name,
-                issuing_company: issuing_company,
+                company_id: company.id,
                 date_expedition: new Date(date_expedition),
                 date_expiration: new Date(date_expiration),
                 document_url: fileName
@@ -232,24 +200,23 @@ module.exports = {
             const data = {
                 id: certification.id,
                 name: certification.name,
-                issuing_company: certification.issuing_company,
+                company_id: certification.company_id,
                 date_expedition : certification.date_expedition,
                 date_expiration : certification.date_expiration,
-                url : (certification.document_url == null) ? '':`http://35.175.241.103:8081/certifications/download/${(certification.document_url).split('/')[6]}` 
+                url : (certification.document_url  && certification.document_url != '') ? text.download_document(certification.document_url) : null,
+                issuing_company: certification.company.name
             } 
 
-            return res.status(200).json({ status: true, message: 'OK', data: data })
+            successful(res, text.success_update('certificado'), data)
 
-        } catch (error) {
-            return res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {  } })
-        }
+        } catch (error) { returnError(res, error) }
 
     },
 
     delete: async (req, res) => {
 
-        var errors = validationResult(req)
-        if (!errors.isEmpty()) { return res.json({ status: false, message: 'Campos incorrectos', data: errors.array() }) }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         try {
 
@@ -264,9 +231,7 @@ module.exports = {
                 }
             })
 
-            if (certification == null || certification === undefined) {
-                throw('Oops! No se encontró certificado existente.')
-            }
+            if (!certification) throw(text.not_found_element)
 
             if (certification.document_url  && certification.document_url != '') {
                 s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6]);
@@ -274,11 +239,9 @@ module.exports = {
     
             await certification.destroy()
 
-            return res.status(200).json({ status: true, message: "Certificado borrado correctamente.", data: certification });
+            successful(res, text.success_delete('certificado'))
             
-        } catch (error) {
-            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: error });
-        }
+        } catch (error) { returnError(res, error) }
 
     }
 
