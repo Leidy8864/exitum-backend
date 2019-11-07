@@ -206,15 +206,16 @@ module.exports = {
         try {
 
             const advertisements = await models.advertisement.findByPk(advertisement_id, {
-                include: [{
-                    model: models.skill
-                },
-                {
-                    model: models.area
-                },
-                {
-                    model: models.startup
-                }
+                include: [
+                    {
+                        model: models.skill
+                    },
+                    {
+                        model: models.area
+                    },
+                    {
+                        model: models.startup
+                    }
                 ]
             });
 
@@ -343,7 +344,7 @@ module.exports = {
             skill_user.push(user.toUserSkills[i].skill)
         }
         const employee = await models.employee.findOne({ where: { user_id: user_id } });
-        console.log(employee.id)
+        if (!employee) { return res.json({ status: false, message: "No se ha registrado como empleado." }) }
         var prop_ads_id = []
         const proposal = await models.proposal.findAll();
         for (var i = 0; i < proposal.length; i++) {
@@ -406,6 +407,7 @@ module.exports = {
         let page = req.query.page || 1;
 
         const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } });
+        if (!employee) { return res.json({ status: false, message: "No se ha registrado como empleado" }) }
         const proposal = await models.proposal.findAll({
             attributes: ['advertisement_id'],
             where: { employee_id: employee.id },

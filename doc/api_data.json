@@ -887,6 +887,98 @@
     }
   },
   {
+    "type": "GET",
+    "url": "/proposals/byAdvertisement?advertisement_id=ID",
+    "title": "GET proposals by advertisement",
+    "name": "proposals_by_advertisement",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Creacion del anuncio de trabajo.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advertisement_id",
+            "description": "<p>Id del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/proposals/byAdvertisement?advertisement_id=1",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Listado de propuestas por anuncio\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"user_id\": 10,\n            \"category_id\": 1,\n            \"stage_id\": 1,\n            \"short_description\": \"Desarrollador Web\",\n            \"about_me\": \"Soy un desarrollor web\",\n            \"price_hour\": \"15.50\",\n            \"behance_user\": null,\n            \"behance_active\": null,\n            \"linkedin_active\": null,\n            \"user\": {\n                \"id\": 10,\n                \"name\": \"José\",\n                \"lastname\": \"Cristobal\",\n                \"photo\": null,\n                \"description\": null,\n                \"avg_rating\": 0,\n                \"toUserSkills\": []\n            }\n        }\n    ],\n    \"current\": 1,\n    \"pages\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "POST",
     "url": "/appointments/create/:to_user_id",
     "title": "POST reservation",

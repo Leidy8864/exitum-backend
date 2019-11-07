@@ -2487,6 +2487,55 @@
  *
  *
  */
+
+  /**
+ *
+ * @api {GET} /proposals/byAdvertisement?advertisement_id=ID GET proposals by advertisement
+ * @apiName proposals by advertisement
+ * @apiGroup ADVERTISEMENT
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creacion del anuncio de trabajo.
+ * @apiParam {Int} advertisement_id Id del anuncio
+	* @apiParamExample {querystring} Ejemplo url
+    /proposals/byAdvertisement?advertisement_id=1
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct} data Indica los datos del anuncio 
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Listado de propuestas por anuncio",
+        "data": [
+            {
+                "id": 2,
+                "user_id": 10,
+                "category_id": 1,
+                "stage_id": 1,
+                "short_description": "Desarrollador Web",
+                "about_me": "Soy un desarrollor web",
+                "price_hour": "15.50",
+                "behance_user": null,
+                "behance_active": null,
+                "linkedin_active": null,
+                "user": {
+                    "id": 10,
+                    "name": "José",
+                    "lastname": "Cristobal",
+                    "photo": null,
+                    "description": null,
+                    "avg_rating": 0,
+                    "toUserSkills": []
+                }
+            }
+        ],
+        "current": 1,
+        "pages": 1
+    }
+ *
+ *
+ */
  
  /**
  *
