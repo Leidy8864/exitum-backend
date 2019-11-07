@@ -56,7 +56,7 @@ module.exports = {
                     {
                         model: models.employee,
                         include: [
-                            { 
+                            {
                                 model: models.user,
                                 attributes: ['id', 'name', 'lastname']
                             }
@@ -64,15 +64,56 @@ module.exports = {
                     }
                 ]
             }).then(proposal => {
-                if (proposal) {
-                    res.json({ status: true, message: "Listado de propuestas de impulsores", data: proposal })
-                } else {
-                    console.log('no')
-                }
+                res.json({ status: true, message: "Listado de propuestas de impulsores", data: proposal })
             });
         } catch (error) {
             console.log(error);
             res.status(200).json({ status: false, message: "Error al listar propuestas propuesta del impulsor." });
+        }
+    },
+
+    byAdvertisement: async (req, res) => {
+        const { advertisement_id } = req.query
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        try {
+            const ads = await models.employee.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage,
+                include: [
+                    {
+                        model: models.advertisement,
+                        as: 'proposals',
+                        attributes: [],
+                        where: { id: advertisement_id }
+                    },
+                    {
+                        model: models.user,
+                        attributes: ['id', 'name', 'lastname', 'photo', 'description', 'avg_rating'],
+                        include: [
+                            {
+                                model: models.skill,
+                                as: 'toUserSkills'
+                            }
+                        ]
+                    }
+                ]
+            })
+            const totalRows = await models.employee.count({
+                include: [
+                    {
+                        model: models.advertisement,
+                        as: 'proposals',
+                        attributes: [],
+                        where: { id: advertisement_id }
+                    }
+                ]
+            })
+            return res.json({ status: true, message: "Listado de propuestas por anuncio", data: ads, current: page, pages: Math.ceil(totalRows / perPage) })
+        } catch (err) {
+            console.log(err)
+            return res.json({ status: false, message: "Error al listar las propuestas" })
         }
     }
 }
