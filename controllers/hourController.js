@@ -30,6 +30,7 @@ module.exports = {
     },
 
     convertTimes: (time) => {
+        
         var hrs = Number(time.match(/^(\d+)/)[1]);
         var mnts = Number(time.match(/:(\d+)/)[1]);
 
