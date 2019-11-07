@@ -129,7 +129,7 @@ module.exports = {
 
             var user = await existById(models.user, user_id, 'id', 'from_hour', 'to_hour')
             var not_available = availableHours(user.from_hour, user.to_hour, available)
-            var get_unavailables = await user.getUnavailables({ attributes: 'time' })
+            var get_unavailables = await user.getUnavailables({ attributes: ['time'] })
 
             if (get_unavailables) await models.unavailable.destroy({ where: { user_id: user.id } })
 
