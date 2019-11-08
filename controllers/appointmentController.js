@@ -1,75 +1,95 @@
-const models = require('../models/index');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
+const models = require('../models/index');
+const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
 const { timesFormat, validateDateActual, validateTimeActual } = require('../controllers/hourController');
-const { check, validationResult } = require('express-validator');
 
 module.exports = {
-    validate: (appointment) => {
 
-        var user_id = check('to_user_id')
-            .exists().withMessage('Es necesario el ID del usuario con el cual se agendará.')
-        var hour_id = check('from_user_id')
-            .exists().withMessage('Es necesario el ID del usuario logueado.')
-        var date = check('date')
-            .exists().withMessage('Es necesario una fecha.')
-        var time = check('time')
-            .exists().withMessage('Es necesario una hora.')
-        var type = check('type')
-            .exists().withMessage('Es necesario el tipo de agenda.')
-            .isIn([ 'reunion', 'recordatorio' ]).withMessage("Solamente se aceptan :reunion o :recordatorio como parámetros.")
-        var description = check('description')
-            .exists().withMessage("Es necesario una hora de fin.")
-            
-        switch (appointment) {
-            case 'create':
-                return [ user_id, hour_id, date, time, type, description ]
+	validate: (appointment) => {
+
+		var user_id = check('to_user_id').exists().withMessage(text.id('usuario al que se agendará'))
+		var hour_id = check('from_user_id').exists().withMessage(text.id('usuario que inició sesión'))
+		var date = check('date').exists().withMessage(text.date('agendar'))
+		var time = check('time').exists().withMessage(text.time('agendar'))
+		var type = check('type').exists().withMessage(text.type('agendar')).isIn([ 'reunion', 'recordatorio' ]).withMessage(text.only('reunion', 'recordatorio'))
+		var description = check('description').exists().withMessage(text.description)
+
+		switch (appointment) {
+			case 'by-user-id':
+				return [ user_id, date ];
+			case 'create':
+				return [ user_id, hour_id, date, time, type, description ];
         }
-    },
+        
+	},
 
-    create:  async(req, res) => {
+	listByUserId: async (req, res) => {
 
         var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
-        if (!errors.isEmpty()) {
-            returnError( res, 'Campos incorrectos, por favor intentelo nuevamente.', errors.array() )
-        }
+		const { user_id } = req.params;
+		const { date } = req.body;
 
-        const { to_user_id } = req.params
-        const { from_user_id, date, time, type, description } = req.body
-        
-        try {
+		try {
+			const user = await existById(models.user, user_id);
 
-            const user = await existById(models.user, to_user_id, 'id')
-            var timeF = timesFormat(time);
+			const appointment = await models.appointment.findOne({
+				where: {
+					[Sequelize.Op.and]: [ { to_user_id: user.id }, { date: new Date(date) } ]
+				}
+			});
 
-            validateDateActual(date)
-            validateTimeActual(time)
+			if (!appointment) throw text.not_found_element;
 
-            var from_user = (type == 'recordatorio') ? user.id : from_user_id
+			successful(res, 'OK', appointment);
+		} catch (error) {
+			returnError(res, error);
+		}
+	},
 
-            var [ response, created ] = await  models.appointment.findOrCreate({
-                where: {
-                    [ Sequelize.Op.and ] : [
-                        { to_user_id: user.id },
-                        { date: new Date(date) },
-                        { time: timeF[3] }
-                    ]
-                },
-                defaults: {
-                    to_user_id: user.id, from_user_id: from_user, date: date,
-                    time: timeF[3], type: type, description: description
-                }
-            })
+	create: async (req, res) => {
 
-            if (!created) throw (`Lo sentimos, su ${response.type} ya no está disponible.`)
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
-            successful( res, `Su ${response.type}, fue registrada satisfactoriamente.` )
+		const { to_user_id } = req.params;
+		const { from_user_id, date, time, type, description } = req.body;
+
+		try {
+
+			const user = await existById(models.user, to_user_id, 'id');
+			var timeF = timesFormat(time);
+
+			validateDateActual(date);
+			validateTimeActual(time);
+
+			var from_user = type == 'recordatorio' ? user.id : from_user_id;
+
+			var [ response, created ] = await models.appointment.findOrCreate({
+				where: {
+					[Sequelize.Op.and]: [ { to_user_id: user.id }, { date: new Date(date) }, { time: timeF[3] } ]
+				},
+				defaults: {
+					to_user_id: user.id,
+					from_user_id: from_user,
+					date: date,
+					time: timeF[3],
+					type: type,
+					description: description
+				}
+			});
+
+            if (!created) throw (text.duplicate_element);
+
+            successful(res, `Su ${response.type}, fue registrada satisfactoriamente.`);
             
-        } catch (error) { returnError( res, error ) }
+        } catch (error) { returnError(res, error); }
+        
+	},
 
-    }
-
-
-}
+	cancel: (req, res) => {}
+};

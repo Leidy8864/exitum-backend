@@ -12,6 +12,11 @@ router.post('/not-available/:user_id',
     controller.unavailable
 );
 
+router.post('/not-available-multiple/:user_id',
+    controller.validate('available'),
+    controller.unavailable_multiple
+);
+
 router.get('/schedule/:user_id',
     controller.schedule
 );

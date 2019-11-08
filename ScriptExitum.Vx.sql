@@ -1408,6 +1408,11 @@ INSERT INTO `user` (`id`, `name`, `lastname`, `email`, `password`, `provider_id`
 VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1', NULL, NULL),
 (NULL, 'Emprendedora', 'Emprendedora', 'emprendedora@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '2', '2', NULL, NULL);
 
+INSERT INTO `exitum`.`user` (`name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `role`, `method`, `active`, `created_at`, `country_id`, `currency_id`) 
+VALUES ('Mario', 'Bros', 'mario@gmail.com', '$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', null, '1', 'employee', 'local', '1', '2019-10-11 00:00:00', '1', '1'),
+('Rhaegar', 'Code', 'rhaegarcode@gmail.com', null, 115836172712480098535, '1', 'employee', 'google', '1', '2019-10-11 00:00:00', '1', '1')
+('javier', 'lecca', 'leccajavier@gmail.com', null, 101931926708859123325, '1', 'employee', 'google', '1', '2019-10-11 00:00:00', '1', '1')
+
 INSERT INTO `entrepreneur` (`id`, `user_id`) VALUES (NULL, '5'), (NULL, '6');
 
 INSERT INTO `category` (`id`, `name`) VALUES (NULL, 'Tecnológico'), (NULL, 'Radio y televisión'), (NULL, 'Automotriz'), (NULL, 'Alimenticia'), (NULL, 'Bebidas'),
@@ -1679,3 +1684,17 @@ INSERT INTO `exitum`.`type` (`id`, `type`) VALUES ('1', 'Hormiga');
 INSERT INTO `exitum`.`level` (`id`, `level`) VALUES ('1', 'Basico');
 INSERT INTO `exitum`.`level` (`id`, `level`) VALUES ('2', 'Intermedio');
 INSERT INTO `exitum`.`level` (`id`, `level`) VALUES ('3', 'Avanzado');
+
+INSERT INTO `exitum`.`university` (`university`) VALUES ('Universidad Mayor de San Marcos');
+INSERT INTO `exitum`.`university` (`university`) VALUES ('Pontificia Universidad Católica del Perú');
+
+INSERT INTO `exitum`.`company` (`name`) VALUES ('Microsoft');
+INSERT INTO `exitum`.`company` (`name`) VALUES ('Apple');
+
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Emprendedor');
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Diseñador Ux');
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Responsable');
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Cientifico');
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Alegre');
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Desarrollador web');
+INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Marketing');

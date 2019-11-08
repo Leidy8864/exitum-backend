@@ -1,19 +1,23 @@
-const models = require('../models/index');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
+const models = require('../models/index');
+const { check, validationResult } = require('express-validator');
 const { existById, arr_diff } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
 const { timesFormat, convertTimes } = require('../controllers/hourController');
-const { check, validationResult } = require('express-validator');
 
-function availableHours(startTime, endTime, not_available) {
+function availableHours(start_Time, end_Time, not_available) {
+
     var hours = [ ]
+    const startTime = Number(String(start_Time).match(/^(\d+)/)[1])
+    const endTime = Number(String(end_Time).match(/^(\d+)/)[1])
 
     for (let hour = startTime; hour < endTime; hour++) {
         hours.push( convertTimes(`${hour}:00`) )
     }
 
     var unavailable = not_available.map(element => {
-        return  convertTimes(element.time)
+        return  (element.time) ? convertTimes(element.time) :  element
     })
 
     var available = arr_diff(hours, unavailable)
@@ -33,6 +37,8 @@ module.exports = {
             .exists().withMessage("Es necesario una hora de fin.")
         var not_available = check('not_available')
             .exists().withMessage("Es necesario la hora en la que no estará disponible.")
+        var available = check('available')
+            .exists().withMessage("Es necesario las horas disponibles del usuario.")
         var date = check('date')
             .exists().withMessage("Es necesario la fecha en que se agendará.")
 
@@ -41,6 +47,8 @@ module.exports = {
                 return [ user_id, from_hour, to_hour ]
             case 'unavailable':
                 return [ user_id, not_available ]
+            case 'available':
+                return [ user_id, available ]
             case 'schedule':
                 return [ user_id ]
             case 'scheduleDate':
@@ -78,11 +86,8 @@ module.exports = {
 
     unavailable: async (req, res) => {
 
-        var errors = validationResult(req)
-
-        if (!errors.isEmpty()) {
-            returnError( res, 'Campos incorrectos, por favor intentelo nuevamente.', errors.array() )
-        }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id } = req.params
         const { not_available } = req.body
@@ -111,25 +116,53 @@ module.exports = {
         } catch ( error ) { returnError(res, error) }
 
     },
+    
+    unavailable_multiple: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+
+        const { user_id } = req.params
+        const { available } = req.body
+
+        try {
+
+            var user = await existById(models.user, user_id, 'id', 'from_hour', 'to_hour')
+            var not_available = availableHours(user.from_hour, user.to_hour, available)
+            var get_unavailables = await user.getUnavailables({ attributes: ['time'] })
+
+            if (get_unavailables) await models.unavailable.destroy({ where: { user_id: user.id } })
+
+            not_available.map(async element => {
+
+                var hour = timesFormat(element)
+
+                await  models.unavailable.create({
+                        user_id: user.id,
+                        time: hour[3]
+                })
+
+            })
+
+            successful(res)
+
+        } catch ( error ) { returnError(res, error, error) }
+
+    },
 
     schedule: async (req, res) => {
 
-        var errors = validationResult(req)
-
-        if (!errors.isEmpty()) {
-            returnError( res, 'Campos incorrectos, por favor intentelo nuevamente.', errors.array() )
-        }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id } = req.params
 
         try {
 
             const user = await existById(models.user, user_id, 'id', 'from_hour', 'to_hour')
-            const startTime = Number(user.from_hour.match(/^(\d+)/)[1])
-            const endTime = Number(user.to_hour.match(/^(\d+)/)[1])
 
             var not_available = await user.getUnavailables({ attributes: [ 'time' ] });
-            var available = availableHours(startTime, endTime, not_available)
+            var available = availableHours(user.from_hour, user.to_hour, not_available)
 
             successful(res, 'OK', available)
 
@@ -139,11 +172,8 @@ module.exports = {
     
     scheduleDate: async (req, res) => {
 
-        var errors = validationResult(req)
-
-        if (!errors.isEmpty()) {
-            returnError( res, 'Campos incorrectos, por favor intentelo nuevamente.', errors.array() )
-        }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
 
         const { user_id } = req.params
         const { date } = req.body
@@ -151,11 +181,9 @@ module.exports = {
         try {
 
             const user = await existById(models.user, user_id)
-            const startTime = Number(user.from_hour.match(/^(\d+)/)[1])
-            const endTime = Number(user.to_hour.match(/^(\d+)/)[1])
             
             var not_available = await user.getUnavailables({ attributes: [ 'time' ] });
-            var available = availableHours(startTime, endTime, not_available)
+            var available = availableHours(user.from_hour, user.to_hour, not_available)
 
             var appointment = await models.appointment.findAll({
                 attributes: [ 'time' ],
