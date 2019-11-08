@@ -2094,6 +2094,96 @@
  *
  */
 
+/**
+ *
+ * @api {GET} /ads/recomendations?advertisement_id=ID&page=PAGE GET recomendations by advertisement
+ * @apiName recomendations by advertisement
+ * @apiGroup ADVERTISEMENT
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Listado de anuncios
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /ads/recomendations?advertisement_id=3&page=1
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct[]} data Indica el listado de impulsores
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Lista de impulsores recomendados",
+        "data": [
+            {
+                "id": 7,
+                "name": "Aldo",
+                "lastname": "Cabezoniarini",
+                "photo": "https://techie-exitum.s3-us-west-1.amazonaws.com/techie-exitum/imagenes/user-profile/7af56780-01ab-11ea-a1a8-0123456789ab1cama.png",
+                "description": "Soy una bandida bien rica , me gusta miya lo amo.",
+                "avg_rating": 0,
+                "toUserSkills": [
+                    {
+                        "id": 2,
+                        "skill": "Diseñador Ux",
+                        "icon": null,
+                        "skill_user": {
+                            "user_id": 7,
+                            "skill_id": 2,
+                            "highlight": 0
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "skill": "Emprendedor",
+                        "icon": null,
+                        "skill_user": {
+                            "user_id": 7,
+                            "skill_id": 1,
+                            "highlight": 1
+                        }
+                    }
+                ],
+                "employee": null
+            },
+            {
+                "id": 8,
+                "name": "javier",
+                "lastname": "lecca",
+                "photo": null,
+                "description": null,
+                "avg_rating": 0,
+                "toUserSkills": [
+                    {
+                        "id": 2,
+                        "skill": "Diseñador Ux",
+                        "icon": null,
+                        "skill_user": {
+                            "user_id": 8,
+                            "skill_id": 2,
+                            "highlight": 0
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "skill": "Emprendedor",
+                        "icon": null,
+                        "skill_user": {
+                            "user_id": 8,
+                            "skill_id": 1,
+                            "highlight": 1
+                        }
+                    }
+                ],
+                "employee": null
+            }
+        ],
+        "current": 1,
+        "pages": 1
+    }
+ *
+ *
+ */
+
  /**
  *
  * @api {POST} /challenges/createStage POST create stage

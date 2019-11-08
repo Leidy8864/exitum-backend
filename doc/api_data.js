@@ -979,6 +979,87 @@ define({ "api": [
     }
   },
   {
+    "type": "GET",
+    "url": "/ads/recomendations?advertisement_id=ID&page=PAGE",
+    "title": "GET recomendations by advertisement",
+    "name": "recomendations_by_advertisement",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Listado de anuncios</p>",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/ads/recomendations?advertisement_id=3&page=1",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de impulsores</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Lista de impulsores recomendados\",\n    \"data\": [\n        {\n            \"id\": 7,\n            \"name\": \"Aldo\",\n            \"lastname\": \"Cabezoniarini\",\n            \"photo\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/techie-exitum/imagenes/user-profile/7af56780-01ab-11ea-a1a8-0123456789ab1cama.png\",\n            \"description\": \"Soy una bandida bien rica , me gusta miya lo amo.\",\n            \"avg_rating\": 0,\n            \"toUserSkills\": [\n                {\n                    \"id\": 2,\n                    \"skill\": \"Diseñador Ux\",\n                    \"icon\": null,\n                    \"skill_user\": {\n                        \"user_id\": 7,\n                        \"skill_id\": 2,\n                        \"highlight\": 0\n                    }\n                },\n                {\n                    \"id\": 1,\n                    \"skill\": \"Emprendedor\",\n                    \"icon\": null,\n                    \"skill_user\": {\n                        \"user_id\": 7,\n                        \"skill_id\": 1,\n                        \"highlight\": 1\n                    }\n                }\n            ],\n            \"employee\": null\n        },\n        {\n            \"id\": 8,\n            \"name\": \"javier\",\n            \"lastname\": \"lecca\",\n            \"photo\": null,\n            \"description\": null,\n            \"avg_rating\": 0,\n            \"toUserSkills\": [\n                {\n                    \"id\": 2,\n                    \"skill\": \"Diseñador Ux\",\n                    \"icon\": null,\n                    \"skill_user\": {\n                        \"user_id\": 8,\n                        \"skill_id\": 2,\n                        \"highlight\": 0\n                    }\n                },\n                {\n                    \"id\": 1,\n                    \"skill\": \"Emprendedor\",\n                    \"icon\": null,\n                    \"skill_user\": {\n                        \"user_id\": 8,\n                        \"skill_id\": 1,\n                        \"highlight\": 1\n                    }\n                }\n            ],\n            \"employee\": null\n        }\n    ],\n    \"current\": 1,\n    \"pages\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "POST",
     "url": "/appointments/create/:to_user_id",
     "title": "POST reservation",
@@ -6414,91 +6495,6 @@ define({ "api": [
     }
   },
   {
-    "type": "POST",
-    "url": "/users/resend",
-    "title": "POST resendToken user",
-    "name": "resendToken",
-    "group": "USER",
-    "version": "1.0.0",
-    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email para el reenvio de token.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el mensaje exitoso</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "USER",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
@@ -6557,6 +6553,91 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": true,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/resend",
+    "title": "POST resendToken user",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email para el reenvio de token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el mensaje exitoso</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
           "type": "json"
         }
       ]

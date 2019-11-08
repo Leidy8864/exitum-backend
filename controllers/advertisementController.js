@@ -455,6 +455,62 @@ module.exports = {
                 return res.json({ status: true, message: "Listado de anuncios por postulación", data: ads, current: page, pages: Math.ceil(totalRows / perPage) })
             })
         })
-    }
+    },
 
+    usersRecomendation: async (req, res) => {
+        const { advertisement_id } = req.query
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        try {
+            const ads = await models.advertisement_skill.findAll({
+                where: { advertisement_id: advertisement_id },
+                include: [
+                    {
+                        model: models.skill,
+                        attributes: ['skill']
+                    }
+                ]
+            });
+            var skill_name = []
+            for (var i = 0; i < ads.length; i++) {
+                skill_name.push(ads[i].skill.skill)
+            }
+            const users = await models.user.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage,
+                attributes: ['id', 'name', 'lastname', 'photo', 'description', 'avg_rating'],
+                include: [
+                    {
+                        model: models.skill,
+                        as: "toUserSkills",
+                        where: {
+                            skill: { [models.Sequelize.Op.or]: [skill_name] }
+                        }
+                    },
+                    {
+                        model: models.employee
+                    }
+                ]
+            });
+            const totalRows = await models.user.count({
+                include: [
+                    {
+                        model: models.skill,
+                        as: "toUserSkills",
+                        where: {
+                            skill: { [models.Sequelize.Op.or]: [skill_name] }
+                        }
+                    },
+                    {
+                        model: models.employee
+                    }
+                ]
+            });
+            return res.json({ status: true, message: "Lista de impulsores recomendados", data: users, current: page, pages: Math.ceil(totalRows / perPage) })
+        } catch (err) {
+            console.log(err)
+            return res.json({ status: false, message: "Error al listar las propuestas" })
+        }
+    }
 }
