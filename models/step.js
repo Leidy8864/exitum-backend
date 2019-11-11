@@ -33,6 +33,9 @@ module.exports = (sequelize, DataType) => {
         step.hasMany(models.startup_step, {
             foreignKey: 'step_id'
         });
+        step.hasMany(models.employee_step, {
+            foreignKey: 'step_id'
+        });
     }
     return step
 };

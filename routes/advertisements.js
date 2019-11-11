@@ -34,8 +34,12 @@ router.get('/listByProposal', function (req, res) {
     controller.advertsByProposal(req, res);
 });
 
-// router.get('/listByEntrepreneurPagination', function (req, res) {
-//     controller.findAdvertByEntrepreneurPagination(req, res);
-// });
+router.get('/recomendations', function (req, res) {
+    controller.usersRecomendation(req, res);
+});
+
+router.post('/invitation', controller.validate('invitation'), function (req, res) {
+    controller.createInvitation(req, res);
+});
 
 module.exports = router;

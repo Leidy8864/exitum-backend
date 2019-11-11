@@ -36,10 +36,10 @@ module.exports = (sequelize, DataType) => {
         advertisement.belongsTo(models.area, {
             foreignKey: 'area_id'
         });
-        advertisement.hasMany(models.invitation, {
-            as: 'invitation',
-            foreignKey: 'advertisement_id'
-        });
+        // advertisement.hasMany(models.invitation, {
+        //     as: 'invitation',
+        //     foreignKey: 'advertisement_id'
+        // });
         advertisement.hasMany(models.order_detail, {
             as: 'detail',
             foreignKey: 'advertisement_id'
@@ -52,6 +52,12 @@ module.exports = (sequelize, DataType) => {
 			through: models.proposal,
 			foreignKey: 'advertisement_id',
 			otherKey: 'employee_id'
+        });
+        advertisement.belongsToMany(models.employee, {
+            as: { singular: 'invitation', plural: 'invitations'},
+            through: models.invitation,
+            foreignKey: 'advertisement_id',
+            otherKey: 'employee_id'
         });
         advertisement.hasMany(models.proposal, {
             foreignKey: 'advertisement_id'
