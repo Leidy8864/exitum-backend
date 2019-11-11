@@ -18,12 +18,14 @@ module.exports = {
 
     putObject: (bucket, file) => {
 
+        // console.log(file.mimetype)
         var fileName = helper.generateFileName(file);
 
         var params = {
             Bucket: bucket,
             Body: file.data,
-            Key: fileName
+            Key: fileName,
+            ContentType:  file.mimetype 
         }
         s3Bucket.putObject(params, function (err, data) {
             if (err) {

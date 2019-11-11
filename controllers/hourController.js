@@ -53,6 +53,8 @@ module.exports = {
         if (now >= dateA) {
             throw('Ooops!, la fecha no es válida, no puede ser inferior a la actual.')
         }
+
+        return true
     },
 
     validateTimeActual: (time) => {

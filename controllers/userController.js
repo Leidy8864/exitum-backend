@@ -101,6 +101,8 @@ module.exports = {
                         active: true,
                         confirmed: false,
                         role: 'undefined',
+                        from_hour: '7:00:00',
+                        to_hour: '22:00:00',
                         // country_id: country.id || 1,
                         country_id: 1,
                         // currency_id: country.currency_id || 1

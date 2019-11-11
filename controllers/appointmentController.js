@@ -1,6 +1,7 @@
 const text = require('../libs/text');
 const Sequelize = require('sequelize');
 const models = require('../models/index');
+const { arrayUnavailable } = require('./scheduleController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
@@ -64,8 +65,11 @@ module.exports = {
 			const user = await existById(models.user, to_user_id, 'id');
 			var timeF = timesFormat(time);
 
-			validateDateActual(date);
-			validateTimeActual(time);
+			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
+
+			if(unavailable.indexOf(timeF)) throw('La hora seleccionada no esta disponible.')
+
+			if(validateDateActual(date)) validateTimeActual(time)
 
 			var from_user = type == 'recordatorio' ? user.id : from_user_id;
 

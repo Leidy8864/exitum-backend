@@ -25,6 +25,16 @@ function availableHours(start_Time, end_Time, not_available) {
     return available
 }
 
+function arrayUnavailable(data) {
+
+    var unavailable = data.map(elemet => {
+        return elemet.time
+    })
+
+    return unavailable
+
+}
+
 module.exports = {
 
     validate: (schedule) => {
@@ -205,6 +215,8 @@ module.exports = {
 
         } catch (error) { returnError(res, error) }
         
-    }
+    },
+
+    arrayUnavailable: arrayUnavailable
 
 }
