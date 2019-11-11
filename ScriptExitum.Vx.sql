@@ -910,6 +910,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`invitation` (
   `advertisement_id` INT(11) NOT NULL,
   `employee_id` INT(11) NOT NULL,
   `created_at` DATETIME NULL DEFAULT NULL,
+  `saved` TINYINT(1) DEFAULT 0,
   PRIMARY KEY (`advertisement_id`, `employee_id`),
   INDEX `fk_invitations_project1_idx` (`advertisement_id` ASC),
   INDEX `fk_invitations_employee1_idx` (`employee_id` ASC),
