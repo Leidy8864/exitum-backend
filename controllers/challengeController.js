@@ -180,7 +180,7 @@ module.exports = {
     listStepStartup: async (req, res) => {
         const { step_id, startup_id } = req.query
         const startup = await models.startup.findOne({ attributes: ['id'], where: { id: startup_id } })
-        console.log(startup)
+        if (!startup) { return res.json({ status: false, message: "La startup no esta registrada." }) }
         models.step.findOne({
             where: { id: step_id },
             include: [
@@ -251,42 +251,40 @@ module.exports = {
 
     listStageEmployee: async (req, res) => {
         const { user_id } = req.params
-        const employee = await models.employee.findOne({ attributes: ['id', 'stage_id'], where: { id: user_id } })
-        if (employee) {
-            models.stage.findOne({
-                where: {
-                    id: employee.stage_id,
-                    type: 'employee',
-                },
-                include: [
-                    {
-                        model: models.step,
-                        include: [
-                            {
-                                model: models.employee_step,
-                                where: { employee_id: employee.id }
-                            },
-                            {
-                                model: models.challenge,
-                                where: { employee_id: employee.id }
-                            }
-                        ]
-                    }
-                ]
-            }).then(stage => {
-                return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
-            }).catch(err => {
-                console.log(err)
-                return res.json({ status: false, message: "Ocurrio un problema, vuelva a intentarlo." })
-            })
-        } else {
-            return res.json({ status: false, message: "No existe el inpulsor" })
-        }
+        const employee = await models.employee.findOne({ attributes: ['id', 'stage_id'], where: { user_id: user_id } })
+        if (!employee) { return res.json({ status: false, message: "No existe impulsor con este usuario." }) }
+        models.stage.findOne({
+            where: {
+                id: employee.stage_id,
+                type: 'employee',
+            },
+            include: [
+                {
+                    model: models.step,
+                    include: [
+                        {
+                            model: models.employee_step,
+                            where: { employee_id: employee.id }
+                        },
+                        {
+                            model: models.challenge,
+                            where: { employee_id: employee.id }
+                        }
+                    ]
+                }
+            ]
+        }).then(stage => {
+            return res.json({ status: true, message: "Etapa actual con sus niveles", data: stage })
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Ocurrio un problema, vuelva a intentarlo." })
+        })
     },
 
     listStepEmployee: async (req, res) => {
         const { step_id, user_id } = req.query
-        const employee = await models.employee.findOne({ attributes: ['id'], where: { id: user_id } })
+        const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } })
+        if(!employee){return res.json({status:false, message:"No existe impulsor con este usuario."})}
         models.step.findOne({
             where: { id: step_id },
             include: [
@@ -309,6 +307,5 @@ module.exports = {
             console.log(err)
             return res.json({ status: false, message: "Vuelva a intentarlo" })
         })
-    },
-
+    }
 }

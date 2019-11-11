@@ -1,8 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const invitation = sequelize.define('invitation', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     created_at: DataTypes.DATE,
+    saved: DataTypes.INTEGER,
     advertisement_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

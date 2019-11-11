@@ -56,7 +56,7 @@ module.exports = {
                         about_me: req.body.about_me,
                         short_description: req.body.short_description,
                         price_hour: req.body.price_hour,
-                        stage_id: 1
+                        stage_id: 6
                     }, { transaction: t });
 
                     await employee.addType(req.body.types || 1, { transaction: t });

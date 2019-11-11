@@ -39,6 +39,13 @@ module.exports = {
                 return [
                     check('advertisement_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                 ]
+        
+            case 'invitation':
+
+                return [
+                    check('advertisement_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('saved').exists().withMessage(message_exists)
+                ]
         }
     },
 
@@ -407,7 +414,7 @@ module.exports = {
         let page = req.query.page || 1;
 
         const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } });
-        if (!employee) { return res.json({ status: false, message: "No se ha registrado como empleado" }) }
+        if (!employee) { return res.json({ status: false, message: "No se ha registrado como impulsor" }) }
         const proposal = await models.proposal.findAll({
             attributes: ['advertisement_id'],
             where: { employee_id: employee.id },
@@ -476,6 +483,13 @@ module.exports = {
             for (var i = 0; i < ads.length; i++) {
                 skill_name.push(ads[i].skill.skill)
             }
+            const props = await models.proposal.findAll({
+                where: { advertisement_id: advertisement_id }
+            });
+            var prop_emp_ids = []
+            for (var i = 0; i < props.length; i++) {
+                prop_emp_ids.push(props[i].employee_id)
+            }
             const users = await models.user.findAll({
                 offset: (perPage * (page - 1)),
                 limit: perPage,
@@ -485,11 +499,19 @@ module.exports = {
                         model: models.skill,
                         as: "toUserSkills",
                         where: {
-                            skill: { [models.Sequelize.Op.or]: [skill_name] }
+                            skill: { [models.Sequelize.Op.or]: skill_name }
                         }
                     },
                     {
-                        model: models.employee
+                        model: models.employee,
+                        where: {
+                            id: { [models.Sequelize.Op.notIn]: prop_emp_ids }
+                        },
+                        include: [
+                            {
+                                model: models.invitation
+                            }
+                        ]
                     }
                 ]
             });
@@ -512,5 +534,14 @@ module.exports = {
             console.log(err)
             return res.json({ status: false, message: "Error al listar las propuestas" })
         }
+    },
+
+    createInvitation: async (req, res) => {
+        const { advertisement_id, employee_id, saved } = req.body
+        const advertisement = await models.advertisement.findOne({ where: { id: advertisement_id } })
+        if (!advertisement) { return res.json({ status: false, message: "No existe el anuncio." }) }
+        await advertisement.addInvitation(employee_id, { through: { saved: saved, created_at: Date.now() } }).then(invitation => {
+            return res.json({ status: true, message: "Impulsor favorito creado o modificado", data: invitation })
+        })
     }
 }

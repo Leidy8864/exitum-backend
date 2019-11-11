@@ -2143,7 +2143,26 @@
                         }
                     }
                 ],
-                "employee": null
+                "employee": {
+                    "id": 3,
+                    "user_id": 7,
+                    "category_id": 1,
+                    "stage_id": 6,
+                    "short_description": "Desarrollador Web",
+                    "about_me": "Soy un desarrollor web",
+                    "price_hour": "15.50",
+                    "behance_user": null,
+                    "behance_active": null,
+                    "linkedin_active": null,
+                    "invitations": [
+                        {
+                            "created_at": "2019-11-11T16:39:49.000Z",
+                            "saved": 1,
+                            "advertisement_id": 3,
+                            "employee_id": 3
+                        }
+                    ]
+                }
             },
             {
                 "id": 8,
@@ -2174,11 +2193,54 @@
                         }
                     }
                 ],
-                "employee": null
+                "employee": {
+                    "id": 4,
+                    "user_id": 8,
+                    "category_id": 1,
+                    "stage_id": 6,
+                    "short_description": "Desarrollador Web",
+                    "about_me": "Soy un desarrollor web",
+                    "price_hour": "15.50",
+                    "behance_user": null,
+                    "behance_active": null,
+                    "linkedin_active": null,
+                    "invitations": []
+                }
             }
         ],
-        "current": 1,
+        "current": "1",
         "pages": 1
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {POST} /ads/invitation POST favorite create
+ * @apiName favorite create
+ * @apiGroup ADVERTISEMENT
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Creacion del impulsor favorito.
+ * @apiParam {Int} advertisement_id Id del anuncio
+ * @apiParam {Int} employee_id Id del impulsor
+ * @apiParam {Int} saved Valor 0 o 1 
+	* @apiParamExample {querystring} Ejemplo url
+    /ads/invitation
+    {
+        "advertisement_id": 3,
+        "employee_id": 3,
+        "saved": 1
+    }	
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct} data Indica los datos del anuncio 
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Impulsor favorito creado o modificado"
     }
  *
  *
@@ -2535,6 +2597,248 @@
  * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
  * @apiSuccessExample {json} Datos obtenidos:
     {
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /challenges/listStageEmp/:user_id GET list stage employee
+ * @apiName list stage employee
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista de etapa y sus niveles del employee.
+ * @apiParam {Int} startup_id Id de la startup.
+
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/listStageEmp/8
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Etapa actual con sus niveles",
+        "data": {
+            "id": 6,
+            "stage": "Etapa 1 empleado",
+            "description": "Etapa 1 empleado.",
+            "type": "employee",
+            "steps": [
+                {
+                    "id": 21,
+                    "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    "step": "Nivel 1 Etapa 1 employee",
+                    "stage_id": 6,
+                    "employee_steps": [
+                        {
+                            "employee_id": 4,
+                            "step_id": 21,
+                            "tip_completed": 0,
+                            "icon_count_tip": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg",
+                            "state": "incompleto"
+                        }
+                    ],
+                    "challenges": [
+                        {
+                            "id": 321,
+                            "user_id": 8,
+                            "employee_id": 4,
+                            "startup_id": null,
+                            "stage_id": 6,
+                            "step_id": 21,
+                            "tip_id": 65,
+                            "checked": false,
+                            "status": "Por verificar",
+                            "date": "2019-11-08T20:39:49.000Z",
+                            "comment": null,
+                            "reply": null
+                        },
+                        {
+                            "id": 322,
+                            "user_id": 8,
+                            "employee_id": 4,
+                            "startup_id": null,
+                            "stage_id": 6,
+                            "step_id": 21,
+                            "tip_id": 66,
+                            "checked": false,
+                            "status": "Por verificar",
+                            "date": "2019-11-08T20:39:49.000Z",
+                            "comment": null,
+                            "reply": null
+                        }
+                    ]
+                },
+                {
+                    "id": 22,
+                    "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+                    "step": "Nivel 2 Etapa 1 employee",
+                    "stage_id": 6,
+                    "employee_steps": [
+                        {
+                            "employee_id": 4,
+                            "step_id": 22,
+                            "tip_completed": 0,
+                            "icon_count_tip": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg",
+                            "state": "incompleto"
+                        }
+                    ],
+                    "challenges": [
+                        {
+                            "id": 325,
+                            "user_id": 8,
+                            "employee_id": 4,
+                            "startup_id": null,
+                            "stage_id": 6,
+                            "step_id": 22,
+                            "tip_id": 69,
+                            "checked": false,
+                            "status": "Por verificar",
+                            "date": "2019-11-08T20:39:49.000Z",
+                            "comment": null,
+                            "reply": null
+                        },
+                        {
+                            "id": 326,
+                            "user_id": 8,
+                            "employee_id": 4,
+                            "startup_id": null,
+                            "stage_id": 6,
+                            "step_id": 22,
+                            "tip_id": 70,
+                            "checked": false,
+                            "status": "Por verificar",
+                            "date": "2019-11-08T20:39:49.000Z",
+                            "comment": null,
+                            "reply": null
+                        }
+                    ]
+                }               
+            ]
+        }
+    }
+ *
+ *
+ */
+
+ /**
+ *
+ * @api {GET} /challenges/listStepEmp?step_id=ID&user_id=IDD GET list step employee
+ * @apiName list step employee
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Lista del nivel y sus retos del impulsor.
+ * @apiParam {Int} user_id Id del usuario.
+ * @apiParam {Int} step_id Id del step o nivel.
+ * 
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/listStepEmp?step_id=21&user_id=8
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Listado de retos por nivel del impulsor",
+        "data": {
+            "id": 21,
+            "icon": "https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png",
+            "step": "Nivel 1 Etapa 1 employee",
+            "stage_id": 6,
+            "challenges": [
+                {
+                    "id": 321,
+                    "user_id": 8,
+                    "employee_id": 4,
+                    "startup_id": null,
+                    "stage_id": 6,
+                    "step_id": 21,
+                    "tip_id": 65,
+                    "checked": false,
+                    "status": "Por verificar",
+                    "date": "2019-11-08T20:39:49.000Z",
+                    "comment": null,
+                    "reply": null,
+                    "tip": {
+                        "id": 65,
+                        "tip": "Reto 1 Nivel 1 Etapa 1 employee",
+                        "description": null,
+                        "step_id": 21,
+                        "file_tips": []
+                    }
+                },
+                {
+                    "id": 322,
+                    "user_id": 8,
+                    "employee_id": 4,
+                    "startup_id": null,
+                    "stage_id": 6,
+                    "step_id": 21,
+                    "tip_id": 66,
+                    "checked": false,
+                    "status": "Por verificar",
+                    "date": "2019-11-08T20:39:49.000Z",
+                    "comment": null,
+                    "reply": null,
+                    "tip": {
+                        "id": 66,
+                        "tip": "Reto 2 Nivel 1 Etapa 1 employee",
+                        "description": null,
+                        "step_id": 21,
+                        "file_tips": []
+                    }
+                },
+                {
+                    "id": 323,
+                    "user_id": 8,
+                    "employee_id": 4,
+                    "startup_id": null,
+                    "stage_id": 6,
+                    "step_id": 21,
+                    "tip_id": 67,
+                    "checked": false,
+                    "status": "Por verificar",
+                    "date": "2019-11-08T20:39:49.000Z",
+                    "comment": null,
+                    "reply": null,
+                    "tip": {
+                        "id": 67,
+                        "tip": "Reto 3 Nivel 1 Etapa 1 employee",
+                        "description": null,
+                        "step_id": 21,
+                        "file_tips": []
+                    }
+                },
+                {
+                    "id": 324,
+                    "user_id": 8,
+                    "employee_id": 4,
+                    "startup_id": null,
+                    "stage_id": 6,
+                    "step_id": 21,
+                    "tip_id": 68,
+                    "checked": false,
+                    "status": "Por verificar",
+                    "date": "2019-11-08T20:39:49.000Z",
+                    "comment": null,
+                    "reply": null,
+                    "tip": {
+                        "id": 68,
+                        "tip": "Reto 4 Nivel 1 Etapa 1 employee",
+                        "description": null,
+                        "step_id": 21,
+                        "file_tips": []
+                    }
+                }
+            ]
+        }
     }
  *
  *

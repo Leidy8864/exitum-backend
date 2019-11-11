@@ -35,6 +35,14 @@ router.get('/listStep',
     controller.listStepStartup
 );
 
+router.get('/listStageEmp/:user_id',
+    controller.listStageEmployee
+);
+
+router.get('/listStepEmp',
+    controller.listStepEmployee
+);
+
 router.get('/download/:file',
     controller.downloadFile
 );
