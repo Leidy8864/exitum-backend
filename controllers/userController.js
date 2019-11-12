@@ -216,7 +216,6 @@ module.exports = {
                     const result = await models.sequelize.transaction(async (t) => {
 
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
-                        
                         const newUser = await models.user.create({
                             name: user.name,
                             lastname: user.lastname,
@@ -230,8 +229,6 @@ module.exports = {
                             country_id: 1,
                             currency_id: 1
                         }, { transaction: t });
-
-                        console.log(user.image, user, newUser);
 
                         await models.token.create({
                             token: "",
@@ -503,20 +500,16 @@ module.exports = {
 
             if (user) {
 
-                if (!req.files) {
-                    throw ('Se necesita una imagen.')
-                }
+                if (!req.files) throw ('Se necesita una imagen.')
 
-                if (user.photo && user.photo != '') {
+                if (user.photo && user.photo != '' && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
                     s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[5]);
                 }
 
                 var photo = req.files.photo;
                 fileName = s3.putObject(NEW_BUCKET_NAME, photo);
 
-                await user.update({
-                    photo: fileName
-                });
+                await user.update({ photo: fileName });
 
                 return res.status(200).json({ status: true, message: "Imagen actualizada correctamente.", data: user });
 
@@ -541,7 +534,6 @@ module.exports = {
 
         try {
 
-            var fileName = null;
             const user = await models.user.findOne({ 
                 where: { id: user_id },
                 attributes: { exclude: ['password'] }
@@ -549,9 +541,11 @@ module.exports = {
 
             if (user) {
 
+                var fileName = user.photo;
+
                 if (req.files) {
 
-                    if (user.photo) {
+                    if (user.photo && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
                         s3.deleteObject(NEW_BUCKET_NAME, user.photo);
                     }
                     var photo = req.files.photo;
