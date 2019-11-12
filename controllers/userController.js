@@ -502,7 +502,7 @@ module.exports = {
 
                 if (!req.files) throw ('Se necesita una imagen.')
 
-                if (user.photo && user.photo != '' && user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
+                if (user.photo && user.photo != '' && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
                     s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[5]);
                 }
 
@@ -545,7 +545,7 @@ module.exports = {
 
                 if (req.files) {
 
-                    if (user.photo && user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
+                    if (user.photo && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
                         s3.deleteObject(NEW_BUCKET_NAME, user.photo);
                     }
                     var photo = req.files.photo;
