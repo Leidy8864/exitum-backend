@@ -462,10 +462,16 @@ module.exports = {
             models.advertisement.count({
                 distinct: true,
                 where: {
-                    //state: 'active',
+                    // state: 'active',
                     id: { [models.Sequelize.Op.or]: [ads_ids] }
                 },
                 include: [
+                    {
+                        model: models.skill
+                    },
+                    {
+                        model: models.area
+                    },
                     {
                         model: models.startup,
                         include: [{
