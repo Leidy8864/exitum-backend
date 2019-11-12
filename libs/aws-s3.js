@@ -18,8 +18,8 @@ module.exports = {
 
     putObject: (bucket, file) => {
 
-        // console.log(file.mimetype)
         var fileName = helper.generateFileName(file);
+        var buccketNameLenght = bucket.match(/[/](\w+)/).index;
 
         var params = {
             Bucket: bucket,
@@ -32,11 +32,13 @@ module.exports = {
                 console.log('Error al subir el objeto', err.stack);
                 throw new Error('Error al subir objeto');
             } else {
-                console.log("Objeto subido correctamente");
+                console.log("Objeto subido correctamente ");
                 return data;
             }
         });
-        return 'https://techie-exitum.s3-us-west-1.amazonaws.com/' + bucket + '/' + fileName;
+        console.log()
+        return 'https://techie-exitum.s3-us-west-1.amazonaws.com' + bucket.substring(buccketNameLenght) + '/' + fileName;
+
     },
 
     deleteObject: (bucket, key) => {

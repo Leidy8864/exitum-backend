@@ -181,7 +181,7 @@ module.exports = {
            
             if (req.files) {
 
-                if (certification.document_url) s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6])
+                if (certification.document_url) s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[5])
                 
                 const { document } = req.files
                 fileName = putObject(NEW_BUCKET_NAME, document);
@@ -234,7 +234,7 @@ module.exports = {
             if (!certification) throw(text.not_found_element)
 
             if (certification.document_url  && certification.document_url != '') {
-                s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[6]);
+                s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[5]);
             }
     
             await certification.destroy()

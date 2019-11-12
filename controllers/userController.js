@@ -505,7 +505,7 @@ module.exports = {
                 }
 
                 if (user.photo && user.photo != '') {
-                    s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[6]);
+                    s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[5]);
                 }
 
                 var photo = req.files.photo;
