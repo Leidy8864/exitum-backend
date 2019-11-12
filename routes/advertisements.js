@@ -42,4 +42,8 @@ router.post('/invitation', controller.validate('invitation'), function (req, res
     controller.createInvitation(req, res);
 });
 
+router.get('/favorites', function (req, res) {
+    controller.usersFavorites(req, res);
+});
+
 module.exports = router;

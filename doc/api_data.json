@@ -994,6 +994,98 @@
   },
   {
     "type": "GET",
+    "url": "/ads/favorites?advertisement_id=3&page=1",
+    "title": "GET favorites",
+    "name": "favorites",
+    "group": "ADVERTISEMENT",
+    "version": "1.0.0",
+    "description": "<p>Impulsor de favoritos.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advertisement_id",
+            "description": "<p>Id del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/ads/favorites?advertisement_id=3&page=1",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n  \"status\": true,\n  \"message\": \"Lista de impulsores favoritos.\",\n  \"data\": [\n      {\n          \"created_at\": \"2019-11-12T16:06:05.000Z\",\n          \"saved\": 0,\n          \"advertisement_id\": 3,\n          \"employee_id\": 1,\n          \"employee\": {\n              \"id\": 1,\n              \"user_id\": 13,\n              \"category_id\": 1,\n              \"stage_id\": 6,\n              \"short_description\": \"Desarrollador Web\",\n              \"about_me\": \"Soy un desarrollor web\",\n              \"price_hour\": \"15.50\",\n              \"behance_user\": null,\n              \"behance_active\": null,\n              \"linkedin_active\": null,\n              \"user\": {\n                  \"id\": 13,\n                  \"name\": \"Leidy2\",\n                  \"lastname\": \"Callupe2\",\n                  \"photo\": null,\n                  \"description\": null,\n                  \"avg_rating\": 2\n              },\n              \"invitations\": [\n                  {\n                      \"created_at\": \"2019-11-12T16:06:05.000Z\",\n                      \"saved\": 0,\n                      \"advertisement_id\": 3,\n                      \"employee_id\": 1\n                  }\n              ]\n          }\n      },\n      {\n          \"created_at\": \"2019-11-12T16:06:06.000Z\",\n          \"saved\": 0,\n          \"advertisement_id\": 3,\n          \"employee_id\": 2,\n          \"employee\": {\n              \"id\": 2,\n              \"user_id\": 10,\n              \"category_id\": 1,\n              \"stage_id\": 6,\n              \"short_description\": \"Desarrollador Web\",\n              \"about_me\": \"Soy un desarrollor web\",\n              \"price_hour\": \"15.50\",\n              \"behance_user\": null,\n              \"behance_active\": null,\n              \"linkedin_active\": null,\n              \"user\": {\n                  \"id\": 10,\n                  \"name\": \"José\",\n                  \"lastname\": \"Cristobal\",\n                  \"photo\": null,\n                  \"description\": null,\n                  \"avg_rating\": 4\n              },\n              \"invitations\": [\n                  {\n                      \"created_at\": \"2019-11-12T16:06:06.000Z\",\n                      \"saved\": 0,\n                      \"advertisement_id\": 3,\n                      \"employee_id\": 2\n                  }\n              ]\n          }\n      },\n      {\n          \"created_at\": \"2019-11-11T16:39:49.000Z\",\n          \"saved\": 1,\n          \"advertisement_id\": 3,\n          \"employee_id\": 3,\n          \"employee\": {\n              \"id\": 3,\n              \"user_id\": 7,\n              \"category_id\": 1,\n              \"stage_id\": 6,\n              \"short_description\": \"Desarrollador Web\",\n              \"about_me\": \"Soy un desarrollor web\",\n              \"price_hour\": \"15.50\",\n              \"behance_user\": null,\n              \"behance_active\": null,\n              \"linkedin_active\": null,\n              \"user\": {\n                  \"id\": 7,\n                  \"name\": \"Aldo\",\n                  \"lastname\": \"Cabezoniarini\",\n                  \"photo\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/techie-exitum/imagenes/user-profile/7af56780-01ab-11ea-a1a8-0123456789ab1cama.png\",\n                  \"description\": \"Soy una bandida bien rica , me gusta miya lo amo.\",\n                  \"avg_rating\": 1\n              },\n              \"invitations\": [\n                  {\n                      \"created_at\": \"2019-11-11T16:39:49.000Z\",\n                      \"saved\": 1,\n                      \"advertisement_id\": 3,\n                      \"employee_id\": 3\n                  }\n              ]\n          }\n      },\n      {\n          \"created_at\": \"2019-11-12T15:51:50.000Z\",\n          \"saved\": 1,\n          \"advertisement_id\": 3,\n          \"employee_id\": 4,\n          \"employee\": {\n              \"id\": 4,\n              \"user_id\": 8,\n              \"category_id\": 1,\n              \"stage_id\": 6,\n              \"short_description\": \"Desarrollador Web\",\n              \"about_me\": \"Soy un desarrollor web\",\n              \"price_hour\": \"15.50\",\n              \"behance_user\": null,\n              \"behance_active\": null,\n              \"linkedin_active\": null,\n              \"user\": {\n                  \"id\": 8,\n                  \"name\": \"javier\",\n                  \"lastname\": \"lecca\",\n                  \"photo\": null,\n                  \"description\": null,\n                  \"avg_rating\": 2\n              },\n              \"invitations\": [\n                  {\n                      \"created_at\": \"2019-11-12T15:51:50.000Z\",\n                      \"saved\": 1,\n                      \"advertisement_id\": 3,\n                      \"employee_id\": 4\n                  }\n              ]\n          }\n      }\n  ],\n  \"current\": 1,\n  \"pages\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVERTISEMENT",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
     "url": "/proposals/byAdvertisement?advertisement_id=ID",
     "title": "GET proposals by advertisement",
     "name": "proposals_by_advertisement",
@@ -1544,7 +1636,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "\t{\n        \"category\": \"tecn\"\n    }",
+          "content": "{\n    \"category\": \"tecn\"\n}",
           "type": "json"
         },
         {
@@ -2459,7 +2551,7 @@
       "examples": [
         {
           "title": "Datos obtenidos:",
-          "content": "{\n    \"status\": true,\n    \"message\": \"Etapa actual con sus niveles\",\n    \"data\": {\n        \"id\": 6,\n        \"stage\": \"Etapa 1 empleado\",\n        \"description\": \"Etapa 1 empleado.\",\n        \"type\": \"employee\",\n        \"steps\": [\n            {\n                \"id\": 21,\n                \"icon\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png\",\n                \"step\": \"Nivel 1 Etapa 1 employee\",\n                \"stage_id\": 6,\n                \"employee_steps\": [\n                    {\n                        \"employee_id\": 4,\n                        \"step_id\": 21,\n                        \"tip_completed\": 0,\n                        \"icon_count_tip\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg\",\n                        \"state\": \"incompleto\"\n                    }\n                ],\n                \"challenges\": [\n                    {\n                        \"id\": 321,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 21,\n                        \"tip_id\": 65,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    },\n                    {\n                        \"id\": 322,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 21,\n                        \"tip_id\": 66,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    }\n                ]\n            },\n            {\n                \"id\": 22,\n                \"icon\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png\",\n                \"step\": \"Nivel 2 Etapa 1 employee\",\n                \"stage_id\": 6,\n                \"employee_steps\": [\n                    {\n                        \"employee_id\": 4,\n                        \"step_id\": 22,\n                        \"tip_completed\": 0,\n                        \"icon_count_tip\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg\",\n                        \"state\": \"incompleto\"\n                    }\n                ],\n                \"challenges\": [\n                    {\n                        \"id\": 325,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 22,\n                        \"tip_id\": 69,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    },\n                    {\n                        \"id\": 326,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 22,\n                        \"tip_id\": 70,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    }\n                ]\n            }               \n        ]\n    }\n}",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Etapa actual con sus niveles\",\n    \"data\": {\n        \"id\": 6,\n        \"stage\": \"Etapa 1 empleado\",\n        \"description\": \"Etapa 1 empleado.\",\n        \"type\": \"employee\",\n        \"steps\": [\n            {\n                \"id\": 21,\n                \"icon\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png\",\n                \"step\": \"Nivel 1 Etapa 1 employee\",\n                \"stage_id\": 6,\n                \"employee_steps\": [\n                    {\n                        \"employee_id\": 4,\n                        \"step_id\": 21,\n                        \"tip_completed\": 0,\n                        \"icon_count_tip\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg\",\n                        \"state\": \"incompleto\"\n                    }\n                ],\n                \"challenges\": [\n                    {\n                        \"id\": 321,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 21,\n                        \"tip_id\": 65,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    },\n                    {\n                        \"id\": 322,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 21,\n                        \"tip_id\": 66,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    }\n                ]\n            },\n            {\n                \"id\": 22,\n                \"icon\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png\",\n                \"step\": \"Nivel 2 Etapa 1 employee\",\n                \"stage_id\": 6,\n                \"employee_steps\": [\n                    {\n                        \"employee_id\": 4,\n                        \"step_id\": 22,\n                        \"tip_completed\": 0,\n                        \"icon_count_tip\": \"https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg\",\n                        \"state\": \"incompleto\"\n                    }\n                ],\n                \"challenges\": [\n                    {\n                        \"id\": 325,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 22,\n                        \"tip_id\": 69,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    },\n                    {\n                        \"id\": 326,\n                        \"user_id\": 8,\n                        \"employee_id\": 4,\n                        \"startup_id\": null,\n                        \"stage_id\": 6,\n                        \"step_id\": 22,\n                        \"tip_id\": 70,\n                        \"checked\": false,\n                        \"status\": \"Por verificar\",\n                        \"date\": \"2019-11-08T20:39:49.000Z\",\n                        \"comment\": null,\n                        \"reply\": null\n                    }\n                ]\n            }\n        ]\n    }\n}",
           "type": "json"
         }
       ]
@@ -2856,6 +2948,98 @@
         {
           "title": "Datos obtenidos:",
           "content": "{\n    \"status\": true,\n    \"message\": \"Respuesta enviada correctamente\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
+    "url": "/challenges/summaryTips?tip_id=ID",
+    "title": "GET summary of tips",
+    "name": "summary_of_tips",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Retos cumplidos por otros usuarios.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "tip_id",
+            "description": "<p>Id del reto</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/summaryTips?tip_id=1",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto cumplido por otros usuario\",\n    \"data\": [\n        {\n            \"reply\": \"ReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyRReplyeply\",\n            \"date\": \"2019-11-07T15:39:41.000Z\",\n            \"user\": {\n                \"id\": 12,\n                \"name\": \"Leidy\",\n                \"lastname\": \"Callupe\",\n                \"photo\": null\n            }\n        }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -3322,7 +3506,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/employees/create\n{\n    \"user_id\" : 3,\n    \"category_id\" : 1,\n    \"about_me\" : \"Soy un desarrollor web\",\n    \"short_description\" : \"Desarrollador Web\",\n    \"price_hour\" : 15,\n    \"types\" : [1],\n    \"languages\" : [\n            {\n                \"language_id\": 2,\n                \"level_id\": 2\t\n            },\n            {\n                \"language_id\": 3,\n                \"level_id\": 3\n            }\n        ]\n}",
+          "content": "/employees/create\n{\n    \"user_id\" : 3,\n    \"category_id\" : 1,\n    \"about_me\" : \"Soy un desarrollor web\",\n    \"short_description\" : \"Desarrollador Web\",\n    \"price_hour\" : 15,\n    \"types\" : [1],\n    \"languages\" : [\n            {\n                \"language_id\": 2,\n                \"level_id\": 2\n            },\n            {\n                \"language_id\": 3,\n                \"level_id\": 3\n            }\n        ]\n}",
           "type": "querystring"
         }
       ]
@@ -4280,7 +4464,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "\t{\n        \"user_id\": 2,\n        \"rating\": 5\n    }",
+          "content": "{\n    \"user_id\": 2,\n    \"rating\": 5\n}",
           "type": "json"
         },
         {
@@ -4400,7 +4584,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "\t{\n        \"user_id\": 2,\n        \"review\": \"Recomendación del usuario 2\"\n    }",
+          "content": "{\n    \"user_id\": 2,\n    \"review\": \"Recomendación del usuario 2\"\n}",
           "type": "json"
         },
         {
@@ -4520,7 +4704,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "\t{\n        \"from_user_id\": 2,\n        \"rating\": 5\n    }",
+          "content": "{\n    \"from_user_id\": 2,\n    \"rating\": 5\n}",
           "type": "json"
         },
         {
@@ -4640,7 +4824,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "\t{\n        \"from_user_id\": 2,\n        \"review\": \"Comentario del usuario 2\"\n    }",
+          "content": "{\n    \"from_user_id\": 2,\n    \"review\": \"Comentario del usuario 2\"\n}",
           "type": "json"
         },
         {
@@ -5259,7 +5443,7 @@
       "examples": [
         {
           "title": "Datos requeridos",
-          "content": "\t{\n        \"stage\": \"stage\",\n        \"description\": \"description\",\n        \"type\":\"type\"\n    }",
+          "content": "{\n    \"stage\": \"stage\",\n    \"description\": \"description\",\n    \"type\":\"type\"\n}",
           "type": "json"
         },
         {
@@ -6792,91 +6976,6 @@
     }
   },
   {
-    "type": "POST",
-    "url": "/users/resend",
-    "title": "POST resendToken user",
-    "name": "resendToken",
-    "group": "USER",
-    "version": "1.0.0",
-    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email para el reenvio de token.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el mensaje exitoso</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "USER",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
@@ -6935,6 +7034,91 @@
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": true,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/resend",
+    "title": "POST resendToken user",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email para el reenvio de token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el mensaje exitoso</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
           "type": "json"
         }
       ]
