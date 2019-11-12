@@ -1,3 +1,4 @@
+const text = require('../libs/text');
 const models = require('../models/index');
 
 function timesFormat(time) {
@@ -6,7 +7,7 @@ function timesFormat(time) {
     var mnts = Number(time.match(/:(\d+)/)[1]);
     var format = time.match(/\s(.*)$/)[1];
 
-    if (hrs > 12 || hrs < 0 || mnts > 59 || mnts < 0) throw("Opps! formato de hora incorrecto.");
+    if (hrs > 12 || hrs < 0 || mnts > 59 || mnts < 0) throw(text.incorrectFormat('hora'));
     
     if (format.toUpperCase() == "PM" && hrs < 12) hrs = hrs + 12;
     if (format.toUpperCase() == "AM" && hrs == 12) hrs = hrs - 12;
@@ -34,7 +35,7 @@ module.exports = {
         var hrs = Number(time.match(/^(\d+)/)[1]);
         var mnts = Number(time.match(/:(\d+)/)[1]);
 
-        if (hrs > 24 || hrs < 0 || mnts > 59 || mnts < 0) throw("Opps! formato de hora incorrecto.");
+        if (hrs > 24 || hrs < 0 || mnts > 59 || mnts < 0) throw(text.incorrectFormat('hora'));
         if(mnts < 10) mnts = `0${mnts}`
 
         if (hrs > 0 && hrs < 12) time = `${hrs}:${mnts} AM`
@@ -50,9 +51,7 @@ module.exports = {
         var now = new Date()
         var dateA = new Date(date)
 
-        if (now >= dateA) {
-            throw('Ooops!, la fecha no es válida, no puede ser inferior a la actual.')
-        }
+        if (now >= dateA) throw(text.notAvailable('fecha'))
 
         return true
     },
@@ -62,7 +61,7 @@ module.exports = {
         var now = new Date()
         var hour = timesFormat(time)
 
-        if (now.getHours() >= hour[0]) throw('Ooops!, la hora no es válida, debe de ser superior a la actual.')
+        if (now.getHours() >= hour[0]) throw(text.notAvailable('hora'))
 
     },
 

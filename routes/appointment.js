@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/appointmentController');
 
 router.post('/list-by-id/:user_id',
+    controller.validate('by-user-id'),
     controller.listByUserId
 )
 

@@ -71,9 +71,7 @@ module.exports = {
 
         var errors = validationResult(req)
 
-        if (!errors.isEmpty()) {
-            returnError( res, 'Campos incorrectos, por favor intentelo nuevamente.', errors.array() )
-        }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { from_hour, to_hour } = req.body
         const { user_id } = req.params
@@ -97,7 +95,7 @@ module.exports = {
     unavailable: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         const { not_available } = req.body
@@ -130,7 +128,7 @@ module.exports = {
     unavailable_multiple: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         const { available } = req.body
@@ -163,7 +161,7 @@ module.exports = {
     schedule: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
@@ -183,7 +181,7 @@ module.exports = {
     scheduleDate: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         const { date } = req.body
