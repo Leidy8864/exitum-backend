@@ -540,6 +540,59 @@ module.exports = {
         }
     },
 
+    usersFavorites: async (req, res) => {
+        const { advertisement_id } = req.query
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        const inv = await models.invitation.findAll({
+            offset: (perPage * (page - 1)),
+            limit: perPage,
+            where: { advertisement_id: advertisement_id },
+            include: [
+                {
+                    model: models.employee,
+                    include: [
+                        {
+                            model: models.user,
+                            attributes: ['id', 'name', 'lastname', 'photo', 'description', 'avg_rating'],
+                        },
+                        {
+                            model: models.invitation,
+                            where: {
+                                advertisement_id: advertisement_id
+                            },
+                            required: false
+                        }
+                    ]
+                }
+            ]
+        })
+        const totalRows = await models.invitation.count({
+            where: { advertisement_id: advertisement_id },
+            include: [
+                {
+                    model: models.employee,
+                    include: [
+                        {
+                            model: models.user,
+                            attributes: ['id', 'name', 'lastname', 'photo', 'description', 'avg_rating'],
+                        },
+                        {
+                            model: models.invitation,
+                            where: {
+                                advertisement_id: advertisement_id
+                            },
+                            required: false
+                        }
+                    ]
+                }
+            ]
+        })
+        return res.json({ status: true, message: "Lista de impulsores favoritos.", data: inv, current: page, pages: Math.ceil(totalRows / perPage) })
+
+    },
+
     createInvitation: async (req, res) => {
         const { advertisement_id, user_id, saved } = req.body
         const advertisement = await models.advertisement.findOne({ where: { id: advertisement_id } })
