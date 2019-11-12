@@ -548,7 +548,10 @@ module.exports = {
         const inv = await models.invitation.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
-            where: { advertisement_id: advertisement_id },
+            where: { 
+                advertisement_id: advertisement_id,
+                saved: 1 
+            },
             include: [
                 {
                     model: models.employee,
@@ -569,7 +572,10 @@ module.exports = {
             ]
         })
         const totalRows = await models.invitation.count({
-            where: { advertisement_id: advertisement_id },
+            where: { 
+                advertisement_id: advertisement_id,
+                saved: 1  
+            },
             include: [
                 {
                     model: models.employee,
