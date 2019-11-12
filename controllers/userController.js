@@ -216,6 +216,7 @@ module.exports = {
                     const result = await models.sequelize.transaction(async (t) => {
 
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
+                        console.log(user);
                         const newUser = await models.user.create({
                             name: user.name,
                             lastname: user.lastname,

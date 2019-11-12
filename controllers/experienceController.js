@@ -17,7 +17,7 @@ module.exports = {
                 return [ user_id ]
             case 'create':
                 return [
-                    check('date_start').exists().withMessage(text.date_start),
+                    check('date_start').exists().withMessage(text.dateStart),
                     user_id, check('position').exists().withMessage(text.position),
                     check('company_name').exists().withMessage(text.name('empresa')),
                 ]
@@ -32,7 +32,7 @@ module.exports = {
     findUserId: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
@@ -58,7 +58,7 @@ module.exports = {
     createExperience: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
         
         const { user_id, position, company_name, description, date_start, date_end } = req.body
 
@@ -84,9 +84,9 @@ module.exports = {
                 }
             });
 
-            if (!created) throw(text.duplicate_element)
+            if (!created) throw(text.duplicateElement)
 
-            successful(res, text.success_create('experiencia'), experience)
+            successful(res, text.successCreate('experiencia'), experience)
 
         } catch (error) { returnError(res, error) }
 
@@ -95,7 +95,7 @@ module.exports = {
     updateExperience: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { experience_id, user_id, position, company_name, description, date_start, date_end, current_job } = req.body
 
@@ -114,7 +114,7 @@ module.exports = {
                 } ],
             });
 
-            if (!experience) throw(text.not_found_element)
+            if (!experience) throw(text.notFoundElement)
 
             const company = await createCompany(company_name || experience.company.name)
 
@@ -127,7 +127,7 @@ module.exports = {
                 current_job: (date_end) ? 0 : 1
             });
 
-            successful(res, text.success_update('experiencia'), experience)
+            successful(res, text.successUpdate('experiencia'), experience)
 
         } catch (error) { returnError(res, error) }
         
@@ -136,7 +136,7 @@ module.exports = {
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id, experience_id } = req.body
 
@@ -151,7 +151,7 @@ module.exports = {
                 }
             })
 
-            if (!experience) throw(text.not_found_element)
+            if (!experience) throw(text.notFoundElement)
 
             await experience.destroy()
 

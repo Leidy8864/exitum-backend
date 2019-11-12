@@ -19,8 +19,8 @@ module.exports = {
                 return [
                     check('university_name').exists().withMessage(text.name('universidad')),
                     check('description').exists().withMessage(text.description),
-                    check('date_start').exists().withMessage(text.date_start),
-                    check('date_end').exists().withMessage(text.date_end)
+                    check('date_start').exists().withMessage(text.dateStart),
+                    check('date_end').exists().withMessage(text.dateEnd)
                 ]
             case 'update':
                 return [
@@ -33,7 +33,7 @@ module.exports = {
     findUserId: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
@@ -56,7 +56,7 @@ module.exports = {
     createEducation: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id, university_name, description, date_start, date_end } = req.body
 
@@ -80,9 +80,9 @@ module.exports = {
                     }
                 });
 
-            if (!created) throw(text.duplicate_element)
+            if (!created) throw(text.duplicateElement)
 
-            successful(res, text.success_create('educación'), education)
+            successful(res, text.successCreate('educación'), education)
 
         } catch (error) { returnError(res, error) }
         
@@ -91,7 +91,7 @@ module.exports = {
     updateEducation: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { education_id, user_id, university_name, description, date_start, date_end } = req.body
         
@@ -110,7 +110,7 @@ module.exports = {
                 } ],
             });
 
-            if (!education) throw(text.not_found_element)
+            if (!education) throw(text.notFoundElement)
 
             const university = await createUniversity(university_name || education.university.university)
 
@@ -121,7 +121,7 @@ module.exports = {
                 university_id: university.id
             });
 
-            successful(res, text.success_update('educación'), education)
+            successful(res, text.successUpdate('educación'), education)
 
         } catch (error) { returnError(res, error) }
     },
@@ -129,7 +129,7 @@ module.exports = {
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id, education_id } = req.body
 
@@ -144,7 +144,7 @@ module.exports = {
                 }
             })
 
-            if (!education) throw(text.not_found_element)
+            if (!education) throw(text.notFoundElement)
 
             await education.destroy()
 

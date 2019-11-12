@@ -23,7 +23,7 @@ module.exports = {
                 return [
                     user_id, check('name').exists().withMessage(text.name('certificado')),
                     check('issuing_company').exists().withMessage(text.name('empresa')),
-                    check('date_expedition').exists().withMessage(text.date_expedition)
+                    check('date_expedition').exists().withMessage(text.dateExpedition)
                 ]
             case 'update':
                 return [ user_id, check('certification_id').exists().withMessage(text.id('certificado')).isNumeric().withMessage(text.numeric) ]
@@ -35,7 +35,7 @@ module.exports = {
     findUserId: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
@@ -61,7 +61,7 @@ module.exports = {
                     company_id: element.company_id,
                     date_expedition : element.date_expedition,
                     date_expiration : element.date_expiration,
-                    url : (element.document_url  && element.document_url != '') ? text.download_document(element.document_url) : null,
+                    url : (element.document_url  && element.document_url != '') ? text.downloadDocument(element.document_url) : null,
                     issuing_company: element.company.name
                }
             } ))
@@ -75,7 +75,7 @@ module.exports = {
     create:  async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
@@ -110,7 +110,7 @@ module.exports = {
                 }
             })
 
-            if (!created) throw(text.duplicate_element)
+            if (!created) throw(text.duplicateElement)
 
             const data = {
                 id: certification.id,
@@ -118,10 +118,10 @@ module.exports = {
                 company_id: company.id,
                 date_expedition : certification.date_expedition,
                 date_expiration : certification.date_expiration,
-                url : (certification.document_url  && certification.document_url != '') ? text.download_document(certification.document_url): null,
+                url : (certification.document_url  && certification.document_url != '') ? text.downloadDocument(certification.document_url): null,
             } 
 
-            successful(res, text.success_create('certificado'), data)
+            successful(res, text.successCreate('certificado'), data)
             
         } catch (error) { returnError(res, error) }
 
@@ -130,7 +130,7 @@ module.exports = {
     downloadFile: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { file_name } = req.params
 
@@ -152,7 +152,7 @@ module.exports = {
     updateUserCertification: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
@@ -173,7 +173,7 @@ module.exports = {
                 ]
             })
 
-            if (!certification) throw(text.not_found_element)
+            if (!certification) throw(text.notFoundElement)
 
             const company = await createCompany(issuing_company || certification.company.name)
 
@@ -203,11 +203,11 @@ module.exports = {
                 company_id: certification.company_id,
                 date_expedition : certification.date_expedition,
                 date_expiration : certification.date_expiration,
-                url : (certification.document_url  && certification.document_url != '') ? text.download_document(certification.document_url) : null,
+                url : (certification.document_url  && certification.document_url != '') ? text.downloadDocument(certification.document_url) : null,
                 issuing_company: certification.company.name
             } 
 
-            successful(res, text.success_update('certificado'), data)
+            successful(res, text.successUpdate('certificado'), data)
 
         } catch (error) { returnError(res, error) }
 
@@ -216,7 +216,7 @@ module.exports = {
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validation_data, errors.array()) }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         try {
 
@@ -231,7 +231,7 @@ module.exports = {
                 }
             })
 
-            if (!certification) throw(text.not_found_element)
+            if (!certification) throw(text.notFoundElement)
 
             if (certification.document_url  && certification.document_url != '') {
                 s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[5]);
@@ -239,7 +239,7 @@ module.exports = {
     
             await certification.destroy()
 
-            successful(res, text.success_delete('certificado'))
+            successful(res, text.successDelete('certificado'))
             
         } catch (error) { returnError(res, error) }
 
