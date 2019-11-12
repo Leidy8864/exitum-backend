@@ -284,7 +284,7 @@ module.exports = {
     listStepEmployee: async (req, res) => {
         const { step_id, user_id } = req.query
         const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } })
-        if(!employee){return res.json({status:false, message:"No existe impulsor con este usuario."})}
+        if (!employee) { return res.json({ status: false, message: "No existe impulsor con este usuario." }) }
         models.step.findOne({
             where: { id: step_id },
             include: [
@@ -306,6 +306,16 @@ module.exports = {
         }).catch(err => {
             console.log(err)
             return res.json({ status: false, message: "Vuelva a intentarlo" })
+        })
+    },
+
+    summaryTips: async (req, res) => {
+        const { tip_id } = req.query
+        models.challenge.findAll({
+            where: { tip_id: tip_id },
+            attributes: ['reply', 'date']
+        }).then(tips => {
+            return res.json({ status: true, message: "Reto cumplido por otros usuario", data: tips })
         })
     }
 }

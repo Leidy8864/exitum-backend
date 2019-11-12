@@ -908,7 +908,7 @@
             "group": "Parameter",
             "type": "Int",
             "optional": false,
-            "field": "employee_id",
+            "field": "user_id",
             "description": "<p>Id del impulsor</p>"
           },
           {
@@ -923,7 +923,7 @@
       "examples": [
         {
           "title": "Ejemplo url",
-          "content": "/ads/invitation\n{\n    \"advertisement_id\": 3,\n    \"employee_id\": 3,\n    \"saved\": 1\n}",
+          "content": "/ads/invitation\n{\n    \"advertisement_id\": 3,\n    \"user_id\": 3,\n    \"saved\": 1\n}",
           "type": "querystring"
         }
       ]
