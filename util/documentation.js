@@ -2224,13 +2224,13 @@
  * @apiUse ErrorGeneral
  * @apiDescription Creacion del impulsor favorito.
  * @apiParam {Int} advertisement_id Id del anuncio
- * @apiParam {Int} employee_id Id del impulsor
+ * @apiParam {Int} user_id Id del impulsor
  * @apiParam {Int} saved Valor 0 o 1 
 	* @apiParamExample {querystring} Ejemplo url
     /ads/invitation
     {
         "advertisement_id": 3,
-        "employee_id": 3,
+        "user_id": 3,
         "saved": 1
     }	
  *

@@ -8,22 +8,22 @@ router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
 
-router.post('/createStage', 
+router.post('/createStage',
     controller.validate('createStage'),
     controller.createStage
 );
 
-router.post('/createStep', 
+router.post('/createStep',
     controller.validate('createStep'),
     controller.createStep
 );
 
-router.post('/createTip', 
+router.post('/createTip',
     controller.validate('createTip'),
     controller.createTip
 );
 
-router.post('/create', 
+router.post('/create',
     controller.createChallenge
 );
 
@@ -49,6 +49,10 @@ router.get('/download/:file',
 
 router.post('/reply',
     controller.replyTip
+);
+
+router.get('/summaryTips',
+    controller.summaryTips
 );
 
 module.exports = router;

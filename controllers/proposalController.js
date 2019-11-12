@@ -97,6 +97,13 @@ module.exports = {
                                 as: 'toUserSkills'
                             }
                         ]
+                    },
+                    {
+                        model: models.invitation,
+                        where: {
+                            advertisement_id: advertisement_id
+                        },
+                        required: false
                     }
                 ]
             })

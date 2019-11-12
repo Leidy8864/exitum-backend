@@ -39,7 +39,7 @@ module.exports = {
                 return [
                     check('advertisement_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                 ]
-        
+
             case 'invitation':
 
                 return [
@@ -509,7 +509,11 @@ module.exports = {
                         },
                         include: [
                             {
-                                model: models.invitation
+                                model: models.invitation,
+                                where: {
+                                    advertisement_id: advertisement_id
+                                },
+                                required: false
                             }
                         ]
                     }
@@ -537,10 +541,12 @@ module.exports = {
     },
 
     createInvitation: async (req, res) => {
-        const { advertisement_id, employee_id, saved } = req.body
+        const { advertisement_id, user_id, saved } = req.body
         const advertisement = await models.advertisement.findOne({ where: { id: advertisement_id } })
+        const employee = await models.employee.findOne({ where: { user_id: user_id } })
+        if (!employee) { return res.json({ status: false, message: "El impulsor no existe." }) }
         if (!advertisement) { return res.json({ status: false, message: "No existe el anuncio." }) }
-        await advertisement.addInvitation(employee_id, { through: { saved: saved, created_at: Date.now() } }).then(invitation => {
+        await advertisement.addInvitation(employee.id, { through: { saved: saved, created_at: Date.now() } }).then(invitation => {
             return res.json({ status: true, message: "Impulsor favorito creado o modificado", data: invitation })
         })
     }
