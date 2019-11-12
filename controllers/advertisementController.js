@@ -593,10 +593,9 @@ module.exports = {
             ]
         })
         const totalRows = await models.invitation.count({
-            distinct: true,
             where: { 
                 advertisement_id: advertisement_id,
-                saved: 1  
+                saved: 1 
             },
             include: [
                 {
