@@ -74,7 +74,7 @@ module.exports = {
 
     byAdvertisement: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         try {
@@ -108,6 +108,7 @@ module.exports = {
                 ]
             })
             const totalRows = await models.employee.count({
+                distinct: true,
                 include: [
                     {
                         model: models.advertisement,

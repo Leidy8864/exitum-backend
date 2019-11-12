@@ -145,8 +145,20 @@ module.exports = {
 
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
-            if (advertisement) {
-                advertisement.addSkill(skills);
+            if (advertisement) { 
+                if (skills) {
+                    var skills_id = await Promise.all(skills.map(async element => {
+                        var [response, created] = await models.skill.findOrCreate({
+                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                            defaults: {
+                                skill: element
+                            }
+                        })
+                        return await response.id
+                    }
+                    ))
+                }
+                await advertisement.addSkill(skills_id);
             } else {
                 return res.status(200).json({ status: false, message: "No se encontró el anuncio" });
             }
@@ -241,7 +253,7 @@ module.exports = {
 
     findAdvertByEntrepreneur: async (req, res) => {
         const user_id = req.query.user_id;
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         try {
@@ -293,6 +305,7 @@ module.exports = {
                     }
                 ).then(advertisements => {
                     models.advertisement.count({
+                        distinct: true,
                         where: {
                             state: req.query.state,
                             '$startup.entrepreneur.id$': entrepreneur.id
@@ -332,7 +345,7 @@ module.exports = {
 
     advertsBySkill: async (req, res) => {
         let user_id = req.query.user_id
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         const user = await models.user.findOne({
@@ -384,6 +397,7 @@ module.exports = {
             ]
         }).then(ads => {
             models.advertisement.count({
+                distinct: true,
                 where: {
                     state: 'active',
                     id: { [models.Sequelize.Op.notIn]: prop_ads_id }
@@ -410,7 +424,7 @@ module.exports = {
 
     advertsByProposal: async (req, res) => {
         let user_id = req.query.user_id
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } });
@@ -446,6 +460,7 @@ module.exports = {
             ]
         }).then(ads => {
             models.advertisement.count({
+                distinct: true,
                 where: {
                     //state: 'active',
                     id: { [models.Sequelize.Op.or]: [ads_ids] }
@@ -466,7 +481,7 @@ module.exports = {
 
     usersRecomendation: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         try {
@@ -520,16 +535,22 @@ module.exports = {
                 ]
             });
             const totalRows = await models.user.count({
+                distinct: true,
                 include: [
                     {
                         model: models.skill,
                         as: "toUserSkills",
                         where: {
-                            skill: { [models.Sequelize.Op.or]: [skill_name] }
-                        }
+                            skill: { [models.Sequelize.Op.or]: skill_name }
+                        },
+                        required: true
                     },
                     {
-                        model: models.employee
+                        model: models.employee,
+                        where: {
+                            id: { [models.Sequelize.Op.notIn]: prop_emp_ids }
+                        },
+                        required: true
                     }
                 ]
             });
@@ -542,7 +563,7 @@ module.exports = {
 
     usersFavorites: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         const inv = await models.invitation.findAll({
@@ -572,6 +593,7 @@ module.exports = {
             ]
         })
         const totalRows = await models.invitation.count({
+            distinct: true,
             where: { 
                 advertisement_id: advertisement_id,
                 saved: 1  
