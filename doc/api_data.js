@@ -2891,6 +2891,98 @@ define({ "api": [
     }
   },
   {
+    "type": "GET",
+    "url": "/challenges/summaryTips?tip_id=ID",
+    "title": "GET summary of tips",
+    "name": "summary_of_tips",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Retos cumplidos por otros usuarios.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "tip_id",
+            "description": "<p>Id del reto</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/summaryTips?tip_id=1",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Obejct",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica los datos del anuncio</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto cumplido por otros usuario\",\n    \"data\": [\n        {\n            \"reply\": \"ReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyRReplyeply\",\n            \"date\": \"2019-11-07T15:39:41.000Z\",\n            \"user\": {\n                \"id\": 12,\n                \"name\": \"Leidy\",\n                \"lastname\": \"Callupe\",\n                \"photo\": null\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "POST",
     "url": "/educations/create",
     "title": "POST educations create",
@@ -6792,91 +6884,6 @@ define({ "api": [
     }
   },
   {
-    "type": "POST",
-    "url": "/users/resend",
-    "title": "POST resendToken user",
-    "name": "resendToken",
-    "group": "USER",
-    "version": "1.0.0",
-    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email para el reenvio de token.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el mensaje exitoso</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "USER",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
@@ -6935,6 +6942,91 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": true,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/users/resend",
+    "title": "POST resendToken user",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email para el reenvio de token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el mensaje exitoso</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
           "type": "json"
         }
       ]

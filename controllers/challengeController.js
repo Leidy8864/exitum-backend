@@ -311,9 +311,28 @@ module.exports = {
 
     summaryTips: async (req, res) => {
         const { tip_id } = req.query
+        let perPage = 20;
+
         models.challenge.findAll({
-            where: { tip_id: tip_id },
-            attributes: ['reply', 'date']
+            limit: perPage,
+            where: {
+                tip_id: tip_id,
+                checked: 1
+            },
+            attributes: ['reply', 'date'],
+            order: [
+                ['date', 'DESC']
+            ],
+            include: [
+                {
+                    model: models.user,
+                    attributes: ['id', 'name', 'lastname', 'photo'],
+                    // include: [
+                    //     { model: models.employee}
+                    // ]
+                }
+            ]
+
         }).then(tips => {
             return res.json({ status: true, message: "Reto cumplido por otros usuario", data: tips })
         })

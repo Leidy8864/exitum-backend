@@ -2844,6 +2844,42 @@
  *
  */
 
+  /**
+ *
+ * @api {GET} /challenges/summaryTips?tip_id=ID GET summary of tips
+ * @apiName summary of tips
+ * @apiGroup CHALLENGES
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription Retos cumplidos por otros usuarios.
+ * @apiParam {Int} tip_id Id del reto
+	* @apiParamExample {querystring} Ejemplo url
+    /challenges/summaryTips?tip_id=1
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccess (Datos obtenidos) {Obejct} data Indica los datos del anuncio 
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Reto cumplido por otros usuario",
+        "data": [
+            {
+                "reply": "ReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyRReplyeply",
+                "date": "2019-11-07T15:39:41.000Z",
+                "user": {
+                    "id": 12,
+                    "name": "Leidy",
+                    "lastname": "Callupe",
+                    "photo": null
+                }
+            }
+        ]
+    }
+ *
+ *
+ */
+
  /**
  *
  * @api {POST} /proposals/create POST create proposal
