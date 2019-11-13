@@ -253,7 +253,7 @@ module.exports = {
 
     findAdvertByEntrepreneur: async (req, res) => {
         const user_id = req.query.user_id;
-        let perPage = 6;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         try {
@@ -345,7 +345,7 @@ module.exports = {
 
     advertsBySkill: async (req, res) => {
         let user_id = req.query.user_id
-        let perPage = 6;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         const user = await models.user.findOne({
@@ -424,7 +424,7 @@ module.exports = {
 
     advertsByProposal: async (req, res) => {
         let user_id = req.query.user_id
-        let perPage = 6;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } });
@@ -462,10 +462,16 @@ module.exports = {
             models.advertisement.count({
                 distinct: true,
                 where: {
-                    //state: 'active',
+                    // state: 'active',
                     id: { [models.Sequelize.Op.or]: [ads_ids] }
                 },
                 include: [
+                    {
+                        model: models.skill
+                    },
+                    {
+                        model: models.area
+                    },
                     {
                         model: models.startup,
                         include: [{
@@ -481,7 +487,7 @@ module.exports = {
 
     usersRecomendation: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 6;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         try {
@@ -563,7 +569,7 @@ module.exports = {
 
     usersFavorites: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 6;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         const inv = await models.invitation.findAll({
@@ -593,10 +599,9 @@ module.exports = {
             ]
         })
         const totalRows = await models.invitation.count({
-            distinct: true,
             where: { 
                 advertisement_id: advertisement_id,
-                saved: 1  
+                saved: 1 
             },
             include: [
                 {

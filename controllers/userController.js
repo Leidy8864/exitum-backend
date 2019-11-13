@@ -108,7 +108,8 @@ module.exports = {
                         // country_id: country.id || 1,
                         country_id: 1,
                         // currency_id: country.currency_id || 1
-                        currency_id: 1
+                        currency_id: 1,
+                        avg_rating: 1
                     }, { transaction: t });
                     return newUser;
                 });
@@ -229,7 +230,8 @@ module.exports = {
                             role: 'undefined',
                             photo: user.image,
                             country_id: 1,
-                            currency_id: 1
+                            currency_id: 1,
+                            avg_rating: 1
                         }, { transaction: t });
 
                         await models.token.create({
