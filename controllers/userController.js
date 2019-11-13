@@ -229,6 +229,8 @@ module.exports = {
                             email: user.email,
                             role: 'undefined',
                             photo: user.image,
+                            from_hour: '7:00:00',
+                            to_hour: '22:00:00',
                             country_id: 1,
                             currency_id: 1,
                             avg_rating: 1

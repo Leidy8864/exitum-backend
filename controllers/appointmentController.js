@@ -63,6 +63,8 @@ module.exports = {
 
 		try {
 
+			console.log(req.body, req.params)
+
 			const user = await existById(models.user, to_user_id, 'id');
 			var timeF = timesFormat(time);
 
@@ -86,6 +88,8 @@ module.exports = {
 					description: description
 				}
 			});
+
+			console.log(created)
 
             if (!created) throw (text.duplicateElement);
 
