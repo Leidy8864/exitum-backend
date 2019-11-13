@@ -11,8 +11,8 @@ module.exports = {
 
 	validate: (appointment) => {
 
-		var user_id = check('to_user_id').exists().withMessage(text.id('usuario al que se agendará'))
-		var hour_id = check('from_user_id').exists().withMessage(text.id('usuario que inició sesión'))
+		var to_user_id = check('to_user_id').exists().withMessage(text.id('usuario al que se agendará'))
+		var from_user_id = check('from_user_id').exists().withMessage(text.id('usuario al que se agendará'))
 		var date = check('date').exists().withMessage(text.date('agendar'))
 		var time = check('time').exists().withMessage(text.time('agendar'))
 		var type = check('type').exists().withMessage(text.type('agendar'))
@@ -21,9 +21,9 @@ module.exports = {
 
 		switch (appointment) {
 			case 'by-user-id':
-				return [ user_id, date ];
+				return [ to_user_id, date, type ];
 			case 'create':
-				return [ user_id, hour_id, date, time, type, description ];
+				return [ to_user_id, from_user_id, date, time, type, description ];
         }
         
 	},
@@ -33,15 +33,15 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-		const { user_id } = req.params;
-		const { date } = req.body;
+		const { to_user_id } = req.params;
+		const { date, type } = req.body;
 
 		try {
 			
-			const user = await existById(models.user, user_id);
-			const appointment = await models.appointment.findOne({
+			const user = await existById(models.user, to_user_id);
+			const appointment = await models.appointment.findAll({
 				where: {
-					[Sequelize.Op.and]: [ { to_user_id: user.id }, { date: new Date(date) } ]
+					[Sequelize.Op.and]: [ { to_user_id: user.id }, { date: new Date(date) }, { type: type } ]
 				}
 			});
 
