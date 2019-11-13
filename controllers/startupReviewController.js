@@ -81,9 +81,9 @@ module.exports = {
 
                     successful(res, text.successCreate('rating'))
 
-                }).catch( err => { returnError(res, error) })
+                }).catch(error => { returnError(res, error) })
 
-            }).catch(err => { returnError(res, error) })
+            }).catch(error => { returnError(res, error) })
 
         })
 

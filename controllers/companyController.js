@@ -77,7 +77,7 @@ module.exports = {
             const company = await models.company.findAll({})
             successful(res, 'OK', company)
 
-        } catch (err) { returnError(res, error) }
+        } catch (error) { returnError(res, error) }
 
     }
 }
