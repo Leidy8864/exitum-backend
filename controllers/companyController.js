@@ -1,8 +1,10 @@
-const { putObject, deleteObject } = require('../libs/aws-s3');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
-const models = require('../models/index')
-const { existById } = require('../controllers/elementController');
 const index = require('../config/index');
+const models = require('../models/index')
+const { putObject, deleteObject } = require('../libs/aws-s3');
+const { existById } = require('../controllers/elementController');
+const  { successful, returnError } = require('./responseController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/company-icons';
 
 const { check, validationResult } = require('express-validator');
@@ -62,11 +64,10 @@ module.exports = {
                 })
             }
 
-           return res.status(200).json({ status: true, message: 'OK', data: {  } })
+            successful(res, text.successCreate('empresa'))
 
-        }catch (err) {
-            return res.status(200).json({ status: false, message: err.message, data: {  } })
-        }
+        } catch (error) { returnError(res, error) }
+
     },
     
     all: async(req, res) => {
@@ -74,11 +75,10 @@ module.exports = {
         try {
 
             const company = await models.company.findAll({})
-           return res.status(200).json({ status: true, message: 'OK', data: company })
+            successful(res, 'OK', company)
 
-        }catch (err) {
-            return res.status(200).json({ status: false, message: err.message, data: {  } })
-        }
+        } catch (err) { returnError(res, error) }
+
     }
 }
 

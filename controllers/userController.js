@@ -1,3 +1,4 @@
+const text = require('../libs/text');
 const helper = require('../libs/helper');
 const models = require('../models/index');
 const { highlight } = require('./skillController')
@@ -10,8 +11,9 @@ const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
 const path = require('path');
-const { check, validationResult } = require('express-validator');
 const s3 = require('../libs/aws-s3');
+const { check, validationResult } = require('express-validator');
+const { successful, returnError } = require('../controllers/responseController');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/user-profile';
 
 
@@ -508,27 +510,22 @@ module.exports = {
 
                 var photo = req.files.photo;
                 fileName = s3.putObject(NEW_BUCKET_NAME, photo);
-
                 await user.update({ photo: fileName });
 
-                return res.status(200).json({ status: true, message: "Imagen actualizada correctamente.", data: user });
+                successful(res, text.successUpdate('imagen'), user)
 
             } else {
                 throw ('El usuario no existe!')
             }
 
-        } catch (error) {
-            return res.status(200).json({ status: false, message: (error.message) ? error.message : error });
-        }
+        } catch (error) { returnError(res, error) }
 
     },
 
     updateUser: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
-        }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id, name, lastname, phone, role, birthday, description, skill_id, active } = req.body
 
@@ -563,7 +560,6 @@ module.exports = {
                     description: description
                 });
 
-
                 await highlight(user, skill_id)
 
                 if (req.body.role === "entrepreneur") {
@@ -577,14 +573,14 @@ module.exports = {
                     }
                 }
 
-                return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
+                successful(res, text.successUpdate('usuario'), user)
+
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
-        } catch (error) {
-            console.log("Errrror", error);
-            return res.json({ status: false, message: "Error al actualizar el usuario", data: error });
-        }
+
+        } catch (error) { returnError(res, error) }
+
     },
 
     listCountry: (req, res) => {
