@@ -12,4 +12,9 @@ router.post('/create/:to_user_id',
     controller.create
 );
 
+router.get('/list-by-reminder/:to_user_id',
+    controller.validate('by-user-reminder'),
+    controller.listByUserReminder
+);
+
 module.exports = router;

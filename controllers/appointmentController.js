@@ -20,6 +20,8 @@ module.exports = {
 		var description = check('description').exists().withMessage(text.description)
 
 		switch (appointment) {
+			case 'by-user-reminder':
+				return [ to_user_id ]
 			case 'by-user-id':
 				return [ to_user_id, date, type ];
 			case 'create':
@@ -53,6 +55,29 @@ module.exports = {
 
 	},
 
+	listByUserReminder: async (req, res) => {
+
+		const { to_user_id } = req.params
+
+		try {
+
+			const dateNow = new Date()
+			const user = await existById(models.user, to_user_id, 'id')
+			const appointment = await models.appointment.findAll({
+				where: {
+					[Sequelize.Op.and] : [ 
+						{ to_user_id: user.id }, { type: 'recordatorio' }, 
+						{ date: { [ Sequelize.Op.gte ] : new Date(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) } }  
+					]
+				}
+			})
+
+			successful(res, 'OK', appointment)
+
+		} catch (error) { returnError(res, error) }
+
+	},
+
 	create: async (req, res) => {
 
         var errors = validationResult(req);
@@ -62,8 +87,6 @@ module.exports = {
 		const { from_user_id, date, time, type, description } = req.body;
 
 		try {
-
-			console.log(req.body, req.params)
 
 			const user = await existById(models.user, to_user_id, 'id');
 			var timeF = timesFormat(time);
@@ -88,8 +111,6 @@ module.exports = {
 					description: description
 				}
 			});
-
-			console.log(created)
 
             if (!created) throw (text.duplicateElement);
 
