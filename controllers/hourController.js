@@ -50,10 +50,13 @@ module.exports = {
 
         var now = new Date()
         var dateA = new Date(date)
+        console.log(now.getFullYear(), dateA.getUTCFullYear())
+        // now > dateA
+        if (now.getDate() >= dateA.getUTCDate() && now.getMonth() >= dateA.getUTCMonth() && now.getFullYear() >= dateA.getUTCFullYear()) 
+            return true
 
-        if (now >= dateA) throw(text.notAvailable('fecha'))
-
-        return true
+        throw(text.notAvailable('fecha'))
+        
     },
 
     validateTimeActual: (time) => {
@@ -61,7 +64,7 @@ module.exports = {
         var now = new Date()
         var hour = timesFormat(time)
 
-        if (now.getHours() >= hour[0]) throw(text.notAvailable('hora'))
+        if (now.getHours() <= hour[0]) throw(text.notAvailable('hora'))
 
     },
 

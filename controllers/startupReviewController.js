@@ -1,7 +1,9 @@
-const models = require('../models/index');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
-const { existById } = require('../controllers/elementController');
+const models = require('../models/index');
 const { check, validationResult } = require('express-validator');
+const { existById } = require('../controllers/elementController');
+const { successful, returnError } = require('../controllers/responseController');
 
 module.exports = {
     validate: (review) => {
@@ -31,11 +33,9 @@ module.exports = {
     },
 
     recommendation:  async (req, res) => {
-        var errors = validationResult(req)
 
-        if (!errors.isEmpty()) {
-            return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
-        }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
         
         const { recommendation, user_id } = req.body
         const { startup_id } = req.params
@@ -45,29 +45,24 @@ module.exports = {
             const startup = await existById( models.startup, startup_id )
             startup.addToStartupUser( user_id, { through: { recommendation: recommendation, created_at: Date.now() } } )
 
-            return res.status(200).json( { status: true, message: 'Comentario asignado correctamente.', data: {  } } )
+            successful(res, text.successCreate('comentario'), appointment);
 
-        } catch ( err ) {
-            return res.status(500).json( { status: false, message: err.message, data: { err }  } )
-        }
+        } catch ( error ) { returnError(res, error) }
 
     },
 
     rating:  (req, res) => {
-        var errors = validationResult(req)
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { rating, user_id } = req.body
         const { startup_id } = req.params
-
-        if (!errors.isEmpty()) {
-            return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
-        }
         
         models.startup.findOne( { where: { id: startup_id } } )
         .then(startup => {
 
-            if ( !startup )
-                return res.status(200).json( { status: false, message: "Startup no existente", data: {  }  } )
+            if ( !startup ) return res.status(200).json( { status: false, message: "Startup no existente", data: {  }  } )
 
             startup.addToStartupUser( user_id, { through: { rating: rating, created_at: Date.now() } } )
             .then( response => {
@@ -80,18 +75,15 @@ module.exports = {
                     ]
                 })
                 .then(elements => {
+
                     var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
                     startup.update({ avg_rating: avg_rating })
-                    return res.status(200).json( { status: true, message: 'Rating asignado correctamente.', data: {  } }  )
-                })
-                .catch( err => {
-                    return res.status(500).json( { status: false, message: err.message, data: err  } )
-                })
 
-            })
-            .catch(err => {
-                return res.status(500).json( { status: false, message: err.message, data: err  } )
-            })
+                    successful(res, text.successCreate('rating'))
+
+                }).catch(error => { returnError(res, error) })
+
+            }).catch(error => { returnError(res, error) })
 
         })
 

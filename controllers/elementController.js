@@ -1,3 +1,4 @@
+const text = require('../libs/text');
 
 module.exports = {
 
@@ -11,9 +12,7 @@ module.exports = {
             response = await model.findByPk( value )
         }
 
-        if (!response) {
-            throw("No existe el elemento.");
-        }
+        if (!response) throw(text.notFoundElement)
 
         return response
     },

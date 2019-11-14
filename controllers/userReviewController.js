@@ -1,7 +1,9 @@
-const models = require('../models/index');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
-const { existById } = require('../controllers/elementController');
+const models = require('../models/index');
 const { check, validationResult } = require('express-validator');
+const { existById } = require('../controllers/elementController');
+const { successful, returnError } = require('../controllers/responseController');
 
 module.exports = {
     validate: (review) => {
@@ -31,11 +33,9 @@ module.exports = {
     },
 
     comment: async (req, res) => {
-        var errors = validationResult(req)
 
-        if (!errors.isEmpty()) {
-            return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
-        }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { review, from_user_id } = req.body
         const { to_user_id } = req.params
@@ -45,29 +45,24 @@ module.exports = {
             const user = await existById(models.user, to_user_id)
             user.addFromUser(from_user_id, { through: { review: review, created_at: Date.now() } })
 
-            return res.status(200).json({ status: true, message: 'Comentario asignado correctamente.', data: {} })
+            successful(res, text.successCreate('comentario'))
 
-        } catch (err) {
-            return res.status(500).json({ status: false, message: err.message, data: { err } })
-        }
+        } catch (error) { returnError(res, error) }
 
     },
 
     rating: (req, res) => {
-        var errors = validationResult(req)
 
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        
         const { rating, from_user_id } = req.body
         const { to_user_id } = req.params
-
-        if (!errors.isEmpty()) {
-            return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
-        }
 
         models.user.findOne({ where: { id: to_user_id } })
             .then(user => {
 
-                if (!user)
-                    return res.status(200).json({ status: false, message: "Usuario no existente", data: {} })
+                if (!user) return res.status(200).json({ status: false, message: "Usuario no existente", data: {} })
 
                 user.addFromUser(from_user_id, { through: { rating: rating, created_at: Date.now() } })
                     .then(response => {
@@ -79,19 +74,16 @@ module.exports = {
                                 [Sequelize.fn('count', Sequelize.col('rating')), 'cantidad'],
                             ]
                         })
-                            .then(elements => {
-                                var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
-                                user.update({ avg_rating: avg_rating })
-                                return res.status(200).json({ status: true, message: 'Rating asignado correctamente.', data: {} })
-                            })
-                            .catch(err => {
-                                return res.status(500).json({ status: false, message: err.message, data: err })
-                            })
+                        .then(elements => {
 
-                    })
-                    .catch(err => {
-                        return res.status(500).json({ status: false, message: err.message, data: err })
-                    })
+                            var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
+                            user.update({ avg_rating: avg_rating })
+
+                            successful(res, text.successCreate('rating'))
+
+                        }).catch(error => { returnError(res, error) })
+
+                    }).catch(error => { returnError(res, error) })
 
             })
 

@@ -1,57 +1,51 @@
+const text = require('../libs/text');
+const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { existById } = require('./elementController');
-const Sequelize = require('sequelize');
 const { check, validationResult } = require('express-validator');
+const { successful, returnError } = require('../controllers/responseController');
 
 module.exports = {
     validate: (method) => {
+
         var message_exists = "Este campo es obligatorio";
         switch (method) {
             case 'create':
-
-                return [
-                    check('skill', message_exists).exists()
-                ]
+                return [ check('skill', message_exists).exists() ]
         }
+
     },
     findAllSkill: async (res) => {
+
         try {
 
             const skills = await models.skill.findAll();
-            return res.json({ status: true, message: "OK", data: skills });
+            successful(res, 'OK', skills)
 
-        } catch (error) {
-            res.json({ status: false, message: (error.message) ? error.message : error });
-        }
+        } catch ( error ) { returnError(res, error) }
+
     },
 
     createSkill: async (req, res) => {
 
         var errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
-        }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { skill } = req.body
 
         try {
 
             await models.skill.create({ skill: skill })
-            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: skill });
+            successful(res, text.successCreate('skill'), skill)
 
-        } catch (error) {
-            res.status(200).json({ status: false, message: "Error al crear el skill" });
-        }
+        } catch ( error ) { returnError(res, error) }
 
     },
 
     userAddSkill: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
-        }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         try {
 
@@ -61,15 +55,14 @@ module.exports = {
             const user_skill = await user.getToUserSkills()
 
             var skills_id = await Promise.all(skills.map(async element => {
-                var [response, created] = await models.skill.findOrCreate({
+                var [ response, created ] = await models.skill.findOrCreate({
                     where: { skill: element },
                     defaults: {
                         skill: element
                     }
                 })
                 return await response.id
-            }
-            ))
+            }))
 
             await user.addToUserSkills(skills_id)
             
@@ -85,16 +78,16 @@ module.exports = {
                 })
             }
             
+            successful(res, text.successCreate('skill'))
 
+        } catch ( error ) { returnError(res, error) }
 
-            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: user_skill.da });
-
-        } catch (error) {
-            res.status(200).json({ status: false, message: (error.message) ? error.message : error });
-        }
     },
 
     listById: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         try {
 
@@ -103,15 +96,16 @@ module.exports = {
 
             var skills = await user.getToUserSkills()
 
-            return res.status(200).json({ status: true, message: "Skill creado correctamente", data: skills });
+            successful(res, text.successCreate('skill'), skills)
 
-        } catch (error) {
-            res.status(200).json({ status: false, message: (error.message) ? error.message : error });
-        }
+        } catch ( error ) { returnError(res, error) }
 
     },
 
     delete: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         try {
 
@@ -126,10 +120,7 @@ module.exports = {
                 }
             })
 
-            if (skill_user == null || skill_user === undefined) {
-                throw ('Ooop! No se encontraron los registrados.')
-            }
-
+            if (!skill_user) throw(text.notFoundElement)
 
             await models.skill_user.destroy({
                 where: {
@@ -140,11 +131,9 @@ module.exports = {
                 }
             })
 
-            return res.status(200).json({ status: true, message: "Skill borrado correctamente", data: {} });
+            successful(res, text.successDelete('skill'))
 
-        } catch (error) {
-            res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {} });
-        }
+        } catch ( error ) { returnError(res, error) }
 
     },
 

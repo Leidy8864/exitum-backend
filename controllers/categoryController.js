@@ -32,12 +32,14 @@ module.exports = {
     },
 
     all:  async(req, res) => {
+
         try {
+
             var category = await models.category.findAll({});
-            return res.status(200).json({ status: true, message: 'OK', data: category })
-        } catch (err) {
-            return res.status(500).json({ status: false, message: err.message, data: {} })
-        }
+            successful(res, 'OK', category)
+
+        } catch (error) { returnError(res, error) }
+
     },
 
     search: (req, res) => {
@@ -52,9 +54,7 @@ module.exports = {
                 name:  category
             }
         })
-        .spread((response, created) => {
-            return res.status(200).json({ status: true, message: 'OK', data: response } )
-        })
+        .spread((response, created) => { successful(res, 'OK', response) })
 
     }
 

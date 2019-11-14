@@ -1,8 +1,10 @@
-const { putObject, deleteObject } = require('../libs/aws-s3');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
-const models = require('../models/index')
-const { existById } = require('../controllers/elementController');
 const index = require('../config/index');
+const models = require('../models/index')
+const { putObject, deleteObject } = require('../libs/aws-s3');
+const { existById } = require('../controllers/elementController');
+const { successful, returnError } = require('../controllers/responseController');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/study-center-icons';
 
 const { check, validationResult } = require('express-validator');
@@ -31,20 +33,15 @@ module.exports = {
             
             const university = await createUniversity(name)
 
-            if ( !created ) deleteObject(NEW_BUCKET_NAME, university.icon);
             if (req.files) {
                 var fileName = putObject(NEW_BUCKET_NAME, req.files.icon);
-                university.update({
-                    icon: fileName
-                })
+                university.update({ icon: fileName })
             }
 
-           return res.status(200).json({ status: true, message: 'OK', data: {  } })
+            successful(res, text.successCreate('universidad'))
 
-        }
-        catch (err) {
-            return res.status(200).json({ status: false, message: (err.message) ? error.message : error, data: {  } })
-        }
+        } catch (error) { returnError(res, error) }
+
     },
     
     all: async(req, res) => {
@@ -52,11 +49,9 @@ module.exports = {
         try {
 
             const university = await models.university.findAll({})
-           return res.status(200).json({ status: true, message: 'OK', data: university })
+            successful(res, 'OK', university)
 
-        }catch (err) {
-            return res.status(200).json({ status: false, message: err.message, data: {  } })
-        }
+        }catch (error) { returnError(res, error) }
     }
 }
 
