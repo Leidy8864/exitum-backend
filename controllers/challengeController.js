@@ -311,7 +311,7 @@ module.exports = {
 
     summaryTips: async (req, res) => {
         const { tip_id } = req.query
-        let perPage = 20;
+        let perPage = 6;
 
         models.challenge.findAll({
             limit: perPage,

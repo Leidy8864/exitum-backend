@@ -271,7 +271,7 @@ module.exports = {
 
     findAdvertByEntrepreneur: async (req, res) => {
         const user_id = req.query.user_id;
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         try {
@@ -363,7 +363,7 @@ module.exports = {
 
     advertsBySkill: async (req, res) => {
         let user_id = req.query.user_id
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         const user = await models.user.findOne({
@@ -442,7 +442,7 @@ module.exports = {
 
     advertsByProposal: async (req, res) => {
         let user_id = req.query.user_id
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         const employee = await models.employee.findOne({ attributes: ['id'], where: { user_id: user_id } });
@@ -505,7 +505,7 @@ module.exports = {
 
     usersRecomendation: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         try {
@@ -587,7 +587,7 @@ module.exports = {
 
     usersFavorites: async (req, res) => {
         const { advertisement_id } = req.query
-        let perPage = 20;
+        let perPage = 6;
         let page = req.query.page || 1;
 
         const inv = await models.invitation.findAll({
