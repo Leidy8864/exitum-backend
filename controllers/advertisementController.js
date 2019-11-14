@@ -109,6 +109,7 @@ module.exports = {
 
             if (advertisement) {
                 const result = await models.sequelize.transaction(async (t) => {
+                    models.advertisement_skill.destroy({ where: { advertisement_id: advertisement.id } }, { transaction: t })
                     if (skills) {
                         var skills_id = await Promise.all(skills.map(async element => {
                             var [response, created] = await models.skill.findOrCreate({
@@ -118,8 +119,7 @@ module.exports = {
                                 }
                             })
                             return await response.id
-                        }
-                        ), { transaction: t })
+                        }), { transaction: t })
                     }
                     await advertisement.addSkill(skills_id, { transaction: t });
                     const advertisementNew = await advertisement.update({
