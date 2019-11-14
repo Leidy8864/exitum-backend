@@ -600,10 +600,7 @@ module.exports = {
     show: async(req, res) => {
 
         var errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.status(200).json({ status: false, message: 'Campos incorrectos', data: errors.array() });
-        }
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         

@@ -78,6 +78,32 @@ module.exports = {
 
 	},
 
+	// listByUserMeeting: async (req, res) => {
+
+	// 	var errors = validationResult(req)
+    //     if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+	// 	const { to_user_id } = req.params
+
+	// 	try {
+
+	// 		const dateNow = new Date()
+	// 		const user = await existById(models.user, to_user_id, 'id')
+	// 		const appointment = await models.appointment.findAll({
+	// 			where: {
+	// 				[Sequelize.Op.and] : [ 
+	// 					{ to_user_id: user.id }, { type: 'reunion' }, 
+	// 					{ date: { [ Sequelize.Op.gte ] : new Date(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) } }  
+	// 				]
+	// 			}
+	// 		})
+
+	// 		successful(res, 'OK', appointment)
+
+	// 	} catch (error) { returnError(res, error) }
+
+	// },
+
 	create: async (req, res) => {
 
         var errors = validationResult(req);
