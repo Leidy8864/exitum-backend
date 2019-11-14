@@ -102,7 +102,8 @@ module.exports = {
         }
         const advertisement_id = req.body.advertisement_id;
         const skills = req.body.skills;
-
+        const ads = await models.advertisement.findOne({ where: { startup_id: req.body.startup_id, title: req.body.title, id: { [models.Sequelize.Op.notIn]: [req.body.advertisement_id] } } });
+        if (ads) { return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." }) }
         try {
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
@@ -121,7 +122,7 @@ module.exports = {
                         ), { transaction: t })
                     }
                     await advertisement.addSkill(skills_id, { transaction: t });
-                    const ads = await advertisement.update({
+                    const advertisementNew = await advertisement.update({
                         title: req.body.title,
                         description: req.body.description,
                         state: req.body.state,
@@ -129,7 +130,7 @@ module.exports = {
                         startup_id: req.body.startup_id,
                         slug: generateSlug(req.body.title)
                     }, { transaction: t });
-                    return ads;
+                    return advertisementNew;
                 })
                 return res.status(200).json({ status: true, message: "Anuncio actualizado correctamente", data: result });
 
