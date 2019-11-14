@@ -1562,7 +1562,7 @@
  * @apiParam {Int} advertisement_id Id del anuncio.
  * @apiParam {String} title Titulo del anuncio.
  * @apiParam {String} description Descripcion del anuncio
- * @apiParam {Array[]} habilidades requeridos
+ * @apiParam {Array[]} skills Habilidades requeridos
  * @apiParam {Int} startup_id Id de la startup
  *
 	* @apiParamExample {querystring} Ejemplo url

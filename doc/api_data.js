@@ -339,8 +339,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "Array[]",
             "optional": false,
-            "field": "habilidades",
-            "description": "<p>requeridos</p>"
+            "field": "skills",
+            "description": "<p>Habilidades requeridos</p>"
           },
           {
             "group": "Parameter",
