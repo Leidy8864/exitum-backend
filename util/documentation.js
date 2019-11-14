@@ -1559,21 +1559,21 @@
  * @apiVersion 1.0.0
  * @apiUse ErrorGeneral
  * @apiDescription Actualización de la experiencia del usuario
- * @apiParam {Int} advertisement_id Id del empleado.
- * @apiParam {String} description Descripción
- * @apiParam {String} state Estado del anuncio
- * @apiParam {Int} area_id Id del área
+ * @apiParam {Int} advertisement_id Id del anuncio.
+ * @apiParam {String} title Titulo del anuncio.
+ * @apiParam {String} description Descripcion del anuncio
+ * @apiParam {Array[]} habilidades requeridos
  * @apiParam {Int} startup_id Id de la startup
  *
 	* @apiParamExample {querystring} Ejemplo url
-    /educations/update
+    /ads/update
     {
-        "advertisement_id" : 2,
-        "title" : "Programador en Javascript",
-        "description" : "Conocimientos solidos en NODEJS Y REACT",
-        "state" : "archived",
-        "area_id" : 1,
-        "startup_id" : 1
+        "title": "Domingo domingo domingo se busca desarrollador full stack",
+        "description": "descripciondescripciondescripciondescripciondescripciondescripciondescripcion",
+        "area_id": 1,
+        "startup_id": 5,
+        "advertisement_id" : 5,
+        "skills" : ["Responsable","React","Diseñador Ux", "Emprendedor"]
     }
  *
  * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
@@ -1584,13 +1584,14 @@
         "status": true,
         "message": "Anuncio actualizado correctamente",
         "data": {
-            "id": 2,
-            "title": "Programador en Javascript",
-            "description": "Conocimientos solidos en NODEJS Y REACT",
-            "state": "archived",
+            "id": 5,
+            "title": "Domingo domingo domingo se busca desarrollador full stack",
+            "description": "descripciondescripciondescripciondescripciondescripciondescripciondescripcion",
+            "state": "active",
+            "slug": "domingo-domingo-domingo-se-busca-desarrollador-full-stack",
             "area_id": 1,
-            "startup_id": 1,
-            "created_at": "2019-10-03T20:47:28.000Z"
+            "startup_id": 5,
+            "created_at": "2019-11-13T16:32:01.000Z"
         }
     }
  *
