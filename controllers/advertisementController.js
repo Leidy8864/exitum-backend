@@ -101,12 +101,25 @@ module.exports = {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
         const advertisement_id = req.body.advertisement_id;
+        const skills = req.body.skills;
 
         try {
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
             if (advertisement) {
-
+                if (skills) {
+                    var skills_id = await Promise.all(skills.map(async element => {
+                        var [response, created] = await models.skill.findOrCreate({
+                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                            defaults: {
+                                skill: element
+                            }
+                        })
+                        return await response.id
+                    }
+                    ))
+                }
+                await advertisement.addSkill(skills_id);
                 await advertisement.update({
                     title: req.body.title,
                     description: req.body.description,
@@ -133,6 +146,7 @@ module.exports = {
                 });
         }
     },
+
     updateSkills: async (req, res) => {
 
         const advertisement_id = req.body.advertisement_id;
@@ -145,7 +159,7 @@ module.exports = {
 
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
-            if (advertisement) { 
+            if (advertisement) {
                 if (skills) {
                     var skills_id = await Promise.all(skills.map(async element => {
                         var [response, created] = await models.skill.findOrCreate({
@@ -575,9 +589,9 @@ module.exports = {
         const inv = await models.invitation.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
-            where: { 
+            where: {
                 advertisement_id: advertisement_id,
-                saved: 1 
+                saved: 1
             },
             include: [
                 {
@@ -599,9 +613,9 @@ module.exports = {
             ]
         })
         const totalRows = await models.invitation.count({
-            where: { 
+            where: {
                 advertisement_id: advertisement_id,
-                saved: 1 
+                saved: 1
             },
             include: [
                 {
