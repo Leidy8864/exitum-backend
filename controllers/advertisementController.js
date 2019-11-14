@@ -101,21 +101,38 @@ module.exports = {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
         const advertisement_id = req.body.advertisement_id;
-
+        const skills = req.body.skills;
+        const ads = await models.advertisement.findOne({ where: { startup_id: req.body.startup_id, title: req.body.title, id: { [models.Sequelize.Op.notIn]: [req.body.advertisement_id] } } });
+        if (ads) { return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." }) }
         try {
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
             if (advertisement) {
-
-                await advertisement.update({
-                    title: req.body.title,
-                    description: req.body.description,
-                    state: req.body.state,
-                    area_id: req.body.area_id,
-                    startup_id: req.body.startup_id
-                });
-
-                return res.status(200).json({ status: true, message: "Anuncio actualizado correctamente", data: advertisement });
+                const result = await models.sequelize.transaction(async (t) => {
+                    models.advertisement_skill.destroy({ where: { advertisement_id: advertisement.id } }, { transaction: t })
+                    if (skills) {
+                        var skills_id = await Promise.all(skills.map(async element => {
+                            var [response, created] = await models.skill.findOrCreate({
+                                where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    skill: element
+                                }
+                            })
+                            return await response.id
+                        }), { transaction: t })
+                    }
+                    await advertisement.addSkill(skills_id, { transaction: t });
+                    const advertisementNew = await advertisement.update({
+                        title: req.body.title,
+                        description: req.body.description,
+                        state: req.body.state,
+                        area_id: req.body.area_id,
+                        startup_id: req.body.startup_id,
+                        slug: generateSlug(req.body.title)
+                    }, { transaction: t });
+                    return advertisementNew;
+                })
+                return res.status(200).json({ status: true, message: "Anuncio actualizado correctamente", data: result });
 
             } else {
 
@@ -133,6 +150,7 @@ module.exports = {
                 });
         }
     },
+
     updateSkills: async (req, res) => {
 
         const advertisement_id = req.body.advertisement_id;
@@ -145,7 +163,7 @@ module.exports = {
 
             const advertisement = await models.advertisement.findByPk(advertisement_id);
 
-            if (advertisement) { 
+            if (advertisement) {
                 if (skills) {
                     var skills_id = await Promise.all(skills.map(async element => {
                         var [response, created] = await models.skill.findOrCreate({
@@ -575,9 +593,9 @@ module.exports = {
         const inv = await models.invitation.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
-            where: { 
+            where: {
                 advertisement_id: advertisement_id,
-                saved: 1 
+                saved: 1
             },
             include: [
                 {
@@ -599,9 +617,9 @@ module.exports = {
             ]
         })
         const totalRows = await models.invitation.count({
-            where: { 
+            where: {
                 advertisement_id: advertisement_id,
-                saved: 1 
+                saved: 1
             },
             include: [
                 {
