@@ -40,6 +40,11 @@ module.exports = {
                     check('tip_id', message_exists).exists(),
                     check('startup_id', message_exists).exists()
                 ]
+            case 'deleteFile':
+                return [
+                    check('challenge_id', message_exists).exists(),
+                    check('key_s3', message_exists).exists()
+                ]
         }
     },
 
@@ -367,7 +372,7 @@ module.exports = {
                 }
             });
 
-            if (!file) throw (text.notFoundElement)
+            if (!file) { return res.json({ status: false, message: "El nombre del archivo no exixte." }) }
 
             deleteObject(FILES_TIP_REPLY_BUCKET_NAME, key_s3);
 

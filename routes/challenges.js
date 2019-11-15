@@ -56,6 +56,7 @@ router.get('/summaryTips',
 );
 
 router.post('/deleteFileReply',
+    controller.validate('deleteFile'),
     controller.deleteFileReply
 );
 
