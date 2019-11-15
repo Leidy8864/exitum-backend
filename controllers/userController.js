@@ -627,10 +627,11 @@ module.exports = {
                         }
                     ],
 
-                } ) 
-            return res.status(200).json({ status: true, message: 'OK', data: user })
+                } )
+            
+            successful(res, 'OK', user)
 
-        } catch (error) { return res.status(200).json({ status: false, message: (error.message) ? error.message : error, data: {  } }) }
+        } catch (error) { returnError(res, error) }
 
     },
 

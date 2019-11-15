@@ -7,6 +7,7 @@ router.get('/list',
 );
 
 router.post('/search',
+    controller.validate('create'),
     controller.search
 );
 

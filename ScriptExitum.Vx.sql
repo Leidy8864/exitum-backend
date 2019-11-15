@@ -300,14 +300,15 @@ CREATE TABLE IF NOT EXISTS `exitum`.`appointment` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `from_user_id` INT(11) NOT NULL,
   `to_user_id` INT(11) NOT NULL,
+  `title` VARCHAR(100) NULL,
   `date` DATE NULL DEFAULT NULL,
   `time` TIME NULL DEFAULT NULL,
   `type` ENUM('reunion', 'recordatorio') NULL DEFAULT NULL,
   `description` TEXT NULL DEFAULT NULL,
   `status` TINYINT(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_user_has_user_user2_idx` (`to_user_id` ASC),
-  INDEX `fk_user_has_user_user1_idx` (`from_user_id` ASC),
+  INDEX `fk_user_has_user_user2_idx` (`to_user_id` ASC) VISIBLE,
+  INDEX `fk_user_has_user_user1_idx` (`from_user_id` ASC) VISIBLE,
   CONSTRAINT `fk_user_has_user_user1`
     FOREIGN KEY (`from_user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -1386,6 +1387,28 @@ CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
   CONSTRAINT `fk_workshop_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `exitum`.`category_workshop`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`category_workshop` (
+  `workshop_id` INT(11) NOT NULL,
+  `category_id` INT(11) NOT NULL,
+  PRIMARY KEY (`workshop_id`, `category_id`),
+  INDEX `fk_workshop_has_category_category1_idx` (`category_id` ASC) VISIBLE,
+  INDEX `fk_workshop_has_category_workshop1_idx` (`workshop_id` ASC) VISIBLE,
+  CONSTRAINT `fk_workshop_has_category_workshop1`
+    FOREIGN KEY (`workshop_id`)
+    REFERENCES `exitum`.`workshop` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_workshop_has_category_category1`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `exitum`.`category` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

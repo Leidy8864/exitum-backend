@@ -5,13 +5,13 @@ const index = require('../config/index');
 const models = require('../models/index')
 const { putObject, getObject } = require('../libs/aws-s3');
 const { createCompany } = require('./companyController')
+const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const  { successful, returnError } = require('./responseController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/certifications';
 
-const { check, validationResult } = require('express-validator');
-
 module.exports = {
+    
     validate: (certification) => {
 
         var user_id = check('user_id').exists().withMessage(text.id('usuario')).isNumeric().withMessage(text.numeric)

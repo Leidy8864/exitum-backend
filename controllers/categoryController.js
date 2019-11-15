@@ -1,36 +1,34 @@
-const models = require('../models/index');
+const text = require('../libs/text');
 const Sequelize = require('sequelize');
+const models = require('../models/index');
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
 
+async function createCategory (name) {
+
+    var [ category, created ] = await  models.category.findOrCreate({
+        where: { name: name },
+        defaults: { name: name }
+    })
+    return await category
+    
+}
 
 module.exports = {
+
     validate: (review) => {
 
-        var from_user_id = check('from_user_id')
-            .exists().withMessage('Es necesario el id del usuario que inicio sesión.')
-            .isNumeric().withMessage("El tipo de dato no es el adecuado.")
-
-        var to_user_id = check('to_user_id')
-            .exists().withMessage("Es necesario el id del usuario al que se comentará o puntuar.")
-            .isNumeric().withMessage("El tipo de dato no es el adecuado.")
+        const name = check('name').exists().withMessage(text.name('categoria'))
+        const id_category = check('id_category').exists().withMessage(text.id('categoria'))
 
         switch (review) {
-            case 'comment':
-                return [
-                    from_user_id, to_user_id,
-                    check('review').exists().withMessage("Es necesario agregar un comentario")
-                ]
-            case 'rating':
-                return [
-                    from_user_id, to_user_id,
-                    check('rating').exists().withMessage("Es necesario un puntaje")
-                    .isNumeric().withMessage("El tipo de dato no es el adecuado.")
-                    .custom(value=> value <= 5 && value > 0).withMessage("El valor debe estar entre el rango de 1 y 5.")
-                ]
+            case 'create':
+                return [ name ]
         }
     },
+
+    createCategory: createCategory,
 
     all:  async(req, res) => {
 
@@ -43,19 +41,22 @@ module.exports = {
 
     },
 
-    search: (req, res) => {
+    search: async (req, res) => {
 
-        var { category } = req.body
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        category = category.toLowerCase()
+        const { name } = req.body
 
-        models.category.findOrCreate({
-            where: { name: { [Sequelize.Op.like]  : '%' + category + '%'} },
-            defaults: {
-                name:  category
-            }
-        })
-        .spread((response, created) => { successful(res, 'OK', response) })
+        try {
+
+            name = name.toLowerCase()
+    
+            var category = await createCategory(name)
+
+            successful(res, 'OK', category)
+
+        } catch(error) { returnError(res, error) }
 
     }
 
