@@ -55,4 +55,9 @@ router.get('/summaryTips',
     controller.summaryTips
 );
 
+router.post('/deleteFileReply',
+    controller.validate('deleteFile'),
+    controller.deleteFileReply
+);
+
 module.exports = router;
