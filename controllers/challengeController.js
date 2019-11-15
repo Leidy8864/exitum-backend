@@ -241,7 +241,7 @@ module.exports = {
                 await models.challenge.update({
                     reply: reply,
                     date: Date.now(),
-                }, { where: { id: challenge_id, status: 'Por verificar' } }, { transaction: t });
+                }, { where: { id: challenge_id } }, { transaction: t });
 
                 if (file) {
                     await models.file.create({
