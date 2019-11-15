@@ -63,10 +63,21 @@ module.exports = {
         var hour = timesFormat(time)
         
         if (now.getHours() >= hour[0]) throw(text.notAvailable('hora'))
+        else return true
 
     },
 
-    getTimeHMS: (time) => {
+    validateRangeTime: (time_start, time_end, time) => {
+
+        time_start = Number(time_start.match(/^(\d+)/)[1])
+        time_end = Number(time_end.match(/^(\d+)/)[1])
+        time = Number(time.match(/^(\d+)/)[1])
+
+        console.log(time_start, time_end, time)
+
+        if (time >= time_start && time < time_end ) return true
+        else throw(text.notAvailable('hora'))
 
     }
+    
 }

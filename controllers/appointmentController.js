@@ -5,7 +5,22 @@ const { arrayUnavailable } = require('./scheduleController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
-const { timesFormat, validateDateActual, validateTimeActual } = require('../controllers/hourController')
+const { timesFormat, validateDateActual, validateTimeActual, validateRangeTime } = require('../controllers/hourController')
+
+async function findAppointment(to_user_id, date, time) {
+
+	var response = await models.appointment.findOne({
+		where: {
+			[ Sequelize.Op.and ]: [ { to_user_id: to_user_id }, { date: new Date(date) }, { time: time } ]
+		}
+	});
+
+	console.log(to_user_id, date, time, response);
+
+	if (response) return true
+	else return false
+
+}
 
 module.exports = {
 
@@ -122,6 +137,7 @@ module.exports = {
 			const user = await existById(models.user, to_user_id, 'id')
 			var timeF = timesFormat(time)
 
+			validateRangeTime(user.from_hour, user.to_hour, timeF[3])
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
 			if(!unavailable.indexOf(timeF[3])) throw(text.notAvailable('hora'))
@@ -161,7 +177,7 @@ module.exports = {
 
 		try {
 
-			const user = await existById(models.user, to_user_id, 'id');
+			const user = await existById(models.user, to_user_id);
 
 			var appointment = await models.appointment.findOne({
 				where: {
@@ -176,16 +192,36 @@ module.exports = {
 			if (!appointment) throw (text.notFoundElement);
 
 			var timeF = time ? timesFormat(time) : [ appointment.time ];
+			const timeS = timeF[3] || timeF[0]
+			const dateS = date || appointment.date
 
+			validateRangeTime(user.from_hour, user.to_hour, timeS)
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
-			if(!unavailable.indexOf(timeF[3] || timeF[0])) throw(text.notAvailable('hora'))
-			
-			// if(validateDateActual(date)) validateTimeActual(time)
+			if(!unavailable.indexOf(timeS)) throw(text.notAvailable('hora'))
+
+			if (appointment.date != dateS && appointment.time != timeS) {
+
+				if(validateDateActual(date)) validateTimeActual(time)
+				if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+
+			} else  {
+
+				if (appointment.date != dateS) {
+					validateDateActual(dateS)
+					if(findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+				}
+
+				if (appointment.time != timeS) {
+					validateTimeActual(time)
+					if(findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+				}
+
+			}
 
 			await appointment.update({
-				date: date || appointment.date,
-				time: timeF[3] || appointment.time,
+				date: dateS,
+				time: timeS,
 				description: description || appointment.description
 			})
 
@@ -215,7 +251,7 @@ module.exports = {
 				}
 			})
 
-			if (!appointment) throw (text.notFoundElement);
+			if (!appointment) throw (text.notFoundElement)
 
 			appointment.destroy()
 
