@@ -22,4 +22,9 @@ router.post('/update/:appointment_id',
     controller.update
 );
 
+router.post('/cancel/:appointment_id',
+    controller.validate('cancel'),
+    controller.cancel
+);
+
 module.exports = router;

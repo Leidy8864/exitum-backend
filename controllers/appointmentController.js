@@ -13,6 +13,7 @@ module.exports = {
 
 		var to_user_id = check('to_user_id').exists().withMessage(text.id('usuario al que se agendará'))
 		var from_user_id = check('from_user_id').exists().withMessage(text.id('usuario al que se agendará'))
+		var appointment_id = check('appointment_id').exists().withMessage(text.id('recordatorio'))
 		var date = check('date').exists().withMessage(text.date('agendar'))
 		var time = check('time').exists().withMessage(text.time('agendar'))
 		var type = check('type').exists().withMessage(text.type('agendar'))
@@ -27,7 +28,9 @@ module.exports = {
 			case 'create':
 				return [ to_user_id, from_user_id, date, time, type, description ];
 			case 'update':
-				return [ to_user_id, from_user_id ];
+				return [ to_user_id, from_user_id, appointment_id ];
+			case 'cancel':
+				return [ to_user_id, from_user_id, appointment_id ]
         }
         
 	},
@@ -192,5 +195,33 @@ module.exports = {
         
 	},
 
-	cancel: (req, res) => {}
+	cancel: async (req, res) => {
+
+		var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+		const { appointment_id } = req.params
+		const { to_user_id, from_user_id } = req.body
+
+		try {
+
+			var appointment = await models.appointment.findOne({
+				where: {
+					[Sequelize.Op.and] : [
+						{ id: appointment_id },
+						{ to_user_id: to_user_id },
+						{ from_user_id: from_user_id }
+					]
+				}
+			})
+
+			if (!appointment) throw (text.notFoundElement);
+
+			appointment.destroy()
+
+			successful(res, text.successDelete('agenda'))
+
+		} catch (error) { returnError(res, error) }
+
+	}
 };
