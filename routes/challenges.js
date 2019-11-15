@@ -55,4 +55,8 @@ router.get('/summaryTips',
     controller.summaryTips
 );
 
+router.post('/deleteFileReply',
+    controller.deleteFileReply
+);
+
 module.exports = router;

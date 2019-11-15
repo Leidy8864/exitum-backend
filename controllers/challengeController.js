@@ -1,9 +1,13 @@
+const text = require('../libs/text')
+const s3 = require('../libs/aws-s3');
 const models = require('../models/index');
 const index = require('../config/index');
-const { getObject, putObject, getDownloadUrl } = require('../libs/aws-s3');
+const { getObject, putObject, getDownloadUrl, deleteObject } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
+const FILES_TIP_REPLY_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip_reply';
 const { check, validationResult } = require('express-validator');
+const { successful, returnError } = require('./responseController')
 
 module.exports = {
     validate: (method) => {
@@ -227,20 +231,22 @@ module.exports = {
         var name = ""
         if (req.files) {
             var file = req.files.file;
-            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+            fileName = putObject(FILES_TIP_REPLY_BUCKET_NAME, file);
             name = file.name
         }
         try {
             await models.sequelize.transaction(async (t) => {
+                const chll = await models.challenge.findOne({ id: challenge_id })
+                if (chll.status == 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
                 await models.challenge.update({
                     reply: reply,
                     date: Date.now(),
-                }, { where: { id: challenge_id } }, { transaction: t });
+                }, { where: { id: challenge_id, status: 'Por verificar' } }, { transaction: t });
 
                 if (file) {
                     await models.file.create({
                         name: name,
-                        file: fileName,
+                        key_s3: (fileName).split('/')[5],
                         challenge_id: challenge_id
                     }, { transaction: t });
                 }
@@ -342,5 +348,33 @@ module.exports = {
         }).then(tips => {
             return res.json({ status: true, message: "Reto cumplido por otros usuario", data: tips })
         })
+    },
+
+    deleteFileReply: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        try {
+
+            const { challenge_id, key_s3 } = req.body
+
+            var file = await models.file.findOne({
+                where: {
+                    [models.Sequelize.Op.and]: [
+                        { challenge_id: challenge_id },
+                        { key_s3: key_s3 }
+                    ]
+                }
+            });
+
+            if (!file) throw (text.notFoundElement)
+
+            deleteObject(FILES_TIP_REPLY_BUCKET_NAME, key_s3);
+
+            await file.destroy()
+
+            successful(res, text.successDelete('archivo'))
+
+        } catch (error) { returnError(res, error) }
     }
 }

@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const file = sequelize.define('file', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: DataTypes.STRING,
+    key_s3: DataTypes.STRING,
     challenge_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
