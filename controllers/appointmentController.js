@@ -177,13 +177,13 @@ module.exports = {
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
 			if(!unavailable.indexOf(timeF[3] || timeF[0])) throw(text.notAvailable('hora'))
-			if(validateDateActual(date)) validateTimeActual(time)
+			
+			// if(validateDateActual(date)) validateTimeActual(time)
 
 			await appointment.update({
 				date: date || appointment.date,
 				time: timeF[3] || appointment.time,
-				description: description || appointment.description,
-				status: status || appointment.status
+				description: description || appointment.description
 			})
 
             successful(res, text.successUpdate('reserva'));
