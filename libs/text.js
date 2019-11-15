@@ -21,6 +21,7 @@ module.exports = {
     downloadDocument: (url) => `http://35.175.241.103:8081/certifications/download/${(url).split('/')[5]}`,
     notAvailable: (text) => `Lo sentimos, la ${text} seleccionada no esta disponible.`,
     incorrectFormat: (text) => `Lo sentimos, el formato de ${text} es incorrecto.`,
+    fileElement: (text) => `Es necesario un(a) ${text}.`
 
 
 }

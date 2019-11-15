@@ -6,4 +6,9 @@ router.get('/list',
     controller.all
 );
 
+router.post('/create',
+    controller.validate('create'),
+    controller.create
+);
+
 module.exports = router;

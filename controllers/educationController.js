@@ -112,7 +112,7 @@ module.exports = {
 
             if (!education) throw(text.notFoundElement)
 
-            const university = await createUniversity(university_name || education.university.university)
+            var university = await createUniversity(university_name || education.university.university)
 
             await education.update({
                 description: description,
@@ -124,6 +124,7 @@ module.exports = {
             successful(res, text.successUpdate('educación'), education)
 
         } catch (error) { returnError(res, error) }
+        
     },
 
     delete: async (req, res) => {
@@ -148,7 +149,7 @@ module.exports = {
 
             await education.destroy()
 
-            successful(res)
+            successful(res, text.successUpdate('educación'))
             
         } catch (error) { returnError(res, error) }
 

@@ -13,9 +13,7 @@ async function createUniversity (name) {
 
     var [ university, created ] = await  models.university.findOrCreate({
         where: { university: name },
-        defaults: {
-            university: name
-        }
+        defaults: { university: name }
     })
 
     return await university
@@ -31,7 +29,7 @@ module.exports = {
 
         try {
             
-            const university = await createUniversity(name)
+            var university = await createUniversity(name)
 
             if (req.files) {
                 var fileName = putObject(NEW_BUCKET_NAME, req.files.icon);
@@ -51,7 +49,7 @@ module.exports = {
             const university = await models.university.findAll({})
             successful(res, 'OK', university)
 
-        }catch (error) { returnError(res, error) }
+        } catch (error) { returnError(res, error) }
     }
 }
 

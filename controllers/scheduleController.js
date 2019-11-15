@@ -87,7 +87,7 @@ module.exports = {
                 to_hour: t_hour[3]
             })
 
-            successful(res)
+            successful(res, text.successCreate('horario'))
 
         } catch (error) { returnError(res, error) }
     },
@@ -119,7 +119,7 @@ module.exports = {
                 }
             })
 
-            successful(res)
+            successful(res, text.successCreate('horario no disponible'))
 
         } catch ( error ) { returnError(res, error) }
 
@@ -152,7 +152,7 @@ module.exports = {
 
             })
 
-            successful(res)
+            successful(res, text.successCreate('horas disponibles'))
 
         } catch ( error ) { returnError(res, error, error) }
 

@@ -4,7 +4,7 @@ const models = require('../models/index');
 const { existById } = require('./elementController')
 const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
-const  { successful, returnError } = require('./responseController')
+const { successful, returnError } = require('./responseController')
 
 module.exports = {
 

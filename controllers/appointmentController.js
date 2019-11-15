@@ -5,7 +5,7 @@ const { arrayUnavailable } = require('./scheduleController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
-const { timesFormat, validateDateActual, validateTimeActual } = require('../controllers/hourController');
+const { timesFormat, validateDateActual, validateTimeActual } = require('../controllers/hourController')
 
 module.exports = {
 
@@ -13,6 +13,7 @@ module.exports = {
 
 		var to_user_id = check('to_user_id').exists().withMessage(text.id('usuario al que se agendará'))
 		var from_user_id = check('from_user_id').exists().withMessage(text.id('usuario al que se agendará'))
+		var appointment_id = check('appointment_id').exists().withMessage(text.id('recordatorio'))
 		var date = check('date').exists().withMessage(text.date('agendar'))
 		var time = check('time').exists().withMessage(text.time('agendar'))
 		var type = check('type').exists().withMessage(text.type('agendar'))
@@ -26,6 +27,10 @@ module.exports = {
 				return [ to_user_id, date, type ];
 			case 'create':
 				return [ to_user_id, from_user_id, date, time, type, description ];
+			case 'update':
+				return [ to_user_id, from_user_id, appointment_id ];
+			case 'cancel':
+				return [ to_user_id, from_user_id, appointment_id ]
         }
         
 	},
@@ -78,31 +83,31 @@ module.exports = {
 
 	},
 
-	// listByUserMeeting: async (req, res) => {
+	listByUserMeeting: async (req, res) => {
 
-	// 	var errors = validationResult(req)
-    //     if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+		var errors = validationResult(req)
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-	// 	const { to_user_id } = req.params
+		const { to_user_id } = req.params
 
-	// 	try {
+		try {
 
-	// 		const dateNow = new Date()
-	// 		const user = await existById(models.user, to_user_id, 'id')
-	// 		const appointment = await models.appointment.findAll({
-	// 			where: {
-	// 				[Sequelize.Op.and] : [ 
-	// 					{ to_user_id: user.id }, { type: 'reunion' }, 
-	// 					{ date: { [ Sequelize.Op.gte ] : new Date(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) } }  
-	// 				]
-	// 			}
-	// 		})
+			const dateNow = new Date()
+			const user = await existById(models.user, to_user_id, 'id')
+			const appointment = await models.appointment.findAll({
+				where: {
+					[Sequelize.Op.and] : [ 
+						{ to_user_id: user.id }, { type: 'reunion' }, 
+						{ date: { [ Sequelize.Op.gte ] : new Date(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) } }  
+					]
+				}
+			})
 
-	// 		successful(res, 'OK', appointment)
+			successful(res, 'OK', appointment)
 
-	// 	} catch (error) { returnError(res, error) }
+		} catch (error) { returnError(res, error) }
 
-	// },
+	},
 
 	create: async (req, res) => {
 
@@ -114,19 +119,19 @@ module.exports = {
 
 		try {
 
-			const user = await existById(models.user, to_user_id, 'id');
-			var timeF = timesFormat(time);
+			const user = await existById(models.user, to_user_id, 'id')
+			var timeF = timesFormat(time)
 
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
-			if(!unavailable.indexOf(timeF)) throw(text.notAvailable('hora'))
-			// if(!validateDateActual(date)) validateTimeActual(time)
+			if(!unavailable.indexOf(timeF[3])) throw(text.notAvailable('hora'))
+			if(validateDateActual(date)) validateTimeActual(time)
 
 			var from_user = type == 'recordatorio' ? user.id : from_user_id;
 
 			var [ response, created ] = await models.appointment.findOrCreate({
 				where: {
-					[Sequelize.Op.and]: [ { to_user_id: user.id }, { date: new Date(date) }, { time: timeF[3] } ]
+					[ Sequelize.Op.and ]: [ { to_user_id: user.id }, { date: new Date(date) }, { time: timeF[3] } ]
 				},
 				defaults: {
 					to_user_id: user.id, 
@@ -145,6 +150,78 @@ module.exports = {
         } catch (error) { returnError(res, error); }
         
 	},
+	
+	update: async (req, res) => {
 
-	cancel: (req, res) => {}
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+		const { appointment_id } = req.params;
+		const { to_user_id, from_user_id, date, time, description } = req.body;
+
+		try {
+
+			const user = await existById(models.user, to_user_id, 'id');
+
+			var appointment = await models.appointment.findOne({
+				where: {
+					[Sequelize.Op.and] : [
+						{ id: appointment_id },
+						{ to_user_id: to_user_id },
+						{ from_user_id: from_user_id }
+					]
+				}
+			})
+
+			if (!appointment) throw (text.notFoundElement);
+
+			var timeF = time ? timesFormat(time) : [ appointment.time ];
+
+			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
+
+			if(!unavailable.indexOf(timeF[3] || timeF[0])) throw(text.notAvailable('hora'))
+			
+			// if(validateDateActual(date)) validateTimeActual(time)
+
+			await appointment.update({
+				date: date || appointment.date,
+				time: timeF[3] || appointment.time,
+				description: description || appointment.description
+			})
+
+            successful(res, text.successUpdate('reserva'));
+            
+        } catch (error) { returnError(res, error); }
+        
+	},
+
+	cancel: async (req, res) => {
+
+		var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+		const { appointment_id } = req.params
+		const { to_user_id, from_user_id } = req.body
+
+		try {
+
+			var appointment = await models.appointment.findOne({
+				where: {
+					[Sequelize.Op.and] : [
+						{ id: appointment_id },
+						{ to_user_id: to_user_id },
+						{ from_user_id: from_user_id }
+					]
+				}
+			})
+
+			if (!appointment) throw (text.notFoundElement);
+
+			appointment.destroy()
+
+			successful(res, text.successDelete('agenda'))
+
+		} catch (error) { returnError(res, error) }
+
+	}
 };
