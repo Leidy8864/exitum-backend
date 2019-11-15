@@ -236,8 +236,8 @@ module.exports = {
         }
         try {
             await models.sequelize.transaction(async (t) => {
-                const chll = await models.challenge.findOne({ id: challenge_id })
-                if (chll.status == 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
+                const chll = await models.challenge.findOne({ where: { id: challenge_id } })
+                if (chll.status === 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
                 await models.challenge.update({
                     reply: reply,
                     date: Date.now(),
