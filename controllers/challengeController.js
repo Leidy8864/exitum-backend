@@ -193,6 +193,9 @@ module.exports = {
                             include: [
                                 { model: models.file_tip }
                             ]
+                        },
+                        {
+                            model: models.file
                         }
                     ]
                 }
@@ -297,6 +300,9 @@ module.exports = {
                             include: [
                                 { model: models.file_tip }
                             ]
+                        },
+                        {
+                            model: models.file
                         }
                     ]
                 }
