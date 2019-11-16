@@ -152,7 +152,7 @@ module.exports = {
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
 			if(!unavailable.indexOf(timeF[3])) throw(text.notAvailable('hora'))
-			if(validateDateActual(date)) validateTimeActual(time)
+			// if(validateDateActual(date)) validateTimeActual(time)
 
 			var from_user = type == 'recordatorio' ? user.id : from_user_id;
 
