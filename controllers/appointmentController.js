@@ -141,7 +141,7 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params;
-		const { from_user_id, date, time, type, description } = req.body;
+		const { from_user_id, title, date, time, type, description } = req.body;
 
 		try {
 
@@ -161,6 +161,7 @@ module.exports = {
 					[ Sequelize.Op.and ]: [ { to_user_id: user.id }, { date: new Date(date) }, { time: timeF[3] } ]
 				},
 				defaults: {
+					title: title,
 					to_user_id: user.id, 
 					from_user_id: from_user,
 					date: date,
@@ -184,7 +185,7 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { appointment_id } = req.params;
-		const { to_user_id, from_user_id, date, time, description } = req.body;
+		const { to_user_id, from_user_id, title, date, time, description } = req.body;
 
 		try {
 
@@ -231,6 +232,7 @@ module.exports = {
 			}
 
 			await appointment.update({
+				title: title || appointment.title,
 				date: dateS,
 				time: timeS,
 				description: description || appointment.description
