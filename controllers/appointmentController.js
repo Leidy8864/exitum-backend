@@ -15,7 +15,7 @@ async function findAppointment(to_user_id, date, time) {
 		}
 	});
 
-	console.log(to_user_id, date, time, response);
+	// console.log(to_user_id, date, time, response);
 
 	if (response) return true
 	else return false
@@ -220,12 +220,12 @@ module.exports = {
 
 				if (appointment.date != dateS) {
 					validateDateActual(dateS)
-					if(findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+					if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
 				}
 
 				if (appointment.time != timeS) {
 					validateTimeActual(time)
-					if(findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+					if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
 				}
 
 			}
