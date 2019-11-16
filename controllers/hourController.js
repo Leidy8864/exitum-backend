@@ -73,8 +73,6 @@ module.exports = {
         time_end = Number(time_end.match(/^(\d+)/)[1])
         time = Number(time.match(/^(\d+)/)[1])
 
-        console.log(time_start, time_end, time)
-
         if (time >= time_start && time < time_end ) return true
         else throw(text.notAvailable('hora'))
 

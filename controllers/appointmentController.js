@@ -77,13 +77,20 @@ module.exports = {
 
 	listByUserReminder: async (req, res) => {
 
-		const { to_user_id } = req.params
+		var errors = validationResult(req)
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+		// const { to_user_id } = req.params
+		// const perPage = 3
+		// var page = req.query.page || 1;
 
 		try {
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
 			const appointment = await models.appointment.findAll({
+				// offset: (perPage * (page - 1)),
+				// limit: perPage,
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'recordatorio' }, 
@@ -104,12 +111,16 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params
+		const perPage = 3
+		var page = req.query.page || 1;
 
 		try {
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
 			const appointment = await models.appointment.findAll({
+				offset: (perPage * (page - 1)),
+				limit: perPage,
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'reunion' }, 
@@ -134,7 +145,7 @@ module.exports = {
 
 		try {
 
-			const user = await existById(models.user, to_user_id, 'id')
+			const user = await existById(models.user, to_user_id, 'id', 'from_hour', 'to_hour')
 			var timeF = timesFormat(time)
 
 			validateRangeTime(user.from_hour, user.to_hour, timeF[3])
@@ -177,7 +188,7 @@ module.exports = {
 
 		try {
 
-			const user = await existById(models.user, to_user_id);
+			const user = await existById(models.user, to_user_id, 'id', 'from_hour', 'to_hour');
 
 			var appointment = await models.appointment.findOne({
 				where: {
