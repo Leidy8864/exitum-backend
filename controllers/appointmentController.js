@@ -80,7 +80,7 @@ module.exports = {
 		var errors = validationResult(req)
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-		// const { to_user_id } = req.params
+		const { to_user_id } = req.params
 		// const perPage = 3
 		// var page = req.query.page || 1;
 
