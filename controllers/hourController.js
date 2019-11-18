@@ -59,10 +59,10 @@ module.exports = {
 
     validateTimeActual: (time) => {
 
-        var now = new Date()
+        var now = new Date().toLocaleTimeString('en-US', { timeZone: "America/Lima", hour12: false });
         var hour = timesFormat(time)
         
-        if (now.getHours() >= hour[0]) throw(text.notAvailable('hora'))
+        if (Number(now) >= hour[0]) throw(text.notAvailable('hora'))
         else return true
 
     },
