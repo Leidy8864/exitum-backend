@@ -86,9 +86,8 @@ module.exports = {
 
 		try {
 
-			process.env.TZ = 'America/Lima'
-			var date = new Date();
-			console.log(date.toLocaleTimeString())
+			var date = new Date().toLocaleString("en-US", {timeZone: "America/Lima"});;
+			console.log(date)
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
