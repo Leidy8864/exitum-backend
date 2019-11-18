@@ -86,6 +86,9 @@ module.exports = {
 
 		try {
 
+			var date = new Date();
+			console.log(date)
+
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
 			const appointment = await models.appointment.findAll({
