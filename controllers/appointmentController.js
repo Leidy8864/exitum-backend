@@ -86,6 +86,7 @@ module.exports = {
 
 		try {
 
+			process.env.TZ = 'America/Lima'
 			var date = new Date();
 			console.log(date.toLocaleTimeString())
 
