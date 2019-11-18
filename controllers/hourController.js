@@ -51,18 +51,22 @@ module.exports = {
         var d = new Date()// now.setHours(0, 0, 0, 0)
         var now = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
         var dateA = new Date(date)
-
+        
         if (dateA < now) throw(text.notAvailable('fecha'))
+        // else if(now.getFullYear() < dateA.getFullYear() && now.getMonth() < dateA.getMonth()) return false
+        // else if(now.getFullYear() < dateA.getFullYear()) return false
+        // else if(now.getDate() < dateA.getDate()) return false
         else return true
         
     },
 
     validateTimeActual: (time) => {
 
-        var now = new Date().toLocaleTimeString('en-US', { timeZone: "America/Lima", hour12: false });
+        var nowH = new Date().toLocaleTimeString('en-US', { timeZone: "America/Lima", hour12: false });
+        var now = Number(nowH.match(/^(\d+)/)[1])
         var hour = timesFormat(time)
-        
-        if (Number(now) >= hour[0]) throw(text.notAvailable('hora'))
+
+        if (now >= hour[0]) throw(text.notAvailable('hora'))
         else return true
 
     },

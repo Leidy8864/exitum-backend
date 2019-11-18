@@ -709,5 +709,16 @@ module.exports = {
             return res.json({ status: false, message: "Ocurrio un problema, intentelo nuevamente" })
         }
 
+    },
+
+    allUser: async(req, res) => {
+
+        try {
+
+            var user = await models.user.findAll({ attributes: [ 'id',  [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ] })
+            successful(res, 'OK', user)
+
+        } catch (error) { returnError(res, error) }
+
     }
 }
