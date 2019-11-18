@@ -87,7 +87,7 @@ module.exports = {
 		try {
 
 			var date = new Date();
-			console.log(date)
+			console.log(date.toLocaleTimeString())
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
