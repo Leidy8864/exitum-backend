@@ -86,8 +86,9 @@ module.exports = {
 
 		try {
 
-			var date = new Date().toLocaleString("en-US", {timeZone: "America/Lima"});;
-			console.log(date)
+			var date = new Date()//.toLocaleString("en-US", {timeZone: "America/Lima", hour12: false});
+			// date.toLocaleTimeString('en-US', {timeZone: "America/Lima"});
+			console.log(date.getHours('en-US', {timeZone: "America/Lima"}))
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
