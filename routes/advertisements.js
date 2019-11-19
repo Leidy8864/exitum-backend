@@ -46,4 +46,8 @@ router.get('/favorites', function (req, res) {
     controller.usersFavorites(req, res);
 });
 
+router.post('/updateState', function(req, res){
+    controller.updateState(req, res);
+})
+
 module.exports = router;
