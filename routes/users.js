@@ -89,4 +89,8 @@ router.get('/show/:user_id',
   controller.show
 )
 
+router.get('/all-user',
+  controller.allUser
+)
+
 module.exports = router;

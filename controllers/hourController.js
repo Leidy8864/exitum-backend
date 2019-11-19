@@ -51,22 +51,116 @@ module.exports = {
         var d = new Date()// now.setHours(0, 0, 0, 0)
         var now = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
         var dateA = new Date(date)
-
+        
         if (dateA < now) throw(text.notAvailable('fecha'))
+        // else if(now.getFullYear() < dateA.getFullYear() && now.getMonth() < dateA.getMonth()) return false
+        // else if(now.getFullYear() < dateA.getFullYear()) return false
+        // else if(now.getDate() < dateA.getDate()) return false
         else return true
         
     },
 
     validateTimeActual: (time) => {
 
-        var now = new Date()
+        var nowH = new Date().toLocaleTimeString('en-US', { timeZone: "America/Lima", hour12: false });
+        var now = Number(nowH.match(/^(\d+)/)[1])
         var hour = timesFormat(time)
-        
-        if (now.getHours() >= hour[0]) throw(text.notAvailable('hora'))
+
+        if (now >= hour[0]) throw(text.notAvailable('hora'))
+        else return true
 
     },
 
-    getTimeHMS: (time) => {
+    validateRangeTime: (time_start, time_end, time) => {
 
+        time_start = Number(time_start.match(/^(\d+)/)[1])
+        time_end = Number(time_end.match(/^(\d+)/)[1])
+        time = Number(time.match(/^(\d+)/)[1])
+
+        if (time >= time_start && time < time_end ) return true
+        else throw(text.notAvailable('hora'))
+
+    },
+
+    getAge: (dateString, dateString2) =>{
+
+        var now = (dateString2) ? new Date(dateString2) : new Date()
+        var today = new Date(now.getYear(),now.getMonth(),now.getDate());
+    
+        var yearNow = now.getFullYear();
+        var monthNow = now.getMonth();
+        var dateNow = now.getDate();
+
+        console.log(yearNow, monthNow, dateNow)
+    
+        var dob = new Date(dateString); //dateString.substring(6,10), dateString.substring(0,2)-1, dateString.substring(3,5)
+    
+        var yearDob = dob.getFullYear();
+        var monthDob = dob.getMonth();
+        var dateDob = dob.getDate();
+        var age = {};
+        var ageString = "";
+        var yearString = "";
+        var monthString = "";
+        var dayString = "";
+
+        console.log(yearNow, monthNow, dateNow, yearDob, monthDob, dateDob)
+    
+    
+        yearAge = yearNow - yearDob;
+    
+        if (monthNow >= monthDob)
+        var monthAge = monthNow - monthDob;
+        else {
+        yearAge--;
+        var monthAge = 12 + monthNow -monthDob;
+        }
+    
+        if (dateNow >= dateDob)
+        var dateAge = dateNow - dateDob;
+        else {
+        monthAge--;
+        var dateAge = 31 + dateNow - dateDob;
+    
+        if (monthAge < 0) {
+            monthAge = 11;
+            yearAge--;
+        }
+        }
+    
+        age = {
+            years: yearAge,
+            months: monthAge,
+            days: dateAge
+            };
+
+        console.log(age)
+    
+        if ( age.years > 1 ) yearString = " año(s)";
+        else yearString = " año";
+        if ( age.months> 1 ) monthString = " meses";
+        else monthString = " mes";
+        if ( age.days > 1 ) dayString = " dias";
+        else dayString = " dia";
+    
+    
+        if ( (age.years > 0) && (age.months > 0) && (age.days > 0) )
+        ageString = age.years + yearString + ", " + age.months + monthString + " y " + age.days + dayString; //+ " old.";
+        else if ( (age.years == 0) && (age.months == 0) && (age.days > 0) )
+        ageString = /*"Only " +*/ age.days + dayString; //+ " old!";
+        else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )
+        ageString = age.years + yearString; // + " old. Happy Birthday!!";
+        else if ( (age.years > 0) && (age.months > 0) && (age.days == 0) )
+        ageString = age.years + yearString + " y " + age.months + monthString; //+ " old.";
+        else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) )
+        ageString = age.months + monthString + " y " + age.days + dayString; //+ " old.";
+        else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )
+        ageString = age.years + yearString + " y " + age.days + dayString; //+ " old.";
+        else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )
+        ageString = age.months + monthString; //+ " old.";
+        else ageString = "Sin resultado!";
+    
+        return ageString;
     }
+    
 }

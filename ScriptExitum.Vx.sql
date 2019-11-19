@@ -1414,6 +1414,27 @@ CREATE TABLE IF NOT EXISTS `exitum`.`category_workshop` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `exitum`.`user_workshop`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`user_workshop` (
+  `user_id` INT(11) NOT NULL,
+  `workshop_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user_id`, `workshop_id`),
+  INDEX `fk_user_has_workshop_workshop1_idx` (`workshop_id` ASC) VISIBLE,
+  INDEX `fk_user_has_workshop_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_user_has_workshop_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_workshop_workshop1`
+    FOREIGN KEY (`workshop_id`)
+    REFERENCES `exitum`.`workshop` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

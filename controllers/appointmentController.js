@@ -5,7 +5,22 @@ const { arrayUnavailable } = require('./scheduleController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
-const { timesFormat, validateDateActual, validateTimeActual } = require('../controllers/hourController')
+const { timesFormat, validateDateActual, validateTimeActual, validateRangeTime } = require('../controllers/hourController')
+
+async function findAppointment(to_user_id, date, time) {
+
+	var response = await models.appointment.findOne({
+		where: {
+			[ Sequelize.Op.and ]: [ { to_user_id: to_user_id }, { date: new Date(date) }, { time: time } ]
+		}
+	});
+
+	// console.log(to_user_id, date, time, response);
+
+	if (response) return true
+	else return false
+
+}
 
 module.exports = {
 
@@ -62,13 +77,24 @@ module.exports = {
 
 	listByUserReminder: async (req, res) => {
 
+		var errors = validationResult(req)
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
 		const { to_user_id } = req.params
+		// const perPage = 3
+		// var page = req.query.page || 1;
 
 		try {
+
+			// var date = new Date().toLocaleTimeString('en-US', {timeZone: "America/Lima"})//.toLocaleString("en-US", {timeZone: "America/Lima", hour12: false});
+			// // date.toLocaleTimeString('en-US', {timeZone: "America/Lima"});
+			// console.log(date)
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
 			const appointment = await models.appointment.findAll({
+				// offset: (perPage * (page - 1)),
+				// limit: perPage,
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'recordatorio' }, 
@@ -89,12 +115,16 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params
+		const perPage = 3
+		var page = req.query.page || 1;
 
 		try {
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
 			const appointment = await models.appointment.findAll({
+				offset: (perPage * (page - 1)),
+				limit: perPage,
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'reunion' }, 
@@ -115,17 +145,18 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params;
-		const { from_user_id, date, time, type, description } = req.body;
+		const { from_user_id, title, date, time, type, description } = req.body;
 
 		try {
 
-			const user = await existById(models.user, to_user_id, 'id')
+			const user = await existById(models.user, to_user_id, 'id', 'from_hour', 'to_hour')
 			var timeF = timesFormat(time)
 
+			validateRangeTime(user.from_hour, user.to_hour, timeF[3])
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
 			if(!unavailable.indexOf(timeF[3])) throw(text.notAvailable('hora'))
-			if(validateDateActual(date)) validateTimeActual(time)
+			// if(validateDateActual(date)) validateTimeActual(time)
 
 			var from_user = type == 'recordatorio' ? user.id : from_user_id;
 
@@ -134,6 +165,7 @@ module.exports = {
 					[ Sequelize.Op.and ]: [ { to_user_id: user.id }, { date: new Date(date) }, { time: timeF[3] } ]
 				},
 				defaults: {
+					title: title,
 					to_user_id: user.id, 
 					from_user_id: from_user,
 					date: date,
@@ -157,11 +189,11 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { appointment_id } = req.params;
-		const { to_user_id, from_user_id, date, time, description } = req.body;
+		const { to_user_id, from_user_id, title, date, time, description } = req.body;
 
 		try {
 
-			const user = await existById(models.user, to_user_id, 'id');
+			const user = await existById(models.user, to_user_id, 'id', 'from_hour', 'to_hour');
 
 			var appointment = await models.appointment.findOne({
 				where: {
@@ -176,16 +208,37 @@ module.exports = {
 			if (!appointment) throw (text.notFoundElement);
 
 			var timeF = time ? timesFormat(time) : [ appointment.time ];
+			const timeS = timeF[3] || timeF[0]
+			const dateS = date || appointment.date
 
+			validateRangeTime(user.from_hour, user.to_hour, timeS)
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
-			if(!unavailable.indexOf(timeF[3] || timeF[0])) throw(text.notAvailable('hora'))
-			
-			// if(validateDateActual(date)) validateTimeActual(time)
+			if(!unavailable.indexOf(timeS)) throw(text.notAvailable('hora'))
+
+			if (appointment.date != dateS && appointment.time != timeS) {
+
+				if(validateDateActual(date)) validateTimeActual(time)
+				if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+
+			} else  {
+
+				if (appointment.date != dateS) {
+					validateDateActual(dateS)
+					if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+				}
+
+				if (appointment.time != timeS) {
+					validateTimeActual(time)
+					if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
+				}
+
+			}
 
 			await appointment.update({
-				date: date || appointment.date,
-				time: timeF[3] || appointment.time,
+				title: title || appointment.title,
+				date: dateS,
+				time: timeS,
 				description: description || appointment.description
 			})
 
@@ -215,7 +268,7 @@ module.exports = {
 				}
 			})
 
-			if (!appointment) throw (text.notFoundElement);
+			if (!appointment) throw (text.notFoundElement)
 
 			appointment.destroy()
 
