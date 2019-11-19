@@ -203,6 +203,8 @@ module.exports = {
                 }
             })
 
+            console.log(appointment)
+
             var appointment_act = appointment.map(element => {
                 return convertTimes(element.time)
             })

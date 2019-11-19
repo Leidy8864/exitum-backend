@@ -158,16 +158,14 @@ module.exports = {
 			if(!unavailable.indexOf(timeF[3])) throw(text.notAvailable('hora'))
 			// if(validateDateActual(date)) validateTimeActual(time)
 
-			var from_user = type == 'recordatorio' ? user.id : from_user_id;
-
 			var [ response, created ] = await models.appointment.findOrCreate({
 				where: {
-					[ Sequelize.Op.and ]: [ { to_user_id: user.id }, { date: new Date(date) }, { time: timeF[3] } ]
+					[ Sequelize.Op.and ]: [ { to_user_id: to_user_id }, { date: new Date(date) }, { time: timeF[3] } ]
 				},
 				defaults: {
 					title: title,
-					to_user_id: user.id, 
-					from_user_id: from_user,
+					to_user_id: to_user_id, 
+					from_user_id: from_user_id,
 					date: date,
 					time: timeF[3],
 					type: type,
