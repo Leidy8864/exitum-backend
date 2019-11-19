@@ -16,6 +16,10 @@ router.get('/list-by-reminder/:to_user_id',
     controller.validate('by-user-reminder'),
     controller.listByUserReminder
 );
+router.get('/list-by-meeting/:to_user_id',
+    controller.validate('by-user-reminder'),
+    controller.listByUserMeeting
+);
 
 router.post('/update/:appointment_id',
     controller.validate('update'),
