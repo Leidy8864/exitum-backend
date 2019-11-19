@@ -330,7 +330,9 @@ module.exports = {
         const { tip_id } = req.query
         let perPage = 6;
 
-        models.challenge.findAll({
+        const tip = await models.tip.findOne({ where: { id: tip_id } })
+        if (!tip) { return res.json({ status: false, message: "El codigo del reto no exixte." }) }
+        await models.challenge.findAll({
             limit: perPage,
             where: {
                 tip_id: tip_id,
@@ -349,7 +351,6 @@ module.exports = {
                     // ]
                 }
             ]
-
         }).then(tips => {
             return res.json({ status: true, message: "Reto cumplido por otros usuario", data: tips })
         })
