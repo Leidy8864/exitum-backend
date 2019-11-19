@@ -327,14 +327,17 @@ module.exports = {
     },
 
     summaryTips: async (req, res) => {
-        const { tip_id } = req.query
+        const { tip_id, user_id } = req.query
         let perPage = 6;
-
-        models.challenge.findAll({
+        console.log(user_id)
+        const tip = await models.tip.findOne({ where: { id: tip_id } })
+        if (!tip) { return res.json({ status: false, message: "El codigo del reto no exixte." }) }
+        await models.challenge.findAll({
             limit: perPage,
             where: {
                 tip_id: tip_id,
-                checked: 1
+                checked: 1,
+                user_id: { [models.Sequelize.Op.notIn]: [user_id] }
             },
             attributes: ['reply', 'date'],
             order: [
@@ -343,13 +346,12 @@ module.exports = {
             include: [
                 {
                     model: models.user,
-                    attributes: ['id', 'name', 'lastname', 'photo'],
+                    attributes: ['id', 'name', 'lastname', 'photo']
                     // include: [
                     //     { model: models.employee}
                     // ]
                 }
             ]
-
         }).then(tips => {
             return res.json({ status: true, message: "Reto cumplido por otros usuario", data: tips })
         })

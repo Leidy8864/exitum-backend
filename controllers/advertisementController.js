@@ -276,57 +276,18 @@ module.exports = {
 
         try {
 
-            var entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } });
+            var entrepreneur_b = await models.entrepreneur.findOne({ where: { user_id: user_id } });
             const whereConsult = {
-                state: req.query.state,
                 //'$startup.entrepreneur.id$': entrepreneur.id
             };
 
-            if (entrepreneur) {
+            if (entrepreneur_b) {
                 models.advertisement.findAll(
                     {
                         offset: (perPage * (page - 1)),
                         limit: perPage,
-                        where: whereConsult,
-                        include: [
-                            {
-                                model: models.startup,
-                                include: [{
-                                    model: models.entrepreneur,
-                                    where: {
-                                        id: entrepreneur.id
-                                    }
-                                }]
-                            },
-                            {
-                                model: models.proposal
-                            },
-                            // {
-                            //     model: models.advertisement_skill,
-                            //     as: 'advertisement_skills',
-                            //     include: [
-                            //         {
-                            //             model: models.skill,
-                            //             as: 'skill',
-                            //             include: [
-                            //                 {
-                            //                     model: models.user,
-                            //                     as: 'toSkillUsers',
-                            //                     attributes: ['id', 'name']
-                            //                 }
-                            //             ]
-                            //         }
-                            //     ],
-                            //     group: ['advertisement_id']
-                            // },
-                        ]
-                    }
-                ).then(advertisements => {
-                    models.advertisement.count({
-                        distinct: true,
                         where: {
                             state: req.query.state,
-                            '$startup.entrepreneur.id$': entrepreneur.id
                         },
                         include: [
                             {
@@ -334,11 +295,34 @@ module.exports = {
                                 include: [{
                                     model: models.entrepreneur,
                                     where: {
-                                        id: entrepreneur.id
-                                    }
+                                        id: entrepreneur_b.id
+                                    },
+                                    required: false
                                 }]
+                            },
+                            {
+                                model: models.proposal
                             }
                         ]
+                    }
+                ).then(advertisements => {
+                    models.advertisement.count({
+                        where: {
+                            state: req.query.state,
+                            '$startup.entrepreneur.id$': entrepreneur_b.id
+                        },
+                        include: [
+                            {
+                                model: models.startup,
+                                include: [{
+                                    model: models.entrepreneur,
+                                    // where: {
+                                    //     id: entrepreneur.id
+                                    // }
+                                }]
+                            }
+                        ],
+                        distinct: true
                     }).then(totalRows => {
                         console.log(advertisements.length)
                         console.log(totalRows)

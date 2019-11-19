@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const helper = require('../libs/helper');
 const controller = require('../controllers/userController');
 const controllerReview = require('../controllers/userReviewController');
 var passportConf = require('../libs/passport');
@@ -92,5 +93,9 @@ router.get('/show/:user_id',
 router.get('/all-user',
   controller.allUser
 )
+
+// router.get('/all-user', helper.verifyToken,
+//   controller.allUser
+// )
 
 module.exports = router;
