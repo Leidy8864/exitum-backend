@@ -91,8 +91,6 @@ module.exports = {
         var monthNow = now.getMonth();
         var dateNow = now.getDate();
 
-        console.log(yearNow, monthNow, dateNow)
-    
         var dob = new Date(dateString); //dateString.substring(6,10), dateString.substring(0,2)-1, dateString.substring(3,5)
     
         var yearDob = dob.getFullYear();
@@ -103,9 +101,6 @@ module.exports = {
         var yearString = "";
         var monthString = "";
         var dayString = "";
-
-        console.log(yearNow, monthNow, dateNow, yearDob, monthDob, dateDob)
-    
     
         yearAge = yearNow - yearDob;
     
@@ -133,8 +128,6 @@ module.exports = {
             months: monthAge,
             days: dateAge
             };
-
-        console.log(age)
     
         if ( age.years > 1 ) yearString = " año(s)";
         else yearString = " año";
