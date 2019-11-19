@@ -68,12 +68,7 @@ module.exports = {
 
             const company = await createCompany(company_name)
 
-            var [experience, created] = await models.experience.findOrCreate({
-                where: { [Sequelize.Op.and]: [
-                    { user_id: user.id },
-                    { company_id: company.id }
-                ]},
-                defaults: {
+            var expererience = await models.experience.create({
                     user_id: user.id,
                     position: position,
                     company_id: company.id,
@@ -81,12 +76,11 @@ module.exports = {
                     date_start: date_start,
                     date_end: date_end,
                     current_job: (date_end) ? 0 : 1
-                }
-            });
+                });
 
-            if (!created) throw(text.duplicateElement)
+            // if (!created) throw(text.duplicateElement)
 
-            successful(res, text.successCreate('experiencia'), experience)
+            successful(res, text.successCreate('experiencia'))
 
         } catch (error) { returnError(res, error) }
 
