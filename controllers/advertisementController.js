@@ -151,6 +151,17 @@ module.exports = {
         }
     },
 
+    updateState: async (req, res) => {
+        const { advertisement_id, state } = req.body
+        const ads = await models.advertisement.findOne({ where: { id: advertisement_id } })
+        if (!ads) { return res.json({ status: false, message: "No existe el anuncio" }) }
+        await ads.update({
+            state: state
+        }, { where: { id: advertisement_id } }).then(ads => {
+            return res.json({ status: true, message: "Estado actualizado correctamente." })
+        })
+    },
+
     updateSkills: async (req, res) => {
 
         const advertisement_id = req.body.advertisement_id;
