@@ -59,38 +59,43 @@ module.exports = {
                                                 [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job' ]
                     },
                 ],
+                // attributes: [ [ Sequelize.literal(`(SELECT MIN(date_start) FROM experience WHERE )`), 'date_start' ],
+                //                      [ Sequelize.literal(`(SELECT MAX(date_end) FROM experience WHERE )`), 'date_end' ] ],
                 attributes: [ 'name', [ Sequelize.fn( 'Date_format', Sequelize.fn('min', Sequelize.col('experiences.date_start')), '%Y-%m-%d' ), 'inicio' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.fn('max', Sequelize.col('experiences.date_end')), '%Y-%m-%d' ), 'fin' ] ],
-                group: ['id', 'name', 'experiences.id']
+                group: ['id', 'name', 'experiences.id'],
             })
 
             var data = await Promise.all(element.map(async experience => {
-                // console.log(await exper.dataValues.inicio)
+                var start = new Date(experience.experiences[0].date_start);
+                var end = new Date(experience.experiences[0].date_end);
 
-                // return await exper
+                (experience.experiences).forEach(db => {
+
+                    var fecha = new Date(db.date_start)
+                    var fecha2 = new Date(db.date_end)
+
+                    if (fecha.getTime() < start.getTime()) start = fecha
+                    if (db.current_job == 0) {
+                        if (fecha2.getTime() > end.getTime() && end) end = fecha2
+                    } else {
+                        end = null
+                    }
+
+                });
+                
+                start = `${start.getUTCFullYear()}-${start.getUTCMonth() + 1}-${start.getUTCDate()}`
+                end = (end) ? `${end.getUTCFullYear()}-${end.getUTCMonth() + 1}-${end.getUTCDate()}` : null
+
                 return {
                     company_name: experience.name,
-                    time_total: getAge(experience.dataValues.inicio, experience.dataValues.fin),
+                    // start: start,
+                    // end: end,
+                    time_total: getAge(start, end),
                     detail: experience.experiences
                 }
-                // console.log(element.id)
-                // var [response, created] = await models.skill.findOrCreate({
-                //     where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
-                //     defaults: {
-                //         skill: element
-                //     }
-                // })
-                // return await response.id
             }))
 
-            // var element = expereriences.map(element => {
-            //     console.log(element)
-            //     // return {
-            //     //     company_name: expereriences.company.name                    
-            //     // }
-            // })
-
-            // successful(res, 'OK', data)
             return res.status(200).json({ data: data })
 
         } catch (error) { returnError(res, error) }
