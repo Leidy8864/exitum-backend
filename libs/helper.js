@@ -10,14 +10,14 @@ module.exports = {
             SECRET_KEY, {
             // expiresIn : expiresIn
         });
-        
+
         const accessData = {
-            id : user.id,
-            name : user.name,
-            lastname : user.lastname,
-            email : user.email,
-            accessToken : accessToken,
-            role : user.role,
+            id: user.id,
+            name: user.name,
+            lastname: user.lastname,
+            email: user.email,
+            accessToken: accessToken,
+            role: user.role,
             confirmed: user.confirmed,
             photo: user.photo
             // expiresIn : expiresIn
@@ -44,5 +44,23 @@ module.exports = {
         var nameFile = uuid.v1({ node: [0x01, 0x23, 0x45, 0x67, 0x89, 0xab] }).toString() + file.name;
 
         return nameFile;
-    }
+    },
+
+    verifyToken: function (req, res, next) {
+        // if (!req.headers.authorization) {
+        //     return res.status(401).send("Unauthorized request");
+        // }
+        //let token = req.token.headers.authorization.split(' ')[1]
+        let token = req.headers['access-token'];
+ 
+        if (token === 'null') {
+            return res.status(401).send("Unauthorized request");
+        }
+        let payload = jwt.verify(token, 'secretKey')
+        if (!payload) {
+            return res.status(401).send("Unauthorized request");
+        }
+        req.id = payload.subject
+        next()
+    },
 }
