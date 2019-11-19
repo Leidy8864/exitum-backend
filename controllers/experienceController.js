@@ -1,6 +1,7 @@
 const text = require('../libs/text')
 const Sequelize = require('sequelize');
 const models = require('../models/index');
+const { getAge } = require('./hourController')
 const { existById } = require('./elementController')
 const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
@@ -40,16 +41,57 @@ module.exports = {
 
             const user = await existById(models.user, user_id)
 
-            var expereriences = await user.getExperience({
-                attributes: [ 'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job'  ],
-                include: [ { 
-                    model: models.company,
-                    attributes: ['name']
-                 } ]
+            // var expereriences = await user.getExperience({
+            //     attributes: [ 'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ], 'company_id',
+            //                         [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job'  ],
+            //     include: [ { 
+            //         model: models.company,
+            //         attributes: ['name']
+            //      } ]
+            // })
+
+            var element = await models.company.findAll({
+                include: [
+                    {
+                        model: models.experience,
+                        where: { user_id: user.id },
+                        attributes: [  'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
+                                                [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job' ]
+                    },
+                ],
+                attributes: [ 'name', [ Sequelize.fn( 'Date_format', Sequelize.fn('min', Sequelize.col('experiences.date_start')), '%Y-%m-%d' ), 'inicio' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.fn('max', Sequelize.col('experiences.date_end')), '%Y-%m-%d' ), 'fin' ] ],
+                group: ['id', 'name', 'experiences.id']
             })
 
-            successful(res, 'OK', expereriences)
+            var data = await Promise.all(element.map(async experience => {
+                // console.log(await exper.dataValues.inicio)
+
+                // return await exper
+                return {
+                    company_name: experience.name,
+                    time_total: getAge(experience.dataValues.inicio, experience.dataValues.fin),
+                    detail: experience.experiences
+                }
+                // console.log(element.id)
+                // var [response, created] = await models.skill.findOrCreate({
+                //     where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                //     defaults: {
+                //         skill: element
+                //     }
+                // })
+                // return await response.id
+            }))
+
+            // var element = expereriences.map(element => {
+            //     console.log(element)
+            //     // return {
+            //     //     company_name: expereriences.company.name                    
+            //     // }
+            // })
+
+            // successful(res, 'OK', data)
+            return res.status(200).json({ data: data })
 
         } catch (error) { returnError(res, error) }
 
@@ -68,7 +110,7 @@ module.exports = {
 
             const company = await createCompany(company_name)
 
-            var expererience = await models.experience.create({
+            await models.experience.create({
                     user_id: user.id,
                     position: position,
                     company_id: company.id,
