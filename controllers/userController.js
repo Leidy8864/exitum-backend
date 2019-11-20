@@ -715,7 +715,9 @@ module.exports = {
 
         try {
 
-            var user = await models.user.findAll({ attributes: [ 'id',  [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ] })
+            const { user_id } = req.params
+
+            var user = await models.user.findAll({ attributes: [ 'id',  [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ], where: { id: { [Sequelize.Op.ne] : user_id} } })
             successful(res, 'OK', user)
 
         } catch (error) { returnError(res, error) }

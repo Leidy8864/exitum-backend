@@ -90,7 +90,7 @@ router.get('/show/:user_id',
   controller.show
 )
 
-router.get('/all-user',
+router.get('/all-user/:user_id',
   controller.allUser
 )
 
