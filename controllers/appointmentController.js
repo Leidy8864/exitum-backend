@@ -1,4 +1,5 @@
 const text = require('../libs/text');
+var moment = require('moment');
 const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { arrayUnavailable } = require('./scheduleController')
@@ -86,21 +87,24 @@ module.exports = {
 
 		try {
 
-			// var date = new Date().toLocaleTimeString('en-US', {timeZone: "America/Lima"})//.toLocaleString("en-US", {timeZone: "America/Lima", hour12: false});
-			// // date.toLocaleTimeString('en-US', {timeZone: "America/Lima"});
-			// console.log(date)
-
-			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
+			var date = moment().subtract(24, 'hours');
+			var minute = date.minutes();
+			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
+
 			const appointment = await models.appointment.findAll({
-				// offset: (perPage * (page - 1)),
-				// limit: perPage,
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'recordatorio' }, 
-						{ date: { [ Sequelize.Op.gte ] : new Date(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) } }  
+						{ date: { [ Sequelize.Op.gte ] : local } }  
 					]
-				}
+				},
+				include: [
+					{ 
+						model: models.user, as: 'toAppointmentUser',
+						attributes: [ [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
+					 }
+				]
 			})
 
 			successful(res, 'OK', appointment)
@@ -120,18 +124,28 @@ module.exports = {
 
 		try {
 
-			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
-			console.log(new Date( Date.UTC(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) ))
+			var date = moment().subtract(24, 'hours');
+			var minute = date.minutes();
+			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
+
 			const appointment = await models.appointment.findAll({
-				// offset: (perPage * (page - 1)),
-				// limit: perPage,
 				where: {
-					[Sequelize.Op.and] : [ 
-						{ to_user_id: user.id }, { type: 'reunion' }, 
-						{ date: { [ Sequelize.Op.gte ] : new Date( Date.UTC(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) ) } }
+					[ Sequelize.Op.and ] : [ 
+						{ type: 'reunion' }, 
+						{ date: { [ Sequelize.Op.gte ] : local  } }
+					],
+					[ Sequelize.Op.or ] : [
+						{ to_user_id: user.id },
+						{ from_user_id: user.id }
 					]
-				}
+				},
+				include: [
+					{ 
+						model: models.user, as: 'toAppointmentUser',
+						attributes: [ [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
+					 }
+				]
 			})
 
 			successful(res, 'OK', appointment)

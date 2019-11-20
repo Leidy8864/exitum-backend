@@ -40,5 +40,17 @@ module.exports = (sequelize, DataType) => {
         omitNull: true,
         underscored: true
     });
+    appointment.associate = (models) => {
+        appointment.belongsTo(models.user, {
+            as: 'fromAppointmentUser',
+            foreignKey: 'from_user_id',
+			otherKey: 'to_user_id'
+        });
+        appointment.belongsTo(models.user, {
+            as: 'toAppointmentUser',
+            foreignKey: 'to_user_id',
+			otherKey: 'from_user_id'
+        });
+    }
     return appointment;
 };
