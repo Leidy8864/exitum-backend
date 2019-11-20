@@ -122,13 +122,14 @@ module.exports = {
 
 			const dateNow = new Date()
 			const user = await existById(models.user, to_user_id, 'id')
+			console.log(new Date( Date.UTC(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) ))
 			const appointment = await models.appointment.findAll({
 				// offset: (perPage * (page - 1)),
 				// limit: perPage,
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'reunion' }, 
-						{ date: { [ Sequelize.Op.gte ] : new Date(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) } }
+						{ date: { [ Sequelize.Op.gte ] : new Date( Date.UTC(`${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth() + 1}-${dateNow.getUTCDate()}`) ) } }
 					]
 				}
 			})

@@ -115,7 +115,9 @@ module.exports = {
         try {
 
             const experience = await models.experience.findByPk(experience_id, {
-                attributes: [ 'id', 'position', 'date_start', 'date_end', 'description', 'current_job' ],
+                attributes: [ 'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ], 'company_id',
+                                        [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job',
+                                        [ Sequelize.fn('max', Sequelize.col('company.name') ), 'company_name' ] ],
                 include: [ { model: models.company, attributes: [ 'name', 'id' ] } ]
             })
 
