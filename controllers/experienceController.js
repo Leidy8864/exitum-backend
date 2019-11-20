@@ -12,10 +12,13 @@ module.exports = {
     validate: (method) => {
 
         var user_id = check('user_id').exists().withMessage(text.id('usuario')).isNumeric().withMessage(text.numeric)
+        var experience_id = check('experience_id').exists().withMessage(text.id('experiencia')).isNumeric().withMessage(text.numeric)
 
         switch (method) {
             case 'by-user-id':
                 return [ user_id ]
+            case 'by-experience-id':
+                return [ experience_id ]
             case 'create':
                 return [
                     check('date_start').exists().withMessage(text.dateStart),
@@ -24,7 +27,7 @@ module.exports = {
                 ]
             case 'update':
                 return [
-                    user_id, check('experience_id').exists().withMessage(text.id('experiencia')).isNumeric().withMessage(text.numeric),
+                    user_id, experience_id
                 ]
         }
         
@@ -98,6 +101,26 @@ module.exports = {
 
             return res.status(200).json({ data: data })
 
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    show: async(req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { experience_id } = req.params
+
+        try {
+
+            const experience = await models.experience.findByPk(experience_id, {
+                attributes: [ 'id', 'position', 'date_start', 'date_end', 'description', 'current_job' ],
+                include: [ { model: models.company, attributes: [ 'name', 'id' ] } ]
+            })
+
+            successful(res, 'OK', experience)
+            
         } catch (error) { returnError(res, error) }
 
     },

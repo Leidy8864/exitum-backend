@@ -7,6 +7,11 @@ router.get('/list-by-id/:user_id',
   controller.findUserId
 );
 
+router.get('/show/:experience_id',
+  controller.validate('by-experience-id'),
+  controller.show
+)
+
 router.post('/create',
   controller.validate('create'),
   controller.createExperience
