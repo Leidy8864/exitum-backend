@@ -17,9 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         category.hasMany(models.subcategory, {
             foreignKey: 'category_id'
         });
-        // category.hasMany(models.advertisement, {
-        //     foreignKey: 'category_id'
-        // });
+        category.belongsToMany(models.workshop, {
+            as: { singular: 'toCategoryWorkshop', plural: 'toCategoryWorkshops' },
+            through: models.category_workshop,
+            foreignKey: 'category_id',
+            otherKey: 'workshop_id'
+        });
         // category.hasMany(models.startup, {
         //     foreignKey: 'category_id'
         // });

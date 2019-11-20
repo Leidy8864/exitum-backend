@@ -307,8 +307,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`appointment` (
   `description` TEXT NULL DEFAULT NULL,
   `status` TINYINT(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_user_has_user_user2_idx` (`to_user_id` ASC) VISIBLE,
-  INDEX `fk_user_has_user_user1_idx` (`from_user_id` ASC) VISIBLE,
+  INDEX `fk_user_has_user_user2_idx` (`to_user_id` ASC),
+  INDEX `fk_user_has_user_user1_idx` (`from_user_id` ASC),
   CONSTRAINT `fk_user_has_user_user1`
     FOREIGN KEY (`from_user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -811,7 +811,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`experience` (
   `position` VARCHAR(145) NULL DEFAULT NULL,
   `date_start` DATETIME NULL DEFAULT NULL,
   `date_end` DATETIME NULL DEFAULT NULL,
-  `description` VARCHAR(1024) NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL,
   `current_job` TINYINT(4) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
   `company_id` INT(11) NOT NULL,
@@ -1399,8 +1399,8 @@ CREATE TABLE IF NOT EXISTS `exitum`.`category_workshop` (
   `workshop_id` INT(11) NOT NULL,
   `category_id` INT(11) NOT NULL,
   PRIMARY KEY (`workshop_id`, `category_id`),
-  INDEX `fk_workshop_has_category_category1_idx` (`category_id` ASC) VISIBLE,
-  INDEX `fk_workshop_has_category_workshop1_idx` (`workshop_id` ASC) VISIBLE,
+  INDEX `fk_workshop_has_category_category1_idx` (`category_id` ASC),
+  INDEX `fk_workshop_has_category_workshop1_idx` (`workshop_id` ASC),
   CONSTRAINT `fk_workshop_has_category_workshop1`
     FOREIGN KEY (`workshop_id`)
     REFERENCES `exitum`.`workshop` (`id`)
@@ -1420,9 +1420,10 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `exitum`.`user_workshop` (
   `user_id` INT(11) NOT NULL,
   `workshop_id` INT(11) NOT NULL,
+  `rate` TINYINT(1) NULL,
   PRIMARY KEY (`user_id`, `workshop_id`),
-  INDEX `fk_user_has_workshop_workshop1_idx` (`workshop_id` ASC) VISIBLE,
-  INDEX `fk_user_has_workshop_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_user_has_workshop_workshop1_idx` (`workshop_id` ASC),
+  INDEX `fk_user_has_workshop_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_user_has_workshop_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -1444,19 +1445,19 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 INSERT INTO `currency` (`id`, `currency`) VALUES (NULL, 'PEN'), (NULL, 'USD');
 INSERT INTO `country` (`id`, `country`, `code`, `currency_id`) VALUES (NULL, 'Perú', 'PE', 1), (NULL, 'Estados Unidos', 'EEUU', 2);
 INSERT INTO `user` (`id`, `name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `phone`, `role`, `method`, `active`, `last_login`, `photo`, `avg_rating`, `created_at`, `country_id`, `currency_id`, `from_hour`, `to_hour`)
-VALUES (NULL, 'Usuario', 'Usuario', 'usuario@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL),
-(NULL, 'Usuaria', 'Usuaria', 'usuaria@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL),
-(NULL, 'Usuarito', 'Usuarito', 'usuarito@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL),
-(NULL, 'Usuarita', 'Usuarita', 'usuarita@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  NULL, NULL);
+VALUES (NULL, 'Usuario', 'Usuario', 'usuario@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '7:00.00', '22:00:00'),
+(NULL, 'Usuaria', 'Usuaria', 'usuaria@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '7:00.00', '22:00:00'),
+(NULL, 'Usuarito', 'Usuarito', 'usuarito@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '7:00.00', '22:00:00'),
+(NULL, 'Usuarita', 'Usuarita', 'usuarita@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'employee', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1',  '7:00.00', '22:00:00');
 
 INSERT INTO `user` (`id`, `name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `phone`, `role`, `method`, `active`, `last_login`, `photo`, `avg_rating`, `created_at`, `country_id`, `currency_id`, `from_hour`, `to_hour`)
-VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1', NULL, NULL),
-(NULL, 'Emprendedora', 'Emprendedora', 'emprendedora@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '2', '2', NULL, NULL);
+VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '1', '1', '7:00.00', '22:00:00'),
+(NULL, 'Emprendedora', 'Emprendedora', 'emprendedora@gmail.com', '$2b$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', NULL, '1', NULL, 'entrepreneur', 'local', '1', NULL, NULL, NULL, '2019-10-11 00:00:00', '2', '2', '7:00.00', '22:00:00');
 
-INSERT INTO `exitum`.`user` (`name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `role`, `method`, `active`, `created_at`, `country_id`, `currency_id`) 
-VALUES ('Mario', 'Bros', 'mario@gmail.com', '$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', null, '1', 'employee', 'local', '1', '2019-10-11 00:00:00', '1', '1'),
-('Rhaegar', 'Code', 'rhaegarcode@gmail.com', null, 115836172712480098535, '1', 'employee', 'google', '1', '2019-10-11 00:00:00', '1', '1')
-('javier', 'lecca', 'leccajavier@gmail.com', null, 101931926708859123325, '1', 'employee', 'google', '1', '2019-10-11 00:00:00', '1', '1')
+-- INSERT INTO `exitum`.`user` (`name`, `lastname`, `email`, `password`, `provider_id`, `confirmed`, `role`, `method`, `active`, `created_at`, `country_id`, `currency_id`) 
+-- VALUES ('Mario', 'Bros', 'mario@gmail.com', '$10$AVbAuGsBU0pDnTrrhuRn9uON0HTDcALvdcTqlSHbDgyDoNQ8Qc0.6', null, '1', 'employee', 'local', '1', '2019-10-11 00:00:00', '1', '1'),
+-- ('Rhaegar', 'Code', 'rhaegarcode@gmail.com', null, 115836172712480098535, '1', 'employee', 'google', '1', '2019-10-11 00:00:00', '1', '1')
+-- ('javier', 'lecca', 'leccajavier@gmail.com', null, 101931926708859123325, '1', 'employee', 'google', '1', '2019-10-11 00:00:00', '1', '1')
 
 INSERT INTO `entrepreneur` (`id`, `user_id`) VALUES (NULL, '5'), (NULL, '6');
 

@@ -575,6 +575,12 @@ module.exports = {
                             user_id: user.id
                         });
                     }
+                } else if(req.body.role === "employee") {
+                    await models.employee.create({
+                        user_id: user.id,
+                        stage_id: 1,
+                        category_id: 1
+                    })
                 }
 
                 successful(res, text.successUpdate('usuario'), user)

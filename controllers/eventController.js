@@ -5,6 +5,7 @@ const { existById } = require('./elementController')
 const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
+const { createCategory } = require('./categoryController')
 
 module.exports = {
 
@@ -19,11 +20,11 @@ module.exports = {
         const hour_end = check('hour_end').exists().withMessage(message_exists)
         const hour_start=  check('hour_start').exists().withMessage(message_exists)
         const description = check('description').exists().withMessage(message_exists)
-        const category_id = check('category_id').exists().withMessage(message_exists)
+        const categories = check('categories').exists().withMessage(message_exists)
 
         switch (method) {
             case 'create':
-                return [ title, day, place, user_id, hour_end, hour_start, description, category_id ]
+                return [ title, day, place, user_id, hour_end, hour_start, description, categories ]
             case 'update':
                 return [ event_id, user_id ]
             case 'delete':
@@ -37,25 +38,33 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, category_id } = req.body
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories } = req.body
 
         try {
 
             const user = await existById(models.user, user_id, 'id')
 
-            var event = await models.workshop.create({
-                title: title,
-                description: description,
-                day: day,
-                hour_start: hour_start,
-                hour_end: hour_end,
-                place: place,
-                lat: lat,
-                lng: lng,
-                user_id: user.id
-            })
+            // var event = await models.workshop.create({
+            //     title: title,
+            //     description: description,
+            //     day: day,
+            //     hour_start: hour_start,
+            //     hour_end: hour_end,
+            //     place: place,
+            //     lat: lat,
+            //     lng: lng,
+            //     user_id: user.id
+            // })
 
-            successful(res, text.createCompany('evento'))
+            var categories_id = await Promise.all(categories.map(async element => {
+                var [ response, created ] = await models.category.findOrCreate({
+                    where: { name: element },
+                    defaults: { name: element }
+                })
+                return await response.id
+            }))
+
+            successful(res, text.createCompany('evento'), categories_id)
             
         } catch (error) { returnError(res, error) }
 
