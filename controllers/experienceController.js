@@ -59,14 +59,16 @@ module.exports = {
                         model: models.experience,
                         where: { user_id: user.id },
                         attributes: [  'id', 'position', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
-                                                [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job' ]
+                                                [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ], 'description', 'current_job' ],
+                        order: [ 'date_start', 'DESC' ]
                     },
                 ],
                 // attributes: [ [ Sequelize.literal(`(SELECT MIN(date_start) FROM experience WHERE )`), 'date_start' ],
                 //                      [ Sequelize.literal(`(SELECT MAX(date_end) FROM experience WHERE )`), 'date_end' ] ],
                 attributes: [ 'name', [ Sequelize.fn( 'Date_format', Sequelize.fn('min', Sequelize.col('experiences.date_start')), '%Y-%m-%d' ), 'inicio' ],
-                                    [ Sequelize.fn( 'Date_format', Sequelize.fn('max', Sequelize.col('experiences.date_end')), '%Y-%m-%d' ), 'fin' ] ],
+                    [ Sequelize.fn( 'Date_format', Sequelize.fn('max', Sequelize.col('experiences.date_end')), '%Y-%m-%d' ), 'fin' ] ],
                 group: ['id', 'name', 'experiences.id'],
+                order: [ [ { model: models.experience }, 'date_start', 'DESC' ] ],
             })
 
             var data = await Promise.all(element.map(async experience => {
@@ -79,8 +81,8 @@ module.exports = {
                     var fecha2 = new Date(db.date_end)
 
                     if (fecha.getTime() < start.getTime()) start = fecha
-                    if (db.current_job == 0) {
-                        if (fecha2.getTime() > end.getTime() && end) end = fecha2
+                    if (db.current_job == 0 && end) {
+                        if (fecha2.getTime() > end.getTime()) end = fecha2
                     } else {
                         end = null
                     }
