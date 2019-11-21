@@ -307,8 +307,7 @@ module.exports = {
                                     model: models.entrepreneur,
                                     where: {
                                         id: entrepreneur_b.id
-                                    },
-                                    required: false
+                                    }
                                 }]
                             },
                             {
