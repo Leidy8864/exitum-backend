@@ -44,17 +44,17 @@ module.exports = {
 
             const user = await existById(models.user, user_id, 'id')
 
-            // var event = await models.workshop.create({
-            //     title: title,
-            //     description: description,
-            //     day: day,
-            //     hour_start: hour_start,
-            //     hour_end: hour_end,
-            //     place: place,
-            //     lat: lat,
-            //     lng: lng,
-            //     user_id: user.id
-            // })
+            var event = await models.workshop.create({
+                title: title,
+                description: description,
+                day: day,
+                hour_start: hour_start,
+                hour_end: hour_end,
+                place: place,
+                lat: lat,
+                lng: lng,
+                user_id: user.id
+            })
 
             var categories_id = await Promise.all(categories.map(async element => {
                 var [ response, created ] = await models.category.findOrCreate({
@@ -64,7 +64,9 @@ module.exports = {
                 return await response.id
             }))
 
-            successful(res, text.createCompany('evento'), categories_id)
+            event.addToWorkshopCategories(categories_id)
+
+            successful(res, text.successCreate('evento'))
             
         } catch (error) { returnError(res, error) }
 
@@ -75,7 +77,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, category_id, event_id } = req.body
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, event_id } = req.body
 
         try {
 
@@ -100,7 +102,19 @@ module.exports = {
                 lat: lat || event.lat,
                 lng: lng || event.lng,
             })
-            
+
+            var categories_id = await Promise.all(categories.map(async element => {
+                var [ response, created ] = await models.category.findOrCreate({
+                    where: { name: element },
+                    defaults: { name: element }
+                })
+                return await response.id
+            }))
+
+            event.addToWorkshopCategories(categories_id)
+
+            successful(res, text.successUpdate('evento'));
+
         } catch (error) { returnError(res, error) }
 
     },
