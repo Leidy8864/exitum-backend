@@ -6,11 +6,16 @@ module.exports = (sequelize, DataType) => {
         title: DataType.STRING,
         description: DataType.STRING
     },
-    {
-        freezeTableName: true,
-        timestamps: false,
-        omitNull: true,
-        underscored: true
-    });
+        {
+            freezeTableName: true,
+            timestamps: false,
+            omitNull: true,
+            underscored: true
+        });
+    advice.associate = function (models) {
+        advice.hasMany(models.user_advice, {
+            foreignKey: 'advice_id'
+        })
+    };
     return advice
 };

@@ -35,54 +35,74 @@ module.exports = {
 
     showAdvice: async (req, res) => {
         const { user_id, startup_id, type } = req.query
-        var { order, employee_id, entrepreneur_id } = null
+        var order = 0
+        var employee_idd = undefined
+        var entrepreneur_idd = undefined
+        var whereConsult = {
+            user_id: user_id
+        }
         if (type == "employee") {
-            const employee = models.employee_id.findOne({ where: { user_id: user_id } })
-            if (!employee) {
-                return res.json({ status: false, message: "No se ha registrado como impulsor." })
+            const employee = await models.employee.findOne({ where: { user_id: user_id } })
+            whereConsult = {
+                user_id: user_id,
+                employee_id: employee.id
             }
+            employee_idd = employee.id
+            if (!employee) { return res.json({ status: false, message: "No se ha registrado como impulsor." }) }
         } else if (type == "entrepreneur") {
-            const entrepreneur = models.entrepreneur.findOne({ where: { user_id: user_id } })
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } })
+            whereConsult = {
+                user_id: user_id,
+                entrepreneur_id: entrepreneur.id,
+            }
+            entrepreneur_idd = entrepreneur.id
             if (!entrepreneur) { return res.json({ status: false, message: "No se ha registrado como emprendedor." }) }
+        } else if (type == "startup") {
+            whereConsult = {
+                user_id: user_id,
+                startup_id: startup_id
+            }
         }
         const usr_adv = await models.user_advice.findAll({
-            where: {
-                user_id: user_id,
-            },
+            where: whereConsult,
+            attributes: ['id', 'user_id', 'date_viewed'],
             include: [
                 {
                     model: models.advice,
-                    attributes: [[models.Sequelize.fn('MAX', models.Sequelize.col('order')), 'max']],
+                    attributes: ['type', [models.Sequelize.fn('MAX', models.Sequelize.col('order')), 'max']],
                     where: {
                         type: type
                     }
                 }
             ],
-            group: ["id"]
+            order: [['date_viewed','DESC']],
+            group: ['id','user_id','advice.type'],
         })
-
         if (usr_adv.length == 0) {
-            const adv = await models.advice.findOne({
-                where: {
-                    type: type,
-                    order: order
-                }
-            })
-            const new_usr_adv = await models.user_advice.create({
-                advice_id: adv.id,
-                user_id: user_id,
-                startup_id: startup.id || null,
-                employee_id: employee_id,
-                entrepreneur_id: entrepreneur_id,
-                date_viewed: Date.now(),
-                viewed: true
-            }).catch(err => {
-                console.log(err)
-            })
-            return res.json({ status: true, message: "Consejo visto", data: adv })
+            order = 0
+            console.log(order)
         } else {
-            return res.json(usr_adv)
+            order = usr_adv[0].advice.dataValues.max
+            console.log(order)
         }
 
+        const adv = await models.advice.findOne({
+            where: {
+                type: type,
+                order: order + 1
+            }
+        })
+        await models.user_advice.create({
+            advice_id: adv.id,
+            user_id: user_id,
+            startup_id: startup_id,
+            employee_id: employee_idd,
+            entrepreneur_id: entrepreneur_idd,
+            date_viewed: Date.now(),
+            viewed: true
+        }).catch(err => {
+            console.log(err)
+        })
+        return res.json({ status: true, message: "Consejo visto", data: adv })
     }
 }
