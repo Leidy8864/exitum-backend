@@ -498,9 +498,9 @@ module.exports = {
         const { user_id } = req.body
 
         try {
-            
-            const user = await models.user.findOne({ 
-                where: { id: user_id } ,
+
+            const user = await models.user.findOne({
+                where: { id: user_id },
                 attributes: { exclude: ['password'] }
             });
 
@@ -535,7 +535,7 @@ module.exports = {
 
         try {
 
-            const user = await models.user.findOne({ 
+            const user = await models.user.findOne({
                 where: { id: user_id },
                 attributes: { exclude: ['password'] }
             });
@@ -574,17 +574,87 @@ module.exports = {
                         await models.entrepreneur.create({
                             user_id: user.id
                         });
+                    } else {
+                        return res.json({ status: false, message: "Ya fue registrado como emprendedor" })
                     }
-                } else if(req.body.role === "employee") {
-                    await models.employee.create({
-                        user_id: user.id,
-                        stage_id: 1,
-                        category_id: 1
-                    })
+
+                    return res.status(200).json({ status: true, message: "Usuario actualizado correctamente" });
+
+                } else if (req.body.role === "employee") {
+                    const employee = await models.employee.findOne({ where: { user_id: req.body.user_id } });
+
+                    if (employee) {
+                        return res.json({ status: false, message: "Ya fue registrado como impulsor" })
+                    } else {
+                        try {
+                            const result = await models.sequelize.transaction(async (t) => {
+
+                                const employee = await models.employee.create({
+                                    user_id: req.body.user_id,
+                                    category_id: 1,
+                                    stage_id: 6
+                                }, { transaction: t });
+
+                                await employee.addType(req.body.types || 1, { transaction: t });
+                                var chlls = []
+                                var steps = []
+
+                                await models.stage.findAll({
+                                    where: {
+                                        type: 'employee'
+                                    },
+                                    include: [
+                                        {
+                                            model: models.step,
+                                            include: [
+                                                {
+                                                    model: models.tip
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }, { transaction: t }).then(stages => {
+                                    for (var x = 0; x < stages.length; x++) {
+                                        for (var y = 0; y < stages[x].steps.length; y++) {
+                                            for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
+                                                chlls.push(
+                                                    {
+                                                        user_id: req.body.user_id,
+                                                        employee_id: employee.id,
+                                                        stage_id: stages[x].id,
+                                                        step_id: stages[x].steps[y].id,
+                                                        tip_id: stages[x].steps[y].tips[z].id,
+                                                        checked: false,
+                                                        status: "Por verificar",
+                                                        date: Date.now(),
+                                                        comment: null
+                                                    }
+                                                )
+                                            }
+
+                                            steps.push(
+                                                {
+                                                    employee_id: employee.id,
+                                                    step_id: stages[x].steps[y].id,
+                                                    tip_completed: 0,
+                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                    state: 'incompleto'
+                                                }
+                                            )
+                                        }
+                                    }
+                                })
+                                await models.challenge.bulkCreate(chlls, { transaction: t });
+                                return employee;
+                            });
+                            return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: result });
+
+                        } catch (err) {
+                            console.log(err);
+                            res.status(200).json({ status: false, message: "Error al crear impulsor" });
+                        }
+                    }
                 }
-
-                successful(res, text.successUpdate('usuario'), user)
-
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
@@ -603,25 +673,25 @@ module.exports = {
         })
     },
 
-    show: async(req, res) => {
+    show: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
-        
+
         try {
 
-            const user = await models.user.findByPk( user_id, 
-                { 
-                    attributes: [ 'id', 'name', 'lastname', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
-                        'to_hour',  [ Sequelize.fn( 'Date_format', Sequelize.col('birthday'), '%Y-%m-%d' ), 'birthday' ], 'description'
+            const user = await models.user.findByPk(user_id,
+                {
+                    attributes: ['id', 'name', 'lastname', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
+                        'to_hour', [Sequelize.fn('Date_format', Sequelize.col('birthday'), '%Y-%m-%d'), 'birthday'], 'description'
                     ],
-                    include:  [
+                    include: [
                         {
                             model: models.skill,
                             as: 'toUserSkills',
-                            attributes: { exclude: [ 'icon' ] }
+                            attributes: { exclude: ['icon'] }
                         },
                         {
                             model: models.experience,
@@ -633,8 +703,8 @@ module.exports = {
                         }
                     ],
 
-                } )
-            
+                })
+
             successful(res, 'OK', user)
 
         } catch (error) { returnError(res, error) }
@@ -717,13 +787,13 @@ module.exports = {
 
     },
 
-    allUser: async(req, res) => {
+    allUser: async (req, res) => {
 
         try {
 
             const { user_id } = req.params
 
-            var user = await models.user.findAll({ attributes: [ 'id',  [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ], where: { id: { [Sequelize.Op.ne] : user_id} } })
+            var user = await models.user.findAll({ attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname']], where: { id: { [Sequelize.Op.ne]: user_id } } })
             successful(res, 'OK', user)
 
         } catch (error) { returnError(res, error) }
