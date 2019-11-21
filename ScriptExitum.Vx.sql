@@ -5,7 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema exitum
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema exitum
@@ -862,6 +862,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `exitum`.`file` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(145) NULL DEFAULT NULL,
+  `key_s3` VARCHAR(150) NULL DEFAULT NULL,
   `challenge_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_file_challenge_challenge1_idx` (`challenge_id` ASC),
@@ -1437,6 +1438,65 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user_workshop` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+
+-- -----------------------------------------------------
+-- Table `exitum`.`advice`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`advice` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(145) NULL,
+  `description` TEXT NULL,
+  `type` ENUM('employee', 'startup', 'entrepreneur') NULL,
+  `order` INT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`user_advice`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`user_advice` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `advice_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `startup_id` INT NULL,
+  `employee_id` INT NULL,
+  `entrepreneur_id` INT NULL,
+  `date_viewed` DATETIME NULL,
+  `viewed` TINYINT(1) NULL,
+  INDEX `fk_user_has_advice_advice1_idx` (`advice_id` ASC),
+  INDEX `fk_user_has_advice_user1_idx` (`user_id` ASC),
+  INDEX `fk_user_has_advice_startup1_idx` (`startup_id` ASC),
+  INDEX `fk_user_has_advice_employee1_idx` (`employee_id` ASC),
+  INDEX `fk_user_has_advice_entrepreneur1_idx` (`entrepreneur_id` ASC),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_user_has_advice_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_advice_advice1`
+    FOREIGN KEY (`advice_id`)
+    REFERENCES `exitum`.`advice` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_advice_startup1`
+    FOREIGN KEY (`startup_id`)
+    REFERENCES `exitum`.`startup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_advice_employee1`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `exitum`.`employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_advice_entrepreneur1`
+    FOREIGN KEY (`entrepreneur_id`)
+    REFERENCES `exitum`.`entrepreneur` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -1491,26 +1551,36 @@ INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('1', 'Nivel 1 Etap
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('2', 'Nivel 2 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('3', 'Nivel 3 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('4', 'Nivel 4 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('5', 'Nivel 5 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('6', 'Nivel 6 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
 
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('5', 'Nivel 1 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('6', 'Nivel 2 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('7', 'Nivel 3 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('8', 'Nivel 4 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ( '7', 'Nivel 1 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ( '8', 'Nivel 2 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ( '9', 'Nivel 3 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('10', 'Nivel 4 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('11', 'Nivel 5 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('12', 'Nivel 6 Etapa 2 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '2');
 
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ( '9', 'Nivel 1 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('10', 'Nivel 2 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('11', 'Nivel 3 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('12', 'Nivel 4 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('13', 'Nivel 1 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('14', 'Nivel 2 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('15', 'Nivel 3 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('16', 'Nivel 4 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('17', 'Nivel 5 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('18', 'Nivel 6 Etapa 3 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '3');
 
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('13', 'Nivel 1 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('14', 'Nivel 2 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('15', 'Nivel 3 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('16', 'Nivel 4 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('19', 'Nivel 1 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('20', 'Nivel 2 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('21', 'Nivel 3 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('22', 'Nivel 4 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('23', 'Nivel 5 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('24', 'Nivel 6 Etapa 4 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '4');
 
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('17', 'Nivel 1 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('18', 'Nivel 2 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('19', 'Nivel 3 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('20', 'Nivel 4 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('25', 'Nivel 1 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('26', 'Nivel 2 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('27', 'Nivel 3 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('28', 'Nivel 4 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('29', 'Nivel 5 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('30', 'Nivel 6 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('1', 'Reto 1 Nivel 1 Etapa 1 startup', '1');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('2', 'Reto 2 Nivel 1 Etapa 1 startup', '1');
@@ -1532,171 +1602,291 @@ INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('14', 'Reto 2 Nivel 4 Etapa 1
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('15', 'Reto 3 Nivel 4 Etapa 1 startup', '4');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('16', 'Reto 4 Nivel 4 Etapa 1 startup', '4');
 
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('17', 'Reto 1 Nivel 5 Etapa 1 startup', '5');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('18', 'Reto 2 Nivel 5 Etapa 1 startup', '5');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('19', 'Reto 3 Nivel 5 Etapa 1 startup', '5');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('20', 'Reto 4 Nivel 5 Etapa 1 startup', '5');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('17', 'Reto 1 Nivel 1 Etapa 2 startup', '5');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('18', 'Reto 2 Nivel 1 Etapa 2 startup', '5');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('19', 'Reto 3 Nivel 1 Etapa 2 startup', '5');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('20', 'Reto 4 Nivel 1 Etapa 2 startup', '5');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('21', 'Reto 1 Nivel 2 Etapa 2 startup', '6');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('22', 'Reto 2 Nivel 2 Etapa 2 startup', '6');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('23', 'Reto 3 Nivel 2 Etapa 2 startup', '6');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('24', 'Reto 4 Nivel 2 Etapa 2 startup', '6');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('25', 'Reto 1 Nivel 3 Etapa 2 startup', '7');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('26', 'Reto 2 Nivel 3 Etapa 2 startup', '7');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('27', 'Reto 3 Nivel 3 Etapa 2 startup', '7');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('28', 'Reto 4 Nivel 3 Etapa 2 startup', '7');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('29', 'Reto 1 Nivel 4 Etapa 2 startup', '8');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('30', 'Reto 2 Nivel 4 Etapa 2 startup', '8');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('31', 'Reto 3 Nivel 4 Etapa 2 startup', '8');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('32', 'Reto 4 Nivel 4 Etapa 2 startup', '8');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('21', 'Reto 1 Nivel 6 Etapa 1 startup', '6');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('22', 'Reto 2 Nivel 6 Etapa 1 startup', '6');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('23', 'Reto 3 Nivel 6 Etapa 1 startup', '6');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('24', 'Reto 4 Nivel 6 Etapa 1 startup', '6');
 
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('33', 'Reto 1 Nivel 1 Etapa 3 startup', '9');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('34', 'Reto 2 Nivel 1 Etapa 3 startup', '9');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('35', 'Reto 3 Nivel 1 Etapa 3 startup', '9');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('36', 'Reto 4 Nivel 1 Etapa 3 startup', '9');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('25', 'Reto 1 Nivel 1 Etapa 2 startup', '7');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('26', 'Reto 2 Nivel 1 Etapa 2 startup', '7');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('27', 'Reto 3 Nivel 1 Etapa 2 startup', '7');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('28', 'Reto 4 Nivel 1 Etapa 2 startup', '7');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('37', 'Reto 1 Nivel 2 Etapa 3 startup', '10');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('38', 'Reto 2 Nivel 2 Etapa 3 startup', '10');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('39', 'Reto 3 Nivel 2 Etapa 3 startup', '10');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('40', 'Reto 4 Nivel 2 Etapa 3 startup', '10');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('29', 'Reto 1 Nivel 2 Etapa 2 startup', '8');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('30', 'Reto 2 Nivel 2 Etapa 2 startup', '8');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('31', 'Reto 3 Nivel 2 Etapa 2 startup', '8');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('32', 'Reto 4 Nivel 2 Etapa 2 startup', '8');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('41', 'Reto 1 Nivel 3 Etapa 3 startup', '11');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('42', 'Reto 2 Nivel 3 Etapa 3 startup', '11');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('43', 'Reto 3 Nivel 3 Etapa 3 startup', '11');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('44', 'Reto 4 Nivel 3 Etapa 3 startup', '11');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('33', 'Reto 1 Nivel 3 Etapa 2 startup', '9');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('34', 'Reto 2 Nivel 3 Etapa 2 startup', '9');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('35', 'Reto 3 Nivel 3 Etapa 2 startup', '9');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('36', 'Reto 4 Nivel 3 Etapa 2 startup', '9');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('45', 'Reto 1 Nivel 4 Etapa 3 startup', '12');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('46', 'Reto 2 Nivel 4 Etapa 3 startup', '12');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('47', 'Reto 3 Nivel 4 Etapa 3 startup', '12');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('48', 'Reto 4 Nivel 4 Etapa 3 startup', '12');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('37', 'Reto 1 Nivel 4 Etapa 2 startup', '10');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('38', 'Reto 2 Nivel 4 Etapa 2 startup', '10');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('39', 'Reto 3 Nivel 4 Etapa 2 startup', '10');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('40', 'Reto 4 Nivel 4 Etapa 2 startup', '10');
 
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('41', 'Reto 1 Nivel 5 Etapa 2 startup', '11');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('42', 'Reto 2 Nivel 5 Etapa 2 startup', '11');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('43', 'Reto 3 Nivel 5 Etapa 2 startup', '11');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('44', 'Reto 4 Nivel 5 Etapa 2 startup', '11');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('49', 'Reto 1 Nivel 1 Etapa 4 startup', '13');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('50', 'Reto 2 Nivel 1 Etapa 4 startup', '13');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('51', 'Reto 3 Nivel 1 Etapa 4 startup', '13');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('52', 'Reto 4 Nivel 1 Etapa 4 startup', '13');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('53', 'Reto 1 Nivel 2 Etapa 4 startup', '14');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('54', 'Reto 2 Nivel 2 Etapa 4 startup', '14');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('55', 'Reto 3 Nivel 2 Etapa 4 startup', '14');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('56', 'Reto 4 Nivel 2 Etapa 4 startup', '14');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('57', 'Reto 1 Nivel 3 Etapa 4 startup', '15');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('58', 'Reto 2 Nivel 3 Etapa 4 startup', '15');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('59', 'Reto 3 Nivel 3 Etapa 4 startup', '15');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('60', 'Reto 4 Nivel 3 Etapa 4 startup', '15');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('61', 'Reto 1 Nivel 4 Etapa 4 startup', '16');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('62', 'Reto 2 Nivel 4 Etapa 4 startup', '16');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('63', 'Reto 3 Nivel 4 Etapa 4 startup', '16');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('64', 'Reto 4 Nivel 4 Etapa 4 startup', '16');
-
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('21', 'Nivel 1 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('22', 'Nivel 2 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('23', 'Nivel 3 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('24', 'Nivel 4 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
-
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('25', 'Nivel 1 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('26', 'Nivel 2 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('27', 'Nivel 3 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('28', 'Nivel 4 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
-
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('29', 'Nivel 1 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('30', 'Nivel 2 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('31', 'Nivel 3 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('32', 'Nivel 4 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
-
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('33', 'Nivel 1 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('34', 'Nivel 2 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('35', 'Nivel 3 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
-INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('36', 'Nivel 4 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('65', 'Reto 1 Nivel 1 Etapa 1 employee', '21');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('66', 'Reto 2 Nivel 1 Etapa 1 employee', '21');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('67', 'Reto 3 Nivel 1 Etapa 1 employee', '21');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('68', 'Reto 4 Nivel 1 Etapa 1 employee', '21');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('69', 'Reto 1 Nivel 2 Etapa 1 employee', '22');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('70', 'Reto 2 Nivel 2 Etapa 1 employee', '22');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('71', 'Reto 3 Nivel 2 Etapa 1 employee', '22');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('72', 'Reto 4 Nivel 2 Etapa 1 employee', '22');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('73', 'Reto 1 Nivel 3 Etapa 1 employee', '23');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('74', 'Reto 2 Nivel 3 Etapa 1 employee', '23');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('75', 'Reto 3 Nivel 3 Etapa 1 employee', '23');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('76', 'Reto 4 Nivel 3 Etapa 1 employee', '23');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('77', 'Reto 1 Nivel 4 Etapa 1 employee', '24');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('78', 'Reto 2 Nivel 4 Etapa 1 employee', '24');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('79', 'Reto 3 Nivel 4 Etapa 1 employee', '24');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('80', 'Reto 4 Nivel 4 Etapa 1 employee', '24');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('45', 'Reto 1 Nivel 6 Etapa 2 startup', '12');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('46', 'Reto 2 Nivel 6 Etapa 2 startup', '12');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('47', 'Reto 3 Nivel 6 Etapa 2 startup', '12');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('48', 'Reto 4 Nivel 6 Etapa 2 startup', '12');
 
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('81', 'Reto 1 Nivel 1 Etapa 2 employee', '25');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('82', 'Reto 2 Nivel 1 Etapa 2 employee', '25');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('83', 'Reto 3 Nivel 1 Etapa 2 employee', '25');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('84', 'Reto 4 Nivel 1 Etapa 2 employee', '25');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('49', 'Reto 1 Nivel 1 Etapa 3 startup', '13');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('50', 'Reto 2 Nivel 1 Etapa 3 startup', '13');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('51', 'Reto 3 Nivel 1 Etapa 3 startup', '13');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('52', 'Reto 4 Nivel 1 Etapa 3 startup', '13');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('85', 'Reto 1 Nivel 2 Etapa 2 employee', '26');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('86', 'Reto 2 Nivel 2 Etapa 2 employee', '26');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('87', 'Reto 3 Nivel 2 Etapa 2 employee', '26');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('88', 'Reto 4 Nivel 2 Etapa 2 employee', '26');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('53', 'Reto 1 Nivel 2 Etapa 3 startup', '14');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('54', 'Reto 2 Nivel 2 Etapa 3 startup', '14');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('55', 'Reto 3 Nivel 2 Etapa 3 startup', '14');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('56', 'Reto 4 Nivel 2 Etapa 3 startup', '14');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('89', 'Reto 1 Nivel 3 Etapa 2 employee', '27');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('90', 'Reto 2 Nivel 3 Etapa 2 employee', '27');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('91', 'Reto 3 Nivel 3 Etapa 2 employee', '27');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('92', 'Reto 4 Nivel 3 Etapa 2 employee', '27');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('57', 'Reto 1 Nivel 3 Etapa 3 startup', '15');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('58', 'Reto 2 Nivel 3 Etapa 3 startup', '15');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('59', 'Reto 3 Nivel 3 Etapa 3 startup', '15');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('60', 'Reto 4 Nivel 3 Etapa 3 startup', '15');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('93', 'Reto 1 Nivel 4 Etapa 2 employee', '28');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('94', 'Reto 2 Nivel 4 Etapa 2 employee', '28');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('95', 'Reto 3 Nivel 4 Etapa 2 employee', '28');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('96', 'Reto 4 Nivel 4 Etapa 2 employee', '28');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('61', 'Reto 1 Nivel 4 Etapa 3 startup', '16');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('62', 'Reto 2 Nivel 4 Etapa 3 startup', '16');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('63', 'Reto 3 Nivel 4 Etapa 3 startup', '16');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('64', 'Reto 4 Nivel 4 Etapa 3 startup', '16');
 
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('65', 'Reto 1 Nivel 5 Etapa 3 startup', '17');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('66', 'Reto 2 Nivel 5 Etapa 3 startup', '17');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('67', 'Reto 3 Nivel 5 Etapa 3 startup', '17');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('68', 'Reto 4 Nivel 5 Etapa 3 startup', '17');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '97', 'Reto 1 Nivel 1 Etapa 2 employee', '29');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '98', 'Reto 2 Nivel 1 Etapa 2 employee', '29');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '99', 'Reto 3 Nivel 1 Etapa 2 employee', '29');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('100', 'Reto 4 Nivel 1 Etapa 2 employee', '29');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('101', 'Reto 1 Nivel 2 Etapa 2 employee', '30');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('102', 'Reto 2 Nivel 2 Etapa 2 employee', '30');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('103', 'Reto 3 Nivel 2 Etapa 2 employee', '30');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('104', 'Reto 4 Nivel 2 Etapa 2 employee', '30');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('105', 'Reto 1 Nivel 3 Etapa 2 employee', '31');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('106', 'Reto 2 Nivel 3 Etapa 2 employee', '31');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('107', 'Reto 3 Nivel 3 Etapa 2 employee', '31');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('108', 'Reto 4 Nivel 3 Etapa 2 employee', '31');
-
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('109', 'Reto 1 Nivel 4 Etapa 2 employee', '32');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('110', 'Reto 2 Nivel 4 Etapa 2 employee', '32');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('111', 'Reto 3 Nivel 4 Etapa 2 employee', '32');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('112', 'Reto 4 Nivel 4 Etapa 2 employee', '32');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('69', 'Reto 1 Nivel 6 Etapa 3 startup', '18');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('70', 'Reto 2 Nivel 6 Etapa 3 startup', '18');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('71', 'Reto 3 Nivel 6 Etapa 3 startup', '18');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('72', 'Reto 4 Nivel 6 Etapa 3 startup', '18');
 
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('113', 'Reto 1 Nivel 1 Etapa 3 employee', '33');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('114', 'Reto 2 Nivel 1 Etapa 3 employee', '33');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('115', 'Reto 3 Nivel 1 Etapa 3 employee', '33');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('116', 'Reto 4 Nivel 1 Etapa 3 employee', '33');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('73', 'Reto 1 Nivel 1 Etapa 4 startup', '19');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('74', 'Reto 2 Nivel 1 Etapa 4 startup', '19');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('75', 'Reto 3 Nivel 1 Etapa 4 startup', '19');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('76', 'Reto 4 Nivel 1 Etapa 4 startup', '19');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('117', 'Reto 1 Nivel 2 Etapa 3 employee', '34');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('118', 'Reto 2 Nivel 2 Etapa 3 employee', '34');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('119', 'Reto 3 Nivel 2 Etapa 3 employee', '34');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('120', 'Reto 4 Nivel 2 Etapa 3 employee', '34');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('77', 'Reto 1 Nivel 2 Etapa 4 startup', '20');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('78', 'Reto 2 Nivel 2 Etapa 4 startup', '20');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('79', 'Reto 3 Nivel 2 Etapa 4 startup', '20');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('80', 'Reto 4 Nivel 2 Etapa 4 startup', '20');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('121', 'Reto 1 Nivel 3 Etapa 3 employee', '35');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('122', 'Reto 2 Nivel 3 Etapa 3 employee', '35');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('123', 'Reto 3 Nivel 3 Etapa 3 employee', '35');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('124', 'Reto 4 Nivel 3 Etapa 3 employee', '35');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('81', 'Reto 1 Nivel 3 Etapa 4 startup', '21');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('82', 'Reto 2 Nivel 3 Etapa 4 startup', '21');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('83', 'Reto 3 Nivel 3 Etapa 4 startup', '21');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('84', 'Reto 4 Nivel 3 Etapa 4 startup', '21');
 
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('125', 'Reto 1 Nivel 4 Etapa 3 employee', '36');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('126', 'Reto 2 Nivel 4 Etapa 3 employee', '36');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('127', 'Reto 3 Nivel 4 Etapa 3 employee', '36');
-INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('128', 'Reto 4 Nivel 4 Etapa 3 employee', '36');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('85', 'Reto 1 Nivel 4 Etapa 4 startup', '22');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('86', 'Reto 2 Nivel 4 Etapa 4 startup', '22');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('87', 'Reto 3 Nivel 4 Etapa 4 startup', '22');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('88', 'Reto 4 Nivel 4 Etapa 4 startup', '22');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('89', 'Reto 1 Nivel 5 Etapa 4 startup', '23');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('90', 'Reto 2 Nivel 5 Etapa 4 startup', '23');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('91', 'Reto 3 Nivel 5 Etapa 4 startup', '23');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('92', 'Reto 4 Nivel 5 Etapa 4 startup', '23');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('93', 'Reto 1 Nivel 6 Etapa 4 startup', '24');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('94', 'Reto 2 Nivel 6 Etapa 4 startup', '24');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('95', 'Reto 3 Nivel 6 Etapa 4 startup', '24');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('96', 'Reto 4 Nivel 6 Etapa 4 startup', '24');
+
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '97', 'Reto 1 Nivel 1 Etapa 5 startup', '25');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '98', 'Reto 2 Nivel 1 Etapa 5 startup', '25');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '99', 'Reto 3 Nivel 1 Etapa 5 startup', '25');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('100', 'Reto 4 Nivel 1 Etapa 5 startup', '25');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('101', 'Reto 1 Nivel 2 Etapa 5 startup', '26');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('102', 'Reto 2 Nivel 2 Etapa 5 startup', '26');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('103', 'Reto 3 Nivel 2 Etapa 5 startup', '26');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('104', 'Reto 4 Nivel 2 Etapa 5 startup', '26');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('105', 'Reto 1 Nivel 3 Etapa 5 startup', '27');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('106', 'Reto 2 Nivel 3 Etapa 5 startup', '27');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('107', 'Reto 3 Nivel 3 Etapa 5 startup', '27');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('108', 'Reto 4 Nivel 3 Etapa 5 startup', '27');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('109', 'Reto 1 Nivel 4 Etapa 5 startup', '28');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('110', 'Reto 2 Nivel 4 Etapa 5 startup', '28');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('111', 'Reto 3 Nivel 4 Etapa 5 startup', '28');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('112', 'Reto 4 Nivel 4 Etapa 5 startup', '28');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('113', 'Reto 1 Nivel 5 Etapa 5 startup', '29');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('114', 'Reto 2 Nivel 5 Etapa 5 startup', '29');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('115', 'Reto 3 Nivel 5 Etapa 5 startup', '29');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('116', 'Reto 4 Nivel 5 Etapa 5 startup', '29');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('117', 'Reto 1 Nivel 6 Etapa 5 startup', '30');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('118', 'Reto 2 Nivel 6 Etapa 5 startup', '30');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('119', 'Reto 3 Nivel 6 Etapa 5 startup', '30');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('120', 'Reto 4 Nivel 6 Etapa 5 startup', '30');
+
+
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('31', 'Nivel 1 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('32', 'Nivel 2 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('33', 'Nivel 3 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('34', 'Nivel 4 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('35', 'Nivel 5 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('36', 'Nivel 6 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
+
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('37', 'Nivel 1 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('38', 'Nivel 2 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('39', 'Nivel 3 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('40', 'Nivel 4 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('41', 'Nivel 5 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('42', 'Nivel 6 Etapa 2 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '7');
+
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('43', 'Nivel 1 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('44', 'Nivel 2 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('45', 'Nivel 3 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('46', 'Nivel 4 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('47', 'Nivel 5 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('48', 'Nivel 6 Etapa 3 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '8');
+
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('49', 'Nivel 1 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('50', 'Nivel 2 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('51', 'Nivel 3 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('52', 'Nivel 4 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('53', 'Nivel 5 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
+INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('54', 'Nivel 6 Etapa 4 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '9');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('121', 'Reto 1 Nivel 1 Etapa 1 employee', '31');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('122', 'Reto 2 Nivel 1 Etapa 1 employee', '31');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('123', 'Reto 3 Nivel 1 Etapa 1 employee', '31');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('124', 'Reto 4 Nivel 1 Etapa 1 employee', '31');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('125', 'Reto 1 Nivel 2 Etapa 1 employee', '32');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('126', 'Reto 2 Nivel 2 Etapa 1 employee', '32');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('127', 'Reto 3 Nivel 2 Etapa 1 employee', '32');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('128', 'Reto 4 Nivel 2 Etapa 1 employee', '32');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('129', 'Reto 1 Nivel 3 Etapa 1 employee', '33');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('130', 'Reto 2 Nivel 3 Etapa 1 employee', '33');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('131', 'Reto 3 Nivel 3 Etapa 1 employee', '33');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('132', 'Reto 4 Nivel 3 Etapa 1 employee', '33');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('133', 'Reto 1 Nivel 4 Etapa 1 employee', '34');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('134', 'Reto 2 Nivel 4 Etapa 1 employee', '34');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('135', 'Reto 3 Nivel 4 Etapa 1 employee', '34');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('136', 'Reto 4 Nivel 4 Etapa 1 employee', '34');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('137', 'Reto 1 Nivel 3 Etapa 1 employee', '35');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('138', 'Reto 2 Nivel 3 Etapa 1 employee', '35');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('139', 'Reto 3 Nivel 3 Etapa 1 employee', '35');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('140', 'Reto 4 Nivel 3 Etapa 1 employee', '35');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('141', 'Reto 1 Nivel 4 Etapa 1 employee', '36');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('142', 'Reto 2 Nivel 4 Etapa 1 employee', '36');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('143', 'Reto 3 Nivel 4 Etapa 1 employee', '36');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('144', 'Reto 4 Nivel 4 Etapa 1 employee', '36');
+
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('81', 'Reto 1 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('82', 'Reto 2 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('83', 'Reto 3 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('84', 'Reto 4 Nivel 1 Etapa 2 employee', '37');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('85', 'Reto 1 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('86', 'Reto 2 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('87', 'Reto 3 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('88', 'Reto 4 Nivel 2 Etapa 2 employee', '38');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('89', 'Reto 1 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('90', 'Reto 2 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('91', 'Reto 3 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('92', 'Reto 4 Nivel 3 Etapa 2 employee', '39');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('93', 'Reto 1 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('94', 'Reto 2 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('95', 'Reto 3 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('96', 'Reto 4 Nivel 4 Etapa 2 employee', '40');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '97', 'Reto 1 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '98', 'Reto 2 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '99', 'Reto 3 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('100', 'Reto 4 Nivel 5 Etapa 2 employee', '41');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('101', 'Reto 1 Nivel 6 Etapa 2 employee', '42');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('102', 'Reto 2 Nivel 6 Etapa 2 employee', '42');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('103', 'Reto 3 Nivel 6 Etapa 2 employee', '42');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('104', 'Reto 4 Nivel 6 Etapa 2 employee', '42');
+
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('105', 'Reto 1 Nivel 1 Etapa 3 employee', '43');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('106', 'Reto 2 Nivel 1 Etapa 3 employee', '43');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('107', 'Reto 3 Nivel 1 Etapa 3 employee', '43');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('108', 'Reto 4 Nivel 1 Etapa 3 employee', '43');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('101', 'Reto 1 Nivel 2 Etapa 3 employee', '44');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('102', 'Reto 2 Nivel 2 Etapa 3 employee', '44');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('103', 'Reto 3 Nivel 2 Etapa 3 employee', '44');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('104', 'Reto 4 Nivel 2 Etapa 3 employee', '44');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('105', 'Reto 1 Nivel 3 Etapa 3 employee', '45');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('106', 'Reto 2 Nivel 3 Etapa 3 employee', '45');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('107', 'Reto 3 Nivel 3 Etapa 3 employee', '45');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('108', 'Reto 4 Nivel 3 Etapa 3 employee', '45');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('109', 'Reto 1 Nivel 4 Etapa 3 employee', '46');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('110', 'Reto 2 Nivel 4 Etapa 3 employee', '46');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('111', 'Reto 3 Nivel 4 Etapa 3 employee', '46');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('112', 'Reto 4 Nivel 4 Etapa 3 employee', '46');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('113', 'Reto 1 Nivel 5 Etapa 3 employee', '47');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('114', 'Reto 2 Nivel 5 Etapa 3 employee', '47');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('115', 'Reto 3 Nivel 5 Etapa 3 employee', '47');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('116', 'Reto 4 Nivel 5 Etapa 3 employee', '47');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('117', 'Reto 1 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('118', 'Reto 2 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('119', 'Reto 3 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('120', 'Reto 4 Nivel 6 Etapa 3 employee', '48');
+
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('121', 'Reto 1 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('122', 'Reto 2 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('123', 'Reto 3 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('124', 'Reto 4 Nivel 1 Etapa 4 employee', '49');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('125', 'Reto 1 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('126', 'Reto 2 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('127', 'Reto 3 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('128', 'Reto 4 Nivel 2 Etapa 4 employee', '50');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('129', 'Reto 1 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('130', 'Reto 2 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('131', 'Reto 3 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('132', 'Reto 4 Nivel 3 Etapa 4 employee', '51');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('133', 'Reto 1 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('134', 'Reto 2 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('135', 'Reto 3 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('136', 'Reto 4 Nivel 4 Etapa 4 employee', '52');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('137', 'Reto 1 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('138', 'Reto 2 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('139', 'Reto 3 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('140', 'Reto 4 Nivel 5 Etapa 4 employee', '53');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('141', 'Reto 1 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('142', 'Reto 2 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('143', 'Reto 3 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('144', 'Reto 4 Nivel 6 Etapa 4 employee', '54');
 
 insert into `exitum`.`file_tip`(id, name, tip_id) values 
 ( 1, "Business_Model_Canvas.docx", 1),
@@ -1744,3 +1934,16 @@ INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Cientifico');
 INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Alegre');
 INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Desarrollador web');
 INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Marketing');
+
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '1', 'Consejo 1', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'employee', '1');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '2', 'Consejo 2', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'employee', '2');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '3', 'Consejo 3', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'employee', '3');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '4', 'Consejo 4', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'employee', '4');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '5', 'Consejo 1', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'startup', '1');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '6', 'Consejo 2', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'startup', '2');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '7', 'Consejo 3', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'startup', '3');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '8', 'Consejo 4', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'startup', '4');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '9', 'Consejo 1', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'entrepreneur', '1');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ('10', 'Consejo 2', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'entrepreneur', '2');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ('11', 'Consejo 3', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'entrepreneur', '3');
+INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ('12', 'Consejo 4', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'entrepreneur', '4');
