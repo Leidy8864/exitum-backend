@@ -2,7 +2,6 @@ const text = require('../libs/text')
 const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { existById } = require('./elementController')
-const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
 const { createCategory } = require('./categoryController')
@@ -57,10 +56,7 @@ module.exports = {
             })
 
             var categories_id = await Promise.all(categories.map(async element => {
-                var [ response, created ] = await models.category.findOrCreate({
-                    where: { name: element },
-                    defaults: { name: element }
-                })
+                var response = await createCategory(element)
                 return await response.id
             }))
 
@@ -77,7 +73,8 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, event_id } = req.body
+        const { event_id } = req.params
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories } = req.body
 
         try {
 
@@ -91,6 +88,9 @@ module.exports = {
             })
     
             if(!event) throw(text.notFoundElement)
+
+            // await event.removeToWorkshopCategories([ 16, 17 ]);
+            // var elements = await event.getToWorkshopCategories({ through: { where: { category_id: 18 } } });
     
             await event.update({
                 title: title || event.title,
@@ -103,15 +103,18 @@ module.exports = {
                 lng: lng || event.lng,
             })
 
-            var categories_id = await Promise.all(categories.map(async element => {
-                var [ response, created ] = await models.category.findOrCreate({
-                    where: { name: element },
-                    defaults: { name: element }
-                })
-                return await response.id
-            }))
+            if ( categories && categories.length > 0) {
 
-            event.addToWorkshopCategories(categories_id)
+                await models.category_workshop.destroy({ where: { workshop_id: event.id } })
+
+                var categories_id = await Promise.all(categories.map(async element => {
+                    var response = await createCategory(element)
+                    return await response
+                }))
+                
+                event.addToWorkshopCategories(categories_id)
+
+            }
 
             successful(res, text.successUpdate('evento'));
 
@@ -125,21 +128,12 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
         const { event_id } = req.params
-        const { user_id } = req.body
 
         try {
 
-            var event = await models.workshop.findOne({
-                where: {
-                    [ Sequelize.Op.and ] : [
-                        { id: event_id },
-                        { user_id: user_id }
-                    ]
-                }    
-            });
+            var event = await existById(event_id)
 
-            if(!event) throw(text.notFoundElement)
-
+            await models.category_workshop.destroy({ where: { workshop_id: event.id } })
             await workshop.destroy()
 
             successful(res, text.successDelete('evento'))

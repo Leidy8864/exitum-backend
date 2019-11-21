@@ -93,6 +93,8 @@ module.exports = {
 			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
 			const appointment = await models.appointment.findAll({
+				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ],
+					'type', 'type', 'description', 'status' ],
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'recordatorio' }, 
@@ -130,6 +132,8 @@ module.exports = {
 			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
 			const appointment = await models.appointment.findAll({
+				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ],
+					'type', 'type', 'description', 'status' ],
 				where: {
 					[ Sequelize.Op.and ] : [ 
 						{ type: 'reunion' }, 
