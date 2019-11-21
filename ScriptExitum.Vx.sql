@@ -864,6 +864,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`file` (
   `name` VARCHAR(145) NULL DEFAULT NULL,
   `key_s3` VARCHAR(150) NULL DEFAULT NULL,
   `challenge_id` INT(11) NOT NULL,
+  `key_s3` VARCHAR(150),
   PRIMARY KEY (`id`),
   INDEX `fk_file_challenge_challenge1_idx` (`challenge_id` ASC),
   CONSTRAINT `fk_file_challenge_challenge1`

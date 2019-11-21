@@ -46,7 +46,7 @@ module.exports = {
 			case 'update':
 				return [ to_user_id, from_user_id, appointment_id ];
 			case 'cancel':
-				return [ to_user_id, from_user_id, appointment_id ]
+				return [ appointment_id ]
         }
         
 	},
@@ -267,19 +267,10 @@ module.exports = {
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
 		const { appointment_id } = req.params
-		const { to_user_id, from_user_id } = req.body
 
 		try {
 
-			var appointment = await models.appointment.findOne({
-				where: {
-					[Sequelize.Op.and] : [
-						{ id: appointment_id },
-						{ to_user_id: to_user_id },
-						{ from_user_id: from_user_id }
-					]
-				}
-			})
+			var appointment = await models.appointment.findOne({ where: { id: appointment_id } })
 
 			if (!appointment) throw (text.notFoundElement)
 
