@@ -104,7 +104,7 @@ module.exports = {
 				include: [
 					{ 
 						model: models.user, as: 'toAppointmentUser',
-						attributes: [ [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
 					 }
 				]
 			})
@@ -147,7 +147,7 @@ module.exports = {
 				include: [
 					{ 
 						model: models.user, as: 'toAppointmentUser',
-						attributes: [ [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
 					 }
 				]
 			})
@@ -281,6 +281,19 @@ module.exports = {
 			appointment.destroy()
 
 			successful(res, text.successDelete('agenda'))
+
+		} catch (error) { returnError(res, error) }
+
+	}, 
+
+	rate: async (req, res) => {
+
+		var errors = validationResult(req);
+		if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+		
+		try {
+
+			
 
 		} catch (error) { returnError(res, error) }
 

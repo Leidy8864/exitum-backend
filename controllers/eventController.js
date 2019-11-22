@@ -11,15 +11,15 @@ module.exports = {
     validate: (method) => {
 
         var message_exists = 'No existe :v'
-        const day = check('day').exists().withMessage(message_exists)
-        const title = check('title').exists().withMessage(message_exists)
-        const place = check('place').exists().withMessage(message_exists)
-        const user_id = check('user_id').exists().withMessage(message_exists)
-        const event_id = check('event_id').exists().withMessage(message_exists)
-        const hour_end = check('hour_end').exists().withMessage(message_exists)
-        const hour_start=  check('hour_start').exists().withMessage(message_exists)
-        const description = check('description').exists().withMessage(message_exists)
-        const categories = check('categories').exists().withMessage(message_exists)
+        const day = check('day').exists().withMessage(text.day('evento'))
+        const title = check('title').exists().withMessage(text.title('evento'))
+        const place = check('place').exists().withMessage(text.place('evento'))
+        const user_id = check('user_id').exists().withMessage(text.id('evento del usuario'))
+        const event_id = check('event_id').exists().withMessage(text.id('evento'))
+        const hour_end = check('hour_end').exists().withMessage(text.dateEnd)
+        const hour_start=  check('hour_start').exists().withMessage(text.dateStart)
+        const description = check('description').exists().withMessage(text.description)
+        const categories = check('categories').exists().withMessage(text.category('evento'))
 
         switch (method) {
             case 'create':
