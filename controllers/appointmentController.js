@@ -293,8 +293,6 @@ module.exports = {
 		
 		try {
 
-			
-
 		} catch (error) { returnError(res, error) }
 
 	}

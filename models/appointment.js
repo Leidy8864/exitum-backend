@@ -33,6 +33,8 @@ module.exports = (sequelize, DataType) => {
             values: ['reunion', 'recordatorio']
         },
         description: DataType.TEXT,
+        rate: DataType.FLOAT(3, 2),
+        commentary: DataType.TEXT,
         status: DataType.BOOLEAN
     }, {
         freezeTableName: true,

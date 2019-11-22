@@ -647,7 +647,7 @@ module.exports = {
                                 await models.challenge.bulkCreate(chlls, { transaction: t });
                                 return employee;
                             });
-                            return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: result });
+                            return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
 
                         } catch (err) {
                             console.log(err);

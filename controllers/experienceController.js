@@ -165,15 +165,15 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { experience_id, user_id, position, company_name, description, date_start, date_end, current_job } = req.body
+        const { experience_id, user_id, position, company_name, description, date_start, date_end } = req.body
 
         try {
 
             var experience = await models.experience.findOne({
                 where: {
                     [Sequelize.Op.and]: [
-                        { id: experience_id},
-                        { user_id: user_id}
+                        { id: experience_id },
+                        { user_id: user_id }
                     ]
                 },
                 include: [ { 
