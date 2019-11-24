@@ -188,7 +188,8 @@ module.exports = {
 					date: date,
 					time: timeF[3],
 					type: type,
-					description: description
+					description: description,
+					status: false
 				}
 			});
 
@@ -295,5 +296,28 @@ module.exports = {
 
 		} catch (error) { returnError(res, error) }
 
+	},
+
+	confirmation: async (req, res) => {
+
+		var errors = validationResult(req);
+		if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+		const { appointment_id } = req.params
+		const { status } = req.body
+
+		try {
+			
+			var appointment = await existById(models.appointment, appointment_id)
+			
+			if (status) {
+				await appointment.update({ status: true })	
+			}
+
+			successful(res)
+
+		} catch (error) { returnError(res, error) }
+
 	}
+
 };

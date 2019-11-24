@@ -31,4 +31,8 @@ router.post('/cancel/:appointment_id',
     controller.cancel
 );
 
+router.post('/confirmation/:appointment_id',
+    controller.confirmation
+)
+
 module.exports = router;
