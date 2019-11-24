@@ -310,9 +310,10 @@ module.exports = {
 			
 			var appointment = await existById(models.appointment, appointment_id)
 			
-			if (status) {
-				await appointment.update({ status: true })	
-			}
+			if (status)
+				await appointment.update({ status: true })
+			else
+				await appointment.destroy()
 
 			successful(res)
 

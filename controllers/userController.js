@@ -578,7 +578,7 @@ module.exports = {
                         return res.json({ status: false, message: "Ya fue registrado como emprendedor" })
                     }
 
-                    return res.status(200).json({ status: true, message: "Usuario actualizado correctamente" });
+                    return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
 
                 } else if (req.body.role === "employee") {
                     const employee = await models.employee.findOne({ where: { user_id: req.body.user_id } });
