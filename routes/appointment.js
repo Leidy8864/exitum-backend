@@ -33,6 +33,10 @@ router.post('/cancel/:appointment_id',
 
 router.post('/confirmation/:appointment_id',
     controller.confirmation
-)
+);
+
+router.get('/list-by-meeting-pending/:to_user_id',
+    controller.pending
+);
 
 module.exports = router;

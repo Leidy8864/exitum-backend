@@ -323,6 +323,46 @@ module.exports = {
 
 		} catch (error) { returnError(res, error) }
 
+	},
+
+	pending: async (req, res) => {
+
+		var errors = validationResult(req);
+		if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+		const { to_user_id } = req.params
+		
+		try {
+			const user = await existById(models.user, to_user_id, 'id')
+			var date = moment().subtract(24, 'hours');
+			var minute = date.minutes();
+			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
+
+			const appointment = await models.appointment.findAll({
+				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ],
+					'type', 'type', 'description', 'status' ],
+				where: {
+					[ Sequelize.Op.and ] : [ 
+						{ type: 'reunion' }, 
+						{ date: { [ Sequelize.Op.gte ] : local  } }
+					],
+					[ Sequelize.Op.or ] : [
+						{ to_user_id: user.id },
+						{ from_user_id: user.id }
+					]
+				},
+				include: [
+					{
+						model: models.user, as: 'fromAppointmentUser',
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
+					}
+				]
+			})
+
+			successful(res, 'OK', appointment)
+
+		} catch (error) { returnError(res, error) }
+
 	}
 
 };
