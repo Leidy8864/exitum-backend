@@ -147,8 +147,12 @@ module.exports = {
 				include: [
 					{ 
 						model: models.user, as: 'toAppointmentUser',
-						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ] ]
-					 }
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname')), 'fullname' ] ]
+					},
+					{
+						model: models.user, as: 'fromAppointmentUser',
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname')), 'fullname' ] ]
+					}
 				]
 			})
 
