@@ -68,7 +68,8 @@ module.exports = {
                 place: place,
                 lat: lat,
                 lng: lng,
-                user_id: user.id
+                user_id: user.id,
+                participants: 50
             })
 
             var categories_id = await Promise.all(categories.map(async element => {
@@ -117,6 +118,7 @@ module.exports = {
                 place: place || event.place,
                 lat: lat || event.lat,
                 lng: lng || event.lng,
+                participants: participants_max || event.participants
             })
 
             if ( categories && categories.length > 0) {
@@ -148,14 +150,12 @@ module.exports = {
         try {
             
             var event = await existById(models.workshop, event_id)
+            var event_user = await event.getToWorkshopUsers()
 
-            var event_user = await event.getToWorkshopUsers({ 
-                attributes: [ [Sequelize.fn('count', Sequelize.col('id')), 'cantidad'] ],
-                group: [ 'id' ]
-            })
-            
+            if (event_user.length > event.participants) throw text.exceeded
             await event.addToWorkshopUser(user_id)
-            successful(res, text.add, event_user)
+
+            successful(res, text.add, event_user.length)
 
         } catch (error) { returnError(res, error) }
 

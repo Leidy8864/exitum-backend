@@ -11,6 +11,7 @@ module.exports = (sequelize, DataType) => {
         place: DataType.STRING,
         lat: DataType.FLOAT(10, 8),
         lng: DataType.FLOAT(11, 8),
+        participants: DataType.INTEGER,
         user_id: {
             type: DataType.INTEGER,
             references: {
