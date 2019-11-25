@@ -4124,3 +4124,39 @@
 *
 *
 */
+
+/**
+*
+* @api {POST} /events/delete POST delete an event
+* @apiName Eliminar evento
+* @apiParam {Number} event_id ID del evento.
+* @apiExample Request parameter
+* http://35.175.241.103:8081/certifications/delete/:event_id
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription Eliminar un evento.
+* @apiSuccess (Datos retornados) {Boolean} status Indica si la petición fue existosa.
+* @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+* @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+      "status": true,
+      "message": "OK",
+      "data": {  }
+  }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+      "status" : false,
+      "message": "(...)",
+      "data":  { }
+  }
+*
+*
+*/

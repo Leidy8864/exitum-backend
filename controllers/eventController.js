@@ -10,7 +10,6 @@ module.exports = {
 
     validate: (method) => {
 
-        var message_exists = 'No existe :v'
         const day = check('day').exists().withMessage(text.day('evento'))
         const title = check('title').exists().withMessage(text.title('evento'))
         const place = check('place').exists().withMessage(text.place('evento'))
@@ -24,12 +23,16 @@ module.exports = {
         switch (method) {
             case 'create':
                 return [ title, day, place, user_id, hour_end, hour_start, description, categories ]
+            case 'list-by-user':
+                return [ user_id ]
+            case 'take-part':
+                return [ event_id, user_id ]
             case 'update':
                 return [ event_id, user_id ]
             case 'delete':
-                return [ event_id, user_id ]
+                return [ event_id ]
         }
-        
+
     },
 
     listByUser: async (req, res) => {
