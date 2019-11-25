@@ -4464,8 +4464,8 @@
   },
   {
     "type": "POST",
-    "url": "/events/delete",
-    "title": "/:event_id POST delete an event",
+    "url": "/events/delete/:event_id",
+    "title": "POST delete an event",
     "name": "Eliminar_evento",
     "parameter": {
       "fields": {
