@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     const user_workshop = sequelize.define('user_workshop', {
         user_id: { type: DataTypes.INTEGER, primaryKey: true },
         workshop_id: { type: DataTypes.INTEGER, primaryKey: true },
+        status: {
+            type: DataTypes.ENUM,
+            values: ['ACCEPTED', 'PENDING', 'REJECTED']
+        },
         rate: Sequelize.TINYINT
     },
     {

@@ -152,10 +152,12 @@ module.exports = {
             var event = await existById(models.workshop, event_id)
             var event_user = await event.getToWorkshopUsers()
 
-            if (event_user.length > event.participants) throw text.exceeded
-            await event.addToWorkshopUser(user_id)
-
-            successful(res, text.add, event_user.length)
+            if (event_user.length > event.participants) 
+                await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
+            else 
+                await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
+            
+            successful(res, text.add)
 
         } catch (error) { returnError(res, error) }
 
