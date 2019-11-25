@@ -4465,7 +4465,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/events/delete",
-    "title": "POST delete an event",
+    "title": "/:event_id POST delete an event",
     "name": "Eliminar_evento",
     "parameter": {
       "fields": {
@@ -4483,7 +4483,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/certifications/delete/:event_id",
+        "content": "http://35.175.241.103:8081/certifications/delete/1",
         "type": "json"
       }
     ],

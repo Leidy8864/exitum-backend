@@ -4127,11 +4127,11 @@
 
 /**
 *
-* @api {POST} /events/delete POST delete an event
+* @api {POST} /events/delete /:event_id POST delete an event
 * @apiName Eliminar evento
 * @apiParam {Number} event_id ID del evento.
 * @apiExample Request parameter
-* http://35.175.241.103:8081/certifications/delete/:event_id
+* http://35.175.241.103:8081/certifications/delete/1
 * @apiGroup EVENTS
 *
 * @apiVersion 1.0.0
