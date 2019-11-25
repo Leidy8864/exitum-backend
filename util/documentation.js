@@ -3885,3 +3885,42 @@
 *
 *
 */
+
+/**
+ *
+ * @api {POST} /advices/check POST check advice
+ * @apiName check advice
+ * @apiGroup ADVICE
+ * @apiVersion 1.0.0
+ * @apiUse ErrorGeneral
+ * @apiDescription  Morcar como entendido el consejo
+ * @apiParam {Int} advice_id Id del consejo.
+ * @apiParam {Int} user_id Id de la usuario.
+ * @apiParam {String} type Tipo de usuario (employee || startup).
+ *
+	* @apiParamExample {querystring} Ejemplo url
+    /advices/check
+    {
+        "advice_id": 1,
+        "user_id": 13,
+        "type": "employee"
+    }
+ *
+ * @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+ * @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+ * @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Consejo marcado como visto.",
+        "data": {
+            "id": 19,
+            "advice_id": 1,
+            "user_id": 13,
+            "employee_id": 8,
+            "date_viewed": "2019-11-22T22:57:24.589Z",
+            "viewed": true
+        }
+    }
+ *
+ *
+ */

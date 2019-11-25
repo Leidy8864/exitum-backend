@@ -34,10 +34,8 @@ module.exports = {
     },
 
     showAdvice: async (req, res) => {
-        const { user_id, startup_id, type } = req.query
+        const { user_id, type } = req.query
         var order = 0
-        var employee_idd = undefined
-        var entrepreneur_idd = undefined
         var whereConsult = {
             user_id: user_id
         }
@@ -47,7 +45,6 @@ module.exports = {
                 user_id: user_id,
                 employee_id: employee.id
             }
-            employee_idd = employee.id
             if (!employee) { return res.json({ status: false, message: "No se ha registrado como impulsor." }) }
         } else if (type == "entrepreneur") {
             const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } })
@@ -55,14 +52,29 @@ module.exports = {
                 user_id: user_id,
                 entrepreneur_id: entrepreneur.id,
             }
-            entrepreneur_idd = entrepreneur.id
             if (!entrepreneur) { return res.json({ status: false, message: "No se ha registrado como emprendedor." }) }
-        } else if (type == "startup") {
-            whereConsult = {
-                user_id: user_id,
-                startup_id: startup_id
-            }
         }
+        // const usr_adv = await models.user_advice.findAll({
+        //     where: whereConsult,
+        //     attributes: ['id', 'advice_id', 'user_id', 'date_viewed']
+        // })
+        // var adv_ids = []
+        // for (var i = 0; usr_adv.length > i; i++) {
+        //     adv_ids = usr_adv[i].advice_id
+        // }
+        // console.log(adv_ids)
+        // if (usr_adv.length == 0) {
+        //     order = 0
+        // } else {
+        //     order = usr_adv[0].advice.dataValues.max
+        // }
+        // const adv = await models.advice.findAll({
+        //     where: {
+        //         id: { [models.Sequelize.Op.notIn]: adv_ids },
+        //         type: type,
+        //     },
+        //     limit: 1
+        // })
         const usr_adv = await models.user_advice.findAll({
             where: whereConsult,
             attributes: ['id', 'user_id', 'date_viewed'],
@@ -92,17 +104,39 @@ module.exports = {
                 order: order + 1
             }
         })
-        await models.user_advice.create({
-            advice_id: adv.id,
+
+        if (!adv) {
+            return res.json({ status: false, message: "Se mostraron todos los consejos registrados" })
+        } else {
+            return res.json({ status: true, message: "Mostrando consejo", data: adv })
+        }
+    },
+
+    checkAdvice: async (req, res) => {
+        const { advice_id, user_id, type } = req.body
+        var employee_id = undefined
+        var entrepreneur_id = undefined
+        if (type == "employee") {
+            const employee = await models.employee.findOne({ where: { user_id: user_id } })
+            employee_id = employee.id
+            if (!employee) { return res.json({ status: false, message: "No se ha registrado como impulsor." }) }
+        } else if (type == "entrepreneur") {
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } })
+            entrepreneur_id = entrepreneur.id
+            if (!entrepreneur) { return res.json({ status: false, message: "No se ha registrado como emprendedor." }) }
+        }
+        const usr_adv = await models.user_advice.create({
+            advice_id: advice_id,
             user_id: user_id,
-            startup_id: startup_id,
-            employee_id: employee_idd,
-            entrepreneur_id: entrepreneur_idd,
+            employee_id: employee_id,
+            entrepreneur_id: entrepreneur_id,
             date_viewed: Date.now(),
             viewed: true
         }).catch(err => {
             console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
         })
-        return res.json({ status: true, message: "Consejo visto", data: adv })
+        return res.json({ status: true, message: "Consejo marcado como visto.", data: usr_adv })
+
     }
 }
