@@ -26,5 +26,6 @@ module.exports = {
     day: (text) => `Es necesario un titulo para ${text}`,
     place: (text) => `Es necesario un titulo para ${text}`,
     category: (text) => `Es necesario categoria(s) para ${text}`,
+    add: `Añadido satisfactoriamente.`
 
 }

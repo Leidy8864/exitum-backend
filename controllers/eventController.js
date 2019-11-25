@@ -32,7 +32,23 @@ module.exports = {
         
     },
 
-    create: async(req, res) => {
+    listByUser: async (req, res) => {
+
+        const { user_id } = req.params
+
+        try {
+            
+            const user = await existById(models.user, user_id, 'id')
+
+            var events = await models.workshop.findAll({ where: { user_id: user.id } })
+
+            successful(res, 'OK', events)
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    create: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
@@ -60,7 +76,7 @@ module.exports = {
                 return await response.id
             }))
 
-            event.addToWorkshopCategories(categories_id)
+            await event.addToWorkshopCategories(categories_id)
 
             successful(res, text.successCreate('evento'))
             
@@ -68,7 +84,7 @@ module.exports = {
 
     },
 
-    update: async(req, res) => {
+    update: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
@@ -112,11 +128,29 @@ module.exports = {
                     return await response
                 }))
                 
-                event.addToWorkshopCategories(categories_id)
+                await event.addToWorkshopCategories(categories_id)
 
             }
 
             successful(res, text.successUpdate('evento'));
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    takePart: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { event_id, user_id } = req.body
+
+        try {
+            
+            var event = await existById(models.workshop, event_id)
+            await event.addToWorkshopUser(user_id)
+
+            successful(res, text.add)
 
         } catch (error) { returnError(res, error) }
 

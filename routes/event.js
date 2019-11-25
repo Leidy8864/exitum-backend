@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/eventController');
 
+router.get('/list-by-user',
+    controller.listByUser
+);
+
+router.post('/take-part',
+    controller.takePart
+);
+
 router.post('/create',
     controller.validate('create'),
     controller.create
