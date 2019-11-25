@@ -3924,3 +3924,203 @@
  *
  *
  */
+
+ /**
+*
+* @api {POST} /events/create/ POST create event
+* @apiName Crear un evento
+* @apiExample Request parameter
+* http://35.175.241.103:8081/events/create
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription Horas disponible.
+* @apiSuccess (Datos requeridos) {String} title Nombre del evento.
+* @apiSuccess (Datos requeridos) {Date} day Fecha en la cual se realizará el evento.
+* @apiSuccess (Datos requeridos) {String} description Detalle del evento
+* @apiSuccess (Datos requeridos) {Time} hour_start Hora de inicio del evento.
+* @apiSuccess (Datos requeridos) {Time} hour_end Hora fin del evento.
+* @apiSuccess (Datos requeridos) {String} place Lugar donde se realizará.
+* @apiSuccess (Datos requeridos) {String} lat Coordenadas de ubicación.
+* @apiSuccess (Datos requeridos) {String} lng Coordenadas de ubicación.
+* @apiSuccess (Datos requeridos) {Number} user_id ID del usuario que registró el usuario.
+* @apiSuccess (Datos retornados) {Boolean} status Status retornado.
+* @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+* @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+* @apiSuccessExample {json} Datos requeridos
+  {
+        "title": "Nuevo evento",
+        "day": "2017-11-11",
+        "description": "description",
+        "hour_start": "12:00:00",
+        "hour_end": "15:00:00",
+        "place": "Lima",
+        "user_id": 2,
+        "categories": [ "Tecnología", "IOT" ]   
+  }
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+        "status": true,
+        "message": "(...)",
+        "data": {  }
+  }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+  }
+*
+*
+*/
+
+/**
+*
+* @api {POST} /events/update/:event_id POST update event
+* @apiName Actualizar un evento
+* @apiParam {Number} event_id ID del evento.
+* @apiExample Request parameter
+* http://35.175.241.103:8081/events/update/1
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription Horas disponible.
+* @apiSuccess (Datos requeridos) {String} title Nombre del evento.
+* @apiSuccess (Datos requeridos) {Date} day Fecha en la cual se realizará el evento.
+* @apiSuccess (Datos requeridos) {String} description Detalle del evento
+* @apiSuccess (Datos requeridos) {Time} hour_start Hora de inicio del evento.
+* @apiSuccess (Datos requeridos) {Time} hour_end Hora fin del evento.
+* @apiSuccess (Datos requeridos) {String} place Lugar donde se realizará.
+* @apiSuccess (Datos requeridos) {String} lat Coordenadas de ubicación.
+* @apiSuccess (Datos requeridos) {String} lng Coordenadas de ubicación.
+* @apiSuccess (Datos requeridos) {Number} user_id ID del usuario.
+* @apiSuccess (Datos retornados) {Boolean} status Status retornado.
+* @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+* @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+* @apiSuccessExample {json} Datos requeridos
+  {
+        "title": "Nuevo evento",
+        "day": "2017-11-11",
+        "description": "description",
+        "hour_start": "12:00:00",
+        "hour_end": "15:00:00",
+        "place": "Lima",
+        "user_id": 2,
+        "categories": [ "Tecnología", "IOT" ]   
+  }
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+        "status": true,
+        "message": "(...)",
+        "data": {  }
+  }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+  }
+*
+*
+*/
+
+/**
+*
+* @api {POST} /events/take-part POST Take part event
+* @apiName Participar en un evento
+* @apiExample Request parameter
+* http://35.175.241.103:8081/events/take-part
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription Horas disponible.
+* @apiSuccess (Datos requeridos) {Number} user_id ID del usuario.
+* @apiSuccess (Datos requeridos) {Number} event_id ID del evento.
+* @apiSuccess (Datos retornados) {Boolean} status Status retornado.
+* @apiSuccess (Datos retornados) {String} message Mensaje retornado.
+* @apiSuccess (Datos retornados) {Object} data Contenido retornado.
+* @apiSuccessExample {json} Datos requeridos
+  {
+        ""user_id": 1,
+        "event_id": 1
+  }
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+        "status": true,
+        "message": "(...)",
+        "data": {  }
+  }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+        "status" : false,
+        "message": "(...)",
+        "data":  { }
+  }
+*
+*
+*/
+
+/**
+*
+* @api {GET} /events/download/:user_id GET list by user events
+* @apiName Listar eventos por usuario
+* @apiParam {String} user_id ID del usuario.
+* @apiExample Request parameter
+* http://35.175.241.103:8081/events/list-by-id/1
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription  Descargar certificación.
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+        "status": true,
+        "message": "OK",
+        "data": [
+            {
+                "id": 1,
+                "title": "Nuevo evento",
+                "description": "description",
+                "day": "2017-11-11",
+                "hour_start": "12:00:00",
+                "hour_end": "15:00:00",
+                "place": "Lima",
+                "lat": null,
+                "lng": null,
+                "user_id": 1
+            }
+            ...
+        ]
+   }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+      "status" : false,
+      "message": "(...)",
+      "data":  { }
+  }
+*
+*
+*/

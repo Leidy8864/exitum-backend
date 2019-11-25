@@ -1259,6 +1259,105 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/advices/check",
+    "title": "POST check advice",
+    "name": "check_advice",
+    "group": "ADVICE",
+    "version": "1.0.0",
+    "description": "<p>Morcar como entendido el consejo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advice_id",
+            "description": "<p>Id del consejo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id de la usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Tipo de usuario (employee || startup).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/advices/check\n{\n    \"advice_id\": 1,\n    \"user_id\": 13,\n    \"type\": \"employee\"\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Consejo marcado como visto.\",\n    \"data\": {\n        \"id\": 19,\n        \"advice_id\": 1,\n        \"user_id\": 13,\n        \"employee_id\": 8,\n        \"date_viewed\": \"2019-11-22T22:57:24.589Z\",\n        \"viewed\": true\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVICE",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/appointments/create/:to_user_id",
     "title": "POST reservation",
     "name": "Reserva_de_horario",
@@ -4037,6 +4136,512 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "type": "POST",
+    "url": "/events/update/:event_id",
+    "title": "POST update event",
+    "name": "Actualizar_un_evento",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "event_id",
+            "description": "<p>ID del evento.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/events/update/1",
+        "type": "json"
+      }
+    ],
+    "group": "EVENTS",
+    "version": "1.0.0",
+    "description": "<p>Horas disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Nombre del evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Date",
+            "optional": false,
+            "field": "day",
+            "description": "<p>Fecha en la cual se realizará el evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Detalle del evento</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_start",
+            "description": "<p>Hora de inicio del evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_end",
+            "description": "<p>Hora fin del evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "place",
+            "description": "<p>Lugar donde se realizará.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>Coordenadas de ubicación.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "lng",
+            "description": "<p>Coordenadas de ubicación.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n      \"title\": \"Nuevo evento\",\n      \"day\": \"2017-11-11\",\n      \"description\": \"description\",\n      \"hour_start\": \"12:00:00\",\n      \"hour_end\": \"15:00:00\",\n      \"place\": \"Lima\",\n      \"user_id\": 2,\n      \"categories\": [ \"Tecnología\", \"IOT\" ]   \n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n      \"status\": true,\n      \"message\": \"(...)\",\n      \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n      \"status\" : false,\n      \"message\": \"(...)\",\n      \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EVENTS"
+  },
+  {
+    "type": "POST",
+    "url": "/events/create/",
+    "title": "POST create event",
+    "name": "Crear_un_evento",
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/events/create",
+        "type": "json"
+      }
+    ],
+    "group": "EVENTS",
+    "version": "1.0.0",
+    "description": "<p>Horas disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Nombre del evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Date",
+            "optional": false,
+            "field": "day",
+            "description": "<p>Fecha en la cual se realizará el evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Detalle del evento</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_start",
+            "description": "<p>Hora de inicio del evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Time",
+            "optional": false,
+            "field": "hour_end",
+            "description": "<p>Hora fin del evento.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "place",
+            "description": "<p>Lugar donde se realizará.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>Coordenadas de ubicación.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "String",
+            "optional": false,
+            "field": "lng",
+            "description": "<p>Coordenadas de ubicación.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario que registró el usuario.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n      \"title\": \"Nuevo evento\",\n      \"day\": \"2017-11-11\",\n      \"description\": \"description\",\n      \"hour_start\": \"12:00:00\",\n      \"hour_end\": \"15:00:00\",\n      \"place\": \"Lima\",\n      \"user_id\": 2,\n      \"categories\": [ \"Tecnología\", \"IOT\" ]   \n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n      \"status\": true,\n      \"message\": \"(...)\",\n      \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n      \"status\" : false,\n      \"message\": \"(...)\",\n      \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EVENTS"
+  },
+  {
+    "type": "GET",
+    "url": "/events/download/:user_id",
+    "title": "GET list by user events",
+    "name": "Listar_eventos_por_usuario",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/events/list-by-id/1",
+        "type": "json"
+      }
+    ],
+    "group": "EVENTS",
+    "version": "1.0.0",
+    "description": "<p>Descargar certificación.</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n      \"status\": true,\n      \"message\": \"OK\",\n      \"data\": [\n          {\n              \"id\": 1,\n              \"title\": \"Nuevo evento\",\n              \"description\": \"description\",\n              \"day\": \"2017-11-11\",\n              \"hour_start\": \"12:00:00\",\n              \"hour_end\": \"15:00:00\",\n              \"place\": \"Lima\",\n              \"lat\": null,\n              \"lng\": null,\n              \"user_id\": 1\n          }\n          ...\n      ]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EVENTS"
+  },
+  {
+    "type": "POST",
+    "url": "/events/take-part",
+    "title": "POST Take part event",
+    "name": "Participar_en_un_evento",
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/events/take-part",
+        "type": "json"
+      }
+    ],
+    "group": "EVENTS",
+    "version": "1.0.0",
+    "description": "<p>Horas disponible.</p>",
+    "success": {
+      "fields": {
+        "Datos requeridos": [
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario.</p>"
+          },
+          {
+            "group": "Datos requeridos",
+            "type": "Number",
+            "optional": false,
+            "field": "event_id",
+            "description": "<p>ID del evento.</p>"
+          }
+        ],
+        "Datos retornados": [
+          {
+            "group": "Datos retornados",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Datos retornados",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos requeridos",
+          "content": "{\n      \"\"user_id\": 1,\n      \"event_id\": 1\n}",
+          "type": "json"
+        },
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n      \"status\": true,\n      \"message\": \"(...)\",\n      \"data\": {  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n      \"status\" : false,\n      \"message\": \"(...)\",\n      \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EVENTS"
   },
   {
     "type": "POST",
@@ -6976,6 +7581,91 @@ define({ "api": [
     }
   },
   {
+    "type": "POST",
+    "url": "/users/resend",
+    "title": "POST resendToken user",
+    "name": "resendToken",
+    "group": "USER",
+    "version": "1.0.0",
+    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email para el reenvio de token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el mensaje exitoso</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "USER",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "GET",
     "url": "/users/countries",
     "title": "GET list country",
@@ -7034,91 +7724,6 @@ define({ "api": [
         {
           "title": "Datos obtenidos:",
           "content": "\t{\n        \"status\": true,\n        \"countries\": [\n            {\n                \"id\": 1,\n                \"country\": \"Peru\",\n                \"code\": \"PER\",\n                \"currency_id\": 1\n            }\n        ]\n    }",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "util/documentation.js",
-    "groupTitle": "USER",
-    "error": {
-      "fields": {
-        "Estructura de Error": [
-          {
-            "group": "Estructura de Error",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Estructura de Error",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el detalle de la solicitud</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error general",
-          "content": "{\"status\":false,\"message\":\"(...)\"}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "POST",
-    "url": "/users/resend",
-    "title": "POST resendToken user",
-    "name": "resendToken",
-    "group": "USER",
-    "version": "1.0.0",
-    "description": "<p>Enviar un nuevo token para la verificación del correo</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email para el reenvio de token.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo url",
-          "content": "\t/users/resend\n    {\n\t    \"email\": \"leidy.callupe@tecsup.edu.pe\"\n    }",
-          "type": "querystring"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Datos obtenidos": [
-          {
-            "group": "Datos obtenidos",
-            "type": "Boolean",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Indica si el response fue exitoso o fallido</p>"
-          },
-          {
-            "group": "Datos obtenidos",
-            "type": "String",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Indica el mensaje exitoso</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Datos obtenidos:",
-          "content": "\t{\n        \"status\": true,\n        \"message\": \"Un email de verificación ha sido enviado a leidy.callupe@tecsup.edu.pe .\"\n    }",
           "type": "json"
         }
       ]

@@ -148,9 +148,14 @@ module.exports = {
         try {
             
             var event = await existById(models.workshop, event_id)
-            await event.addToWorkshopUser(user_id)
 
-            successful(res, text.add)
+            var event_user = await event.getToWorkshopUsers({ 
+                attributes: [ [Sequelize.fn('count', Sequelize.col('id')), 'cantidad'] ],
+                group: [ 'id' ]
+            })
+            
+            await event.addToWorkshopUser(user_id)
+            successful(res, text.add, event_user)
 
         } catch (error) { returnError(res, error) }
 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/eventController');
 
-router.get('/list-by-user',
+router.get('/list-by-user/:user_id',
     controller.listByUser
 );
 
