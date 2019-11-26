@@ -625,7 +625,7 @@ module.exports = {
                                                         step_id: stages[x].steps[y].id,
                                                         tip_id: stages[x].steps[y].tips[z].id,
                                                         checked: false,
-                                                        status: "Por verificar",
+                                                        status: "Sin responder",
                                                         date: Date.now(),
                                                         comment: null
                                                     }

@@ -60,4 +60,11 @@ router.post('/deleteFileReply',
     controller.deleteFileReply
 );
 
+router.get('/toVerify',
+    controller.showChallengesToVerify
+);
+
+router.post('/verify', 
+    controller.verifyChallenge
+);
 module.exports = router;

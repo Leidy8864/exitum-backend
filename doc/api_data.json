@@ -1259,6 +1259,105 @@
   },
   {
     "type": "POST",
+    "url": "/advices/check",
+    "title": "POST check advice",
+    "name": "check_advice",
+    "group": "ADVICE",
+    "version": "1.0.0",
+    "description": "<p>Morcar como entendido el consejo</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "advice_id",
+            "description": "<p>Id del consejo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id de la usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Tipo de usuario (employee || startup).</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/advices/check\n{\n    \"advice_id\": 1,\n    \"user_id\": 13,\n    \"type\": \"employee\"\n}",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Consejo marcado como visto.\",\n    \"data\": {\n        \"id\": 19,\n        \"advice_id\": 1,\n        \"user_id\": 13,\n        \"employee_id\": 8,\n        \"date_viewed\": \"2019-11-22T22:57:24.589Z\",\n        \"viewed\": true\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "ADVICE",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/appointments/create/:to_user_id",
     "title": "POST reservation",
     "name": "Reserva_de_horario",
@@ -2877,6 +2976,105 @@
     }
   },
   {
+    "type": "GET",
+    "url": "/challenges/toVerify?user_id=ID&page=IDD",
+    "title": "GET list to verify",
+    "name": "list_to_verify",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Lista de retos para verificar</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "page",
+            "description": "<p>Pagina.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/toVerify?user_id=12&page=1",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica la etapa recien creada</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Retos para verificar.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"date\": \"2019-11-20T17:15:17.000Z\",\n            \"reply\": \"respuesta al reto planteado la la la\",\n            \"comment\": null,\n            \"user\": {\n                \"name\": \"javier\",\n                \"lastname\": \"lecca\",\n                \"photo\": \"https://lh3.googleusercontent.com/a-/AAuE7mAyWr2a92TAb5wTFjscn43EXZSXSCOyfAVH49rA=s50\"\n            },\n            \"tip\": {\n                \"id\": 1,\n                \"tip\": \"Reto 1 Nivel 1 Etapa 1 startup\",\n                \"description\": \"It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.\",\n                \"step_id\": 1,\n                \"tip_skills\": [\n                    {\n                        \"tip_id\": 1,\n                        \"skill_id\": 1\n                    },\n                    {\n                        \"tip_id\": 1,\n                        \"skill_id\": 2\n                    }\n                ],\n                \"file_tips\": [\n                    {\n                        \"id\": 1,\n                        \"name\": \"Business_Model_Canvas.docx\",\n                        \"tip_id\": 1\n                    }\n                ]\n            },\n            \"files\": [\n                {\n                    \"id\": 2,\n                    \"name\": \"verify.png\",\n                    \"key_s3\": \"52ce79a0-0bb9-11ea-890e-0123456789abverify.png\",\n                    \"challenge_id\": 1\n                }\n            ]\n        },\n        {\n            \"id\": 2,\n            \"date\": \"2019-11-20T11:54:22.000Z\",\n            \"reply\": \"respuesta al reto planteado la la la\",\n            \"comment\": null,\n            \"user\": {\n                \"name\": \"javier\",\n                \"lastname\": \"lecca\",\n                \"photo\": \"https://lh3.googleusercontent.com/a-/AAuE7mAyWr2a92TAb5wTFjscn43EXZSXSCOyfAVH49rA=s50\"\n            },\n            \"tip\": {\n                \"id\": 2,\n                \"tip\": \"Reto 2 Nivel 1 Etapa 1 startup\",\n                \"description\": \"It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.\",\n                \"step_id\": 1,\n                \"tip_skills\": [\n                    {\n                        \"tip_id\": 2,\n                        \"skill_id\": 1\n                    },\n                    {\n                        \"tip_id\": 2,\n                        \"skill_id\": 2\n                    }\n                ],\n                \"file_tips\": [\n                    {\n                        \"id\": 2,\n                        \"name\": \"Business_Model_Canvas.docx\",\n                        \"tip_id\": 2\n                    }\n                ]\n            },\n            \"files\": []\n        }\n    ],\n    \"current\": \"1\",\n    \"pages\": 2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "POST",
     "url": "/challenges/reply",
     "title": "POST reply tip",
@@ -3040,6 +3238,218 @@
         {
           "title": "Datos obtenidos:",
           "content": "{\n    \"status\": true,\n    \"message\": \"Reto cumplido por otros usuario\",\n    \"data\": [\n        {\n            \"reply\": \"ReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyRReplyeply\",\n            \"date\": \"2019-11-07T15:39:41.000Z\",\n            \"user\": {\n                \"id\": 12,\n                \"name\": \"Leidy\",\n                \"lastname\": \"Callupe\",\n                \"photo\": null\n            }\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/challenges/verify",
+    "title": "POST verify",
+    "name": "verify",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Verificar o dejar observaciones al el reto</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "challenge_id",
+            "description": "<p>Id del reto del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "comment",
+            "description": "<p>Comentario de observación.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Nuevo estado del reto a evaluar ['Con observaciones', 'Verificado'].</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/verify\n{\n     \"challenge_id\": 130,\n     \"comment\": \"Comentarios para mejorar la respuesta\",\n     \"status\": \"Con observaciones\"\n }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de retos</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto verificado\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "CHALLENGES",
+    "error": {
+      "fields": {
+        "Estructura de Error": [
+          {
+            "group": "Estructura de Error",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Estructura de Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error general",
+          "content": "{\"status\":false,\"message\":\"(...)\"}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/challenges/verify",
+    "title": "POST verify two",
+    "name": "verify_two",
+    "group": "CHALLENGES",
+    "version": "1.0.0",
+    "description": "<p>Verificar o dejar observaciones al el reto</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "challenge_id",
+            "description": "<p>Id del reto del usuario.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "comment",
+            "description": "<p>Comentario de observación.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Nuevo estado del reto a evaluar ['Con observaciones', 'Verificado'].</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo url",
+          "content": "/challenges/verify\n {\n     \"challenge_id\": 130,\n     \"status\": \"Verificado\"\n }",
+          "type": "querystring"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Datos obtenidos": [
+          {
+            "group": "Datos obtenidos",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Indica si el response fue exitoso o fallido</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Indica el detalle de la solicitud</p>"
+          },
+          {
+            "group": "Datos obtenidos",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Indica el listado de retos</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Datos obtenidos:",
+          "content": "{\n    \"status\": true,\n    \"message\": \"Reto verificado\"\n}",
           "type": "json"
         }
       ]
