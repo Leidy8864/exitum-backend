@@ -4563,7 +4563,68 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/events/download/:user_id",
+    "url": "/events/list-all",
+    "title": "GET list events",
+    "name": "Listar_eventos",
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/events/list-all",
+        "type": "json"
+      }
+    ],
+    "group": "EVENTS",
+    "version": "1.0.0",
+    "description": "<p>Listar eventos.</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n      \"status\": true,\n      \"message\": \"OK\",\n      \"data\": [\n          {\n              \"id\": 1,\n              \"title\": \"Nuevo evento\",\n              \"description\": \"description\",\n              \"day\": \"2017-11-11\",\n              \"hour_start\": \"12:00:00\",\n              \"hour_end\": \"15:00:00\",\n              \"place\": \"Lima\",\n              \"lat\": null,\n              \"lng\": null,\n              \"user_id\": 1\n          }\n          ...\n      ]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EVENTS"
+  },
+  {
+    "type": "GET",
+    "url": "/events/list-by-user/:user_id",
     "title": "GET list by user events",
     "name": "Listar_eventos_por_usuario",
     "parameter": {
@@ -4582,13 +4643,13 @@ define({ "api": [
     "examples": [
       {
         "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/events/list-by-id/1",
+        "content": "http://35.175.241.103:8081/events/list-by-user/1",
         "type": "json"
       }
     ],
     "group": "EVENTS",
     "version": "1.0.0",
-    "description": "<p>Descargar certificación.</p>",
+    "description": "<p>Listar eventos por usuario.</p>",
     "success": {
       "examples": [
         {

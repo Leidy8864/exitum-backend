@@ -4080,15 +4080,15 @@
 
 /**
 *
-* @api {GET} /events/download/:user_id GET list by user events
+* @api {GET} /events/list-by-user/:user_id GET list by user events
 * @apiName Listar eventos por usuario
 * @apiParam {String} user_id ID del usuario.
 * @apiExample Request parameter
-* http://35.175.241.103:8081/events/list-by-id/1
+* http://35.175.241.103:8081/events/list-by-user/1
 * @apiGroup EVENTS
 *
 * @apiVersion 1.0.0
-* @apiDescription  Descargar certificación.
+* @apiDescription  Listar eventos por usuario.
 *@apiSuccessExample { json } Datos retornados
   HTTP/1.1 200 OK
   {
@@ -4146,6 +4146,53 @@
       "message": "OK",
       "data": {  }
   }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+      "status" : false,
+      "message": "(...)",
+      "data":  { }
+  }
+*
+*
+*/
+
+
+/**
+*
+* @api {GET} /events/list-all GET list events
+* @apiName Listar eventos
+* @apiExample Request parameter
+* http://35.175.241.103:8081/events/list-all
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription  Listar eventos.
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+        "status": true,
+        "message": "OK",
+        "data": [
+            {
+                "id": 1,
+                "title": "Nuevo evento",
+                "description": "description",
+                "day": "2017-11-11",
+                "hour_start": "12:00:00",
+                "hour_end": "15:00:00",
+                "place": "Lima",
+                "lat": null,
+                "lng": null,
+                "user_id": 1
+            }
+            ...
+        ]
+   }
 *
 *@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
 *@apiError (Error retornado) {Boolean}  message Mensaje retornado.
