@@ -11,6 +11,7 @@ module.exports = (sequelize, DataType) => {
         place: DataType.STRING,
         lat: DataType.FLOAT(10, 8),
         lng: DataType.FLOAT(11, 8),
+        participants: DataType.INTEGER,
         user_id: {
             type: DataType.INTEGER,
             references: {
@@ -33,6 +34,12 @@ module.exports = (sequelize, DataType) => {
             through: models.category_workshop,
             foreignKey: 'workshop_id',
             otherKey: 'category_id'
+        });
+        workshop.belongsToMany(models.user, {
+            as: { singular: 'toWorkshopUser', plural: 'toWorkshopUsers' },
+            through: models.user_workshop,
+            foreignKey: 'workshop_id',
+            otherKey: 'user_id'
         });
     }
     return workshop

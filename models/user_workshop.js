@@ -3,9 +3,13 @@
 const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-    const university = sequelize.define('user_workshop', {
+    const user_workshop = sequelize.define('user_workshop', {
         user_id: { type: DataTypes.INTEGER, primaryKey: true },
         workshop_id: { type: DataTypes.INTEGER, primaryKey: true },
+        status: {
+            type: DataTypes.ENUM,
+            values: ['ACCEPTED', 'PENDING', 'REJECTED']
+        },
         rate: Sequelize.TINYINT
     },
     {
@@ -14,5 +18,5 @@ module.exports = (sequelize, DataTypes) => {
         omitNull: true,
         underscored: true
     })
-    return university
+    return user_workshop
 };

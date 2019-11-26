@@ -10,7 +10,6 @@ module.exports = {
 
     validate: (method) => {
 
-        var message_exists = 'No existe :v'
         const day = check('day').exists().withMessage(text.day('evento'))
         const title = check('title').exists().withMessage(text.title('evento'))
         const place = check('place').exists().withMessage(text.place('evento'))
@@ -23,16 +22,60 @@ module.exports = {
 
         switch (method) {
             case 'create':
-                return [ title, day, place, user_id, hour_end, hour_start, description, categories ]
+                return [ title, day, place, user_id, hour_start, description, categories ]
+            case 'list-by-user':
+                return [ user_id ]
+            case 'take-part':
+                return [ event_id, user_id ]
             case 'update':
                 return [ event_id, user_id ]
             case 'delete':
-                return [ event_id, user_id ]
+                return [ event_id ]
         }
-        
+
     },
 
-    create: async(req, res) => {
+    listAll: async (req, res) => {
+
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        try {
+            
+            var events = await models.workshop.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage
+            })
+
+            res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    listByUser: async (req, res) => {
+
+        const { user_id } = req.params
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        try {
+            
+            const user = await existById(models.user, user_id, 'id')
+
+            var events = await models.workshop.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage,
+                where: { user_id: user.id }
+            })
+
+            res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    create: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
@@ -52,7 +95,8 @@ module.exports = {
                 place: place,
                 lat: lat,
                 lng: lng,
-                user_id: user.id
+                user_id: user.id,
+                participants: 50
             })
 
             var categories_id = await Promise.all(categories.map(async element => {
@@ -60,7 +104,7 @@ module.exports = {
                 return await response.id
             }))
 
-            event.addToWorkshopCategories(categories_id)
+            await event.addToWorkshopCategories(categories_id)
 
             successful(res, text.successCreate('evento'))
             
@@ -68,7 +112,7 @@ module.exports = {
 
     },
 
-    update: async(req, res) => {
+    update: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
@@ -101,6 +145,7 @@ module.exports = {
                 place: place || event.place,
                 lat: lat || event.lat,
                 lng: lng || event.lng,
+                participants: participants_max || event.participants
             })
 
             if ( categories && categories.length > 0) {
@@ -112,11 +157,34 @@ module.exports = {
                     return await response
                 }))
                 
-                event.addToWorkshopCategories(categories_id)
+                await event.addToWorkshopCategories(categories_id)
 
             }
 
             successful(res, text.successUpdate('evento'));
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    takePart: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { event_id, user_id } = req.body
+
+        try {
+            
+            var event = await existById(models.workshop, event_id)
+            var event_user = await event.getToWorkshopUsers()
+
+            if (event_user.length > event.participants) 
+                await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
+            else 
+                await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
+            
+            successful(res, text.add)
 
         } catch (error) { returnError(res, error) }
 
