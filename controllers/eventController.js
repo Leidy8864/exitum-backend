@@ -22,7 +22,7 @@ module.exports = {
 
         switch (method) {
             case 'create':
-                return [ title, day, place, user_id, hour_end, hour_start, description, categories ]
+                return [ title, day, place, user_id, hour_start, description, categories ]
             case 'list-by-user':
                 return [ user_id ]
             case 'take-part':
