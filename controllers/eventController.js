@@ -38,14 +38,20 @@ module.exports = {
     listByUser: async (req, res) => {
 
         const { user_id } = req.params
+        let perPage = 7;
+        let page = req.query.page || 1;
 
         try {
             
             const user = await existById(models.user, user_id, 'id')
 
-            var events = await models.workshop.findAll({ where: { user_id: user.id } })
+            var events = await models.workshop.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage,
+                where: { user_id: user.id }
+            })
 
-            successful(res, 'OK', events)
+            res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
 
         } catch (error) { returnError(res, error) }
 
