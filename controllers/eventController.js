@@ -35,10 +35,28 @@ module.exports = {
 
     },
 
+    listAll: async (req, res) => {
+
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        try {
+            
+            var events = await models.workshop.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage
+            })
+
+            res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
     listByUser: async (req, res) => {
 
         const { user_id } = req.params
-        let perPage = 7;
+        let perPage = 20;
         let page = req.query.page || 1;
 
         try {
