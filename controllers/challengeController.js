@@ -222,9 +222,9 @@ module.exports = {
         try {
             res.attachment(file);
             var fileStream = getObject(FILES_TIP_BUCKET_NAME, file)
-            //fileStream.pipe(res)
-            const url = getDownloadUrl(fileStream)
-            return res.redirect(url)
+            fileStream.pipe(res)
+            //const url = getDownloadUrl(fileStream)
+            //return res.redirect(url)
         } catch (error) {
             return res.status(200).json({ status: false, message: error.message, data: {} })
         }
@@ -245,6 +245,7 @@ module.exports = {
                 if (chll.status === 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
                 await models.challenge.update({
                     reply: reply,
+                    status: "Respondido",
                     date: Date.now(),
                 }, { where: { id: challenge_id } }, { transaction: t });
 
@@ -383,5 +384,109 @@ module.exports = {
             successful(res, text.successDelete('archivo'))
 
         } catch (error) { returnError(res, error) }
+    },
+
+    showChallengesToVerify: async (req, res) => {
+        const { user_id } = req.query
+        let perPage = 20;
+        let page = req.query.page || 1;
+
+        const skll_usr = await models.skill_user.findAll({
+            where: { user_id: user_id }
+        })
+        var skll_ids = []
+        for (var i = 0; i < skll_usr.length; i++) {
+            skll_ids.push(skll_usr[i].skill_id)
+        }
+        const challenges = await models.challenge.findAll({
+            offset: (perPage * (page - 1)),
+            limit: perPage,
+            where: {
+                status: 'Respondido',
+            },
+            attributes: ['id', 'date', 'reply', 'comment'],
+            include: [
+                {
+                    model: models.user,
+                    attributes: ['id','name', 'lastname', 'photo']
+                },
+                {
+                    model: models.tip,
+                    include: [
+                        {
+                            model: models.tip_skill,
+                            where: {
+                                skill_id: {
+                                    [models.Sequelize.Op.in]: skll_ids
+                                }
+                            },
+                            required: true
+                        },
+                        {
+                            model: models.file_tip
+                        }
+                    ],
+                    required: true
+                },
+                {
+                    model: models.file
+                }
+            ]
+        })
+        const totalRows = await models.challenge.findAll({
+            distinct: true,
+            where: {
+                status: 'Respondido',
+            },
+            attributes: ['id'],
+            include: [
+                {
+                    model: models.tip,
+                    attributes: ['id'],
+                    include: [
+                        {
+                            model: models.tip_skill,
+                            where: {
+                                skill_id: {
+                                    [models.Sequelize.Op.in]: skll_ids
+                                }
+                            },
+                            required: true
+                        }
+                    ],
+                    required: true
+                }
+            ]
+        }).catch(err => {
+            console.log(err)
+        })
+        console.log(challenges.length)
+        console.log(totalRows.length)
+        return res.json({ status: true, message: "Retos para verificar.", data: challenges, current: page, pages: Math.ceil(totalRows.length / perPage) })
+    },
+
+    verifyChallenge: async (req, res) => {
+        const { challenge_id, comment, status } = req.body
+        var forUpdate = {}
+        //Sin respuesta, Respondido, Con observaciones, Verificado
+        if (status == 'Con observaciones') {
+            forUpdate = {
+                comment: comment,
+                date: Date.now(),
+                status: 'Con observaciones',
+            }
+        } else if (status == 'Verificado') {
+            forUpdate = {
+                checked: 1,
+                date: Date.now(),
+                status: 'Verificado'
+            }
+        } else {
+            return res.json({ status: false, message: 'El campo status solo puede ser "Con observaciones" o "Verificado"' })
+        }
+        const challenge = await models.challenge.findOne({ where: { id: challenge_id } })
+        if (!challenge) { return res.json({ status: false, message: "Codigo del reto invalido" }) }
+        await challenge.update(forUpdate)
+        return res.json({ status: true, message: "Reto verificado" })
     }
 }

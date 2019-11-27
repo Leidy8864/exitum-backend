@@ -13,7 +13,7 @@ module.exports = {
         s3 : {
             ACCESS_KEY : 'AKIAQULJUGW3E672HYYV',
             SECRET_KEY : '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',
-            REGION : 'us-east-1',
+            REGION : 'us-west-1',
             BUCKET_NAME : 'techie-exitum'
         }
     },

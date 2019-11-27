@@ -25,6 +25,12 @@ module.exports = (sequelize, DataType) => {
       foreignKey: 'skill_id',
       otherKey: 'user_id'
     });
+    skill.belongsToMany(models.tip, {
+      as: { singular: 'tip', plural: 'tips' },
+      through: models.tip_skill,
+      foreignKey: 'skill_id',
+      otherKey: 'tip_id'
+  });
   };
   return skill;
 };

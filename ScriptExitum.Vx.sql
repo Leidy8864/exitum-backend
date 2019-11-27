@@ -1528,6 +1528,19 @@ INSERT INTO `category` (`id`, `name`) VALUES (NULL, 'Tecnológico'), (NULL, 'Rad
 (NULL, 'Textil'), (NULL, 'Construnccion'), (NULL, 'Maquinaria y equipo'), (NULL, 'Productos Químicos'), (NULL, 'Farmaceutica'), (NULL, 'Inmoviliarias'), (NULL, 'Transporte'),
 (NULL, 'Agricultura'), (NULL, 'Educación'), (NULL, 'Salud');
 
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (1,'Emprendedor');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (2,'Diseñador Ux');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (3,'Responsable');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (4,'Cientifico');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (5,'Alegre');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (6,'Desarrollador web');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (7,'Desarrollador movil');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (8,'JavaScript');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (9,'NodeJS');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (10,'PHP');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (11,'Android');
+INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (12,'Java');
+
 INSERT INTO `stage` (`id`, `stage`, `description`, `type`) 
 VALUES (1, 'Pre semilla', "Etapa donde solo se tiene una idea superficial y se busca validarla.", 'startup'), 
 (2, 'Semilla', "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.", 'startup'), 
@@ -1739,6 +1752,18 @@ INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('118', 'Reto 2 Nivel 6 Etapa 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('119', 'Reto 3 Nivel 6 Etapa 5 startup', '30');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('120', 'Reto 4 Nivel 6 Etapa 5 startup', '30');
 
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('1', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('4', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('5', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('8', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('9', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('12', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('13', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('16', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('17', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('20', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('21', '1');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('24', '1');
 
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('31', 'Nivel 1 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('32', 'Nivel 2 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
@@ -1891,6 +1916,27 @@ INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('142', 'Reto 2 Nivel 6 Etapa 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('143', 'Reto 3 Nivel 6 Etapa 4 employee', '54');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('144', 'Reto 4 Nivel 6 Etapa 4 employee', '54');
 
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('121', '6');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('121', '8');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('121', '9');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('124', '7');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('124', '12');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('125', '6');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('125', '8');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('125', '9');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('128', '7');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('128', '12');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('129', '6');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('129', '8');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('129', '9');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('132', '7');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('132', '12');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '6');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '8');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '9');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '7');
+INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '12');
+
 insert into `exitum`.`file_tip`(id, name, tip_id) values 
 ( 1, "Business_Model_Canvas.docx", 1),
 ( 2, "Business_Model_Canvas.docx", 2),
@@ -1929,14 +1975,6 @@ INSERT INTO `exitum`.`university` (`university`) VALUES ('Pontificia Universidad
 
 INSERT INTO `exitum`.`company` (`name`) VALUES ('Microsoft');
 INSERT INTO `exitum`.`company` (`name`) VALUES ('Apple');
-
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Emprendedor');
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Diseñador Ux');
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Responsable');
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Cientifico');
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Alegre');
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Desarrollador web');
-INSERT INTO `exitum`.`skill` (`skill`) VALUES ('Marketing');
 
 INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '1', 'Consejo 1', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'employee', '1');
 INSERT INTO `exitum`.`advice` (`id`, `title`, `description`, `type`, `order`) VALUES ( '2', 'Consejo 2', 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable.', 'employee', '2');

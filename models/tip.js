@@ -30,6 +30,15 @@ module.exports = (sequelize, DataType) => {
         tip.belongsTo(models.step, {
             foreignKey: 'step_id'
         });
+        // tip.belongsToMany(models.skill, {
+        //     as: { singular: 'skill', plural: 'skills' },
+        //     through: models.tip_skill,
+        //     foreignKey: 'tip_id',
+        //     otherKey: 'skill_id'
+        // });
+        tip.hasMany(models.tip_skill, {
+            foreignKey: 'tip_id'
+        })
         // tip.belongsToMany(models.employee, {
         //     through: 'employee_tip',
         //     foreignKey: 'tip_id'
@@ -38,6 +47,7 @@ module.exports = (sequelize, DataType) => {
         //     through: 'startup_tip',
         //     foreignKey: 'tip_id'
         // });
+        
     }
     return tip
 };

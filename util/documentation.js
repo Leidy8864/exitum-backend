@@ -3019,6 +3019,7 @@
 * @apiUse ErrorGeneral
 * @apiDescription Retos cumplidos por otros usuarios.
 * @apiParam {Int} tip_id Id del reto
+*
   * @apiParamExample {querystring} Ejemplo url
   /challenges/summaryTips?tip_id=1
 *
@@ -3042,6 +3043,176 @@
           }
       ]
   }
+*
+*
+*/
+
+/**
+*
+* @api {GET} /challenges/toVerify?user_id=ID&page=IDD GET list to verify
+* @apiName list to verify
+* @apiGroup CHALLENGES
+* @apiVersion 1.0.0
+* @apiUse ErrorGeneral
+* @apiDescription Lista de retos para verificar
+* @apiParam {Int} user_id Id del usuario.
+* @apiParam {Int} page Pagina.
+*
+   * @apiParamExample {querystring} Ejemplo url
+   /challenges/toVerify?user_id=12&page=1
+*
+* @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+* @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+* @apiSuccess (Datos obtenidos) {Object} data Indica la etapa recien creada
+* @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Retos para verificar.",
+        "data": [
+            {
+                "id": 1,
+                "date": "2019-11-20T17:15:17.000Z",
+                "reply": "respuesta al reto planteado la la la",
+                "comment": null,
+                "user": {
+                    "name": "javier",
+                    "lastname": "lecca",
+                    "photo": "https://lh3.googleusercontent.com/a-/AAuE7mAyWr2a92TAb5wTFjscn43EXZSXSCOyfAVH49rA=s50"
+                },
+                "tip": {
+                    "id": 1,
+                    "tip": "Reto 1 Nivel 1 Etapa 1 startup",
+                    "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+                    "step_id": 1,
+                    "tip_skills": [
+                        {
+                            "tip_id": 1,
+                            "skill_id": 1
+                        },
+                        {
+                            "tip_id": 1,
+                            "skill_id": 2
+                        }
+                    ],
+                    "file_tips": [
+                        {
+                            "id": 1,
+                            "name": "Business_Model_Canvas.docx",
+                            "tip_id": 1
+                        }
+                    ]
+                },
+                "files": [
+                    {
+                        "id": 2,
+                        "name": "verify.png",
+                        "key_s3": "52ce79a0-0bb9-11ea-890e-0123456789abverify.png",
+                        "challenge_id": 1
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "date": "2019-11-20T11:54:22.000Z",
+                "reply": "respuesta al reto planteado la la la",
+                "comment": null,
+                "user": {
+                    "name": "javier",
+                    "lastname": "lecca",
+                    "photo": "https://lh3.googleusercontent.com/a-/AAuE7mAyWr2a92TAb5wTFjscn43EXZSXSCOyfAVH49rA=s50"
+                },
+                "tip": {
+                    "id": 2,
+                    "tip": "Reto 2 Nivel 1 Etapa 1 startup",
+                    "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+                    "step_id": 1,
+                    "tip_skills": [
+                        {
+                            "tip_id": 2,
+                            "skill_id": 1
+                        },
+                        {
+                            "tip_id": 2,
+                            "skill_id": 2
+                        }
+                    ],
+                    "file_tips": [
+                        {
+                            "id": 2,
+                            "name": "Business_Model_Canvas.docx",
+                            "tip_id": 2
+                        }
+                    ]
+                },
+                "files": []
+            }
+        ],
+        "current": "1",
+        "pages": 2
+    }
+*
+*
+*/
+
+/**
+*
+* @api {POST} /challenges/verify POST verify
+* @apiName verify
+* @apiGroup CHALLENGES
+* @apiVersion 1.0.0
+* @apiUse ErrorGeneral
+* @apiDescription Verificar o dejar observaciones al el reto
+* @apiParam {Int} challenge_id Id del reto del usuario.
+* @apiParam {String} comment Comentario de observación.
+* @apiParam {String} status Nuevo estado del reto a evaluar ['Con observaciones', 'Verificado'].
+*
+   * @apiParamExample {querystring} Ejemplo url
+   /challenges/verify
+   {
+        "challenge_id": 130,
+        "comment": "Comentarios para mejorar la respuesta",
+        "status": "Con observaciones"
+    }
+*
+* @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+* @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+* @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+* @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Reto verificado"
+    }
+*
+*
+*/
+
+/**
+*
+* @api {POST} /challenges/verify POST verify two
+* @apiName verify two
+* @apiGroup CHALLENGES
+* @apiVersion 1.0.0
+* @apiUse ErrorGeneral
+* @apiDescription Verificar o dejar observaciones al el reto
+* @apiParam {Int} challenge_id Id del reto del usuario.
+* @apiParam {String} comment Comentario de observación.
+* @apiParam {String} status Nuevo estado del reto a evaluar ['Con observaciones', 'Verificado'].
+*
+   * @apiParamExample {querystring} Ejemplo url
+   /challenges/verify
+    {
+        "challenge_id": 130,
+        "status": "Verificado"
+    }
+*
+* @apiSuccess (Datos obtenidos) {Boolean} status Indica si el response fue exitoso o fallido
+* @apiSuccess (Datos obtenidos) {String} message Indica el detalle de la solicitud
+* @apiSuccess (Datos obtenidos) {Object[]} data Indica el listado de retos
+* @apiSuccessExample {json} Datos obtenidos:
+    {
+        "status": true,
+        "message": "Reto verificado"
+    }
 *
 *
 */
