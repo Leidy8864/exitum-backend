@@ -25,7 +25,7 @@ module.exports = {
             Bucket: bucket,
             Body: file.data,
             Key: fileName,
-            ContentType:  file.mimetype 
+            ContentType: file.mimetype
         }
         s3Bucket.putObject(params, function (err, data) {
             if (err) {
@@ -75,7 +75,11 @@ module.exports = {
             Bucket: bucket,
             Key: key
         }
-        return s3Bucket.getObject(params).createReadStream();
+        return s3Bucket.getObject(params)
+            .createReadStream()
+            .on('error', (e) => {
+                console.log(e)
+            });
 
         // try {
         //     const data = await s3Bucket.getObject(params).promise()

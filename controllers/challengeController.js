@@ -222,9 +222,9 @@ module.exports = {
         try {
             res.attachment(file);
             var fileStream = getObject(FILES_TIP_BUCKET_NAME, file)
-            //fileStream.pipe(res)
-            const url = getDownloadUrl(fileStream)
-            return res.redirect(url)
+            fileStream.pipe(res)
+            //const url = getDownloadUrl(fileStream)
+            //return res.redirect(url)
         } catch (error) {
             return res.status(200).json({ status: false, message: error.message, data: {} })
         }
@@ -408,7 +408,7 @@ module.exports = {
             include: [
                 {
                     model: models.user,
-                    attributes: ['name', 'lastname', 'photo']
+                    attributes: ['id','name', 'lastname', 'photo']
                 },
                 {
                     model: models.tip,
