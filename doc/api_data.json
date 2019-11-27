@@ -4483,7 +4483,7 @@
     "examples": [
       {
         "title": "Request parameter",
-        "content": "http://35.175.241.103:8081/certifications/delete/1",
+        "content": "http://35.175.241.103:8081/events/delete/1",
         "type": "json"
       }
     ],
