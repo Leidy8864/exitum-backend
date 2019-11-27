@@ -78,7 +78,7 @@ module.exports = {
         return s3Bucket.getObject(params)
             .createReadStream()
             .on('error', (e) => {
-                console.log(e)
+                console.log(e.message)
             });
 
         // try {
