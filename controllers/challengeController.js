@@ -236,7 +236,7 @@ module.exports = {
         var name = ""
         if (req.files) {
             var file = req.files.file;
-            fileName = putObject(FILES_TIP_REPLY_BUCKET_NAME, file);
+            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
             name = file.name
         }
         try {
