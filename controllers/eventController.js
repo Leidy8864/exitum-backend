@@ -198,14 +198,25 @@ module.exports = {
         try {
             
             var event = await existById(models.workshop, event_id)
-            var event_user = await event.getToWorkshopUsers()
+            var pivot_exists = await models.user_workshop.findOne({ where: { user_id: user_id, workshop_id: event_id } })
 
-            if (event_user.length > event.participants) 
-                await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
-            else 
-                await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
-            
-            successful(res, text.add)
+            if (pivot_exists) {
+                
+                await pivot_exists.destroy()
+                successful(res, text.removed)
+
+            } else {
+
+                var event_user = await models.user_workshop.count({ where: { workshop_id: event_id } })
+
+                if (event_user.length > event.participants) 
+                    await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
+                else 
+                    await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
+
+                successful(res, text.add)
+
+            }
 
         } catch (error) { returnError(res, error) }
 
