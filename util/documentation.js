@@ -4302,7 +4302,7 @@
 * @apiName Eliminar evento
 * @apiParam {Number} event_id ID del evento.
 * @apiExample Request parameter
-* http://35.175.241.103:8081/certifications/delete/1
+* http://35.175.241.103:8081/events/delete/1
 * @apiGroup EVENTS
 *
 * @apiVersion 1.0.0

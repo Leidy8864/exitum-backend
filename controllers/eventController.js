@@ -1,6 +1,7 @@
 const text = require('../libs/text')
 const Sequelize = require('sequelize');
 const models = require('../models/index');
+const { sendEmail } = require('../libs/mail')
 const { existById } = require('./elementController')
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
@@ -106,6 +107,8 @@ module.exports = {
 
             await event.addToWorkshopCategories(categories_id)
 
+            // sendEmail()
+
             successful(res, text.successCreate('evento'))
             
         } catch (error) { returnError(res, error) }
@@ -199,14 +202,15 @@ module.exports = {
 
         try {
 
-            var event = await existById(event_id)
+            var event = await existById(models.workshop, event_id)
 
             await models.category_workshop.destroy({ where: { workshop_id: event.id } })
-            await workshop.destroy()
+            await models.user_workshop.destroy({ where: { workshop_id: event.id } })
+            await event.destroy()
 
             successful(res, text.successDelete('evento'))
 
-        } catch (err) { returnError(res, error) }
+        } catch (error) { returnError(res, error) }
 
     }
 
