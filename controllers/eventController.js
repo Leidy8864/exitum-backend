@@ -80,8 +80,8 @@ module.exports = {
 
         try {
 
-            var events_number = await models.workshop.count()
             const user = await existById(models.user, user_id, 'id')
+            var events_number = await models.workshop.count({ where: { user_id: user.id } })
 
             var events = await models.workshop.findAll({
                 offset: (perPage * (page - 1)),
