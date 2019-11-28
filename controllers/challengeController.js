@@ -267,6 +267,7 @@ module.exports = {
     listStageEmployee: async (req, res) => {
         const { user_id } = req.params
         const employee = await models.employee.findOne({ attributes: ['id', 'stage_id'], where: { user_id: user_id } })
+        console.log(employee.id)
         if (!employee) { return res.json({ status: false, message: "No existe impulsor con este usuario." }) }
         models.stage.findOne({
             where: {
@@ -279,7 +280,8 @@ module.exports = {
                     include: [
                         {
                             model: models.employee_step,
-                            where: { employee_id: employee.id }
+                            where: { employee_id: employee.id },
+                            required: false
                         },
                         {
                             model: models.challenge,

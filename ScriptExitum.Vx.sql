@@ -881,7 +881,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
   `id` INT(11) NOT NULL,
-  `file` VARCHAR(245) NULL DEFAULT NULL,
+  `key_s3` VARCHAR(245) NULL DEFAULT NULL,
   `name` VARCHAR(245) NULL DEFAULT NULL,
   `tip_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1937,32 +1937,32 @@ INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '9');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '7');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '12');
 
-insert into `exitum`.`file_tip`(id, name, tip_id) values 
-( 1, "Business_Model_Canvas.docx", 1),
-( 2, "Business_Model_Canvas.docx", 2),
-( 3, "Business_Model_Canvas.docx", 3),
-( 4, "Business_Model_Canvas.docx", 4),
-( 5, "Business_Model_Canvas.docx", 5),
-( 6, "Business_Model_Canvas.docx", 6),
-( 7, "Business_Model_Canvas.docx", 7),
-( 8, "Business_Model_Canvas.docx", 8),
-( 9, "Business_Model_Canvas.docx", 9),
-(10, "Business_Model_Canvas.docx", 10),
-(11, "Business_Model_Canvas.docx", 11),
-(12, "Business_Model_Canvas.docx", 12),
-(13, "Business_Model_Canvas.docx", 13),
-(14, "Business_Model_Canvas.docx", 14),
-(15, "Business_Model_Canvas.docx", 15),
-(16, "Business_Model_Canvas.docx", 16),
-(17, "Business_Model_Canvas.docx", 17),
-(18, "Business_Model_Canvas.docx", 18),
-(19, "Business_Model_Canvas.docx", 19),
-(20, "Business_Model_Canvas.docx", 20),
-(21, "Business_Model_Canvas.docx", 21),
-(22, "Business_Model_Canvas.docx", 22),
-(23, "Business_Model_Canvas.docx", 23),
-(24, "Business_Model_Canvas.docx", 24),
-(25, "Business_Model_Canvas.docx", 25);
+insert into `exitum`.`file_tip`(id, name, key_s3,tip_id) values 
+( 1, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 1),
+( 2, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 2),
+( 3, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 3),
+( 4, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 4),
+( 5, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 5),
+( 6, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 6),
+( 7, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 7),
+( 8, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 8),
+( 9, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 9),
+(10, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 10),
+(11, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 11),
+(12, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 12),
+(13, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 13),
+(14, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 14),
+(15, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 15),
+(16, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 16),
+(17, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 17),
+(18, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 18),
+(19, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 19),
+(20, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 20),
+(21, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 21),
+(22, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 22),
+(23, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 23),
+(24, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 24),
+(25, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 25);
 
 INSERT INTO `exitum`.`type` (`id`, `type`) VALUES ('1', 'Hormiga');
 
