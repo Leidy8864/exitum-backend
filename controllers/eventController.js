@@ -40,15 +40,16 @@ module.exports = {
 
         let perPage = 20;
         let page = req.query.page || 1;
-        // let user = req.query.user
+        let user = req.query.user
 
         try {
 
-            var events_number = await models.workshop.count()
+            var events_number = await models.workshop.count({ where: { user_id: { [ Sequelize.Op.ne ]:  user } } })
             
             var events = await models.workshop.findAll({
                 offset: (perPage * (page - 1)),
                 limit: perPage,
+                where: { user_id: { [ Sequelize.Op.ne ]:  user } },
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
@@ -73,6 +74,9 @@ module.exports = {
 
     listByUser: async (req, res) => {
 
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
         const { user_id } = req.params
         let perPage = 20;
         let page = req.query.page || 1;
@@ -85,10 +89,36 @@ module.exports = {
             var events = await models.workshop.findAll({
                 offset: (perPage * (page - 1)),
                 limit: perPage,
-                where: { user_id: user.id }
+                where: { user_id: user.id },
+                attributes: [
+                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
+                ]
             })
 
             return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
+
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    participating: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { user_id } = req.params
+
+        try {
+            
+            const user = await existById(models.user, user_id)
+
+            var events = await user.getToUserWorkshops({ attributes: [ 
+                'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
+             ] })
+
+            successful(res, 'OK', events)
 
         } catch (error) { returnError(res, error) }
 

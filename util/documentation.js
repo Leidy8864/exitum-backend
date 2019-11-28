@@ -4378,3 +4378,66 @@
 *
 *
 */
+
+/**
+*
+* @api {GET} /events/participating/:user_id GET list participating 
+* @apiName Listar eventos en los que participará el usuario
+* @apiParam {Number} user_id ID del usuario.
+* @apiExample Request parameter
+* http://35.175.241.103:8081/events/participating/1
+* @apiGroup EVENTS
+*
+* @apiVersion 1.0.0
+* @apiDescription  Listar eventos en los que participará el usuario.
+*@apiSuccessExample { json } Datos retornados
+  HTTP/1.1 200 OK
+  {
+        "status": true,
+        "message": "OK",
+        "data": [
+            {
+                "id": 1,
+                "title": "Nuevo evento",
+                "day": "2017-11-11",
+                "hour_start": "12:00 PM",
+                "hour_end": "03:00 PM",
+                "place": "Lima",
+                "user_workshop": {
+                    "user_id": 1,
+                    "workshop_id": 1,
+                    "status": null,
+                    "rate": null
+                }
+            },
+            {
+                "id": 6,
+                "title": "Nuevo evento 2",
+                "day": "2017-11-11",
+                "hour_start": "12:00 PM",
+                "hour_end": "03:00 PM",
+                "place": "Lima",
+                "user_workshop": {
+                    "user_id": 1,
+                    "workshop_id": 6,
+                    "status": "ACCEPTED",
+                    "rate": null
+                }
+            }
+            ...
+        ]
+   }
+*
+*@apiError (Error retornado) {Boolean}  status Estado negativo de la petición.
+*@apiError (Error retornado) {Boolean}  message Mensaje retornado.
+*@apiError (Error retornado) {Object}  data Contenido retornado
+*@apiErrorExample  Error
+  HTTP/1.1 4xx Error
+  {
+      "status" : false,
+      "message": "(...)",
+      "data":  { }
+  }
+*
+*
+*/

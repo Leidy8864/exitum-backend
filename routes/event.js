@@ -11,6 +11,11 @@ router.get('/list-by-user/:user_id',
     controller.listByUser
 );
 
+router.get('/participating/:user_id',
+    controller.validate('list-by-user'),
+    controller.participating
+);
+
 router.post('/take-part',
     controller.validate('take-part'),
     controller.takePart
