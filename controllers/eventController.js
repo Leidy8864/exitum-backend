@@ -65,7 +65,6 @@ module.exports = {
                     }
                 ]
             })
-
             return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
         } catch (error) { returnError(res, error) }
@@ -88,7 +87,10 @@ module.exports = {
                 where: { user_id: user.id }
             })
 
-            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+            var totalRows = await models.workshop.count({
+                where: { user_id: user.id }
+            })
+            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(totalRows / perPage) })
 
         } catch (error) { returnError(res, error) }
 
