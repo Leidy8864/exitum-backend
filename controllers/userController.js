@@ -625,7 +625,7 @@ module.exports = {
                                                         step_id: stages[x].steps[y].id,
                                                         tip_id: stages[x].steps[y].tips[z].id,
                                                         checked: false,
-                                                        status: "Sin responder",
+                                                        status: "Sin respuesta",
                                                         date: Date.now(),
                                                         comment: null
                                                     }
@@ -645,6 +645,7 @@ module.exports = {
                                     }
                                 })
                                 await models.challenge.bulkCreate(chlls, { transaction: t });
+                                await models.employee_step.bulkCreate(steps, { transaction: t });
                                 return employee;
                             });
                             return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
