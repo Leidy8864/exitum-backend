@@ -40,15 +40,33 @@ module.exports = {
 
         let perPage = 20;
         let page = req.query.page || 1;
+        // let user = req.query.user
 
         try {
+
+            var events_number = await models.workshop.count()
             
             var events = await models.workshop.findAll({
                 offset: (perPage * (page - 1)),
-                limit: perPage
+                limit: perPage,
+                attributes: [
+                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
+                ],
+                include: [
+                    {
+                        model: models.user,
+                        as: 'toWorkshopUsers',
+                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ]
+                    },
+                    {
+                        model: models.category,
+                        as: 'toWorkshopCategories'
+                    }
+                ]
             })
 
-            res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
         } catch (error) { returnError(res, error) }
 
@@ -70,7 +88,7 @@ module.exports = {
                 where: { user_id: user.id }
             })
 
-            res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
 
         } catch (error) { returnError(res, error) }
 
@@ -180,14 +198,25 @@ module.exports = {
         try {
             
             var event = await existById(models.workshop, event_id)
-            var event_user = await event.getToWorkshopUsers()
+            var pivot_exists = await models.user_workshop.findOne({ where: { user_id: user_id, workshop_id: event_id } })
 
-            if (event_user.length > event.participants) 
-                await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
-            else 
-                await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
-            
-            successful(res, text.add)
+            if (pivot_exists) {
+                
+                await pivot_exists.destroy()
+                successful(res, text.removed)
+
+            } else {
+
+                var event_user = await models.user_workshop.count({ where: { workshop_id: event_id } })
+
+                if (event_user.length > event.participants) 
+                    await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
+                else 
+                    await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
+
+                successful(res, text.add)
+
+            }
 
         } catch (error) { returnError(res, error) }
 

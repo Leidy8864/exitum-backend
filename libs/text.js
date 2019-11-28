@@ -27,6 +27,7 @@ module.exports = {
     place: (text) => `Es necesario un titulo para ${text}`,
     category: (text) => `Es necesario categoria(s) para ${text}`,
     add: `Añadido satisfactoriamente.`,
+    removed: `Removido satisfactoriamente.`,
     exceeded: `Lo sentimos ha superado el máximo permitido.`,
 
 }
