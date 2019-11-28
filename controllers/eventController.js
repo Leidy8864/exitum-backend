@@ -79,7 +79,8 @@ module.exports = {
         let page = req.query.page || 1;
 
         try {
-            
+
+            var events_number = await models.workshop.count()
             const user = await existById(models.user, user_id, 'id')
 
             var events = await models.workshop.findAll({
@@ -88,7 +89,7 @@ module.exports = {
                 where: { user_id: user.id }
             })
 
-            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events.length / perPage) })
+            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
         } catch (error) { returnError(res, error) }
 
