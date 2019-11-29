@@ -47,28 +47,35 @@ module.exports = {
             var events_number = await models.workshop.count({ where: { user_id: { [ Sequelize.Op.ne ]:  user } } })
             
             var events = await models.workshop.findAll({
-                offset: (perPage * (page - 1)),
-                limit: perPage,
-                where: { user_id: { [ Sequelize.Op.ne ]:  user } },
-                attributes: [
-                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
-                ],
+                where: { 
+                    user_id: { [ Sequelize.Op.ne ]:  user } ,
+                },
                 include: [
                     {
                         model: models.user,
                         as: 'toWorkshopUsers',
-                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ]
+                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ],
+                        through: { where: { user_id: { [ Sequelize.Op.eq ] : user } } } ,
+                        // where: { id : user }
                     },
                     {
                         model: models.category,
                         as: 'toWorkshopCategories'
                     }
-                ]
+                ],
+                attributes: [
+                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place',
+                    // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
+                ],
+                // group : [ 'id', 'toWorkshopUsers.id', 'toWorkshopCategories.id'],
+                limit: perPage,
+                offset: (perPage * (page - 1))
             })
-            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
-        } catch (error) { returnError(res, error) }
+            return res.status(200).json({ status: true, message: 'OK', data: events})
+
+        } catch (error) { returnError(res, error, error) }
 
     },
 
