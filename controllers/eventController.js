@@ -100,7 +100,7 @@ module.exports = {
                     }
                 ],
                 attributes: [
-                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description'
+                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id'
                 ],
             })
             successful(res, 'OK', event)
