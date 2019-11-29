@@ -100,8 +100,7 @@ module.exports = {
                     }
                 ],
                 attributes: [
-                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
+                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description'
                 ],
             })
             successful(res, 'OK', event)
