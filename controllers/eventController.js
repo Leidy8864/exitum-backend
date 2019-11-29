@@ -65,7 +65,7 @@ module.exports = {
                 ],
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
                     // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
                 ],
                 // group : [ 'id', 'toWorkshopUsers.id', 'toWorkshopCategories.id'],
@@ -151,7 +151,7 @@ module.exports = {
                 where: { user_id: user.id },
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
                 ]
             })
 
@@ -174,7 +174,7 @@ module.exports = {
 
             var events = await user.getToUserWorkshops({ attributes: [ 
                 'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
              ] })
 
             successful(res, 'OK', events)

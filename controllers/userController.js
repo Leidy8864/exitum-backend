@@ -706,6 +706,10 @@ module.exports = {
 
                 })
 
+            // var 
+            
+            var unavailables = await user.getUnavailables()
+
             successful(res, 'OK', user)
 
         } catch (error) { returnError(res, error) }
