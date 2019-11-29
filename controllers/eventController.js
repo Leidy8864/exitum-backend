@@ -65,7 +65,7 @@ module.exports = {
                 ],
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place',
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
                     // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
                 ],
                 // group : [ 'id', 'toWorkshopUsers.id', 'toWorkshopCategories.id'],
@@ -92,13 +92,8 @@ module.exports = {
 
         try {
             
-            var events = await models.workshop.findByPk(event_id, {
+            var event = await models.workshop.findByPk(event_id, {
                 include: [
-                    {
-                        model: models.user,
-                        as: 'toWorkshopUsers',
-                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ],
-                    },
                     {
                         model: models.category,
                         as: 'toWorkshopCategories'
@@ -106,11 +101,33 @@ module.exports = {
                 ],
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place',
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
                 ],
             })
-            successful(res, 'OK', events)
+            successful(res, 'OK', event)
             
+        } catch (error) { returnError(res, error) }
+
+    },
+
+    participatingEvents: async (req, res) => {
+        
+        const { event_id } = req.params
+        const perPage = 12;
+        let page = req.query.page || 1;
+
+        try {
+            
+            var events_number = await models.user_workshop.count({ where: { workshop_id: event_id } })
+            const event = await existById(models.workshop, event_id)
+            var event_user = await event.getToWorkshopUsers({
+                offset: (perPage * (page - 1)),
+                limit: perPage,
+                attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ]
+            })
+
+            return res.status(200).json({ status: true, message: 'OK', data: event_user, current: page, pages: Math.ceil(events_number / perPage) })
+
         } catch (error) { returnError(res, error) }
 
     },
@@ -135,7 +152,7 @@ module.exports = {
                 where: { user_id: user.id },
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
                 ]
             })
 
@@ -158,7 +175,7 @@ module.exports = {
 
             var events = await user.getToUserWorkshops({ attributes: [ 
                 'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description'
              ] })
 
             successful(res, 'OK', events)
