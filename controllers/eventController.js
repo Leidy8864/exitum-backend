@@ -227,8 +227,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { event_id } = req.params
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories } = req.body
+        const {event_id,  title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories } = req.body
 
         try {
 

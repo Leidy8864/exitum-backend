@@ -36,7 +36,7 @@ router.post('/create',
     controller.create
 );
 
-router.post('/update/:event_id',
+router.post('/update',
     controller.validate('update'),
     controller.update
 );
