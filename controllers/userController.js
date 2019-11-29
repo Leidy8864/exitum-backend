@@ -703,6 +703,7 @@ module.exports = {
                             attributes: ['country']
                         }
                     ],
+                    order: [ [ { model: models.experience }, 'date_start', 'DESC' ] ],
 
                 })
 
