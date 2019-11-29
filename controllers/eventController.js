@@ -73,13 +73,14 @@ module.exports = {
                 offset: (perPage * (page - 1))
             })
             
-            // var event = events.reduce( (element, option) => {
-            //     if (!option.toWorkshopUsers.length) {
-            //         element.push()
-            //     }
-            // }, [])
+            var event = events.reduce( (element, option) => {
+                if (!option.toWorkshopUsers.length) {
+                    element.push(option)
+                }
+                return element
+            }, [])
 
-            return res.status(200).json({ status: true, message: 'OK', data: events })
+            return res.status(200).json({ status: true, message: 'OK', data: event })
 
         } catch (error) { returnError(res, error, error) }
 
