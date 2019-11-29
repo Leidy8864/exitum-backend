@@ -95,6 +95,11 @@ module.exports = {
             var event = await models.workshop.findByPk(event_id, {
                 include: [
                     {
+                        model: models.user,
+                        as: 'toWorkshopUsers',
+                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ],
+                    },
+                    {
                         model: models.category,
                         as: 'toWorkshopCategories'
                     }
