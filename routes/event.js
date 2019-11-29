@@ -16,6 +16,11 @@ router.get('/participating/:user_id',
     controller.participating
 );
 
+router.get('/show/:event_id',
+    controller.validate('list-by-user'),
+    controller.show
+);
+
 router.post('/take-part',
     controller.validate('take-part'),
     controller.takePart

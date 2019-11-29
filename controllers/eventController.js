@@ -72,10 +72,45 @@ module.exports = {
                 limit: perPage,
                 offset: (perPage * (page - 1))
             })
+            
+            // var event = events.reduce( (element, option) => {
+            //     if (!option.toWorkshopUsers.length) {
+            //         element.push()
+            //     }
+            // }, [])
 
-            return res.status(200).json({ status: true, message: 'OK', data: events})
+            return res.status(200).json({ status: true, message: 'OK', data: events })
 
         } catch (error) { returnError(res, error, error) }
+
+    },
+
+    show: async (req, res) => {
+
+        const { event_id } = req.params
+
+        try {
+            
+            var events = await models.workshop.findByPk(event_id, {
+                include: [
+                    {
+                        model: models.user,
+                        as: 'toWorkshopUsers',
+                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ],
+                    },
+                    {
+                        model: models.category,
+                        as: 'toWorkshopCategories'
+                    }
+                ],
+                attributes: [
+                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place',
+                ],
+            })
+            successful(res, 'OK', events)
+            
+        } catch (error) { returnError(res, error) }
 
     },
 
