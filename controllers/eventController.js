@@ -28,6 +28,8 @@ module.exports = {
                 return [ title, day, place, user_id, hour_start, description, categories, participants ]
             case 'list-by-user':
                 return [ user_id ]
+            case "event-id":
+                return [ event_id ]
             case 'list-by-user-id':
                 return [ user ]
             case 'take-part':

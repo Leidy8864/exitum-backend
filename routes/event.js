@@ -18,12 +18,12 @@ router.get('/participating/:user_id',
 );
 
 router.get('/show/:event_id',
-    controller.validate('list-by-user'),
+    controller.validate('event-id'),
     controller.show
 );
 
 router.get('/participating-event/:event_id',
-    controller.validate('list-by-user'),
+    controller.validate('event-id'),
     controller.participatingEvents
 );
 
