@@ -517,9 +517,10 @@ module.exports = {
                 ]
             })
 
+            const email_info = { to: challenge.ownerChallenge.email, subject: text.challengeValidation, template: 'template-challenge' }
+
             if (status == 'Con observaciones')
             {
-                const email_info = { to: challenge.ownerChallenge.email, subject: text.challengeValidation, template: 'template-challenge' }
                 const data_send = { 
                     reto: challenge.tip.tip, validador: challenge.verifyingChallenge.dataValues.fullname, comentario: challenge.comment, 
                     estado: text.incorrectState, mensaje_estado:text.messageIncorrectState, photo: 'verde.png', 
@@ -530,7 +531,6 @@ module.exports = {
 
             if (status == 'Verificado') 
             {
-                const email_info = { to: challenge.ownerChallenge.email, subject: text.challengeValidation, template: 'template-challenge' }
                 const data_send = { 
                     reto: challenge.tip.tip, estado: text.correctState, mensaje_estado: text.messageCorrectState, comentario: challenge.comment,
                     photo: 'verde.png', user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage 

@@ -301,7 +301,13 @@ module.exports = {
 
         try {
             
-            var event = await existById(models.workshop, event_id)
+            var event = await models.workshop.findByPk(event_id, {
+                attributes: [ 'id', 'title', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('day'), "%W %M %e %Y" ), 'day' ],  
+                [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'place' ]
+            })
+            if (!event) throw text.notFoundElement
+            
+            const user = await existById(models.user, user_id)
             var pivot_exists = await models.user_workshop.findOne({ where: { user_id: user_id, workshop_id: event_id } })
 
             if (pivot_exists) {
@@ -312,19 +318,32 @@ module.exports = {
             } else {
 
                 var event_user = await models.user_workshop.count({ where: { workshop_id: event_id } })
-
-                if (event_user.length > event.participants) 
+                const email_info = { to: user.email, subject: text.eventParticipation(event.title), template: 'template-event' }
+                
+                if (event_user > event.participants) 
                 {
-                    // sendEmail()
                     await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
+
+                    const data_send = { 
+                        fecha: event.dataValues.day, hora: event.dataValues.hour_start, 
+                        titulo: event.title, direccion: event.place, descripcion: event.description,
+                        mensaje: text.message_event(`${user.name} ${user.lastname}`, 'esta pendiente de aceptación.Te enviaremos un correo con la confirmación')
+                    }
+                    sendEmail(email_info, data_send)
                 }
                 else
                 {
-                    // sendEmail()
                     await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
+
+                    const data_send = { 
+                        fecha: event.dataValues.day, hora: event.dataValues.hour_start, 
+                        titulo: event.title, direccion: event.place, descripcion: event.description,
+                        mensaje: text.message_event(`${user.name} ${user.lastname}`, 'ha sido aceptada')
+                    }
+                    sendEmail(email_info, data_send)
                 }
                 
-                successful(res, text.add)
+                successful(res, text.add )
 
             }
 

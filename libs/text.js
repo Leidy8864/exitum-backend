@@ -42,5 +42,7 @@ module.exports = {
     messageRejection: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que lamentablemente ${receptor} no accedió ha tener una reunión el dia ${date} a la(s) ${time}.`,
     manProfileImage: `https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/man_profile.png`,
     succesful_validation: `Se validó satisfactoriamente el reto.`,
+    message_event: (usuario, status) => `Hola ${usuario}! Te informamos que tu solicitud de participacion en el siguiente evento, ${status}. Gracias por participar.`,
+    eventParticipation: (evento) => `Participación en el evento ${evento}`,
 
 }
