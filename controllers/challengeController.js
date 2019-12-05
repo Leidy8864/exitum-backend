@@ -416,6 +416,7 @@ module.exports = {
             limit: perPage,
             where: {
                 status: 'Respondido',
+                user_id: { [models.Sequelize.Op.notIn]: [user_id] }
             },
             attributes: ['id', 'date', 'reply', 'comment'],
             include: [
