@@ -15,7 +15,7 @@ module.exports = {
         const title = check('title').exists().withMessage(text.title('evento'))
         const place = check('place').exists().withMessage(text.place('evento'))
         const user_id = check('user_id').exists().withMessage(text.id('evento del usuario'))
-        const user = check('user').exists().withMessage(text.id('evento del usuario'))
+        const user_data = check('user').exists().withMessage(text.id('evento del usuario'))
         const event_id = check('event_id').exists().withMessage(text.id('evento'))
         const hour_end = check('hour_end').exists().withMessage(text.dateEnd)
         const hour_start=  check('hour_start').exists().withMessage(text.dateStart)
@@ -31,7 +31,7 @@ module.exports = {
             case "event-id":
                 return [ event_id ]
             case 'list-by-user-id':
-                return [ user ]
+                return [ user_data ]
             case 'take-part':
                 return [ event_id, user_id ]
             case 'update':
