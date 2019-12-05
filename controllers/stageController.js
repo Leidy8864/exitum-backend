@@ -28,7 +28,7 @@ module.exports = {
 
         try {
             var stage = await models.stage.findAll({})
-            return res.status(200).json({ status: true, message: "OK", data:  stage})
+            return res.status(200).json({ status: true, message: "OK", data:  [ stage[0] ] })
         } catch (err) {
             return res.status(500).json({ status: false, message: err.message, data: {} })
         }
