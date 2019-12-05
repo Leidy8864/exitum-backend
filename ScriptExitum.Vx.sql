@@ -462,6 +462,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
   INDEX `fk_startup_tip_stage1_idx` (`stage_id` ASC),
   INDEX `fk_challenge_employee1_idx` (`employee_id` ASC),
   INDEX `fk_challenge_user1_idx` (`user_id` ASC),
+  INDEX `fk_challenge_user2_idx` (`verifying_user` ASC),
   CONSTRAINT `fk_challenge_employee1`
     FOREIGN KEY (`employee_id`)
     REFERENCES `exitum`.`employee` (`id`)
@@ -490,6 +491,11 @@ CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
   CONSTRAINT `fk_tips_has_startup_tips1`
     FOREIGN KEY (`tip_id`)
     REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_challenge_user2`
+    FOREIGN KEY (`verifying_user`)
+    REFERENCES `exitum`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

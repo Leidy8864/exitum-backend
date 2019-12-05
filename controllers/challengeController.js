@@ -1,7 +1,10 @@
 const text = require('../libs/text')
 const s3 = require('../libs/aws-s3');
+const Sequelize = require('sequelize');
 const models = require('../models/index');
 const index = require('../config/index');
+const { sendEmail } = require('../libs/mail')
+const { existById } = require('../controllers/elementController');
 const { getObject, putObject, getDownloadUrl, deleteObject } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
@@ -39,6 +42,14 @@ module.exports = {
                     check('checked', message_exists).exists(),
                     check('tip_id', message_exists).exists(),
                     check('startup_id', message_exists).exists()
+                ]
+            case 'verifyChallenge':
+                return [
+                    check('challenge_id', message_exists).exists(),
+                    check('comment', message_exists).exists(),
+                    check('status').exists().withMessage(message_exists).isIn([ 'Con observaciones', 'Verificado' ])
+                    .withMessage(text.only('Con observaciones', 'Verificado')),
+                    check('verifying_use', message_exists).exists()
                 ]
             case 'deleteFile':
                 return [
@@ -469,27 +480,68 @@ module.exports = {
     },
 
     verifyChallenge: async (req, res) => {
-        const { challenge_id, comment, status } = req.body
-        var forUpdate = {}
-        //Sin respuesta, Respondido, Con observaciones, Verificado
-        if (status == 'Con observaciones') {
-            forUpdate = {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { challenge_id, comment, status, verifying_user } = req.body
+
+        try 
+        {
+    
+            var update_challenge = await existById(models.challenge, challenge_id)
+
+            await update_challenge.update({
                 comment: comment,
                 date: Date.now(),
-                status: 'Con observaciones',
+                status: status,
+                checked: (status == 'Verificado') ? 1 : 0,
+                verifying_user: verifying_user
+            })
+
+            const challenge = await models.challenge.findOne({ 
+                where: { id: challenge_id },
+                include: [
+                    {
+                        model: models.user,
+                        as: 'ownerChallenge',
+                        attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('ownerChallenge.name'), ' ', Sequelize.col('ownerChallenge.lastname')), 'fullname' ], 'email']
+                    },
+                    {
+                        model: models.user,
+                        as: 'verifyingChallenge',
+                        attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('verifyingChallenge.name'), ' ', Sequelize.col('verifyingChallenge.lastname')), 'fullname' ], 'email', 'photo' ]
+                    },
+                    {
+                        model: models.tip,
+                    }
+                ]
+            })
+
+            if (status == 'Con observaciones')
+            {
+                const email_info = { to: challenge.ownerChallenge.email, subject: text.challengeValidation, template: 'template-challenge' }
+                const data_send = { 
+                    reto: challenge.tip.tip, validador: challenge.verifyingChallenge.dataValues.fullname, comentario: challenge.comment, 
+                    estado: text.incorrectState, mensaje_estado:text.messageIncorrectState, photo: 'verde.png', 
+                    user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage 
+                }
+                sendEmail(email_info, data_send)
+            } 
+
+            if (status == 'Verificado') 
+            {
+                const email_info = { to: challenge.ownerChallenge.email, subject: text.challengeValidation, template: 'template-challenge' }
+                const data_send = { 
+                    reto: challenge.tip.tip, estado: text.correctState, mensaje_estado: text.messageCorrectState, comentario: challenge.comment,
+                    photo: 'verde.png', user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage 
+                }
+                sendEmail(email_info, data_send)
             }
-        } else if (status == 'Verificado') {
-            forUpdate = {
-                checked: 1,
-                date: Date.now(),
-                status: 'Verificado'
-            }
-        } else {
-            return res.json({ status: false, message: 'El campo status solo puede ser "Con observaciones" o "Verificado"' })
-        }
-        const challenge = await models.challenge.findOne({ where: { id: challenge_id } })
-        if (!challenge) { return res.json({ status: false, message: "Codigo del reto invalido" }) }
-        await challenge.update(forUpdate)
-        return res.json({ status: true, message: "Reto verificado" })
+    
+            successful(res, text.succesful_validation)
+
+        } catch (error) { returnError(res, error) }
+
     }
 }

@@ -31,9 +31,17 @@ var adviceRouter = require('./routes/advices');
 
 var app = express();
 
+var hbs = exphbs.create({
+  extname: '.hbs',
+  defaultLayout: 'main',
+  partialsDir: path.join(__dirname, 'views/partials'),
+  layoutsDir: path.join(__dirname, 'views/layouts')
+});
+
 // view engine setup
+app.engine('.hbs', hbs.engine);
+app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'handlebars');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -66,6 +74,11 @@ app.use('/appointments', appointmentRouter);
 app.use('/universities', universityRouter);
 app.use('/events', eventRouter);
 app.use('/advices', adviceRouter);
+
+app.get("/test", (req, res) => {
+  console.log("mario")
+  return res.render('template-appointment')
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

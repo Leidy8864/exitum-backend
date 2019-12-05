@@ -4935,6 +4935,80 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/events/participating/:user_id",
+    "title": "GET list participating",
+    "name": "Listar_eventos_en_los_que_participar__el_usuario",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID del usuario.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Request parameter",
+        "content": "http://35.175.241.103:8081/events/participating/1",
+        "type": "json"
+      }
+    ],
+    "group": "EVENTS",
+    "version": "1.0.0",
+    "description": "<p>Listar eventos en los que participará el usuario.</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Datos retornados",
+          "content": "HTTP/1.1 200 OK\n{\n      \"status\": true,\n      \"message\": \"OK\",\n      \"data\": [\n          {\n              \"id\": 1,\n              \"title\": \"Nuevo evento\",\n              \"day\": \"2017-11-11\",\n              \"hour_start\": \"12:00 PM\",\n              \"hour_end\": \"03:00 PM\",\n              \"place\": \"Lima\",\n              \"user_workshop\": {\n                  \"user_id\": 1,\n                  \"workshop_id\": 1,\n                  \"status\": null,\n                  \"rate\": null\n              }\n          },\n          {\n              \"id\": 6,\n              \"title\": \"Nuevo evento 2\",\n              \"day\": \"2017-11-11\",\n              \"hour_start\": \"12:00 PM\",\n              \"hour_end\": \"03:00 PM\",\n              \"place\": \"Lima\",\n              \"user_workshop\": {\n                  \"user_id\": 1,\n                  \"workshop_id\": 6,\n                  \"status\": \"ACCEPTED\",\n                  \"rate\": null\n              }\n          }\n          ...\n      ]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error retornado": [
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Estado negativo de la petición.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Boolean",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje retornado.</p>"
+          },
+          {
+            "group": "Error retornado",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Contenido retornado</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 4xx Error\n{\n    \"status\" : false,\n    \"message\": \"(...)\",\n    \"data\":  { }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "util/documentation.js",
+    "groupTitle": "EVENTS"
+  },
+  {
+    "type": "GET",
     "url": "/events/list-by-user/:user_id",
     "title": "GET list by user events",
     "name": "Listar_eventos_por_usuario",
