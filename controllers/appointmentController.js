@@ -2,11 +2,18 @@ const text = require('../libs/text');
 var moment = require('moment');
 const Sequelize = require('sequelize');
 const models = require('../models/index');
+const { sendEmail } = require('../libs/mail')
 const { arrayUnavailable } = require('./scheduleController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
 const { timesFormat, validateDateActual, validateTimeActual, validateRangeTime } = require('../controllers/hourController')
+
+async function getAppointment(appointment_id) {
+	return await models.appointment.findByPk(appointment_id, {
+		attributes: [ 'title', 'to_user_id', 'from_user_id',  [ Sequelize.fn( 'Date_format', Sequelize.col('date'), "%W %M %e %Y" ), 'date' ],  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ], 'description' ]
+	})
+}
 
 async function findAppointment(to_user_id, date, time) {
 
@@ -93,8 +100,6 @@ module.exports = {
 			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
 			const appointment = await models.appointment.findAll({
-				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ],
-					'type', 'type', 'description', 'status' ],
 				where: {
 					[Sequelize.Op.and] : [ 
 						{ to_user_id: user.id }, { type: 'recordatorio' }, 
@@ -132,8 +137,7 @@ module.exports = {
 			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
 			const appointment = await models.appointment.findAll({
-				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ],
-					'type', 'type', 'description', 'status' ],
+				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ], 'type', 'description', 'status' ],
 				where: {
 					[ Sequelize.Op.and ] : [ 
 						{ type: 'reunion' }, 
@@ -172,7 +176,8 @@ module.exports = {
 
 		try {
 
-			const user = await existById(models.user, to_user_id, 'id', 'from_hour', 'to_hour')
+			const user = await existById(models.user, to_user_id)
+			const user_emit = await existById(models.user, from_user_id)
 			var timeF = timesFormat(time)
 
 			validateRangeTime(user.from_hour, user.to_hour, timeF[3])
@@ -197,7 +202,20 @@ module.exports = {
 				}
 			});
 
-            if (!created) throw (text.duplicateElement);
+			if (!created) throw (text.duplicateElement);
+
+			//Enviar email
+			if (response.type == 'reunion')
+			{
+				const appointment = await getAppointment(response.id)
+				const email_info = { to: user.email, subject: text.reunion, template: 'template-appointment', cc: user_emit.email }
+				const data_send = { 
+					fecha: appointment.date, hora: appointment.time, 
+					emisor: user_emit.name + ' ' + user_emit.lastname, receptor: user.name + '  ' + user.lastname, 
+					telefono: user_emit.phone, descripcion: appointment.description 
+				}
+				sendEmail(email_info, data_send)
+			}
 
             successful(res, text.successCreate('reserva'));
             
@@ -312,12 +330,38 @@ module.exports = {
 
 		try {
 			
-			var appointment = await existById(models.appointment, appointment_id)
+			var appointment = await models.appointment.findByPk(appointment_id, {
+				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ], 'type', 'description', 'status' ],
+				include: [
+					{ 
+						model: models.user, as: 'toAppointmentUser',
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname')), 'fullname' ], 'email' ]
+					},
+					{
+						model: models.user, as: 'fromAppointmentUser',
+						attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname')), 'fullname' ], 'email' ]
+					}
+				]
+			})
 			
-			if (status)
+			if (status) 
+			{	
 				await appointment.update({ status: true })
+
+				//Send E-mail
+				const email_info = { to: appointment.fromAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response', cc: appointment.toAppointmentUser.email }
+				const data_send = { message: text.messageConfirmation(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
+				sendEmail(email_info, data_send)
+			}
 			else
+			{
 				await appointment.destroy()
+
+				//Send E-mail
+				const email_info = { to: appointment.fromAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response', cc: appointment.toAppointmentUser.email }
+				const data_send = { message: text.messageRejection(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
+				sendEmail(email_info, data_send)
+			}
 
 			successful(res)
 
@@ -332,7 +376,8 @@ module.exports = {
 
 		const { to_user_id } = req.params
 		
-		try {
+		try 
+		{
 			const user = await existById(models.user, to_user_id, 'id')
 			var date = moment().subtract(24, 'hours');
 			var minute = date.minutes();

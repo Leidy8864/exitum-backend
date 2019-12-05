@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/eventController');
 
 router.get('/list-all',
+    controller.validate('list-by-user-id'),
     controller.listAll
 )
 

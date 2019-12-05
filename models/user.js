@@ -129,7 +129,12 @@ module.exports = (sequelize, DataType) => {
 			foreignKey: 'user_id'
 		});
 		user.hasMany(models.challenge, {
-			foreignKey: 'user_id'
+			foreignKey: 'user_id',
+			as: 'ownerUserChallenge'
+		});
+		user.hasMany(models.challenge, {
+			foreignKey: 'verifying_user',
+            as: 'verifyingUserChallenge'
 		});
 		user.hasMany(models.certification, {
 			foreignKey: 'user_id'
