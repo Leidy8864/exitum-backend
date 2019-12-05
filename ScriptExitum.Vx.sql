@@ -157,7 +157,6 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup` (
   `stage_id` INT(11) NOT NULL,
   `category_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   INDEX `fk_startup_emprendedor1_idx` (`entrepreneur_id` ASC),
   INDEX `fk_startup_stage1_idx` (`stage_id` ASC),
   INDEX `fk_startup_category1_idx` (`category_id` ASC),

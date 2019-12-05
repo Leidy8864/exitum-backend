@@ -655,6 +655,8 @@ module.exports = {
                             res.status(200).json({ status: false, message: "Error al crear impulsor" });
                         }
                     }
+                } else {
+                    return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
                 }
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
