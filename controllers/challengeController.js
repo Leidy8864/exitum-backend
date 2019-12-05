@@ -360,6 +360,7 @@ module.exports = {
             include: [
                 {
                     model: models.user,
+                    as: 'ownerChallenge',
                     attributes: ['id', 'name', 'lastname', 'photo']
                     // include: [
                     //     { model: models.employee}
@@ -422,6 +423,7 @@ module.exports = {
             include: [
                 {
                     model: models.user,
+                    as: 'ownerChallenge',
                     attributes: ['id','name', 'lastname', 'photo']
                 },
                 {
