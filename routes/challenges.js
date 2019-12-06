@@ -65,6 +65,7 @@ router.get('/toVerify',
 );
 
 router.post('/verify', 
+    controller.validate('verifyChallenge'),
     controller.verifyChallenge
 );
 module.exports = router;

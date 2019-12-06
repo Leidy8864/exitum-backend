@@ -45,6 +45,13 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id'
             }
         },
+        verifying_user: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'user',
+                key: 'id'
+            }
+        },
         checked: DataTypes.BOOLEAN,
         status: DataTypes.STRING,
         date: DataTypes.DATE,
@@ -60,7 +67,12 @@ module.exports = (sequelize, DataTypes) => {
     })
     challenge.associate = function (models) {
         challenge.belongsTo(models.user, {
-            foreignKey: 'user_id'
+            foreignKey: 'user_id',
+            as: 'ownerChallenge'
+        });
+        challenge.belongsTo(models.user, {
+            foreignKey: 'verifying_user',
+            as: 'verifyingChallenge'
         });
         challenge.belongsTo(models.employee, {
             foreignKey: 'employee_id'

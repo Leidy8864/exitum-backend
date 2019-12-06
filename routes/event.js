@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/eventController');
 
 router.get('/list-all',
+    controller.validate('list-by-user-id'),
     controller.listAll
 )
 
@@ -17,12 +18,12 @@ router.get('/participating/:user_id',
 );
 
 router.get('/show/:event_id',
-    controller.validate('list-by-user'),
+    controller.validate('event-id'),
     controller.show
 );
 
 router.get('/participating-event/:event_id',
-    controller.validate('list-by-user'),
+    controller.validate('event-id'),
     controller.participatingEvents
 );
 

@@ -15,17 +15,23 @@ module.exports = {
         const title = check('title').exists().withMessage(text.title('evento'))
         const place = check('place').exists().withMessage(text.place('evento'))
         const user_id = check('user_id').exists().withMessage(text.id('evento del usuario'))
+        const user_data = check('user').exists().withMessage(text.id('evento del usuario'))
         const event_id = check('event_id').exists().withMessage(text.id('evento'))
         const hour_end = check('hour_end').exists().withMessage(text.dateEnd)
         const hour_start=  check('hour_start').exists().withMessage(text.dateStart)
         const description = check('description').exists().withMessage(text.description)
         const categories = check('categories').exists().withMessage(text.category('evento'))
+        const participants = check('participants').exists().withMessage(text.participants)
 
         switch (method) {
             case 'create':
-                return [ title, day, place, user_id, hour_start, description, categories ]
+                return [ title, day, place, user_id, hour_start, description, categories, participants ]
             case 'list-by-user':
                 return [ user_id ]
+            case "event-id":
+                return [ event_id ]
+            case 'list-by-user-id':
+                return [ user_data ]
             case 'take-part':
                 return [ event_id, user_id ]
             case 'update':
@@ -38,9 +44,12 @@ module.exports = {
 
     listAll: async (req, res) => {
 
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
         let perPage = 20;
         let page = req.query.page || 1;
-        let user = req.query.user
+        const { user } = req.query
 
         try {
 
@@ -88,6 +97,9 @@ module.exports = {
 
     show: async (req, res) => {
 
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
         const { event_id } = req.params
 
         try {
@@ -115,6 +127,9 @@ module.exports = {
     },
 
     participatingEvents: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
         
         const { event_id } = req.params
         const perPage = 12;
@@ -193,7 +208,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories } = req.body
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants } = req.body
 
         try {
 
@@ -209,7 +224,7 @@ module.exports = {
                 lat: lat,
                 lng: lng,
                 user_id: user.id,
-                participants: 50
+                participants:participants
             })
 
             var categories_id = await Promise.all(categories.map(async element => {
@@ -218,8 +233,6 @@ module.exports = {
             }))
 
             await event.addToWorkshopCategories(categories_id)
-
-            // sendEmail()
 
             successful(res, text.successCreate('evento'))
             
@@ -232,7 +245,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const {event_id,  title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants_max } = req.body
+        const { event_id,  title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants } = req.body
 
         try {
 
@@ -259,7 +272,7 @@ module.exports = {
                 place: place || event.place,
                 lat: lat || event.lat,
                 lng: lng || event.lng,
-                participants: participants_max || event.participants
+                participants: participants || event.participants
             })
 
             if ( categories && categories.length > 0) {
@@ -290,7 +303,13 @@ module.exports = {
 
         try {
             
-            var event = await existById(models.workshop, event_id)
+            var event = await models.workshop.findByPk(event_id, {
+                attributes: [ 'id', 'title', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('day'), "%W %M %e %Y" ), 'day' ],  
+                [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'place' ]
+            })
+            if (!event) throw text.notFoundElement
+            
+            const user = await existById(models.user, user_id)
             var pivot_exists = await models.user_workshop.findOne({ where: { user_id: user_id, workshop_id: event_id } })
 
             if (pivot_exists) {
@@ -301,13 +320,32 @@ module.exports = {
             } else {
 
                 var event_user = await models.user_workshop.count({ where: { workshop_id: event_id } })
-
-                if (event_user.length > event.participants) 
+                const email_info = { to: user.email, subject: text.eventParticipation(event.title), template: 'template-event' }
+                
+                if (event_user > event.participants) 
+                {
                     await event.addToWorkshopUser(user_id, { through: { status: 'PENDING' } })
-                else 
+
+                    const data_send = { 
+                        fecha: event.dataValues.day, hora: event.dataValues.hour_start, 
+                        titulo: event.title, direccion: event.place, descripcion: event.description,
+                        mensaje: text.message_event(`${user.name} ${user.lastname}`, 'esta pendiente de aceptación.Te enviaremos un correo con la confirmación')
+                    }
+                    sendEmail(email_info, data_send)
+                }
+                else
+                {
                     await event.addToWorkshopUser(user_id, { through: { status: 'ACCEPTED' } })
 
-                successful(res, text.add)
+                    const data_send = { 
+                        fecha: event.dataValues.day, hora: event.dataValues.hour_start, 
+                        titulo: event.title, direccion: event.place, descripcion: event.description,
+                        mensaje: text.message_event(`${user.name} ${user.lastname}`, 'ha sido aceptada')
+                    }
+                    sendEmail(email_info, data_send)
+                }
+                
+                successful(res, text.add )
 
             }
 
