@@ -155,7 +155,7 @@ module.exports = {
                                     name: req.body.name + ' ' + req.body.lastname,
                                     text: 'En Exitum estamos felices de tener tu confianza',
                                     description: 'Por favor verifica tu cuenta dándole click al botón.',
-                                    url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
+                                    url: 'http:\/\/' + 'exitum.pe' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
                             }
