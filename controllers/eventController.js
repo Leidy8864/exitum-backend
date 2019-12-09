@@ -224,7 +224,7 @@ module.exports = {
                 lat: lat,
                 lng: lng,
                 user_id: user.id,
-                participants:participants
+                participants:(participants) ? participants : 50
             })
 
             var categories_id = await Promise.all(categories.map(async element => {

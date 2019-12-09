@@ -874,33 +874,49 @@ CREATE TABLE IF NOT EXISTS `exitum`.`employee_type` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+
 -- -----------------------------------------------------
 -- Table `exitum`.`occupation`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`occupation` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(190) NOT NULL,
   PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 
 -- -----------------------------------------------------
 -- Table `exitum`.`experience`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`experience` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `position` VARCHAR(145) NULL DEFAULT NULL,
   `date_start` DATETIME NULL DEFAULT NULL,
   `date_end` DATETIME NULL DEFAULT NULL,
   `description` TEXT NULL DEFAULT NULL,
   `current_job` TINYINT(4) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
   `company_id` INT(11) NOT NULL,
+  `category_id` INT(11) NOT NULL,
+  `occupation_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_experience_user1_idx` (`user_id` ASC),
   INDEX `fk_experience_company1_idx` (`company_id` ASC),
+  INDEX `fk_experience_category_idx` (`category_id` ASC),
+  INDEX `fk_experience_occupation1_idx` (`occupation_id` ASC),
+  CONSTRAINT `fk_experience_category`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `exitum`.`category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_experience_company1`
     FOREIGN KEY (`company_id`)
     REFERENCES `exitum`.`company` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_experience_occupation1`
+    FOREIGN KEY (`occupation_id`)
+    REFERENCES `exitum`.`occupation` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_experience_user1`
