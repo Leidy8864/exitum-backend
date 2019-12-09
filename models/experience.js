@@ -3,7 +3,13 @@
 module.exports = (sequelize, DataTypes) => {
     const experience = sequelize.define('experience', {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        position: DataTypes.STRING,
+        occupation_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'occupation',
+                key: 'id'
+            }
+        },
         company_id: {
             type: DataTypes.INTEGER,
             references: {
@@ -18,7 +24,14 @@ module.exports = (sequelize, DataTypes) => {
         user_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'employee',
+                model: 'user',
+                key: 'id'
+            }
+        },
+        category_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'category',
                 key: 'id'
             }
         },
@@ -35,6 +48,12 @@ module.exports = (sequelize, DataTypes) => {
         });
         experience.belongsTo(models.company, {
             foreignKey: 'company_id'
+        });
+        experience.belongsTo(models.category, {
+            foreignKey: 'category_id'
+        });
+        experience.belongsTo(models.occupation, {
+            foreignKey: 'occupation_id'
         });
     }
     return experience

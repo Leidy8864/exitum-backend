@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'category_id',
             otherKey: 'workshop_id'
         });
+        category.hasMany(models.experience, {
+            foreignKey: 'category_id'
+        });
         // category.hasMany(models.startup, {
         //     foreignKey: 'category_id'
         // });
