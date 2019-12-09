@@ -47,8 +47,8 @@ module.exports = {
                 return [
                     check('challenge_id', message_exists).exists(),
                     check('comment', message_exists).exists(),
-                    check('status').exists().withMessage(message_exists).isIn([ 'Con observaciones', 'Verificado' ])
-                    .withMessage(text.only('Con observaciones', 'Verificado')),
+                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado'])
+                        .withMessage(text.only('Con observaciones', 'Verificado')),
                     check('verifying_use', message_exists).exists()
                 ]
             case 'deleteFile':
@@ -92,6 +92,8 @@ module.exports = {
         if (req.files) {
             var photo = req.files.photo;
             fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+        } else {
+            return res.json({ status: false, message: "Es necesario subir un icono." })
         }
         await models.step.create({
             icon: fileName,
@@ -109,14 +111,107 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
         const { tip, step_id } = req.body
-        models.tip.create({
-            tip: tip,
-            step_id: step_id
-        }).then(tip => {
-            return res.status(200).json({ status: true, message: "Reto creado correctamente", data: tip });
-        }).catch(err => {
-            return res.json({ status: false, message: err });
-        });
+        try {
+            const stepFind = await models.step.findOne({
+                where: { id: step_id },
+                attributes: ['id'],
+                include: [{
+                    model: models.stage,
+                    attributes: ['id', 'type']
+                }]
+            }).catch(err => {
+                console.log(err)
+            })
+            const typeUser = stepFind.stage.type
+            const result = await models.sequelize.transaction(async (t) => {
+                const tipNew = await models.tip.create({
+                    tip: tip,
+                    step_id: step_id
+                }, { transaction: t })
+
+                if (typeUser == "startup") {
+                    const startups = await models.startup.findAll({
+                        attributes: ['id'],
+                        include: [
+                            { model: models.entrepreneur }
+                        ]
+                    })
+                    var chlls = []
+                    var stp_step = []
+                    for (var i = 0; i < startups.length; i++) {
+                        chlls.push({
+                            user_id: startups[i].entrepreneur.user_id,
+                            startup_id: startups[i].id,
+                            stage_id: stepFind.stage.id,
+                            step_id: stepFind.id,
+                            tip_id: tipNew.id,
+                            checked: false,
+                            status: "Sin respuesta",
+                            date: Date.now()
+                        })
+                        const startup_step = await models.startup_step.findOne({
+                            where: {
+                                startup_id: startups[i].id,
+                                step_id: stepFind.id
+                            }
+                        })
+                        if (!startup_step) {
+                            stp_step.push({
+                                startup_id: startups[i].id,
+                                step_id: stepFind.id,
+                                tip_completed: 0,
+                                icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                state: 'incompleto'
+                            })
+                        }
+                    }
+                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                    await models.startup_step.bulkCreate(stp_step, { transaction: t });
+                } else if (typeUser == "employee") {
+                    const employees = await models.employee.findAll({
+                        attributes: ['id', 'user_id'],
+                    })
+                    var chlls = []
+                    var emp_step = []
+                    for (var i = 0; i < employees.length; i++) {
+                        chlls.push({
+                            user_id: employees[i].user_id,
+                            employee_id: employees[i].id,
+                            stage_id: stepFind.stage.id,
+                            step_id: stepFind.id,
+                            tip_id: tipNew.id,
+                            checked: false,
+                            status: "Sin respuesta",
+                            date: Date.now()
+                        })
+                        const employee_step = await models.employee_step.findOne({
+                            where: {
+                                employee_id: employees[i].id,
+                                step_id: stepFind.id
+                            }
+                        })
+                        if (!employee_step) {
+                            emp_step.push({
+                                employee_id: employees[i].id,
+                                step_id: stepFind.id,
+                                tip_completed: 0,
+                                icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                state: 'incompleto'
+                            })
+                        }
+                    }
+                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                    await models.employee_step.bulkCreate(emp_step, { transaction: t });
+                } else {
+                    return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
+                }
+                return tipNew
+            })
+            return res.status(200).json({ status: true, message: "Reto creado correctamente", data: result });
+        } catch (err) {
+            console.log(err);
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." });
+        }
     },
 
     createChallenge: async (req, res) => {
@@ -424,7 +519,7 @@ module.exports = {
                 {
                     model: models.user,
                     as: 'ownerChallenge',
-                    attributes: ['id','name', 'lastname', 'photo']
+                    attributes: ['id', 'name', 'lastname', 'photo']
                 },
                 {
                     model: models.tip,
@@ -488,9 +583,8 @@ module.exports = {
 
         const { challenge_id, comment, status, verifying_user } = req.body
 
-        try 
-        {
-    
+        try {
+
             var update_challenge = await existById(models.challenge, challenge_id)
 
             await update_challenge.update({
@@ -501,18 +595,18 @@ module.exports = {
                 verifying_user: verifying_user
             })
 
-            const challenge = await models.challenge.findOne({ 
+            const challenge = await models.challenge.findOne({
                 where: { id: challenge_id },
                 include: [
                     {
                         model: models.user,
                         as: 'ownerChallenge',
-                        attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('ownerChallenge.name'), ' ', Sequelize.col('ownerChallenge.lastname')), 'fullname' ], 'email']
+                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('ownerChallenge.name'), ' ', Sequelize.col('ownerChallenge.lastname')), 'fullname'], 'email']
                     },
                     {
                         model: models.user,
                         as: 'verifyingChallenge',
-                        attributes: [ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('verifyingChallenge.name'), ' ', Sequelize.col('verifyingChallenge.lastname')), 'fullname' ], 'email', 'photo' ]
+                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('verifyingChallenge.name'), ' ', Sequelize.col('verifyingChallenge.lastname')), 'fullname'], 'email', 'photo']
                     },
                     {
                         model: models.tip,
@@ -522,25 +616,23 @@ module.exports = {
 
             const email_info = { to: challenge.ownerChallenge.email, subject: text.challengeValidation, template: 'template-challenge' }
 
-            if (status == 'Con observaciones')
-            {
-                const data_send = { 
-                    reto: challenge.tip.tip, validador: challenge.verifyingChallenge.dataValues.fullname, comentario: challenge.comment, 
-                    estado: text.incorrectState, mensaje_estado:text.messageIncorrectState, photo: 'verde.png', 
-                    user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage 
-                }
-                sendEmail(email_info, data_send)
-            } 
-
-            if (status == 'Verificado') 
-            {
-                const data_send = { 
-                    reto: challenge.tip.tip, estado: text.correctState, mensaje_estado: text.messageCorrectState, comentario: challenge.comment,
-                    photo: 'verde.png', user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage 
+            if (status == 'Con observaciones') {
+                const data_send = {
+                    reto: challenge.tip.tip, validador: challenge.verifyingChallenge.dataValues.fullname, comentario: challenge.comment,
+                    estado: text.incorrectState, mensaje_estado: text.messageIncorrectState, photo: 'verde.png',
+                    user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage
                 }
                 sendEmail(email_info, data_send)
             }
-    
+
+            if (status == 'Verificado') {
+                const data_send = {
+                    reto: challenge.tip.tip, estado: text.correctState, mensaje_estado: text.messageCorrectState, comentario: challenge.comment,
+                    photo: 'verde.png', user_photo: (challenge.verifyingChallenge.photo) ? challenge.verifyingChallenge.photo : text.manProfileImage
+                }
+                sendEmail(email_info, data_send)
+            }
+
             successful(res, text.succesful_validation)
 
         } catch (error) { returnError(res, error) }
