@@ -1566,6 +1566,18 @@ INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (10,'PHP');
 INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (11,'Android');
 INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (12,'Java');
 
+INSERT INTO `stage` (`id`, `stage`, `description`, `type`) 
+VALUES (1, 'Pre semilla', "Etapa donde solo se tiene una idea superficial y se busca validarla.", 'startup'), 
+(2, 'Semilla', "Etapa donde se pone en marcha el desarrollar nuestra idea aplicando metodologías para crear un modelo de negocio sustentable.", 'startup'), 
+(3, 'Temprana', "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.", 'startup'), 
+(4, 'Crecimiento', "Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.", 'startup'), 
+(5, 'Expansión', "Etapa donde se busca alcanzar nuevos horizontes en otros mercados.", 'startup'), 
+
+(6, 'Etapa 1 empleado', "Etapa 1 empleado.", 'employee'),
+(7, 'Etapa 2 empleado', "Etapa 2 empleado.", 'employee'),
+(8, 'Etapa 3 empleado', "Etapa 3 empleado.", 'employee'),
+(9, 'Etapa 4 empleado', "Etapa 4 empleado.", 'employee');
+
 INSERT INTO `startup` (`id`, `name`, `photo_url`, `ruc`, `description`, `avg_rating`, `entrepreneur_id`, `stage_id`, `category_id`)
 VALUES (NULL, 'Startup', NULL, '12345678', NULL, NULL, '1', '1', '1'), (NULL, 'Startup2', NULL, '12345698', NULL, NULL, '2', '2', '2'),
 (NULL, 'Startup3', NULL, '98765432', NULL, NULL, '1', '2', '2'), (NULL, 'Startup4', NULL, '56974563', NULL, NULL, '1', '1', '2');
