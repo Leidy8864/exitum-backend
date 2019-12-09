@@ -27,6 +27,7 @@ var appointmentRouter = require('./routes/appointment');
 var universityRouter = require('./routes/university');
 var eventRouter = require('./routes/event');
 var adviceRouter = require('./routes/advices');
+var occupationRouter = require('./routes/occupation');
 //const controller = require('./controllers/userController');
 
 var app = express();
@@ -74,6 +75,8 @@ app.use('/appointments', appointmentRouter);
 app.use('/universities', universityRouter);
 app.use('/events', eventRouter);
 app.use('/advices', adviceRouter);
+app.use('/occupations', adviceRouter);
+app.use('/occupations', occupationRouter);
 
 app.get("/test", (req, res) => {
   console.log("mario")
