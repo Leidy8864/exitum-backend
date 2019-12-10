@@ -39,12 +39,17 @@ module.exports = {
 
         try 
         {
-            await models.administrador.create({
-                name: name,
-                email: email,
-                password: bcrypt.hashSync(password),
-                status: (status) ? status : 1 
+            const [ admin, created ] = await models.administrador.findOrCreate({
+                where: { email: email },
+                defaults: {
+                    name: name,
+                    email: email,
+                    password: bcrypt.hashSync(password),
+                    status: (status) ? status : 1
+                }
             });
+            
+            if (!created) throw text.duplicateEmail 
 
             successful(res, text.successCreate('administrador'))
             
