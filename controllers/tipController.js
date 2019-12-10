@@ -9,11 +9,23 @@ module.exports = {
 
     all:  async(req, res) => {
 
+        const perPage = 20;
+        let page = req.query.page || 1;
+
         try 
         {
-            const tip = await models.tip.findAll({});
-            successful(res, 'OK', tip)
-            
+            const number_tips = await models.tip.count()
+
+            const tip = await models.tip.findAll({
+                offset: (perPage * (page - 1)),
+                limit: perPage,
+                include: [
+                    { model: models.step }
+                ]
+            });
+
+            return res.status(200).json({ status: true, message: 'OK', data: tip, current: page, pages: Math.ceil(number_tips / perPage) })
+
         } catch (error)  {  returnError(res, error) } 
 
     },
