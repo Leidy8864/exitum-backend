@@ -48,5 +48,6 @@ module.exports = {
     password: (text) => `Es necesario una contraseña para el ${text}.`,
     failLogin:  `Credenciales incorrectas.`,
     duplicateEmail: `El correo electrónico ya se encuentra registrado.`,
+    tip: `Es necesario el nombre del tip`,
 
 }

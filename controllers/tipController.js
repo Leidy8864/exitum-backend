@@ -7,6 +7,24 @@ const { successful, returnError } = require('../controllers/responseController')
 
 module.exports = {
 
+    validate: (method) => {
+
+        const tip = check('day').exists().withMessage(text.tip)
+        const tip_id = check('day').exists().withMessage(text.id('tip'))
+        const description = check('title').exists().withMessage(text.description)
+        const step_id = check('place').exists().withMessage(text.id('step'))
+
+        switch (method) {
+            case 'create':
+                return [ tip, description, step_id ]
+            case 'update':
+                return [ tip_id ]
+            case 'delete':
+                return [ tip_id ]
+        }
+
+    },
+
     all:  async(req, res) => {
 
         const perPage = 20;
@@ -30,18 +48,64 @@ module.exports = {
 
     },
 
-    create: async(req, res) => {
+    create: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { name } = req.body
+        const { tip, description, step_id } = req.body
 
-        try {
+        try 
+        {
+            await models.tip.create({
+                tip: tip,
+                description: description,
+                step_id: step_id
+            })
 
-            await createArea(name)
-            successful(res, text.successCreate('area'))
+            successful(res, text.successCreate('tip'))
             
+        } catch(error) { returnError(res, error) }
+
+    },
+
+    update: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { tip_id, tip, description, step_id } = req.body
+
+        try 
+        {
+            var tip_data = await existById(models.tip, tip_id)
+
+            tip_data.update({
+                tip: tip,
+                description: description,
+                step_id: step_id
+            })
+
+            successful(res, text.successUpdate('tip'))
+
+        } catch(error) { returnError(res, error) }
+
+    },
+
+    delete: async (req, res) => {
+
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+
+        const { tip_id } = req.body
+
+        try 
+        {
+            var tip_data = await existById(models.tip, tip_id)
+            await tip_data.destroy()
+
+            successful(res, text.successDelete('tip'))
+
         } catch(error) { returnError(res, error) }
 
     }

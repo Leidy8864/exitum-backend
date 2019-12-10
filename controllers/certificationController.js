@@ -7,7 +7,7 @@ const { putObject, getObject } = require('../libs/aws-s3');
 const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
-const  { successful, returnError } = require('./responseController')
+const { successful, returnError } = require('./responseController')
 const { createCertificationName } = require('./certificationNameController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/certifications';
 

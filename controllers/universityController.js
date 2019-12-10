@@ -27,8 +27,8 @@ module.exports = {
 
         const { name } = req.body
 
-        try {
-            
+        try 
+        {    
             var university = await createUniversity(name)
 
             if (req.files) {

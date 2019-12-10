@@ -39,7 +39,7 @@ module.exports = {
 
         try 
         {
-            const [ admin, created ] = await models.administrador.findOrCreate({
+            const [ administrador, created ] = await models.administrador.findOrCreate({
                 where: { email: email },
                 defaults: {
                     name: name,
@@ -49,9 +49,11 @@ module.exports = {
                 }
             });
             
-            if (!created) throw text.duplicateEmail 
+            if (!created) throw text.duplicateEmail
 
-            successful(res, text.successCreate('administrador'))
+            const admin = generateAccessAdmin(administrador)
+
+            successful(res, text.successCreate('administrador'), admin)
             
         } catch (error)  {  returnError(res, error) } 
 

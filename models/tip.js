@@ -13,13 +13,12 @@ module.exports = (sequelize, DataType) => {
             }
         },
     },
-        {
-            freezeTableName: true,
-            timestamps: false,
-            omitNull: true,
-            underscored: true
-
-        });
+    {
+        freezeTableName: true,
+        timestamps: false,
+        omitNull: true,
+        underscored: true
+    });
     tip.associate = (models) => {
         tip.hasMany(models.challenge, {
             foreignKey: 'tip_id'
