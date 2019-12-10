@@ -1,7 +1,7 @@
 const text = require('../libs/text');
 const index = require('../config/index');
 const models = require('../models/index');
-const { putObject, getObject } = require('../libs/aws-s3');
+const { putObject } = require('../libs/aws-s3');
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
@@ -67,7 +67,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { step, icon, step_id } = req.body
+        const { step, step_id } = req.body
 
         try 
         {
