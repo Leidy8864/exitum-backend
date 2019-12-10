@@ -8,6 +8,7 @@ const { createCompany } = require('./companyController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const  { successful, returnError } = require('./responseController')
+const { createCertificationName } = require('./certificationNameController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/certifications';
 
 module.exports = {
@@ -39,25 +40,24 @@ module.exports = {
 
         const { user_id } = req.params
 
-        try {
-
+        try 
+        {
            const user = await existById(models.user, user_id)
 
            var elements = await user.getCertifications({
-               attributes: [ 'id', 'name', 'company_id', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
+               attributes: [ 'id', 'company_id', [ Sequelize.fn( 'Date_format', Sequelize.col('date_expedition'), '%Y-%m-%d' ), 'date_expedition' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.col('date_expiration'), '%Y-%m-%d' ), 'date_expiration' ], 'document_url'
                                 ],
                 include: [
-                    {
-                        model: models.company
-                    }
+                    { model: models.company },
+                    { model: models.certification_name },
                 ]
-            } )
+            })
 
-            const valor = await Promise.all(elements.map(async element => {
+            const certifications = await Promise.all(elements.map(async element => {
                 return {
                     id: element.id,
-                    name: element.name,
+                    name: element.certification_name.name,
                     company_id: element.company_id,
                     date_expedition : element.date_expedition,
                     date_expiration : element.date_expiration,
@@ -66,7 +66,7 @@ module.exports = {
                }
             } ))
 
-            successful(res, 'OK', valor)
+            successful(res, 'OK', certifications)
 
         } catch (error) { returnError(res, error) }
 
@@ -79,30 +79,32 @@ module.exports = {
 
         const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
-        try {
-
+        try 
+        {
            const user = await existById(models.user, user_id)
            var fileName = null
 
-           if (req.files) {
+           if (req.files) 
+           {
                 const { document } = req.files
                 fileName = putObject(NEW_BUCKET_NAME, document);
            }
 
            const company = await createCompany(issuing_company)
+           const certification_name = await createCertificationName(name)
 
            var [ certification, created ] = await  models.certification.findOrCreate({
                 where: {
                     [ Sequelize.Op.and ] : [
                         { user_id: user.id },
-                        { name: name },
-                        {  company_id: company.id },
+                        { certification_name_id: certification_name.id },
+                        { company_id: company.id },
                         { date_expedition: new Date(date_expedition) }
                     ]
                 },
                 defaults: {
                     user_id: user.id,
-                    name: name,
+                    certification_name_id: certification_name.id,
                     company_id: company.id,
                     date_expedition: new Date(date_expedition),
                     date_expiration: new Date(date_expiration),
@@ -112,16 +114,7 @@ module.exports = {
 
             if (!created) throw(text.duplicateElement)
 
-            const data = {
-                id: certification.id,
-                name: certification.name,
-                company_id: company.id,
-                date_expedition : certification.date_expedition,
-                date_expiration : certification.date_expiration,
-                url : (certification.document_url  && certification.document_url != '') ? text.downloadDocument(certification.document_url): null,
-            } 
-
-            successful(res, text.successCreate('certificado'), data)
+            successful(res, text.successCreate('certificado'))
             
         } catch (error) { returnError(res, error) }
 
@@ -156,8 +149,8 @@ module.exports = {
 
         const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
-        try {
-
+        try 
+        {
             const certification = await models.certification.findOne({
                 where: {
                     [ Sequelize.Op.and ] : [
@@ -166,16 +159,15 @@ module.exports = {
                     ]
                 },
                 include: [
-                    {
-                        model: models.company,
-                        attributes: ['name']
-                    }
+                    { model: models.company, attributes: ['name'] },
+                    { model: models.certification_name, attributes: ['name'] },
                 ]
             })
 
             if (!certification) throw(text.notFoundElement)
 
             const company = await createCompany(issuing_company || certification.company.name)
+            const certification_name = await createCertificationName(name || certification.certification_name.name)
 
             var fileName = certification.document_url
            
@@ -190,24 +182,14 @@ module.exports = {
 
             await certification.update({
                 user_id: user_id,
-                name: name,
+                certification_name_id: certification_name.id,
                 company_id: company.id,
                 date_expedition: new Date(date_expedition),
                 date_expiration: new Date(date_expiration),
                 document_url: fileName
             })
 
-            const data = {
-                id: certification.id,
-                name: certification.name,
-                company_id: certification.company_id,
-                date_expedition : certification.date_expedition,
-                date_expiration : certification.date_expiration,
-                url : (certification.document_url  && certification.document_url != '') ? text.downloadDocument(certification.document_url) : null,
-                issuing_company: certification.company.name
-            } 
-
-            successful(res, text.successUpdate('certificado'), data)
+            successful(res, text.successUpdate('certificado'))
 
         } catch (error) { returnError(res, error) }
 
@@ -218,8 +200,8 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        try {
-
+        try 
+        {
             const { user_id, certification_id } = req.body
 
             var certification = await models.certification.findOne({

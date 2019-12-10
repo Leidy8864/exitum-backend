@@ -402,6 +402,15 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`certification_name`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`certification_name` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
 -- Table `exitum`.`certification`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`certification` (

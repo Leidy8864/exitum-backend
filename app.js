@@ -28,6 +28,7 @@ var universityRouter = require('./routes/university');
 var eventRouter = require('./routes/event');
 var adviceRouter = require('./routes/advices');
 var occupationRouter = require('./routes/occupation');
+var certificationNameRouter = require('./routes/certificationName');
 //const controller = require('./controllers/userController');
 
 var app = express();
@@ -77,6 +78,7 @@ app.use('/events', eventRouter);
 app.use('/advices', adviceRouter);
 app.use('/occupations', adviceRouter);
 app.use('/occupations', occupationRouter);
+app.use('/certification-name', certificationNameRouter);
 
 app.get("/test", (req, res) => {
   console.log("mario")
