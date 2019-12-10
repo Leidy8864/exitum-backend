@@ -1,4 +1,6 @@
 const text = require('../libs/text');
+const { generateAccessAdmin } = require('../libs/helper');
+const bcrypt = require('bcryptjs');
 const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { check, validationResult } = require('express-validator');
@@ -19,12 +21,15 @@ module.exports = {
 
     validate: (review) => {
 
-        const name = check('name').exists().withMessage(text.name('area'))
-        const id_area = check('id_area').exists().withMessage(text.id('area'))
+        const name = check('name').exists().withMessage(text.name('administrador'))
+        const email = check('email').exists().withMessage(text.email('administrador'))
+        const password = check('password').exists().withMessage(text.password('administrador'))
 
         switch (review) {
             case 'sign-up':
                 return [ name, email, password ]
+            case 'sign-in':
+                return [ email, password ]
         }
     },
 
@@ -37,7 +42,7 @@ module.exports = {
             await models.administrador.create({
                 name: name,
                 email: email,
-                password: password,
+                password: bcrypt.hashSync(password),
                 status: (status) ? status : 1 
             });
 
@@ -52,12 +57,18 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
 
-        const { name } = req.body
+        const { email, password } = req.body
 
         try {
+            const administrador = await models.administrador.findOne({ where: { email: email } })
+            if(!administrador) throw (text.failLogin)
 
-            await createArea(name)
-            successful(res, text.successCreate('area'))
+            const statusPass = bcrypt.compareSync(password, administrador.password)
+            if(!statusPass) throw (text.failLogin)
+
+            const admin = generateAccessAdmin(administrador)
+
+            successful(res, 'OK', admin)
             
         } catch(error) { returnError(res, error) }
 

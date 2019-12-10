@@ -3,6 +3,23 @@ const SECRET_KEY = 'secretkeyExitum2019';
 const uuid = require('node-uuid');
 
 module.exports = {
+
+    generateAccessAdmin: function (admin) {
+
+        const accessToken = jwt.sign({ id: admin.id },
+            SECRET_KEY, {
+            // expiresIn : expiresIn
+        });
+
+        return  {
+            id: admin.id,
+            name: admin.name,
+            email: admin.email,
+            accessToken: accessToken
+            // expiresIn : expiresIn
+        }
+    },
+    
     generateAccessData: function (user, res) {
         // const expiresIn = 24*60*60;
 
