@@ -2,6 +2,7 @@ const models = require('../models/index');
 const Sequelize = require('sequelize');
 const { existById } = require('../controllers/elementController');
 const { check, validationResult } = require('express-validator');
+const { successful, returnError } = require('../controllers/responseController');
 
 
 module.exports = {
@@ -24,14 +25,23 @@ module.exports = {
         }
     },
 
-    all: async (req, res) => {
+    list: async (req, res) => {
 
         try {
             var stage = await models.stage.findAll({})
             return res.status(200).json({ status: true, message: "OK", data:  [ stage[0] ] })
-        } catch (err) {
-            return res.status(500).json({ status: false, message: err.message, data: {} })
-        }
+
+        } catch (err) { returnError(res, error) }
+
+    },
+    all: async (req, res) => {
+
+        try 
+        {
+            const stage = await models.stage.findAll({})
+            successful(res, 'OK', stage)
+
+        } catch (err) { returnError(res, error) }
 
     },
 

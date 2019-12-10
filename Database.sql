@@ -1569,6 +1569,20 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
+-- -----------------------------------------------------
+-- Table `exitum`.`administrador`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`administrador` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `status` TINYINT(1) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

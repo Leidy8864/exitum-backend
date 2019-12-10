@@ -3,6 +3,10 @@ const router = express.Router();
 const controller = require('../controllers/stageController');
 
 router.get('/list',
+    controller.list
+);
+
+router.get('/all',
     controller.all
 );
 
