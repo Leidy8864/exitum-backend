@@ -9,8 +9,8 @@ module.exports = {
 
     validate: (method) => {
 
-        const tip = check('day').exists().withMessage(text.tip)
-        const tip_id = check('day').exists().withMessage(text.id('tip'))
+        const tip = check('tip').exists().withMessage(text.tip)
+        const tip_id = check('tip_id').exists().withMessage(text.id('tip'))
         const description = check('title').exists().withMessage(text.description)
         const step_id = check('place').exists().withMessage(text.id('step'))
 

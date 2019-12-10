@@ -11,8 +11,8 @@ module.exports = {
 
     validate: (method) => {
 
-        const step = check('day').exists().withMessage(text.tip)
-        const step_id = check('day').exists().withMessage(text.id('tip'))
+        const step = check('step').exists().withMessage(text.tip)
+        const step_id = check('step_id').exists().withMessage(text.id('tip'))
 
         switch (method) {
             case 'create':
