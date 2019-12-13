@@ -39,7 +39,7 @@ module.exports = {
 
         try 
         {
-            const [ administrador, created ] = await models.administrador.findOrCreate({
+            const [ admin, created ] = await models.administrador.findOrCreate({
                 where: { email: email },
                 defaults: {
                     name: name,
@@ -51,9 +51,11 @@ module.exports = {
             
             if (!created) throw text.duplicateEmail
 
-            var token = createToken(user)
+            const token = createToken(user)
 
-            return res.status(200).json({ status: true, message: 'OK', data: administrador, token: token  })
+            const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
+
+            successful(res, 'Ok', response)
             
         } catch (error)  {  returnError(res, error) } 
 
@@ -73,9 +75,11 @@ module.exports = {
             const statusPass = bcrypt.compareSync(password, admin.password)
             if(!statusPass) throw (text.failLogin)
 
-            const token = createToken(admin)
+            const token = createToken(user)
 
-            return res.status(200).json({ status: true, message: 'OK', data: admin, token: token  })
+            const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
+
+            successful(res, 'Ok', response)
             
         } catch(error) { returnError(res, error) }
 
@@ -85,10 +89,15 @@ module.exports = {
 
     },
 
-    me: (req, res) => {
+    me: async (req, res) => {
         try 
         {
-            return res.status(200).json({ status: true, data: req.user })
+            const admin = await models.administrador.findOne({
+                attributes: [ 'id', 'name', 'email' ],
+                where: { id: req.user }
+            })
+
+            successful(res, 'OK', admin)
 
         } catch (error) {
             return res.status(500).json({error: error})
