@@ -193,9 +193,9 @@ module.exports = {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
                     console.log(req.client.clientId)
-                    var token = createToken(user)
-                    // helper.generateAccessData(user, res);
-                    return res.status(200).json({ status: true, message: 'OK', data: token  })
+                    // var token = createToken(user)
+                    helper.generateAccessData(user, res);
+                    // return res.status(200).json({ status: true, message: 'OK', data: token  })
 
                 } else {
                     res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });

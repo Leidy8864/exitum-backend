@@ -113,7 +113,7 @@ module.exports = {
                 },
                 include: [ 
                     { model: models.university, attributes: ['university'] },
-                    { model: models.occupation, attributes: ['name'] },
+                    { model: models.career, attributes: ['name'] },
                 ],
             });
 

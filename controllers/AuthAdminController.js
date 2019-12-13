@@ -1,5 +1,5 @@
 const text = require('../libs/text');
-const { generateAccessAdmin } = require('../libs/helper');
+const { createToken } = require('../service/service')
 const bcrypt = require('bcryptjs');
 const Sequelize = require('sequelize');
 const models = require('../models/index');
@@ -51,9 +51,9 @@ module.exports = {
             
             if (!created) throw text.duplicateEmail
 
-            const admin = generateAccessAdmin(administrador)
+            var token = createToken(user)
 
-            successful(res, text.successCreate('administrador'), admin)
+            return res.status(200).json({ status: true, message: 'OK', data: administrador, token: token  })
             
         } catch (error)  {  returnError(res, error) } 
 
@@ -83,6 +83,16 @@ module.exports = {
 
     updateAdmin: async (req, res) => {
 
+    },
+
+    me: (req, res) => {
+        try 
+        {
+            return res.status(200).json({ status: true, data: req.admin })
+
+        } catch (error) {
+            return res.status(500).json({error: error})
+        }
     },
 
 }
