@@ -697,6 +697,17 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`career`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`career` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `exitum`.`education`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`education` (
@@ -706,9 +717,11 @@ CREATE TABLE IF NOT EXISTS `exitum`.`education` (
   `date_end` DATETIME NULL DEFAULT NULL,
   `university_id` INT(11) NOT NULL,
   `user_id` INT(11) NOT NULL,
+  `career_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_educations_universities1_idx` (`university_id` ASC),
-  INDEX `fk_education_user1_idx` (`user_id` ASC),
+  INDEX `fk_educations_universities1_idx` (`university_id` ASC) VISIBLE,
+  INDEX `fk_education_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_education_career1_idx` (`career_id` ASC) VISIBLE,
   CONSTRAINT `fk_education_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -717,6 +730,11 @@ CREATE TABLE IF NOT EXISTS `exitum`.`education` (
   CONSTRAINT `fk_educations_universities1`
     FOREIGN KEY (`university_id`)
     REFERENCES `exitum`.`university` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_education_career1`
+    FOREIGN KEY (`career_id`)
+    REFERENCES `exitum`.`career` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

@@ -31,6 +31,7 @@ var occupationRouter = require('./routes/occupation');
 var certificationNameRouter = require('./routes/certificationName');
 var stepRouter = require('./routes/step');
 var tipRouter = require('./routes/tip');
+var careerRouter = require('./routes/career');
 var authAdminRouter = require('./routes/authAdmin');
 //const controller = require('./controllers/userController');
 
@@ -84,6 +85,7 @@ app.use('/occupations', occupationRouter);
 app.use('/certification-name', certificationNameRouter);
 app.use('/steps', stepRouter);
 app.use('/tips', tipRouter);
+app.use('/careers', careerRouter);
 app.use('/admin', authAdminRouter);
 
 app.get("/test", (req, res) => {

@@ -4,7 +4,7 @@ const models = require('../models/index');
 const { existById } = require('./elementController')
 const { createUniversity } = require('./universityController')
 const { check, validationResult } = require('express-validator');
-const { createOccupation } = require('./occupationController');
+const { createCareer } = require('./careerController');
 const  { successful, returnError } = require('./responseController')
 
 module.exports = {
@@ -43,14 +43,14 @@ module.exports = {
             const user = await existById(models.user, user_id)
 
             var education = await user.getEducation({
-                attributes: [ 'id', [ Sequelize.fn('max', Sequelize.col('occupation.name') ), 'description' ],
+                attributes: [ 'id', [ Sequelize.fn('max', Sequelize.col('career.name') ), 'description' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ] ],
                 include: [ 
                     { model: models.university },
-                    { model: models.occupation },
+                    { model: models.career },
                 ],
-                group: [ 'id', 'occupation.name' ]
+                group: [ 'id', 'career.name' ]
             })
 
             successful(res, 'Ok', education)
@@ -70,17 +70,17 @@ module.exports = {
             
             const user = await existById(models.user, user_id);
             const university = await createUniversity(university_name)
-            const occupation = await createOccupation(description)
+            const career = await createCareer(description)
 
             var [ education, created ] = await models.education.findOrCreate({
                     where: { [Sequelize.Op.and]: [
                         { user_id: user.id },
                         { university_id: university.id },
-                        { occupation_id: occupation.id }
+                        { career_id: career.id }
                     ]},
                     defaults: {
                         user_id: user.id,
-                        occupation_id: occupation.id,
+                        career_id: career.id,
                         date_start: date_start,
                         date_end: date_end,
                         university_id: university.id
@@ -120,10 +120,10 @@ module.exports = {
             if (!education) throw(text.notFoundElement)
 
             const university = await createUniversity(university_name || education.university.university)
-            const occupation = await createOccupation(description || education.occupation.name)
+            const career = await createCareer(description || education.career.name)
 
             await education.update({
-                occupation_id: occupation.id,
+                career_id: career.id,
                 date_start: date_start,
                 date_end: date_end,
                 university_id: university.id
