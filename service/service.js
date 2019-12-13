@@ -14,7 +14,7 @@ function createToken (user)
         // issuer:  i,
         // subject:  s,
         // audience:  a,
-        expiresIn:  "5m",
+        expiresIn:  "24h",
         algorithm:  "RS256"
     };
 
@@ -29,7 +29,7 @@ function verifyToken(token)
         // issuer:  i,
         // subject:  s,
         // audience:  a,
-        expiresIn:  "5m",
+        expiresIn:  "24h",
         algorithm:  "RS256"
     };
 

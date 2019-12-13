@@ -49,7 +49,7 @@ module.exports = {
     failLogin:  `Credenciales incorrectas.`,
     duplicateEmail: `El correo electrónico ya se encuentra registrado.`,
     tip: `Es necesario el nombre del tip`,
-    tokenNotProvided: `Es necesario contar un token.`,
+    tokenNotProvided: `Lo sentimos no cuenta con los permisos necesarios.`,
     failedTokenVerification: `Token no válido.`,
     failedTokenExpiration: `Token expirado.`,
 
