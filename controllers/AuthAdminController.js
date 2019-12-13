@@ -67,15 +67,15 @@ module.exports = {
         const { email, password } = req.body
 
         try {
-            const administrador = await models.administrador.findOne({ where: { email: email } })
-            if(!administrador) throw (text.failLogin)
+            const admin = await models.administrador.findOne({ where: { email: email } })
+            if(!admin) throw (text.failLogin)
 
             const statusPass = bcrypt.compareSync(password, administrador.password)
             if(!statusPass) throw (text.failLogin)
 
-            const admin = createToken(administrador)
+            const token = createToken(admin)
 
-            return res.status(200).json({ status: true, message: 'OK', data: administrador, token: token  })
+            return res.status(200).json({ status: true, message: 'OK', data: admin, token: token  })
             
         } catch(error) { returnError(res, error) }
 
