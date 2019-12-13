@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const helper = require('../libs/helper');
+const auth = require('../middleware/authorizationAuth')
 const controller = require('../controllers/userController');
 const controllerReview = require('../controllers/userReviewController');
 var passportConf = require('../libs/passport');
@@ -97,5 +98,10 @@ router.get('/all-user/:user_id',
 // router.get('/all-user', helper.verifyToken,
 //   controller.allUser
 // )
+
+router.get('/me',
+  auth,
+  controller.me
+)
 
 module.exports = router;

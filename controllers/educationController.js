@@ -49,7 +49,8 @@ module.exports = {
                 include: [ 
                     { model: models.university },
                     { model: models.occupation },
-                ]
+                ],
+                group: [ 'id', 'occupation.name' ]
             })
 
             successful(res, 'Ok', education)

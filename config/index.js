@@ -19,5 +19,6 @@ module.exports = {
     },
     culqiSecretKey : 'sk_test_U50Km7hR7dfSfBzA',
     emailExitum: 'exitum.test@gmail.com',
-    passwordExitum: 'exitum123@'
+    passwordExitum: 'exitum123@',
+    tokenSecret: 'exitum@@Secret1998'
 }

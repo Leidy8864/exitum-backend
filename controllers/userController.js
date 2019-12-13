@@ -11,6 +11,7 @@ const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
 const path = require('path');
+const { createToken, verifyToken } = require('../service/service')
 const s3 = require('../libs/aws-s3');
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('../controllers/responseController');
@@ -193,7 +194,11 @@ module.exports = {
             } else {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
+                    console.log(req.client.clientId)
                     helper.generateAccessData(user, res);
+                    // var token = createToken(user)
+                    // return res.status(200).json({ status: true, message: 'OK', data: token  })
+
                 } else {
                     res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
                 }
@@ -202,6 +207,17 @@ module.exports = {
             console.log('Algo esta fallando: ' + error);
             res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
         });
+    },
+
+    me: (req, res) => {
+        try 
+        {
+
+            return res.status(200).json({ status: true, data: req.user })
+
+        } catch (error) {
+            return res.status(500).json({error: error})
+        }
     },
 
     //Función encargada de realizar el registro de usuario o login de usuario con proveedores
