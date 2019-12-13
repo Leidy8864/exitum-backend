@@ -73,9 +73,9 @@ module.exports = {
             const statusPass = bcrypt.compareSync(password, administrador.password)
             if(!statusPass) throw (text.failLogin)
 
-            const admin = generateAccessAdmin(administrador)
+            const admin = createToken(administrador)
 
-            successful(res, 'OK', admin)
+            return res.status(200).json({ status: true, message: 'OK', data: administrador, token: token  })
             
         } catch(error) { returnError(res, error) }
 
