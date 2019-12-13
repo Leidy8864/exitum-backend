@@ -1,4 +1,5 @@
 const text = require('../libs/text');
+const fs = require ('fs'); 
 const helper = require('../libs/helper');
 const models = require('../models/index');
 const { highlight } = require('./skillController')
@@ -212,8 +213,8 @@ module.exports = {
     me: (req, res) => {
         try 
         {
-
-            return res.status(200).json({ status: true, data: req.user })
+            const publicKEY  = fs.readFileSync(__dirname + './../key/publicKeyTest.key', 'utf8');
+            return res.status(200).json({ status: true, data: publicKEY })
 
         } catch (error) {
             return res.status(500).json({error: error})

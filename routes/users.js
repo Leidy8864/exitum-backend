@@ -99,9 +99,9 @@ router.get('/all-user/:user_id',
 //   controller.allUser
 // )
 
-// router.get('/me',
-//   auth,
-//   controller.me
-// )
+router.get('/me',
+  // auth,
+  controller.me
+)
 
 module.exports = router;
