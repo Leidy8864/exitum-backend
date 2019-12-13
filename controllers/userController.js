@@ -1,18 +1,14 @@
 const text = require('../libs/text');
-const fs = require ('fs'); 
 const helper = require('../libs/helper');
 const models = require('../models/index');
 const { highlight } = require('./skillController')
 const Sequelize = require('sequelize')
-const config = require('../config/index');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
-const path = require('path');
-const { createToken, verifyToken } = require('../service/service')
 const s3 = require('../libs/aws-s3');
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('../controllers/responseController');
@@ -213,8 +209,8 @@ module.exports = {
     me: (req, res) => {
         try 
         {
-            const publicKEY  = fs.readFileSync(__dirname + './../key/publicKeyTest.key', 'utf8');
-            return res.status(200).json({ status: true, data: publicKEY })
+            
+            return res.status(200).json({ status: true, data: req.user })
 
         } catch (error) {
             return res.status(500).json({error: error})
