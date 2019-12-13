@@ -6,6 +6,7 @@ const Sequelize = require('sequelize')
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { createToken } = require('../service/service')
 const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
@@ -192,9 +193,9 @@ module.exports = {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
                     console.log(req.client.clientId)
-                    helper.generateAccessData(user, res);
-                    // var token = createToken(user)
-                    // return res.status(200).json({ status: true, message: 'OK', data: token  })
+                    var token = createToken(user)
+                    // helper.generateAccessData(user, res);
+                    return res.status(200).json({ status: true, message: 'OK', data: token  })
 
                 } else {
                     res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
