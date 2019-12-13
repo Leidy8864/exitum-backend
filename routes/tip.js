@@ -1,18 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/stageController');
+const controller = require('../controllers/tipController');
 
 router.get('/list',
-    controller.list
-);
-
-router.get('/all',
     controller.all
-);
-
-router.get('/show/:type',
-    controller.validate('show'),
-    controller.show
 );
 
 router.post('/create',
@@ -20,9 +11,14 @@ router.post('/create',
     controller.create
 );
 
-router.post('/update/:id_stage',
+router.post('/update',
     controller.validate('update'),
     controller.update
+);
+
+router.post('/delete',
+    controller.validate('delete'),
+    controller.delete
 );
 
 module.exports = router;

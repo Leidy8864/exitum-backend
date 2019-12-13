@@ -4,6 +4,7 @@ const models = require('../models/index');
 const { existById } = require('./elementController')
 const { createUniversity } = require('./universityController')
 const { check, validationResult } = require('express-validator');
+const { createOccupation } = require('./occupationController');
 const  { successful, returnError } = require('./responseController')
 
 module.exports = {
@@ -42,9 +43,13 @@ module.exports = {
             const user = await existById(models.user, user_id)
 
             var education = await user.getEducation({
-                attributes: [ 'id', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
+                attributes: [ 'id', [ Sequelize.fn('max', Sequelize.col('occupation.name') ), 'description' ],
+                                    [ Sequelize.fn( 'Date_format', Sequelize.col('date_start'), '%Y-%m-%d' ), 'date_start' ],
                                     [ Sequelize.fn( 'Date_format', Sequelize.col('date_end'), '%Y-%m-%d' ), 'date_end' ] ],
-                include: [ { model: models.university } ]
+                include: [ 
+                    { model: models.university },
+                    { model: models.occupation },
+                ]
             })
 
             successful(res, 'Ok', education)
@@ -63,8 +68,8 @@ module.exports = {
         try {
             
             const user = await existById(models.user, user_id);
-
             const university = await createUniversity(university_name)
+            const occupation = await createOccupation(description)
 
             var [education, created] = await models.education.findOrCreate({
                     where: { [Sequelize.Op.and]: [
@@ -73,7 +78,7 @@ module.exports = {
                     ]},
                     defaults: {
                         user_id: user.id,
-                        description: description,
+                        occupation_id: occupation.id,
                         date_start: date_start,
                         date_end: date_end,
                         university_id: university.id
@@ -104,24 +109,25 @@ module.exports = {
                         { user_id: user_id}
                     ]
                 },
-                include: [ { 
-                    model: models.university,
-                    attributes: ['university']
-                } ],
+                include: [ 
+                    { model: models.university, attributes: ['university'] },
+                    { model: models.occupation, attributes: ['name'] },
+                ],
             });
 
             if (!education) throw(text.notFoundElement)
 
-            var university = await createUniversity(university_name || education.university.university)
+            const university = await createUniversity(university_name || education.university.university)
+            const occupation = await createOccupation(description || education.occupation.name)
 
             await education.update({
-                description: description,
+                occupation_id: occupation.id,
                 date_start: date_start,
                 date_end: date_end,
                 university_id: university.id
             });
 
-            successful(res, text.successUpdate('educación'), education)
+            successful(res, text.successUpdate('educación'))
 
         } catch (error) { returnError(res, error) }
         

@@ -43,6 +43,11 @@ module.exports = {
     manProfileImage: `https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/man_profile.png`,
     succesful_validation: `Se validó satisfactoriamente el reto.`,
     message_event: (usuario, status) => `Hola ${usuario}! Te informamos que tu solicitud de participacion en el siguiente evento, ${status}. Gracias por participar.`,
-    eventParticipation: (evento) => `Participación en el evento ${evento}`,
+    eventParticipation: (evento) => `Participación en el evento ${evento}.`,
+    email: (text) => `Es necesario un correo electronico para el ${text}.`,
+    password: (text) => `Es necesario una contraseña para el ${text}.`,
+    failLogin:  `Credenciales incorrectas.`,
+    duplicateEmail: `El correo electrónico ya se encuentra registrado.`,
+    tip: `Es necesario el nombre del tip`,
 
 }

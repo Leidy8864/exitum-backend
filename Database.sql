@@ -402,6 +402,15 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `exitum`.`certification_name`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`certification_name` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
 -- Table `exitum`.`certification`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
@@ -1558,6 +1567,20 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user_workshop` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`administrador`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`administrador` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `status` TINYINT(1) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
