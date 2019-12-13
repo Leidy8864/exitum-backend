@@ -72,10 +72,11 @@ module.exports = {
             const university = await createUniversity(university_name)
             const occupation = await createOccupation(description)
 
-            var [education, created] = await models.education.findOrCreate({
+            var [ education, created ] = await models.education.findOrCreate({
                     where: { [Sequelize.Op.and]: [
                         { user_id: user.id },
-                        { university_id: university.id }
+                        { university_id: university.id },
+                        { occupation_id: occupation.id }
                     ]},
                     defaults: {
                         user_id: user.id,
