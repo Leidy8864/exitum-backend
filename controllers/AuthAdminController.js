@@ -51,7 +51,7 @@ module.exports = {
             
             if (!created) throw text.duplicateEmail
 
-            const token = createToken(user)
+            const token = createToken(admin)
 
             const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
 
@@ -75,7 +75,7 @@ module.exports = {
             const statusPass = bcrypt.compareSync(password, admin.password)
             if(!statusPass) throw (text.failLogin)
 
-            const token = createToken(user)
+            const token = createToken(admin)
 
             const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
 
