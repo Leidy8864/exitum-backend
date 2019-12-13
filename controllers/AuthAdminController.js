@@ -70,7 +70,7 @@ module.exports = {
             const admin = await models.administrador.findOne({ where: { email: email } })
             if(!admin) throw (text.failLogin)
 
-            const statusPass = bcrypt.compareSync(password, administrador.password)
+            const statusPass = bcrypt.compareSync(password, admin.password)
             if(!statusPass) throw (text.failLogin)
 
             const token = createToken(admin)
