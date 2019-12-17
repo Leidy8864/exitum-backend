@@ -223,7 +223,8 @@ module.exports = {
         // console.log("SOCIAL ", req);
         var user = null;
         try {
-            user = req.user
+            user = req.body.user
+            req.user ? user = req.user : '';
             if (user) {
                 const existingUser = await models.user.findOne({ where: { email: user.email, provider_id: user.id } });
                 if (existingUser) {
@@ -234,20 +235,20 @@ module.exports = {
 
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
                         const newUser = await models.user.create({
-                            name: user.name,
+                            name: user.firstname,
                             lastname: user.lastname,
-                            method: req.body.method,
                             provider_id: user.id,
                             confirmed: true,
                             active: true,
                             email: user.email,
                             role: 'undefined',
-                            photo: user.image,
+                            photo: user.photo,
                             from_hour: '7:00:00',
                             to_hour: '22:00:00',
                             country_id: 1,
                             currency_id: 1,
-                            avg_rating: 1
+                            avg_rating: 1,
+                            method : user.provider
                         }, { transaction: t });
 
                         await models.token.create({
@@ -265,7 +266,7 @@ module.exports = {
                 return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
-            console.log("Error", error);
+            console.log("Error");
 
             var message = '';
             if (error.name === 'SequelizeUniqueConstraintError') {

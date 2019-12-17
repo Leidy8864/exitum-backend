@@ -23,12 +23,20 @@ router.post('/createTip',
     controller.createTip
 );
 
-router.post('/create',
+router.post('/createChallenge',
     controller.createChallenge
 );
 
 router.get('/listStage/:startup_id',
     controller.listStageStartup
+);
+
+router.get('/listStages',
+    controller.listStages
+);
+
+router.get('/listSteps',
+    controller.listSteps
 );
 
 router.get('/listStep',
@@ -68,4 +76,9 @@ router.post('/verify',
     controller.validate('verifyChallenge'),
     controller.verifyChallenge
 );
+
+router.post('/uploadExcel', function (req, res) {
+    controller.uploadExcel(req, res);
+});
+
 module.exports = router;

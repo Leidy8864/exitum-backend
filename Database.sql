@@ -1654,15 +1654,6 @@ VALUES (1, 'Pre semilla', "Etapa donde solo se tiene una idea superficial y se b
 (8, 'Etapa 3 empleado', "Etapa 3 empleado.", 'employee'),
 (9, 'Etapa 4 empleado', "Etapa 4 empleado.", 'employee');
 
-INSERT INTO `startup` (`id`, `name`, `photo_url`, `ruc`, `description`, `avg_rating`, `entrepreneur_id`, `stage_id`, `category_id`)
-VALUES (NULL, 'Startup', NULL, '12345678', NULL, NULL, '1', '1', '1'), (NULL, 'Startup2', NULL, '12345698', NULL, NULL, '2', '2', '2'),
-(NULL, 'Startup3', NULL, '98765432', NULL, NULL, '1', '2', '2'), (NULL, 'Startup4', NULL, '56974563', NULL, NULL, '1', '1', '2');
-
-INSERT INTO `area` (`id`, `name`) VALUES (NULL, 'Área 1'), (NULL, 'Área 2'), (NULL, 'Área 3'), (NULL, 'Área 4');
-
-INSERT INTO `language` (`id`, `language`) VALUES ('1', 'ingles');
-INSERT INTO `language` (`id`, `language`) VALUES ('2', 'espanol');
-INSERT INTO `language` (`id`, `language`) VALUES ('3', 'portugues');
 
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('1', 'Nivel 1 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('2', 'Nivel 2 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
@@ -1698,6 +1689,7 @@ INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('27', 'Nivel 3 Eta
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('28', 'Nivel 4 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('29', 'Nivel 5 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('30', 'Nivel 6 Etapa 5 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '5');
+
 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('1', 'Reto 1 Nivel 1 Etapa 1 startup', '1');
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('2', 'Reto 2 Nivel 1 Etapa 1 startup', '1');
@@ -1925,97 +1917,97 @@ INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('143', 'Reto 3 Nivel 4 Etapa 
 INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('144', 'Reto 4 Nivel 4 Etapa 1 employee', '36');
 
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('81', 'Reto 1 Nivel 1 Etapa 2 employee', '37');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('82', 'Reto 2 Nivel 1 Etapa 2 employee', '37');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('83', 'Reto 3 Nivel 1 Etapa 2 employee', '37');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('84', 'Reto 4 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('145', 'Reto 1 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('146', 'Reto 2 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('147', 'Reto 3 Nivel 1 Etapa 2 employee', '37');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('148', 'Reto 4 Nivel 1 Etapa 2 employee', '37');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('85', 'Reto 1 Nivel 2 Etapa 2 employee', '38');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('86', 'Reto 2 Nivel 2 Etapa 2 employee', '38');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('87', 'Reto 3 Nivel 2 Etapa 2 employee', '38');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('88', 'Reto 4 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('149', 'Reto 1 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('150', 'Reto 2 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('151', 'Reto 3 Nivel 2 Etapa 2 employee', '38');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('152', 'Reto 4 Nivel 2 Etapa 2 employee', '38');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('89', 'Reto 1 Nivel 3 Etapa 2 employee', '39');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('90', 'Reto 2 Nivel 3 Etapa 2 employee', '39');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('91', 'Reto 3 Nivel 3 Etapa 2 employee', '39');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('92', 'Reto 4 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('153', 'Reto 1 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('154', 'Reto 2 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('155', 'Reto 3 Nivel 3 Etapa 2 employee', '39');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('156', 'Reto 4 Nivel 3 Etapa 2 employee', '39');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('93', 'Reto 1 Nivel 4 Etapa 2 employee', '40');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('94', 'Reto 2 Nivel 4 Etapa 2 employee', '40');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('95', 'Reto 3 Nivel 4 Etapa 2 employee', '40');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('96', 'Reto 4 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('157', 'Reto 1 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('158', 'Reto 2 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('159', 'Reto 3 Nivel 4 Etapa 2 employee', '40');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('160', 'Reto 4 Nivel 4 Etapa 2 employee', '40');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '97', 'Reto 1 Nivel 5 Etapa 2 employee', '41');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '98', 'Reto 2 Nivel 5 Etapa 2 employee', '41');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ( '99', 'Reto 3 Nivel 5 Etapa 2 employee', '41');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('100', 'Reto 4 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('161', 'Reto 1 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('162', 'Reto 2 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('163', 'Reto 3 Nivel 5 Etapa 2 employee', '41');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('164', 'Reto 4 Nivel 5 Etapa 2 employee', '41');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('101', 'Reto 1 Nivel 6 Etapa 2 employee', '42');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('102', 'Reto 2 Nivel 6 Etapa 2 employee', '42');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('103', 'Reto 3 Nivel 6 Etapa 2 employee', '42');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('104', 'Reto 4 Nivel 6 Etapa 2 employee', '42');
-
-
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('105', 'Reto 1 Nivel 1 Etapa 3 employee', '43');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('106', 'Reto 2 Nivel 1 Etapa 3 employee', '43');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('107', 'Reto 3 Nivel 1 Etapa 3 employee', '43');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('108', 'Reto 4 Nivel 1 Etapa 3 employee', '43');
-
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('101', 'Reto 1 Nivel 2 Etapa 3 employee', '44');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('102', 'Reto 2 Nivel 2 Etapa 3 employee', '44');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('103', 'Reto 3 Nivel 2 Etapa 3 employee', '44');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('104', 'Reto 4 Nivel 2 Etapa 3 employee', '44');
-
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('105', 'Reto 1 Nivel 3 Etapa 3 employee', '45');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('106', 'Reto 2 Nivel 3 Etapa 3 employee', '45');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('107', 'Reto 3 Nivel 3 Etapa 3 employee', '45');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('108', 'Reto 4 Nivel 3 Etapa 3 employee', '45');
-
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('109', 'Reto 1 Nivel 4 Etapa 3 employee', '46');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('110', 'Reto 2 Nivel 4 Etapa 3 employee', '46');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('111', 'Reto 3 Nivel 4 Etapa 3 employee', '46');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('112', 'Reto 4 Nivel 4 Etapa 3 employee', '46');
-
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('113', 'Reto 1 Nivel 5 Etapa 3 employee', '47');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('114', 'Reto 2 Nivel 5 Etapa 3 employee', '47');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('115', 'Reto 3 Nivel 5 Etapa 3 employee', '47');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('116', 'Reto 4 Nivel 5 Etapa 3 employee', '47');
-
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('117', 'Reto 1 Nivel 6 Etapa 3 employee', '48');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('118', 'Reto 2 Nivel 6 Etapa 3 employee', '48');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('119', 'Reto 3 Nivel 6 Etapa 3 employee', '48');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('120', 'Reto 4 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('165', 'Reto 1 Nivel 6 Etapa 2 employee', '42');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('166', 'Reto 2 Nivel 6 Etapa 2 employee', '42');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('167', 'Reto 3 Nivel 6 Etapa 2 employee', '42');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('168', 'Reto 4 Nivel 6 Etapa 2 employee', '42');
 
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('121', 'Reto 1 Nivel 1 Etapa 4 employee', '49');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('122', 'Reto 2 Nivel 1 Etapa 4 employee', '49');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('123', 'Reto 3 Nivel 1 Etapa 4 employee', '49');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('124', 'Reto 4 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('169', 'Reto 1 Nivel 1 Etapa 3 employee', '43');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('170', 'Reto 2 Nivel 1 Etapa 3 employee', '43');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('171', 'Reto 3 Nivel 1 Etapa 3 employee', '43');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('172', 'Reto 4 Nivel 1 Etapa 3 employee', '43');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('125', 'Reto 1 Nivel 2 Etapa 4 employee', '50');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('126', 'Reto 2 Nivel 2 Etapa 4 employee', '50');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('127', 'Reto 3 Nivel 2 Etapa 4 employee', '50');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('128', 'Reto 4 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('173', 'Reto 1 Nivel 2 Etapa 3 employee', '44');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('174', 'Reto 2 Nivel 2 Etapa 3 employee', '44');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('175', 'Reto 3 Nivel 2 Etapa 3 employee', '44');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('176', 'Reto 4 Nivel 2 Etapa 3 employee', '44');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('129', 'Reto 1 Nivel 3 Etapa 4 employee', '51');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('130', 'Reto 2 Nivel 3 Etapa 4 employee', '51');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('131', 'Reto 3 Nivel 3 Etapa 4 employee', '51');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('132', 'Reto 4 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('177', 'Reto 1 Nivel 3 Etapa 3 employee', '45');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('178', 'Reto 2 Nivel 3 Etapa 3 employee', '45');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('179', 'Reto 3 Nivel 3 Etapa 3 employee', '45');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('180', 'Reto 4 Nivel 3 Etapa 3 employee', '45');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('133', 'Reto 1 Nivel 4 Etapa 4 employee', '52');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('134', 'Reto 2 Nivel 4 Etapa 4 employee', '52');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('135', 'Reto 3 Nivel 4 Etapa 4 employee', '52');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('136', 'Reto 4 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('181', 'Reto 1 Nivel 4 Etapa 3 employee', '46');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('182', 'Reto 2 Nivel 4 Etapa 3 employee', '46');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('183', 'Reto 3 Nivel 4 Etapa 3 employee', '46');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('184', 'Reto 4 Nivel 4 Etapa 3 employee', '46');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('137', 'Reto 1 Nivel 5 Etapa 4 employee', '53');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('138', 'Reto 2 Nivel 5 Etapa 4 employee', '53');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('139', 'Reto 3 Nivel 5 Etapa 4 employee', '53');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('140', 'Reto 4 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('185', 'Reto 1 Nivel 5 Etapa 3 employee', '47');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('186', 'Reto 2 Nivel 5 Etapa 3 employee', '47');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('187', 'Reto 3 Nivel 5 Etapa 3 employee', '47');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('188', 'Reto 4 Nivel 5 Etapa 3 employee', '47');
 
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('141', 'Reto 1 Nivel 6 Etapa 4 employee', '54');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('142', 'Reto 2 Nivel 6 Etapa 4 employee', '54');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('143', 'Reto 3 Nivel 6 Etapa 4 employee', '54');
--- INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('144', 'Reto 4 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('189', 'Reto 1 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('190', 'Reto 2 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('191', 'Reto 3 Nivel 6 Etapa 3 employee', '48');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('192', 'Reto 4 Nivel 6 Etapa 3 employee', '48');
+
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('193', 'Reto 1 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('194', 'Reto 2 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('195', 'Reto 3 Nivel 1 Etapa 4 employee', '49');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('196', 'Reto 4 Nivel 1 Etapa 4 employee', '49');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('197', 'Reto 1 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('198', 'Reto 2 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('199', 'Reto 3 Nivel 2 Etapa 4 employee', '50');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('200', 'Reto 4 Nivel 2 Etapa 4 employee', '50');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('201', 'Reto 1 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('202', 'Reto 2 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('203', 'Reto 3 Nivel 3 Etapa 4 employee', '51');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('204', 'Reto 4 Nivel 3 Etapa 4 employee', '51');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('205', 'Reto 1 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('206', 'Reto 2 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('207', 'Reto 3 Nivel 4 Etapa 4 employee', '52');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('208', 'Reto 4 Nivel 4 Etapa 4 employee', '52');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('209', 'Reto 1 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('210', 'Reto 2 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('211', 'Reto 3 Nivel 5 Etapa 4 employee', '53');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('212', 'Reto 4 Nivel 5 Etapa 4 employee', '53');
+
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('213', 'Reto 1 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('214', 'Reto 2 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('215', 'Reto 3 Nivel 6 Etapa 4 employee', '54');
+INSERT INTO `tip` (`id`, `tip`, `step_id`) VALUES ('216', 'Reto 4 Nivel 6 Etapa 4 employee', '54');
 
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('121', '6');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('121', '8');
@@ -2038,7 +2030,7 @@ INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '9');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '7');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '12');
 
-insert into `exitum`.`file_tip`(id, name, key_s3,tip_id) values 
+insert into `exitum`.`file_tip`(id, name, key_s3, tip_id) values 
 ( 1, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 1),
 ( 2, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 2),
 ( 3, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 3),

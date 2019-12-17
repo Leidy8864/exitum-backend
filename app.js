@@ -3,7 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var exphbs  = require('express-handlebars');
+var exphbs = require('express-handlebars');
+var bodyParser = require('body-parser');
 
 var usersRouter = require('./routes/users');
 var employeesRouter = require('./routes/employees');
@@ -33,8 +34,9 @@ var stepRouter = require('./routes/step');
 var tipRouter = require('./routes/tip');
 var careerRouter = require('./routes/career');
 var authAdminRouter = require('./routes/authAdmin');
-//const controller = require('./controllers/userController');
 
+//const controller = require('./controllers/userController');
+const passport = require('passport');
 var app = express();
 
 var hbs = exphbs.create({
@@ -55,13 +57,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(bodyParser.json());  
 app.use(cors());
 app.use(upload());
+app.use(passport.initialize());
 
 app.use('/documentation', express.static(__dirname + '/doc', { maxAge: 86400000 }));
 
 app.use('/users', usersRouter);
-app.use('/employees',employeesRouter);
+app.use('/employees', employeesRouter);
 app.use('/startups', startupRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/experiences', experiencesRouter);
@@ -92,16 +96,14 @@ app.get("/test", (req, res) => {
   console.log("mario")
   return res.render('template-appointment')
 })
-
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
-
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(404)
-  res.send({ error: 'Page Not found'   })
+  res.send({ error: 'Page Not found' })
   console.log(err)
   return
 });
