@@ -1,3 +1,6 @@
+var multer = require('multer');
+var xlstojson = require("xls-to-json-lc");
+var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
 const s3 = require('../libs/aws-s3');
 const Sequelize = require('sequelize');
@@ -11,6 +14,25 @@ const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip'
 const FILES_TIP_REPLY_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip_reply';
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
+
+var storage = multer.diskStorage({ //multers disk storage settings
+    destination: function (req, file, cb) {
+        cb(null, './uploads/')
+    },
+    filename: function (req, file, cb) {
+        var datetimestamp = Date.now();
+        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1])
+    }
+});
+var upload = multer({ //multer settings
+    storage: storage,
+    fileFilter: function (req, file, callback) { //file filter
+        if (['xls', 'xlsx'].indexOf(file.originalname.split('.')[file.originalname.split('.').length - 1]) === -1) {
+            return callback(new Error('Wrong extension type'));
+        }
+        callback(null, true);
+    }
+}).single('file');
 
 module.exports = {
     validate: (method) => {
@@ -215,44 +237,147 @@ module.exports = {
     },
 
     createChallenge: async (req, res) => {
-        var { startup_id, employee_id, tip_id, user_id, status, comment } = req.body
-        const tip = await models.tip.findOne({ attributes: ['id', 'step_id'], where: { id: tip_id } });
-        const step = await models.step.findOne({ attributes: ['id', 'stage_id'], where: { id: tip.step_id } });
-        var option = {}
-        if (startup_id !== null) {
-            option = {
-                user_id: user_id,
-                startup_id: startup_id,
-                tip_id: tip_id,
-                step_id: tip.step_id,
-                stage_id: step.stage_id,
-                status: status,
-                checked: true,
-                date: Date.now(),
-                comment: comment,
-            }
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
-        if (employee_id !== null) {
-            option = {
-                user_id: user_id,
-                employee_id: employee_id,
-                tip_id: tip_id,
-                step_id: tip.step_id,
-                stage_id: step.stage_id,
-                status: status,
-                checked: true,
-                date: Date.now(),
-                comment: comment,
-            }
-        }
+        const { stage, description_stage, type, stage_id, tip, description_tip, step_id } = req.body
+        var st
+        var stageFind = null
+        var typeUser = null
+        try {
+            const result = await models.sequelize.transaction(async (t) => {
+                var st = null
+                if (stage) {
+                    st = await models.stage.findOne({ where: { stage: stage } })
+                }
+                var stageNew
+                var stepNew
+                var tipNew
+                var fileName = '';
 
-        models.challenge.create(option).then(challenge => {
-            if (challenge) {
-                return res.json({ status: true, message: "Reto validado registrado correctamente", data: challenge })
-            }
-        }).catch(err => {
-            return res.json({ status: false, data: err })
-        })
+                if (st) {
+                    res.json({ status: false, message: "El nombre de esta etapa ya existe" });
+                } else {
+                    if (!stage_id) {
+                        stageNew = await models.stage.create({
+                            stage: stage,
+                            description: description_stage,
+                            type: type
+                        }, { transaction: t }).catch(err => console.log(err))
+                    }
+
+                    if (!step_id) {
+                        if (req.files) {
+                            var photo = req.files.photo;
+                            fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                        } else { return res.json({ status: false, message: "Es necesario subir un icono." }) }
+
+                        stepNew = await models.step.create({
+                            icon: fileName,
+                            step: step,
+                            stage_id: stage_id || stageNew.id
+                        }, { transaction: t }).catch(err => console.log(err))
+                    }
+
+                    if (stage_id) {
+                        stageFind = await models.stage.findOne({
+                            where: { id: stage_id }
+                        })
+                        typeUser = stageFind.type
+                    } else {
+                        typeUser = stageNew.type
+                    }
+
+                    tipNew = await models.tip.create({
+                        tip: tip,
+                        description: description_tip,
+                        step_id: step_id || stepNew.id
+                    }, { transaction: t }).catch(err => { console.log(err) })
+
+                    if (typeUser == "startup") {
+                        const startups = await models.startup.findAll({
+                            attributes: ['id'],
+                            include: [
+                                { model: models.entrepreneur }
+                            ]
+                        })
+                        var chlls = []
+                        var stp_step = []
+                        for (var i = 0; i < startups.length; i++) {
+                            chlls.push({
+                                user_id: startups[i].entrepreneur.user_id,
+                                startup_id: startups[i].id,
+                                stage_id: stepFind.stage.id,
+                                step_id: stepFind.id,
+                                tip_id: tipNew.id,
+                                checked: false,
+                                status: "Sin respuesta",
+                                date: Date.now()
+                            })
+                            const startup_step = await models.startup_step.findOne({
+                                where: {
+                                    startup_id: startups[i].id,
+                                    step_id: stepFind.id
+                                }
+                            })
+                            if (!startup_step) {
+                                stp_step.push({
+                                    startup_id: startups[i].id,
+                                    step_id: stepFind.id,
+                                    tip_completed: 0,
+                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                    state: 'incompleto'
+                                })
+                            }
+                        }
+                        await models.challenge.bulkCreate(chlls, { transaction: t });
+                        await models.startup_step.bulkCreate(stp_step, { transaction: t });
+                    } else if (typeUser == "employee") {
+                        const employees = await models.employee.findAll({
+                            attributes: ['id', 'user_id'],
+                        })
+                        var chlls = []
+                        var emp_step = []
+                        for (var i = 0; i < employees.length; i++) {
+                            chlls.push({
+                                user_id: employees[i].user_id,
+                                employee_id: employees[i].id,
+                                stage_id: stage_id || stageNew.id,
+                                step_id: step_id || stepNew.id,
+                                tip_id: tipNew.id,
+                                checked: false,
+                                status: "Sin respuesta",
+                                date: Date.now()
+                            })
+                            const employee_step = await models.employee_step.findOne({
+                                where: {
+                                    employee_id: employees[i].id,
+                                    step_id: step_id || stepNew.id,
+                                }
+                            })
+                            if (!employee_step) {
+                                emp_step.push({
+                                    employee_id: employees[i].id,
+                                    step_id: step_id || stepNew.id,
+                                    tip_completed: 0,
+                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                    state: 'incompleto'
+                                })
+                            }
+                        }
+                        await models.challenge.bulkCreate(chlls, { transaction: t });
+                        await models.employee_step.bulkCreate(emp_step, { transaction: t });
+                    } else {
+                        return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
+                    }
+                    return res.json({ status: true, message: "Reto creado correctamente", data: tipNew });
+                }
+            });
+        } catch (err) {
+            console.log(err);
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." });
+        }
     },
 
     listStageStartup: async (req, res) => {
@@ -637,5 +762,62 @@ module.exports = {
 
         } catch (error) { returnError(res, error) }
 
+    },
+
+    listStages: async (req, res) => {
+        const { type } = req.query
+        models.stage.findAll({
+            where: { type: type }
+        }).then(stages => {
+            res.json({ status: true, message: "Lista de etapas", data: stages })
+        })
+    },
+
+    listSteps: async (req, res) => {
+        const { stage_id } = req.query
+        models.step.findAll({
+            where: { stage_id: stage_id }
+        }).then(steps => {
+            res.json({ status: true, message: "Lista de niveles", data: steps })
+        })
+    },
+
+    /** API path that will upload the files */
+    uploadExcel: async (req, res) => {
+        var exceltojson; //Initialization
+        upload(req, res, function (err) {
+            if (err) {
+                res.json({ error_code: 1, err_desc: err });
+                return;
+            }
+            /** Multer gives us file info in req.file object */
+            if (!req.file) {
+                res.json({ error_code: 1, err_desc: "No file passed" });
+                return;
+            }
+            //start convert process
+            /** Check the extension of the incoming file and
+             *  use the appropriate module
+             */
+            if (req.file.originalname.split('.')[req.file.originalname.split('.').length - 1] === 'xlsx') {
+                exceltojson = xlsxtojson;
+            } else {
+                exceltojson = xlstojson;
+            }
+            try {
+                exceltojson({
+                    input: req.file.path, //the same path where we uploaded our file
+                    output: null, //since we don't need output.json
+                    lowerCaseHeaders: true
+                }, function (err, result) {
+                    if (err) {
+                        return res.json({ error_code: 1, err_desc: err, data: null });
+                    }
+                    res.json({ error_code: 0, err_desc: null, data: result });
+                });
+            } catch (e) {
+                res.json({ error_code: 1, err_desc: "Corupted excel file" });
+            }
+        });
     }
 }

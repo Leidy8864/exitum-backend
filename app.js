@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var exphbs  = require('express-handlebars');
+var exphbs = require('express-handlebars');
 
 var usersRouter = require('./routes/users');
 var employeesRouter = require('./routes/employees');
@@ -60,7 +60,7 @@ app.use(upload());
 app.use('/documentation', express.static(__dirname + '/doc', { maxAge: 86400000 }));
 
 app.use('/users', usersRouter);
-app.use('/employees',employeesRouter);
+app.use('/employees', employeesRouter);
 app.use('/startups', startupRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/experiences', experiencesRouter);
@@ -92,14 +92,14 @@ app.get("/test", (req, res) => {
 })
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(404)
-  res.send({ error: 'Page Not found'   })
+  res.send({ error: 'Page Not found' })
   console.log(err)
   return
 });
