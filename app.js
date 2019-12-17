@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var exphbs = require('express-handlebars');
+var bodyParser = require('body-parser');
 
 var usersRouter = require('./routes/users');
 var employeesRouter = require('./routes/employees');
@@ -56,10 +57,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(bodyParser.json());  
 app.use(cors());
 app.use(upload());
 app.use(passport.initialize());
-
 
 app.use('/documentation', express.static(__dirname + '/doc', { maxAge: 86400000 }));
 

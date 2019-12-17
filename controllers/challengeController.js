@@ -1,3 +1,4 @@
+
 var multer = require('multer');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
@@ -21,13 +22,14 @@ var storage = multer.diskStorage({ //multers disk storage settings
     },
     filename: function (req, file, cb) {
         var datetimestamp = Date.now();
-        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1])
+        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.name.split('.')[file.name.split('.').length - 1])
     }
 });
 var upload = multer({ //multer settings
     storage: storage,
     fileFilter: function (req, file, callback) { //file filter
-        if (['xls', 'xlsx'].indexOf(file.originalname.split('.')[file.originalname.split('.').length - 1]) === -1) {
+        console.log("@@@",file)
+        if (['xls', 'xlsx'].indexOf(file.name.split('.')[file.name.split('.').length - 1]) === -1) {
             return callback(new Error('Wrong extension type'));
         }
         callback(null, true);
@@ -775,11 +777,17 @@ module.exports = {
 
     listSteps: async (req, res) => {
         const { stage_id } = req.query
-        models.step.findAll({
-            where: { stage_id: stage_id }
-        }).then(steps => {
-            res.json({ status: true, message: "Lista de niveles", data: steps })
-        })
+        if(!stage_id){
+            models.step.findAll().then(steps => {
+                res.json({ status: true, message: "Lista de niveles", data: steps })
+            })
+        } else {
+            models.step.findAll({
+                where: { stage_id: stage_id }
+            }).then(steps => {
+                res.json({ status: true, message: "Lista de niveles", data: steps })
+            })
+        }  
     },
 
     /** API path that will upload the files */
@@ -790,8 +798,8 @@ module.exports = {
                 res.json({ error_code: 1, err_desc: err });
                 return;
             }
-            /** Multer gives us file info in req.file object */
-            if (!req.file) {
+            /** Multer gives us file info in req.files object */
+            if (!req.files) {
                 res.json({ error_code: 1, err_desc: "No file passed" });
                 return;
             }
@@ -799,14 +807,14 @@ module.exports = {
             /** Check the extension of the incoming file and
              *  use the appropriate module
              */
-            if (req.file.originalname.split('.')[req.file.originalname.split('.').length - 1] === 'xlsx') {
+            if (req.files.file.name.split('.')[req.files.file.name.split('.').length - 1] === 'xlsx') {
                 exceltojson = xlsxtojson;
             } else {
                 exceltojson = xlstojson;
             }
             try {
                 exceltojson({
-                    input: req.file.path, //the same path where we uploaded our file
+                    input: "./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
                     output: null, //since we don't need output.json
                     lowerCaseHeaders: true
                 }, function (err, result) {
@@ -816,6 +824,7 @@ module.exports = {
                     res.json({ error_code: 0, err_desc: null, data: result });
                 });
             } catch (e) {
+                console.log(e)
                 res.json({ error_code: 1, err_desc: "Corupted excel file" });
             }
         });

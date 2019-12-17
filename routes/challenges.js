@@ -77,7 +77,8 @@ router.post('/verify',
     controller.verifyChallenge
 );
 
-router.post('/uploadExcel',
-    controller.uploadExcel
-);
+router.post('/uploadExcel', function (req, res) {
+    controller.uploadExcel(req, res);
+});
+
 module.exports = router;
