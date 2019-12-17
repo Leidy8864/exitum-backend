@@ -35,7 +35,7 @@ module.exports = {
     comment: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { review, from_user_id } = req.body
         const { to_user_id } = req.params
@@ -45,16 +45,16 @@ module.exports = {
             const user = await existById(models.user, to_user_id)
             user.addFromUser(from_user_id, { through: { review: review, created_at: Date.now() } })
 
-            successful(res, text.successCreate('comentario'))
+            return successful(res, text.successCreate('comentario'))
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     rating: (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
         
         const { rating, from_user_id } = req.body
         const { to_user_id } = req.params
@@ -79,11 +79,11 @@ module.exports = {
                             var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
                             user.update({ avg_rating: avg_rating })
 
-                            successful(res, text.successCreate('rating'))
+                            return successful(res, text.successCreate('rating'))
 
-                        }).catch(error => { returnError(res, error) })
+                        }).catch(error => { return returnError(res, error) })
 
-                    }).catch(error => { returnError(res, error) })
+                    }).catch(error => { return returnError(res, error) })
 
             })
 

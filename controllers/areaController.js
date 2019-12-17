@@ -33,25 +33,25 @@ module.exports = {
         try {
 
             const area = await models.area.findAll({});
-            successful(res, 'OK', area)
+            return successful(res, 'OK', area)
             
-        } catch (error)  {  returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }  
 
     },
 
     create: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { name } = req.body
 
         try {
 
             await createArea(name)
-            successful(res, text.successCreate('area'))
+            return successful(res, text.successCreate('area'))
             
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     }
 }

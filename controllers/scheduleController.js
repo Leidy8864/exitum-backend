@@ -70,14 +70,13 @@ module.exports = {
     create: async (req, res) => {
 
         var errors = validationResult(req)
-
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { from_hour, to_hour } = req.body
         const { user_id } = req.params
 
-        try {
-
+        try 
+        {
             var f_hour = timesFormat(from_hour)
             var t_hour = timesFormat(to_hour)
 
@@ -87,23 +86,24 @@ module.exports = {
                 to_hour: t_hour[3]
             })
 
-            successful(res, text.successCreate('horario'))
+            return successful(res, text.successCreate('horario'))
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
+
     },
 
     unavailable: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         const { not_available } = req.body
 
         var hour = timesFormat(not_available)
 
-        try {
-
+        try 
+        {
             var user = await existById(models.user, user_id, 'id', 'from_hour', 'to_hour')
 
             var [ response, created ] = await  models.unavailable.findOrCreate({
@@ -119,22 +119,22 @@ module.exports = {
                 }
             })
 
-            successful(res, text.successCreate('horario no disponible'))
+            return successful(res, text.successCreate('horario no disponible'))
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
     
     unavailable_multiple: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         const { available } = req.body
 
-        try {
-
+        try 
+        {
             var user = await existById(models.user, user_id, 'id', 'from_hour', 'to_hour')
             var not_available = availableHours(user.from_hour, user.to_hour, available)
             var get_unavailables = await user.getUnavailables({ attributes: ['time'] })
@@ -152,42 +152,42 @@ module.exports = {
 
             })
 
-            successful(res, text.successCreate('horas disponibles'))
+            return successful(res, text.successCreate('horas disponibles'))
 
-        } catch ( error ) { returnError(res, error, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     schedule: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id, 'id', 'from_hour', 'to_hour')
 
             var not_available = await user.getUnavailables({ attributes: [ 'time' ] });
             var available = availableHours(user.from_hour, user.to_hour, not_available)
 
-            successful(res, 'OK', available)
+            return successful(res, 'OK', available)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
         
     }, 
     
     scheduleDate: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         const { date } = req.body
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id)
             
             var not_available = await user.getUnavailables({ attributes: [ 'time' ] });
@@ -203,17 +203,15 @@ module.exports = {
                 }
             })
 
-            console.log(appointment)
-
             var appointment_act = appointment.map(element => {
                 return convertTimes(element.time)
             })
 
             var hours_available = arr_diff(available, appointment_act)
 
-            successful(res, 'OK', hours_available)
+            return successful(res, 'OK', hours_available)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
         
     },
 

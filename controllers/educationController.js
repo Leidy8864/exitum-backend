@@ -34,12 +34,12 @@ module.exports = {
     findUserId: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id)
 
             var education = await user.getEducation({
@@ -53,21 +53,21 @@ module.exports = {
                 group: [ 'id', 'career.name' ]
             })
 
-            successful(res, 'Ok', education)
+            return successful(res, 'Ok', education)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
         
     },
 
     createEducation: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id, university_name, description, date_start, date_end } = req.body
 
-        try {
-            
+        try 
+        {    
             const user = await existById(models.user, user_id);
             const university = await createUniversity(university_name)
             const career = await createCareer(description)
@@ -89,21 +89,21 @@ module.exports = {
 
             if (!created) throw(text.duplicateElement)
 
-            successful(res, text.successCreate('educación'), education)
+            return successful(res, text.successCreate('educación'), education)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
         
     },
 
     updateEducation: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { education_id, user_id, university_name, description, date_start, date_end } = req.body
         
-        try {
-
+        try 
+        {
             var education = await models.education.findOne({
                 where: {
                     [Sequelize.Op.and]: [
@@ -129,21 +129,21 @@ module.exports = {
                 university_id: university.id
             });
 
-            successful(res, text.successUpdate('educación'))
+            return successful(res, text.successUpdate('educación'))
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
         
     },
 
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id, education_id } = req.body
 
-        try {
-
+        try 
+        {
             const education = await models.education.findOne({
                 where: { 
                     [Sequelize.Op.and]: [
@@ -157,9 +157,9 @@ module.exports = {
 
             await education.destroy()
 
-            successful(res, text.successUpdate('educación'))
+            return successful(res, text.successUpdate('educación'))
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 

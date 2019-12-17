@@ -16,41 +16,39 @@ module.exports = {
 
     },
     findAllSkill: async (res) => {
-
-        try {
-
+        try 
+        {
             const skills = await models.skill.findAll();
-            successful(res, 'OK', skills)
+            return successful(res, 'OK', skills)
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     createSkill: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { skill } = req.body
 
-        try {
-
+        try 
+        {
             await models.skill.create({ skill: skill })
-            successful(res, text.successCreate('skill'), skill)
+            return successful(res, text.successCreate('skill'), skill)
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     userAddSkill: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        try {
-
+        try 
+        {
             const { user_id, skills } = req.body
-
             const user = await existById(models.user, user_id)
             const user_skill = await user.getToUserSkills()
 
@@ -78,37 +76,37 @@ module.exports = {
                 })
             }
             
-            successful(res, text.successCreate('skill'))
+            return successful(res, text.successCreate('skill'))
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     listById: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        try {
-
+        try 
+        {
             const { user_id } = req.params
             const user = await existById(models.user, user_id)
 
             var skills = await user.getToUserSkills()
 
-            successful(res, text.successCreate('skill'), skills)
+            return successful(res, text.successCreate('skill'), skills)
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        try {
-
+        try 
+        {
             const { user_id, skill_id } = req.body
 
             var skill_user = await models.skill_user.findOne({
@@ -131,9 +129,9 @@ module.exports = {
                 }
             })
 
-            successful(res, text.successDelete('skill'))
+            return successful(res, text.successDelete('skill'))
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 

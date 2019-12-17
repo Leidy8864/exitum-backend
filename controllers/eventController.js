@@ -1,11 +1,14 @@
 const text = require('../libs/text')
+const s3 = require('../libs/aws-s3');
 const Sequelize = require('sequelize');
+const index = require('../config/index');
 const models = require('../models/index');
 const { sendEmail } = require('../libs/mail')
 const { existById } = require('./elementController')
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
 const { createCategory } = require('./categoryController')
+const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/event-image';
 
 module.exports = {
 
@@ -45,14 +48,14 @@ module.exports = {
     listAll: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         let perPage = 20;
         let page = req.query.page || 1;
         const { user } = req.query
 
-        try {
-
+        try 
+        {
             var events_number = await models.workshop.count({ where: { user_id: { [ Sequelize.Op.ne ]:  user } } })
             
             var events = await models.workshop.findAll({
@@ -73,7 +76,7 @@ module.exports = {
                     }
                 ],
                 attributes: [
-                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
+                    'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'photo',
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
                     // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
                 ],
@@ -89,21 +92,21 @@ module.exports = {
                 return element
             }, [])
 
-            return res.status(200).json({ status: true, message: 'OK', data: event })
+            return res.status(200).json({ status: true, message: 'OK', data: event, current: page, pages: Math.ceil(events_number / perPage) })
 
-        } catch (error) { returnError(res, error, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     show: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { event_id } = req.params
 
-        try {
-            
+        try 
+        {    
             var event = await models.workshop.findByPk(event_id, {
                 include: [
                     {
@@ -120,23 +123,23 @@ module.exports = {
                     'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id'
                 ],
             })
-            successful(res, 'OK', event)
+            return successful(res, 'OK', event)
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     participatingEvents: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
         
         const { event_id } = req.params
         const perPage = 12;
         let page = req.query.page || 1;
 
-        try {
-            
+        try 
+        {    
             var events_number = await models.user_workshop.count({ where: { workshop_id: event_id } })
             const event = await existById(models.workshop, event_id)
             var event_user = await event.getToWorkshopUsers({
@@ -147,21 +150,21 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: event_user, current: page, pages: Math.ceil(events_number / perPage) })
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     listByUser: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
         let perPage = 20;
         let page = req.query.page || 1;
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id, 'id')
             var events_number = await models.workshop.count({ where: { user_id: user.id } })
 
@@ -177,19 +180,19 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     participating: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
-        try {
-            
+        try 
+        {    
             const user = await existById(models.user, user_id)
 
             var events = await user.getToUserWorkshops({ attributes: [ 
@@ -197,21 +200,21 @@ module.exports = {
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
              ] })
 
-            successful(res, 'OK', events)
+            return successful(res, 'OK', events)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     create: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants } = req.body
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id, 'id')
 
             var event = await models.workshop.create({
@@ -227,6 +230,12 @@ module.exports = {
                 participants:(participants) ? participants : 50
             })
 
+            if (req.files) {
+                var photo = req.files.photo;
+                fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                await event.update({ photo: fileName });
+            }
+
             var categories_id = await Promise.all(categories.map(async element => {
                 var response = await createCategory(element)
                 return await response.id
@@ -234,21 +243,21 @@ module.exports = {
 
             await event.addToWorkshopCategories(categories_id)
 
-            successful(res, text.successCreate('evento'))
+            return successful(res, text.successCreate('evento'),  categories)
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     update: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { event_id,  title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants } = req.body
 
-        try {
-
+        try 
+        {
             var event = await models.workshop.findOne({
                 where: {
                     [ Sequelize.Op.and ]: [
@@ -262,6 +271,19 @@ module.exports = {
 
             // await event.removeToWorkshopCategories([ 16, 17 ]);
             // var elements = await event.getToWorkshopCategories({ through: { where: { category_id: 18 } } });
+
+            var photo = event.photo
+
+            if (req.files) 
+            {
+                if (photo && photo != '' && !photo.indexOf(index.aws.s3.BUCKET_NAME)) {
+                    s3.deleteObject(NEW_BUCKET_NAME, (photo).split('/')[5]);
+                }
+
+                var portada = req.files.photo;
+                photo = s3.putObject(NEW_BUCKET_NAME, portada);
+            }
+
     
             await event.update({
                 title: title || event.title,
@@ -272,7 +294,8 @@ module.exports = {
                 place: place || event.place,
                 lat: lat || event.lat,
                 lng: lng || event.lng,
-                participants: participants || event.participants
+                participants: participants || event.participants,
+                photo: photo
             })
 
             if ( categories && categories.length > 0) {
@@ -288,21 +311,21 @@ module.exports = {
 
             }
 
-            successful(res, text.successUpdate('evento'));
+            return successful(res, text.successUpdate('evento'));
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     takePart: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { event_id, user_id } = req.body
 
-        try {
-            
+        try 
+        {
             var event = await models.workshop.findByPk(event_id, {
                 attributes: [ 'id', 'title', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('day'), "%W %M %e %Y" ), 'day' ],  
                 [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'place' ]
@@ -315,7 +338,7 @@ module.exports = {
             if (pivot_exists) {
                 
                 await pivot_exists.destroy()
-                successful(res, text.removed)
+                return successful(res, text.removed)
 
             } else {
 
@@ -345,32 +368,32 @@ module.exports = {
                     sendEmail(email_info, data_send)
                 }
                 
-                successful(res, text.add )
+                return successful(res, text.add )
 
             }
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     delete: async (req, res) => {
         
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { event_id } = req.params
 
-        try {
-
+        try 
+        {
             var event = await existById(models.workshop, event_id)
 
             await models.category_workshop.destroy({ where: { workshop_id: event.id } })
             await models.user_workshop.destroy({ where: { workshop_id: event.id } })
             await event.destroy()
 
-            successful(res, text.successDelete('evento'))
+            return successful(res, text.successDelete('evento'))
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 

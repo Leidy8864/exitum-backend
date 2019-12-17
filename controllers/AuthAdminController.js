@@ -55,20 +55,21 @@ module.exports = {
 
             const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
 
-            successful(res, 'Ok', response)
+            return successful(res, 'Ok', response)
             
-        } catch (error)  {  returnError(res, error) } 
+        } catch (error) { return returnError(res, error) } 
 
     },
 
     signIn: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { email, password } = req.body
 
-        try {
+        try 
+        {
             const admin = await models.administrador.findOne({ where: { email: email } })
             if(!admin) throw (text.failLogin)
 
@@ -79,9 +80,9 @@ module.exports = {
 
             const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
 
-            successful(res, 'Ok', response)
+            return successful(res, 'Ok', response)
             
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     },
 
@@ -97,11 +98,10 @@ module.exports = {
                 where: { id: req.user }
             })
 
-            successful(res, 'OK', admin)
+            return successful(res, 'OK', admin)
 
-        } catch (error) {
-            return res.status(500).json({error: error})
-        }
+        } catch (error) { return returnError(res, error) } 
+
     },
 
 }

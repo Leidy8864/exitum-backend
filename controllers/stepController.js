@@ -29,16 +29,16 @@ module.exports = {
         try 
         {
             const step = await models.step.findAll({});
-            successful(res, 'OK', step)
+            return successful(res, 'OK', step)
             
-        } catch (error)  {  returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
     },
 
     create: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { step } = req.body
         var fileName = null
@@ -56,16 +56,16 @@ module.exports = {
                 icon: fileName
             })
 
-            successful(res, text.successCreate('step'))
+            return successful(res, text.successCreate('step'))
             
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     update: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { step, step_id } = req.body
 
@@ -87,16 +87,16 @@ module.exports = {
                 icon: fileName
             })
 
-            successful(res, text.successUpdate('step'))
+            return successful(res, text.successUpdate('step'))
 
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { tip_id } = req.body
 
@@ -105,9 +105,9 @@ module.exports = {
             var tip_data = await existById(models.tip, tip_id)
             await tip_data.destroy()
 
-            successful(res, text.successDelete('step'))
+            return successful(res, text.successDelete('step'))
 
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 }

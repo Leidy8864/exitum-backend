@@ -35,16 +35,16 @@ module.exports = {
         try {
 
             var category = await models.category.findAll({});
-            successful(res, 'OK', category)
+            return successful(res, 'OK', category)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     },
 
     search: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { name } = req.body
 
@@ -54,9 +54,9 @@ module.exports = {
     
             var category = await createCategory(name)
 
-            successful(res, 'OK', category)
+            return successful(res, 'OK', category)
 
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     }
 

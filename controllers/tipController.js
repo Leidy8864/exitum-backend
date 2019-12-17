@@ -44,14 +44,14 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: tip, current: page, pages: Math.ceil(number_tips / perPage) })
 
-        } catch (error)  {  returnError(res, error) } 
+        } catch (error) { return returnError(res, error) } 
 
     },
 
     create: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { tip, description, step_id } = req.body
 
@@ -63,16 +63,16 @@ module.exports = {
                 step_id: step_id
             })
 
-            successful(res, text.successCreate('tip'))
+            return successful(res, text.successCreate('tip'))
             
-        } catch(error) { returnError(res, error) }
+        } catch(error) { return eturnError(res, error) }
 
     },
 
     update: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { tip_id, tip, description, step_id } = req.body
 
@@ -86,7 +86,7 @@ module.exports = {
                 step_id: step_id
             })
 
-            successful(res, text.successUpdate('tip'))
+            return successful(res, text.successUpdate('tip'))
 
         } catch(error) { returnError(res, error) }
 
@@ -95,7 +95,7 @@ module.exports = {
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { tip_id } = req.body
 
@@ -104,9 +104,9 @@ module.exports = {
             var tip_data = await existById(models.tip, tip_id)
             await tip_data.destroy()
 
-            successful(res, text.successDelete('tip'))
+            return successful(res, text.successDelete('tip'))
 
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 }

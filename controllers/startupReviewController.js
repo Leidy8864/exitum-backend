@@ -35,26 +35,26 @@ module.exports = {
     recommendation:  async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
         
         const { recommendation, user_id } = req.body
         const { startup_id } = req.params
 
-        try {
-
+        try 
+        {
             const startup = await existById( models.startup, startup_id )
             startup.addToStartupUser( user_id, { through: { recommendation: recommendation, created_at: Date.now() } } )
 
-            successful(res, text.successCreate('comentario'), appointment);
+            return successful(res, text.successCreate('comentario'), appointment);
 
-        } catch ( error ) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     rating:  (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { rating, user_id } = req.body
         const { startup_id } = req.params
@@ -79,11 +79,11 @@ module.exports = {
                     var avg_rating = (elements.dataValues.total / elements.dataValues.cantidad).toFixed(2)
                     startup.update({ avg_rating: avg_rating })
 
-                    successful(res, text.successCreate('rating'))
+                    return successful(res, text.successCreate('rating'))
 
-                }).catch(error => { returnError(res, error) })
+                }).catch(error => { return returnError(res, error) })
 
-            }).catch(error => { returnError(res, error) })
+            }).catch(error => { return returnError(res, error) })
 
         })
 

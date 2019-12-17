@@ -32,9 +32,9 @@ module.exports = {
         try {
 
             const certification_name = await models.certification_name.findAll({});
-            successful(res, 'OK', certification_name)
+            successfulreturn (res, 'OK', certification_name)
             
-        } catch (error)  {  returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
     },
 
@@ -43,16 +43,16 @@ module.exports = {
     create: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { name } = req.body
 
         try {
 
             await createCertificationName(name)
-            successful(res, text.successCreate('nombre certificación'))
+            return successful(res, text.successCreate('nombre certificación'))
             
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 }
