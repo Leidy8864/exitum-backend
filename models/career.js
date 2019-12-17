@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataType) => {
-    const occupation = sequelize.define('occupation', {
+    const career = sequelize.define('career', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
         name: DataType.STRING,
     },
@@ -11,10 +11,10 @@ module.exports = (sequelize, DataType) => {
         omitNull: true,
         underscored: true
     });
-    occupation.associate = (models) => {
-        occupation.hasMany(models.experience, {
-            foreignKey: 'occupation_id'
+    career.associate = (models) => {
+        career.hasMany(models.education, {
+            foreignKey: 'career_id'
         });
     }
-    return occupation
+    return career
 };

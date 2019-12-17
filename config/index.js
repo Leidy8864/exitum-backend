@@ -1,12 +1,12 @@
 module.exports = {
     oauth: {
         google: {
-            clientID : '990260099345-jh6kjumka8s2a2a796nur9tf64u26tir.apps.googleusercontent.com',
-            clientSecret : 'q5gG1S4oifY19QR4ztcn5b7G'
+            clientID : '71522118837-doshidv99lglkc314sk3sr7ve84o335d.apps.googleusercontent.com',
+            clientSecret : 'nFCqjVlWEF5H-eBohLaDEsoo'
         },
         facebook: {
-            clientID : '2753590341320162',
-            clientSecret : 'e0e13c63f5e3545c8db9107ebd461d65'
+            clientID : '576346469845895',
+            clientSecret : 'da66f0088e9b6652ee3c7ba481eab007'
         }
     },
     aws : {
@@ -19,5 +19,6 @@ module.exports = {
     },
     culqiSecretKey : 'sk_test_U50Km7hR7dfSfBzA',
     emailExitum: 'exitum.test@gmail.com',
-    passwordExitum: 'exitum123@'
+    passwordExitum: 'exitum123@',
+    tokenSecret: 'exitum@@Secret1998'
 }

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const helper = require('../libs/helper');
+const auth = require('../middleware/authorizationAuth')
 const controller = require('../controllers/userController');
 const controllerReview = require('../controllers/userReviewController');
 var passportConf = require('../libs/passport');
 var passport = require('passport');
-const passportGoogle = passport.authenticate('google-plus-token', { session: false, failureFlash: 'Invalid username or password.' });
 const passportFacebook = passport.authenticate('facebookToken', { session: false });
 
 /* GET users listing. */
@@ -25,7 +25,7 @@ router.get('/authentication/:token', function (req, res) {
   controller.confirmation(req, res);
 });
 
-router.post('/oauth/google', passportGoogle, function (req, res) {
+router.post('/oauth/google',function (req, res) {
   controller.socialLoginOrRegister(req, res);
 });
 router.post('/oauth/facebook', passportFacebook, function (req, res) {
@@ -50,7 +50,7 @@ router.get('/verificationToken/:token',
   controller.validateToken
 );
 
-router.post('/reset', 
+router.post('/reset',
   controller.validate('confirmPassword'),
   controller.resetPassword
 );
@@ -73,7 +73,7 @@ router.post('/update-image',
   controller.updateImage
 )
 
-router.post('/createWorkshop', 
+router.post('/createWorkshop',
   controller.validate('createWorkshop'),
   controller.createWorkshop
 )
@@ -82,7 +82,7 @@ router.post('/updateWorkshop',
   controller.updateWorkshop
 )
 
-router.post('/deleteWorkshop', 
+router.post('/deleteWorkshop',
   controller.deleteWorkshop
 )
 
@@ -96,6 +96,11 @@ router.get('/all-user/:user_id',
 
 // router.get('/all-user', helper.verifyToken,
 //   controller.allUser
+// )
+
+// router.get('/me',
+//   auth,
+//   controller.me
 // )
 
 module.exports = router;

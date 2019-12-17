@@ -31,9 +31,11 @@ var occupationRouter = require('./routes/occupation');
 var certificationNameRouter = require('./routes/certificationName');
 var stepRouter = require('./routes/step');
 var tipRouter = require('./routes/tip');
+var careerRouter = require('./routes/career');
 var authAdminRouter = require('./routes/authAdmin');
-//const controller = require('./controllers/userController');
 
+//const controller = require('./controllers/userController');
+const passport = require('passport');
 var app = express();
 
 var hbs = exphbs.create({
@@ -56,6 +58,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 app.use(upload());
+app.use(passport.initialize());
+
 
 app.use('/documentation', express.static(__dirname + '/doc', { maxAge: 86400000 }));
 
@@ -84,18 +88,17 @@ app.use('/occupations', occupationRouter);
 app.use('/certification-name', certificationNameRouter);
 app.use('/steps', stepRouter);
 app.use('/tips', tipRouter);
+app.use('/careers', careerRouter);
 app.use('/admin', authAdminRouter);
 
 app.get("/test", (req, res) => {
   console.log("mario")
   return res.render('template-appointment')
 })
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
-
 // error handler
 app.use(function (err, req, res, next) {
   res.status(404)

@@ -2,11 +2,11 @@
 
 module.exports = (sequelize, DataTypes) => {
     const education = sequelize.define('education', {
-        occupation_id: {
+        career_id: {
             type: DataTypes.INTEGER,
             references: {
                 references: {
-                    model: 'occupation',
+                    model: 'career',
                     key: 'id'
                 }
             },
@@ -47,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
         education.belongsTo(models.user, {
             foreignKey: 'user_id'
         });
-        education.belongsTo(models.occupation, {
-            foreignKey: 'occupation_id'
+        education.belongsTo(models.career, {
+            foreignKey: 'career_id'
         });
     }
     return education

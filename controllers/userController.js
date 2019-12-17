@@ -3,14 +3,13 @@ const helper = require('../libs/helper');
 const models = require('../models/index');
 const { highlight } = require('./skillController')
 const Sequelize = require('sequelize')
-const config = require('../config/index');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { createToken } = require('../service/service')
 const hbs = require('nodemailer-express-handlebars');
 const moment = require('moment');
 const index = require('../config/index');
-const path = require('path');
 const s3 = require('../libs/aws-s3');
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('../controllers/responseController');
@@ -193,7 +192,11 @@ module.exports = {
             } else {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
+                    console.log(req.client.clientId)
+                    // var token = createToken(user)
                     helper.generateAccessData(user, res);
+                    // return res.status(200).json({ status: true, message: 'OK', data: token  })
+
                 } else {
                     res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
                 }
@@ -204,12 +207,24 @@ module.exports = {
         });
     },
 
+    me: (req, res) => {
+        try 
+        {
+            
+            return res.status(200).json({ status: true, data: req.user })
+
+        } catch (error) {
+            return res.status(500).json({error: error})
+        }
+    },
+
     //Función encargada de realizar el registro de usuario o login de usuario con proveedores
     socialLoginOrRegister: async (req, res) => {
         // console.log("SOCIAL ", req);
         var user = null;
         try {
-            user = req.user
+            user = req.body.user
+            req.user ? user = req.user : '';
             if (user) {
                 const existingUser = await models.user.findOne({ where: { email: user.email, provider_id: user.id } });
                 if (existingUser) {
@@ -220,20 +235,20 @@ module.exports = {
 
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
                         const newUser = await models.user.create({
-                            name: user.name,
+                            name: user.firstname,
                             lastname: user.lastname,
-                            method: req.body.method,
                             provider_id: user.id,
                             confirmed: true,
                             active: true,
                             email: user.email,
                             role: 'undefined',
-                            photo: user.image,
+                            photo: user.photo,
                             from_hour: '7:00:00',
                             to_hour: '22:00:00',
                             country_id: 1,
                             currency_id: 1,
-                            avg_rating: 1
+                            avg_rating: 1,
+                            method : user.provider
                         }, { transaction: t });
 
                         await models.token.create({
@@ -251,7 +266,7 @@ module.exports = {
                 return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
-            console.log("Error", error);
+            console.log("Error");
 
             var message = '';
             if (error.name === 'SequelizeUniqueConstraintError') {
