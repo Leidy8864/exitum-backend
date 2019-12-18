@@ -16,22 +16,21 @@ module.exports = {
 
         switch (method) {
             case 'create':
-                return [ tip, description, step_id ]
+                return [tip, description, step_id]
             case 'update':
-                return [ tip_id ]
+                return [tip_id]
             case 'delete':
-                return [ tip_id ]
+                return [tip_id]
         }
 
     },
 
-    all:  async(req, res) => {
+    all: async (req, res) => {
 
         const perPage = 20;
         let page = req.query.page || 1;
 
-        try 
-        {
+        try {
             const number_tips = await models.tip.count()
 
             const tip = await models.tip.findAll({
@@ -44,8 +43,18 @@ module.exports = {
 
             return res.status(200).json({ status: true, message: 'OK', data: tip, current: page, pages: Math.ceil(number_tips / perPage) })
 
-        } catch (error) { return returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
+    },
+
+    listByStep: async (req, res) => {
+        const { step_id } = req.query
+        const tips = await models.tip.findAll({
+            where: {
+                step_id: step_id
+            }
+        })
+        return res.json({ status: true, message: "Listado de retos por nivel", data: tips })
     },
 
     create: async (req, res) => {
@@ -55,8 +64,7 @@ module.exports = {
 
         const { tip, description, step_id } = req.body
 
-        try 
-        {
+        try {
             await models.tip.create({
                 tip: tip,
                 description: description,
@@ -64,8 +72,8 @@ module.exports = {
             })
 
             return successful(res, text.successCreate('tip'))
-            
-        } catch(error) { return eturnError(res, error) }
+
+        } catch (error) { return eturnError(res, error) }
 
     },
 
@@ -76,8 +84,7 @@ module.exports = {
 
         const { tip_id, tip, description, step_id } = req.body
 
-        try 
-        {
+        try {
             var tip_data = await existById(models.tip, tip_id)
 
             tip_data.update({
@@ -88,7 +95,7 @@ module.exports = {
 
             return successful(res, text.successUpdate('tip'))
 
-        } catch(error) { returnError(res, error) }
+        } catch (error) { returnError(res, error) }
 
     },
 
@@ -99,8 +106,7 @@ module.exports = {
 
         const { tip_id } = req.body
 
-        try 
-        {
+        try {
             var tip_data = await existById(models.tip, tip_id)
             await tip_data.destroy()
 
