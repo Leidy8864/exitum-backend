@@ -267,8 +267,6 @@ module.exports = {
                     res.json({ status: false, message: "El nombre de esta etapa ya existe" });
                 } else {
                     if (stage_id === "undefined") {
-                        console.log("ETRNTORTORTORTORTORTOadsdasdsadsa");
-                        
                         stageNew = await models.stage.create({
                             stage: stage,
                             description: description_stage,
@@ -285,13 +283,11 @@ module.exports = {
                         stepNew = await models.step.create({
                             icon: fileName,
                             step: step,
-                            stage_id: stage_id !== "undefined"  ? stage_id : stageNew.id
+                            stage_id: stage_id !== "undefined" ? stage_id : stageNew.id
                         }, { transaction: t }).catch(err => console.log(err))
                     }
 
                     if (stage_id !== "undefined") {
-                        console.log("entro");
-
                         stageFind = await models.stage.findOne({
                             where: { id: stage_id }
                         })
@@ -299,15 +295,12 @@ module.exports = {
                     } else {                        
                         typeUser = stageNew.type
                     }
-
-                    console.log("STEPNEW",stepNew);
                     
                     tipNew = await models.tip.create({
                         tip: tip,
                         description: description_tip,
                         step_id: step_id !== "undefined"  ? step_id : stepNew.id
                     }, { transaction: t }).catch(err => { console.log(err) })
-                    console.log("tiptiptitp",tipNew);
                     
                     if (typeUser == "startup") {
                         const startups = await models.startup.findAll({
@@ -322,8 +315,8 @@ module.exports = {
                             chlls.push({
                                 user_id: startups[i].entrepreneur.user_id,
                                 startup_id: startups[i].id,
-                                stage_id: stepFind.stage.id,
-                                step_id: stepFind.id,
+                                stage_id: stage_id !== "undefined" ? stage_id : stageNew.id,
+                                step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 tip_id: tipNew.id,
                                 checked: false,
                                 status: "Sin respuesta",
@@ -332,13 +325,13 @@ module.exports = {
                             const startup_step = await models.startup_step.findOne({
                                 where: {
                                     startup_id: startups[i].id,
-                                    step_id: stepFind.id
+                                    step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 }
                             })
                             if (!startup_step) {
                                 stp_step.push({
                                     startup_id: startups[i].id,
-                                    step_id: stepFind.id,
+                                    step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                     tip_completed: 0,
                                     icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
                                     state: 'incompleto'
@@ -357,8 +350,8 @@ module.exports = {
                             chlls.push({
                                 user_id: employees[i].user_id,
                                 employee_id: employees[i].id,
-                                stage_id: stage_id || stageNew.id,
-                                step_id: step_id || stepNew.id,
+                                stage_id: stage_id !== "undefined" ? stage_id : stageNew.id,
+                                step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 tip_id: tipNew.id,
                                 checked: false,
                                 status: "Sin respuesta",
@@ -367,13 +360,13 @@ module.exports = {
                             const employee_step = await models.employee_step.findOne({
                                 where: {
                                     employee_id: employees[i].id,
-                                    step_id: step_id || stepNew.id,
+                                    step_id: step_id !== "undefined" ? step_id : stepNew.id
                                 }
                             })
                             if (!employee_step) {
                                 emp_step.push({
                                     employee_id: employees[i].id,
-                                    step_id: step_id || stepNew.id,
+                                    step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                     tip_completed: 0,
                                     icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
                                     state: 'incompleto'
