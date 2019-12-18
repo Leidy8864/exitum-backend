@@ -1,6 +1,7 @@
 
 var multer = require('multer');
 var path = require('path');
+var fs = require('fs');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -16,29 +17,6 @@ const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip'
 const FILES_TIP_REPLY_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip_reply';
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
-
-// var storage = multer.diskStorage({ //multers disk storage settings
-//     destination: function (req, file, cb) {
-//         console.log("DIRNAME", __dirname);
-
-//         cb(null, path.join('./uploads'))
-//     },
-//     filename: function (req, file, cb) {
-//         var datetimestamp = Date.now();
-//         cb(null, file.originalname)
-//     }
-// });
-
-// var upload = multer({ //multer settings    
-//     storage: storage,
-//     fileFilter: function (req, file, callback) { //file filter
-//         if (['xls', 'xlsx'].indexOf(file.name.split('.')[file.name.split('.').length - 1]) === -1) {
-//             return callback(new Error('Wrong extension type'));
-//         }
-//         callback(null, true);
-//     }
-// }).single('file');
-
 module.exports = {
     validate: (method) => {
         var message_exists = "Este campo es obligatorio";
@@ -639,6 +617,16 @@ module.exports = {
         for (var i = 0; i < skll_usr.length; i++) {
             skll_ids.push(skll_usr[i].skill_id)
         }
+
+        const exp_usr = await models.experience.findAll({
+            where: { user_id: user_id },
+            attributes: ['user_id','category_id','id']
+        })
+        var exp_ids = []
+        for (var i = 0; i < exp_usr.length; i++) {
+            exp_ids.push(exp_usr[i].category_id)
+        }
+
         const challenges = await models.challenge.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
@@ -663,7 +651,16 @@ module.exports = {
                                     [models.Sequelize.Op.in]: skll_ids
                                 }
                             },
-                            required: true
+                            required: false
+                        },
+                        {
+                            model: models.tip_category,
+                            where: {
+                                category_id: {
+                                    [models.Sequelize.Op.in]: exp_ids
+                                }
+                            },
+                            required: false
                         },
                         {
                             model: models.file_tip
@@ -673,7 +670,19 @@ module.exports = {
                 },
                 {
                     model: models.file
-                }
+                },
+                {
+                    model: models.startup,
+                    required: true
+                },
+                {
+                    model: models.stage,
+                    required: true
+                },
+                {
+                    model: models.step,
+                    required: true
+                },
             ]
         })
         const totalRows = await models.challenge.findAll({
@@ -823,9 +832,14 @@ module.exports = {
             } else {
                 exceltojson = xlstojson;
             }
+<<<<<<< HEAD
 
             // console.log("PATH", path.dirname(fileName));
             
+=======
+            console.log(req.files)
+            console.log(req.file)
+>>>>>>> 7ad7aaa5727e94e387eb854f01eccd4bf48297f4
             try {
                 exceltojson({
                     input: `./uploads/${fileName}`, // ./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
