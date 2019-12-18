@@ -10,7 +10,7 @@ router.get('/all',
     controller.all
 );
 
-router.get('/show/:type',
+router.get('/show',
     controller.validate('show'),
     controller.show
 );

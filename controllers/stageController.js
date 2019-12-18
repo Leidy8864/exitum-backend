@@ -17,7 +17,7 @@ module.exports = {
 
         switch (review) {
             case 'show':
-                return [ type ]
+                return [ stage_id ]
             case 'create':
                 return [ stage, type ]
             case 'update':
@@ -53,11 +53,11 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
         }
 
-        const { type } = req.params
+        const { stage_id } = req.query
 
         try {
             var stage = await models.stage.findAll({ 
-                where: { type: type }
+                where: { id: stage_id }
              })
             return res.status(200).json({ status: true, message: "OK", data:  stage })
         } catch (err) {
