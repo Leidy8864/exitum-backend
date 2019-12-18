@@ -20,7 +20,7 @@ router.post('/create',
     controller.create
 );
 
-router.post('/update/:id_stage',
+router.post('/update',
     controller.validate('update'),
     controller.update
 );

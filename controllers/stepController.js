@@ -34,7 +34,7 @@ module.exports = {
 
     },
 
-    listByStage: async(req, res) => {
+    listByStage: async (req, res) => {
         try {
             const { stage_id } = req.query
             const step = await models.step.findAll({
@@ -107,13 +107,31 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip_id } = req.body
+        const { step_id } = req.query
 
         try {
-            var tip_data = await existById(models.tip, tip_id)
-            await tip_data.destroy()
-
-            return successful(res, text.successDelete('step'))
+            const tips = await models.tip.findAll({
+                where: {
+                    step_id: step_id
+                }
+            })
+            
+            console.log(tips)
+            const tip_categories = await models.tip_category.destroy({
+                where: {
+                    tip_id: {
+                        [models.Sequelize.Op.in]: tips.id
+                    }
+                }
+            })
+            const challenges = await models.challenge.destroy({
+                where: {
+                    step_id: step_id
+                }
+            })
+            var step_data = await existById(models.step, step_id)
+            await step_data.destroy()
+            return successful(res, text.successDelete('step'), step_data)
 
         } catch (error) { return returnError(res, error) }
 
