@@ -17,34 +17,6 @@ const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip'
 const FILES_TIP_REPLY_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip_reply';
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
-
-var storage = multer.diskStorage({ //multers disk storage settings
-    destination: function (req, file, cb) {
-        //cb(null, path.join(__dirname + '/uploads/'))
-        fs.mkdir('./uploads', function (err) {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                cb(null, './uploads');
-            }
-        })
-    },
-    filename: function (req, file, cb) {
-        var datetimestamp = Date.now();
-        cb(null, file.fieldname + '-' + datetimestamp)
-    }
-});
-
-var upload = multer({ //multer settings
-    storage: storage,
-    fileFilter: function (req, file, callback) { //file filter
-        if (['xls', 'xlsx'].indexOf(file.name.split('.')[file.name.split('.').length - 1]) === -1) {
-            return callback(new Error('Wrong extension type'));
-        }
-        callback(null, true);
-    }
-}).single('file');
-
 module.exports = {
     validate: (method) => {
         var message_exists = "Este campo es obligatorio";
@@ -860,30 +832,38 @@ module.exports = {
     /** API path that will upload the files */
     uploadExcel: async (req, res) => {
         var exceltojson; //Initialization
-        upload(req, res, function (err) {
-            if (err) {
-                res.json({ status: false, message: err });
-                return;
+        const messageFileInvalid = "Error el formato del archivo no es válido, solo se admite archivos Excel";
+
+        if (req.files) {
+            var file = req.files.file;
+            var datetimestamp = Date.now();
+            const fileName = datetimestamp + '-' + file.name;
+
+            console.log("FILE", file);
+            const conditionF = file.name.match(/\.(xls|xlsx)$/);
+
+            if (!file.name.match(/\.(xls|xlsx)$/)) {
+                return res.json({ status: false, message: messageFileInvalid })
             }
-            /** Multer gives us file info in req.files object */
-            if (!req.files) {
-                res.json({ status: false, message: "No file passed" });
-                return;
-            }
-            //start convert process
-            /** Check the extension of the incoming file and
-             *  use the appropriate module
-             */
-            if (req.files.file.name.split('.')[req.files.file.name.split('.').length - 1] === 'xlsx') {
+            file.mv('./uploads/' + fileName, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("uploaded");
+                }
+            });
+
+            if (fileName.match(/\.(xlsx)$/)) {
                 exceltojson = xlsxtojson;
             } else {
                 exceltojson = xlstojson;
             }
-            console.log(req.files)
-            console.log(req.file)
+
+            // console.log("PATH", path.dirname(fileName));
+            
             try {
                 exceltojson({
-                    input: "./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
+                    input: `./uploads/${fileName}`, // ./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
                     output: null, //since we don't need output.json
                     lowerCaseHeaders: true
                 }, async (err, result) => {
@@ -1032,6 +1012,8 @@ module.exports = {
                 console.log(e)
                 res.json({ status: false, message: "Archivo corrupto" });
             }
-        });
+        } else {
+            return res.json({ status: false, message: messageFileInvalid })
+        }
     }
 }
