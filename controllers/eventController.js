@@ -77,7 +77,8 @@ module.exports = {
                 ],
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'photo',
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id',
+                    'participants'
                     // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
                 ],
                 // group : [ 'id', 'toWorkshopUsers.id', 'toWorkshopCategories.id'],
@@ -120,7 +121,7 @@ module.exports = {
                     }
                 ],
                 attributes: [
-                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id'
+                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants'
                 ],
             })
             return successful(res, 'OK', event)
@@ -174,7 +175,8 @@ module.exports = {
                 where: { user_id: user.id },
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
-                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id'
+                    [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id',
+                    'participants'
                 ]
             })
 
@@ -328,7 +330,7 @@ module.exports = {
         {
             var event = await models.workshop.findByPk(event_id, {
                 attributes: [ 'id', 'title', 'description', [ Sequelize.fn( 'Date_format', Sequelize.col('day'), "%W %M %e %Y" ), 'day' ],  
-                [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'place' ]
+                [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'place', 'participants' ]
             })
             if (!event) throw text.notFoundElement
             
