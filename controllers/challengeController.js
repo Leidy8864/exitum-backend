@@ -698,7 +698,19 @@ module.exports = {
                 },
                 {
                     model: models.file
-                }
+                },
+                {
+                    model: models.startup,
+                    required: true
+                },
+                {
+                    model: models.stage,
+                    required: true
+                },
+                {
+                    model: models.step,
+                    required: true
+                },
             ]
         })
         const totalRows = await models.challenge.findAll({
