@@ -81,9 +81,6 @@ module.exports = {
                         tip: "Reto número " + x,
                         step_id: stepNew.id
                     }, { transaction: t })
-                    console.log("@@@@@@@@")
-                    console.log(stageFind.id)
-                    console.log("@@@@@@@@")
                     if (stageFind.type == "startup") {
                         var startups = await models.startup.findAll({
                             attributes: ['id'],
@@ -210,6 +207,7 @@ module.exports = {
 
         const { step_id } = req.query
         var tips_id = []
+        var chlls_id = []
         try {
             const tips = await models.tip.findAll({
                 where: {
@@ -231,6 +229,21 @@ module.exports = {
                     tip_id: tips_id
                 }
             })
+            const chlls = await models.challenge.findAll({
+                where: {
+                    step_id: step_id
+                },
+                attributes: ['id']
+            })
+            for (var x = 0; x < chlls.length; x++) {
+                chlls_id.push(chlls[x].id)
+            }
+            console.log("hasta aca")
+            await models.file.destroy({
+                where: {
+                    id: chlls_id    
+                }
+            })
             await models.challenge.destroy({
                 where: {
                     step_id: step_id
@@ -244,6 +257,11 @@ module.exports = {
             await models.startup_step.destroy({
                 where: {
                     step_id: step_id
+                }
+            })
+            await models.file_tip.destroy({
+                where: {
+                    id: tips_id    
                 }
             })
             await models.tip.destroy({
