@@ -52,5 +52,6 @@ module.exports = {
     tokenNotProvided: `Lo sentimos no cuenta con los permisos necesarios.`,
     failedTokenVerification: `Token no válido.`,
     failedTokenExpiration: `Token expirado.`,
+    requireImage: `Se necesita una imagen.`,
 
 }

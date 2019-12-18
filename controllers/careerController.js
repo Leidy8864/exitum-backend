@@ -30,12 +30,12 @@ module.exports = {
 
     all:  async(req, res) => {
 
-        try {
-
+        try 
+        {
             const career = await models.career.findAll({});
-            successful(res, 'OK', career)
+            return successful(res, 'OK', career)
             
-        } catch (error)  {  returnError(res, error) } 
+        } catch (error) { return returnError(res, error) } 
 
     },
 
@@ -44,16 +44,16 @@ module.exports = {
     create: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { name } = req.body
 
-        try {
-
+        try 
+        {
             await createCareer(name)
-            successful(res, text.successCreate('profesión'))
+            return successful(res, text.successCreate('profesión'))
             
-        } catch(error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     }
 }

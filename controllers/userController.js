@@ -512,44 +512,39 @@ module.exports = {
 
         const { user_id } = req.body
 
-        try {
-
+        try 
+        {
             const user = await models.user.findOne({
                 where: { id: user_id },
                 attributes: { exclude: ['password'] }
             });
 
-            if (user) {
+            if (!user) return successful(res, text.notFoundElement,  {}, 402)
+            if (!req.files) return successful(res, text.requireImage,  {}, 402)
 
-                if (!req.files) throw ('Se necesita una imagen.')
-
-                if (user.photo && user.photo != '' && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
-                    s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[5]);
-                }
-
-                var photo = req.files.photo;
-                fileName = s3.putObject(NEW_BUCKET_NAME, photo);
-                await user.update({ photo: fileName });
-
-                successful(res, text.successUpdate('imagen'), user)
-
-            } else {
-                throw ('El usuario no existe!')
+            if (user.photo && user.photo != '' && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
+                s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[5]);
             }
 
-        } catch (error) { returnError(res, error) }
+            var photo = req.files.photo;
+            fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+            await user.update({ photo: fileName });
+
+            return successful(res, text.successUpdate('imagen'), user)
+
+        } catch (error) { return returnError(res, error) } 
 
     },
 
     updateUser: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id, name, lastname, phone, role, birthday, description, skill_id, active } = req.body
 
-        try {
-
+        try 
+        {
             const user = await models.user.findOne({
                 where: { id: user_id },
                 attributes: { exclude: ['password'] }
@@ -676,7 +671,7 @@ module.exports = {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     },
 
@@ -693,12 +688,12 @@ module.exports = {
     show: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
-        try {
-
+        try 
+        {
             const user = await models.user.findByPk(user_id,
                 {
                     attributes: ['id', 'name', 'lastname', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
@@ -725,11 +720,11 @@ module.exports = {
 
             // var 
             
-            var unavailables = await user.getUnavailables()
+            // var unavailables = await user.getUnavailables()
 
-            successful(res, 'OK', user)
+            return successful(res, 'OK', user)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     },
 
@@ -816,9 +811,9 @@ module.exports = {
             const { user_id } = req.params
 
             var user = await models.user.findAll({ attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname']], where: { id: { [Sequelize.Op.ne]: user_id } } })
-            successful(res, 'OK', user)
+            return successful(res, 'OK', user)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) } 
 
     }
 }

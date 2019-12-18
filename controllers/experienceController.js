@@ -35,12 +35,12 @@ module.exports = {
     findUserId: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id)
 
             // var expereriences = await user.getExperience({
@@ -113,21 +113,21 @@ module.exports = {
                 }
             }))
 
-            successful(res, 'OK', data)
+            return successful(res, 'OK', data)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     show: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { experience_id } = req.params
 
-        try {
-
+        try 
+        {
             await existById(models.experience, experience_id)
 
             const experience = await models.experience.findByPk(experience_id, {
@@ -142,21 +142,21 @@ module.exports = {
                  ]
             })
 
-            successful(res, 'OK', experience)
+            return successful(res, 'OK', experience)
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     createExperience: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
         
         const { user_id, position, company_name, description, date_start, date_end, category_id } = req.body
 
-        try {
-
+        try 
+        {
             const user = await existById(models.user, user_id);
             const occupation = await createOccupation(position)
             const company = await createCompany(company_name)
@@ -171,25 +171,22 @@ module.exports = {
                     company_id: company.id,
                     current_job: (date_end) ? 0 : 1
                 });
+            
+            return successful(res, text.successCreate('experiencia'))
 
-            // if (!created) throw(text.duplicateElement)
-
-            successful(res, text.successCreate('experiencia'))
-
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     updateExperience: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { experience_id, user_id, position, company_name, description, date_start, date_end, category_id } = req.body
         
-
-        try {
-
+        try 
+        {
             var experience = await models.experience.findOne({
                 where: {
                     [Sequelize.Op.and]: [
@@ -226,7 +223,7 @@ module.exports = {
                 current_job: (date_end) ? 0 : 1
             });
 
-            successful(res, text.successUpdate('experiencia'))
+            return successful(res, text.successUpdate('experiencia'))
 
         } catch (error) { returnError(res, error) }
         
@@ -235,12 +232,12 @@ module.exports = {
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id, experience_id } = req.body
 
-        try {
-
+        try 
+        {
             const experience = await models.experience.findOne({
                 where: { 
                     [Sequelize.Op.and]: [
@@ -254,9 +251,9 @@ module.exports = {
 
             await experience.destroy()
 
-            successful(res)
+            return successful(res)
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 }

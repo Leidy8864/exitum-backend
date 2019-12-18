@@ -61,13 +61,13 @@ module.exports = {
 	listByUserId: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params;
 		const { date, type } = req.body;
 
-		try {
-			
+		try 
+		{	
 			const user = await existById(models.user, to_user_id);
 			const appointment = await models.appointment.findAll({
 				where: {
@@ -77,23 +77,23 @@ module.exports = {
 
 			if (!appointment) throw text.notFoundElement;
 
-			successful(res, 'OK', appointment);
+			return  successful(res, 'OK', appointment);
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	},
 
 	listByUserReminder: async (req, res) => {
 
 		var errors = validationResult(req)
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params
 		// const perPage = 3
 		// var page = req.query.page || 1;
 
-		try {
-
+		try 
+		{
 			const user = await existById(models.user, to_user_id, 'id')
 			var date = moment().subtract(24, 'hours');
 			var minute = date.minutes();
@@ -114,23 +114,23 @@ module.exports = {
 				]
 			})
 
-			successful(res, 'OK', appointment)
+			return successful(res, 'OK', appointment)
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	},
 
 	listByUserMeeting: async (req, res) => {
 
 		var errors = validationResult(req)
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params
 		const perPage = 3
 		var page = req.query.page || 1;
 
-		try {
-
+		try 
+		{
 			const user = await existById(models.user, to_user_id, 'id')
 			var date = moment().subtract(24, 'hours');
 			var minute = date.minutes();
@@ -160,22 +160,22 @@ module.exports = {
 				]
 			})
 
-			successful(res, 'OK', appointment)
+			return successful(res, 'OK', appointment)
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	},
 
 	create: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params;
 		const { from_user_id, title, date, time, type, description } = req.body;
 
-		try {
-
+		try 
+		{
 			const user = await existById(models.user, to_user_id)
 			const user_emit = await existById(models.user, from_user_id)
 			var timeF = timesFormat(time)
@@ -217,22 +217,22 @@ module.exports = {
 				sendEmail(email_info, data_send)
 			}
 
-            successful(res, text.successCreate('reserva'));
+            return successful(res, text.successCreate('reserva'));
             
-        } catch (error) { returnError(res, error); }
+        } catch (error) { return returnError(res, error) } 
         
 	},
 	
 	update: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { appointment_id } = req.params;
 		const { to_user_id, from_user_id, title, date, time, description } = req.body;
 
-		try {
-
+		try 
+		{
 			const user = await existById(models.user, to_user_id, 'id', 'from_hour', 'to_hour');
 
 			var appointment = await models.appointment.findOne({
@@ -282,54 +282,55 @@ module.exports = {
 				description: description || appointment.description
 			})
 
-            successful(res, text.successUpdate('reserva'));
+            return successful(res, text.successUpdate('reserva'));
             
-        } catch (error) { returnError(res, error); }
+        } catch (error) { return returnError(res, error) } 
         
 	},
 
 	cancel: async (req, res) => {
 
 		var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { appointment_id } = req.params
 
-		try {
-
+		try 
+		{
 			var appointment = await models.appointment.findOne({ where: { id: appointment_id } })
 
 			if (!appointment) throw (text.notFoundElement)
 
 			appointment.destroy()
 
-			successful(res, text.successDelete('agenda'))
+			return successful(res, text.successDelete('agenda'))
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	}, 
 
 	rate: async (req, res) => {
 
 		var errors = validationResult(req);
-		if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+		if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 		
-		try {
+		try 
+		{
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	},
 
 	confirmation: async (req, res) => {
 
 		var errors = validationResult(req);
-		if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+		if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { appointment_id } = req.params
 		const { status } = req.body
 
-		try {
-			
+		try 
+		{	
 			var appointment = await models.appointment.findByPk(appointment_id, {
 				attributes: [ 'id', 'title', 'from_user_id', 'to_user_id', 'date', [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('time'),  '%h:%i %p'), 'time' ], 'type', 'description', 'status' ],
 				include: [
@@ -363,16 +364,16 @@ module.exports = {
 				sendEmail(email_info, data_send)
 			}
 
-			successful(res)
+			return successful(res)
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	},
 
 	pending: async (req, res) => {
 
 		var errors = validationResult(req);
-		if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+		if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
 		const { to_user_id } = req.params
 		
@@ -404,9 +405,9 @@ module.exports = {
 				]
 			})
 
-			successful(res, 'OK', appointment)
+			return successful(res, 'OK', appointment)
 
-		} catch (error) { returnError(res, error) }
+		} catch (error) { return returnError(res, error) } 
 
 	}
 

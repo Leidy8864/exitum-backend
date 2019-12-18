@@ -36,7 +36,7 @@ module.exports = {
     findUserId: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id } = req.params
 
@@ -66,16 +66,16 @@ module.exports = {
                }
             } ))
 
-            successful(res, 'OK', certifications)
+            return successful(res, 'OK', certifications)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     create:  async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
@@ -114,16 +114,16 @@ module.exports = {
 
             if (!created) throw(text.duplicateElement)
 
-            successful(res, text.successCreate('certificado'))
+            return successful(res, text.successCreate('certificado'))
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     downloadFile: async(req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { file_name } = req.params
 
@@ -133,7 +133,7 @@ module.exports = {
             var  fileStream = getObject(NEW_BUCKET_NAME, file_name)
             fileStream.pipe(res)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
         // Guardar en proyecto
         // var s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -145,7 +145,7 @@ module.exports = {
     updateUserCertification: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
 
@@ -189,16 +189,16 @@ module.exports = {
                 document_url: fileName
             })
 
-            successful(res, text.successUpdate('certificado'))
+            return successful(res, text.successUpdate('certificado'))
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
     delete: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         try 
         {
@@ -221,9 +221,9 @@ module.exports = {
     
             await certification.destroy()
 
-            successful(res, text.successDelete('certificado'))
+            return successful(res, text.successDelete('certificado'))
             
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     }
 

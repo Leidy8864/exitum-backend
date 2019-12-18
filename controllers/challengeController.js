@@ -595,11 +595,12 @@ module.exports = {
     },
 
     deleteFileReply: async (req, res) => {
+
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        try {
-
+        try 
+        {
             const { challenge_id, key_s3 } = req.body
 
             var file = await models.file.findOne({
@@ -617,9 +618,10 @@ module.exports = {
 
             await file.destroy()
 
-            successful(res, text.successDelete('archivo'))
+            return successful(res, text.successDelete('archivo'))
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
+
     },
 
     showChallengesToVerify: async (req, res) => {
@@ -706,12 +708,12 @@ module.exports = {
     verifyChallenge: async (req, res) => {
 
         var errors = validationResult(req);
-        if (!errors.isEmpty()) { returnError(res, text.validationData, errors.array()) }
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { challenge_id, comment, status, verifying_user } = req.body
 
-        try {
-
+        try 
+        {
             var update_challenge = await existById(models.challenge, challenge_id)
 
             await update_challenge.update({
@@ -760,9 +762,9 @@ module.exports = {
                 sendEmail(email_info, data_send)
             }
 
-            successful(res, text.succesful_validation)
+            return successful(res, text.succesful_validation)
 
-        } catch (error) { returnError(res, error) }
+        } catch (error) { return returnError(res, error) }
 
     },
 
