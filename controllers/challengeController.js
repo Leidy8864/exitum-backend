@@ -1,6 +1,7 @@
 
 var multer = require('multer');
 var path = require('path');
+var fs = require('fs');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -19,7 +20,14 @@ const { successful, returnError } = require('./responseController')
 
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname + '/uploads/'))
+        //cb(null, path.join(__dirname + '/uploads/'))
+        fs.mkdir('./uploads', function(err) {
+            if(err) {
+                console.log(err.stack)
+            } else {
+                cb(null, './uploads');
+            }
+        })
     },
     filename: function (req, file, cb) {
         var datetimestamp = Date.now();
@@ -637,6 +645,16 @@ module.exports = {
         for (var i = 0; i < skll_usr.length; i++) {
             skll_ids.push(skll_usr[i].skill_id)
         }
+
+        const exp_usr = await models.experience.findAll({
+            where: { user_id: user_id },
+            attributes: ['user_id','category_id','id']
+        })
+        var exp_ids = []
+        for (var i = 0; i < exp_usr.length; i++) {
+            exp_ids.push(exp_usr[i].category_id)
+        }
+
         const challenges = await models.challenge.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
@@ -661,7 +679,16 @@ module.exports = {
                                     [models.Sequelize.Op.in]: skll_ids
                                 }
                             },
-                            required: true
+                            required: false
+                        },
+                        {
+                            model: models.tip_category,
+                            where: {
+                                category_id: {
+                                    [models.Sequelize.Op.in]: exp_ids
+                                }
+                            },
+                            required: false
                         },
                         {
                             model: models.file_tip
@@ -814,7 +841,7 @@ module.exports = {
             } else {
                 exceltojson = xlstojson;
             }
-            console.log(req.files.path)
+            console.log(req.files)
             console.log(req.file)
             try {
                 exceltojson({

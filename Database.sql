@@ -5,7 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema exitum
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema exitum
@@ -157,7 +157,6 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup` (
   `stage_id` INT(11) NOT NULL,
   `category_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   INDEX `fk_startup_emprendedor1_idx` (`entrepreneur_id` ASC),
   INDEX `fk_startup_stage1_idx` (`stage_id` ASC),
   INDEX `fk_startup_category1_idx` (`category_id` ASC),
@@ -719,9 +718,9 @@ CREATE TABLE IF NOT EXISTS `exitum`.`education` (
   `user_id` INT(11) NOT NULL,
   `career_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_educations_universities1_idx` (`university_id` ASC) VISIBLE,
-  INDEX `fk_education_user1_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_education_career1_idx` (`career_id` ASC) VISIBLE,
+  INDEX `fk_educations_universities1_idx` (`university_id` ASC),
+  INDEX `fk_education_user1_idx` (`user_id` ASC),
+  INDEX `fk_education_career1_idx` (`career_id` ASC),
   CONSTRAINT `fk_education_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
@@ -1586,7 +1585,6 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user_workshop` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-
 -- -----------------------------------------------------
 -- Table `exitum`.`administrador`
 -- -----------------------------------------------------
@@ -1600,6 +1598,26 @@ CREATE TABLE IF NOT EXISTS `exitum`.`administrador` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `exitum`.`tip_category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`tip_category` (
+  `tip_id` INT NOT NULL,
+  `category_id` INT NOT NULL,
+  PRIMARY KEY (`tip_id`, `category_id`),
+  INDEX `fk_tip_has_category_category1_idx` (`category_id` ASC),
+  INDEX `fk_tip_has_category_tip1_idx` (`tip_id` ASC),
+  CONSTRAINT `fk_tip_has_category_tip1`
+    FOREIGN KEY (`tip_id`)
+    REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tip_has_category_category1`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `exitum`.`category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -1625,9 +1643,22 @@ VALUES (NULL, 'Emprendedor', 'Emprendedor', 'emprendedor@gmail.com', '$2b$10$AVb
 
 INSERT INTO `entrepreneur` (`id`, `user_id`) VALUES (NULL, '5'), (NULL, '6');
 
-INSERT INTO `category` (`id`, `name`) VALUES (NULL, 'Tecnológico'), (NULL, 'Radio y televisión'), (NULL, 'Automotriz'), (NULL, 'Alimenticia'), (NULL, 'Bebidas'),
-(NULL, 'Textil'), (NULL, 'Construnccion'), (NULL, 'Maquinaria y equipo'), (NULL, 'Productos Químicos'), (NULL, 'Farmaceutica'), (NULL, 'Inmoviliarias'), (NULL, 'Transporte'),
-(NULL, 'Agricultura'), (NULL, 'Educación'), (NULL, 'Salud');
+INSERT INTO `category` (`id`, `name`) 
+VALUES (NULL, 'Tecnológico'), 
+(NULL, 'Radio y televisión'), 
+(NULL, 'Automotriz'), 
+(NULL, 'Alimenticia'), 
+(NULL, 'Bebidas'),
+(NULL, 'Textil'), 
+(NULL, 'Construnccion'), 
+(NULL, 'Maquinaria y equipo'), 
+(NULL, 'Productos Químicos'), 
+(NULL, 'Farmaceutica'), 
+(NULL, 'Inmoviliarias'), 
+(NULL, 'Transporte'),
+(NULL, 'Agricultura'), 
+(NULL, 'Educación'), 
+(NULL, 'Salud');
 
 INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (1,'Emprendedor');
 INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (2,'Diseñador Ux');
@@ -1858,6 +1889,19 @@ INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('20', '1');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('21', '1');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('24', '1');
 
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('1', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('4', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('5', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('8', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('9', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('12', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('13', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('16', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('17', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('20', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('21', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('24', '2');
+
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('31', 'Nivel 1 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('32', 'Nivel 2 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('33', 'Nivel 3 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
@@ -2029,6 +2073,27 @@ INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '8');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '9');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '7');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '12');
+
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('121', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('121', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('121', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('124', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('124', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('125', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('125', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('125', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('128', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('128', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('129', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('129', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('129', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('132', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('132', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('133', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('133', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('133', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('136', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('136', '2');
 
 insert into `exitum`.`file_tip`(id, name, key_s3, tip_id) values 
 ( 1, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 1),
