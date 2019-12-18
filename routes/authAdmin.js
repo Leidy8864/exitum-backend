@@ -13,6 +13,21 @@ router.post('/sign-up',
     controller.signUp
 );
 
+router.post('/forgot-password',
+    controller.validate('forgot-password'),
+    controller.forgotPassword
+);
+
+router.get('/reset/:token',
+    controller.validate('reset-get'),
+    controller.verifyToken
+);
+
+router.post('/reset',
+  controller.validate('reset-post'),
+    controller.verifyToken
+);
+
 router.get('/me',
   auth,
   controller.me

@@ -49,7 +49,48 @@ function verifyToken(token)
     
 }
 
+function createTokenForgot (data = true, expiresIn = '30m') 
+{
+    const payload = {
+        sub : data
+    }
+
+    const signOptions = {
+        expiresIn:  expiresIn,
+        algorithm:  "RS256"
+    };
+
+    const token = jwt.sign(payload, privateKEY, signOptions);
+
+    return token
+}
+
+function verifyTokenForgot (token, expiresIn = '30m') 
+{
+    const verifyOptions  = {
+        expiresIn:  expiresIn,
+        algorithm:  "RS256"
+    };
+
+    const decoded =  new Promise((resolve, reject) => {
+        try 
+        {
+            const payload = jwt.verify(token, publicKEY, verifyOptions);
+            resolve( payload.sub )
+        } 
+        catch (error)
+        {
+            reject( error.message )
+        }
+    })
+    
+    return decoded
+    
+}
+
 module.exports = {
     createToken,
-    verifyToken
+    verifyToken,
+    createTokenForgot,
+    verifyTokenForgot
 }
