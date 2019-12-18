@@ -103,7 +103,7 @@ module.exports = {
                 stage: stage,
                 description: description
             })
-            return res.json({ status: false, message: "Editado correctamente", data: user })
+            return res.json({ status: true, message: "Editado correctamente", data: user })
         } catch (err) {
             return res.status(500).json({ status: false, message: err.message, data: {} })
         }
