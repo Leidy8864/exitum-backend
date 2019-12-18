@@ -22,13 +22,13 @@ var storage = multer.diskStorage({ //multers disk storage settings
     },
     filename: function (req, file, cb) {
         var datetimestamp = Date.now();
-        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.name.split('.')[file.name.split('.').length - 1])
+        cb(null, file.fieldname + '-' + datetimestamp)
     }
 });
+
 var upload = multer({ //multer settings
     storage: storage,
     fileFilter: function (req, file, callback) { //file filter
-        console.log("@@@",file)
         if (['xls', 'xlsx'].indexOf(file.name.split('.')[file.name.split('.').length - 1]) === -1) {
             return callback(new Error('Wrong extension type'));
         }
@@ -243,7 +243,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
-        const { stage, description_stage, type, stage_id, tip, description_tip, step_id } = req.body
+        const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id } = req.body
         var st
         var stageFind = null
         var typeUser = null
@@ -819,6 +819,7 @@ module.exports = {
                     lowerCaseHeaders: true
                 }, function (err, result) {
                     if (err) {
+                        console.log(err)
                         return res.json({ error_code: 1, err_desc: err, data: null });
                     }
                     res.json({ error_code: 0, err_desc: null, data: result });
