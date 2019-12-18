@@ -21,8 +21,8 @@ const { successful, returnError } = require('./responseController')
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function (req, file, cb) {
         //cb(null, path.join(__dirname + '/uploads/'))
-        fs.mkdir('./uploads', function(err) {
-            if(err) {
+        fs.mkdir('./uploads', function (err) {
+            if (err) {
                 console.log(err.stack)
             } else {
                 cb(null, './uploads');
@@ -252,7 +252,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
-        const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id } = req.body
+        const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id, skills, categories } = req.body
 
         var st
         var stageFind = null
@@ -306,6 +306,32 @@ module.exports = {
                         description: description_tip,
                         step_id: step_id !== "undefined" ? step_id : stepNew.id
                     }, { transaction: t }).catch(err => { console.log(err) })
+
+                    if (skills) {
+                        var skills_id = await Promise.all(skills.map(async element => {
+                            var [response, created] = await models.skill.findOrCreate({
+                                where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    skill: element
+                                }
+                            })
+                            return await response.id
+                        }), { transaction: t })
+                        await tipNew.addSkill(skills_id, { transaction: t });
+                    }
+
+                    if (categories) {
+                        var categories_id = await Promise.all(categories.map(async element => {
+                            var [response, created] = await models.category.findOrCreate({
+                                where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    name: element
+                                }
+                            })
+                            return await response.id
+                        }), { transaction: t })
+                        await tipNew.addCategory(categories_id, { transaction: t });
+                    }
 
                     if (typeUser == "startup") {
                         const startups = await models.startup.findAll({
@@ -648,7 +674,7 @@ module.exports = {
 
         const exp_usr = await models.experience.findAll({
             where: { user_id: user_id },
-            attributes: ['user_id','category_id','id']
+            attributes: ['user_id', 'category_id', 'id']
         })
         var exp_ids = []
         for (var i = 0; i < exp_usr.length; i++) {
@@ -857,7 +883,7 @@ module.exports = {
             console.log(req.file)
             try {
                 exceltojson({
-                    input: "",//"./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
+                    input: "./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
                     output: null, //since we don't need output.json
                     lowerCaseHeaders: true
                 }, async (err, result) => {
@@ -890,7 +916,6 @@ module.exports = {
                                 },
                                 transaction: t
                             }).spread(async (tipNew, created) => {
-                                // userResult is the user instance
                                 if (created) {
                                     if (result[x].tipo == "startup") {
                                         var startups = await models.startup.findAll({
@@ -969,7 +994,7 @@ module.exports = {
                                         return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
                                     }
                                 }
-                                var cadena = result[x].skills;
+                                var cadena = result[x].habilidades;
                                 var skills = cadena.split(/(?:,| )+/);
                                 if (skills) {
                                     var skills_id = await Promise.all(skills.map(async element => {
@@ -981,8 +1006,23 @@ module.exports = {
                                         })
                                         return await response.id
                                     }), { transaction: t })
+                                    await tipNew.addSkill(skills_id, { transaction: t });
                                 }
-                                await tipNew.addSkill(skills_id, { transaction: t });
+
+                                var cadena_two = result[x].categorias;
+                                var categories = cadena_two.split(/(?:,| )+/);
+                                if (categories) {
+                                    var categories_id = await Promise.all(categories.map(async element => {
+                                        var [response, created] = await models.category.findOrCreate({
+                                            where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                            defaults: {
+                                                name: element
+                                            }
+                                        })
+                                        return await response.id
+                                    }), { transaction: t })
+                                    await tipNew.addCategory(categories_id, { transaction: t });
+                                }
                             });
                         }
                     })
