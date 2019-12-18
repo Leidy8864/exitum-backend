@@ -244,6 +244,11 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
         const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id } = req.body
+
+        console.log("BODY",req.body);
+        console.log("FILES",req.files);
+        
+        
         var st
         var stageFind = null
         var typeUser = null
@@ -261,7 +266,9 @@ module.exports = {
                 if (st) {
                     res.json({ status: false, message: "El nombre de esta etapa ya existe" });
                 } else {
-                    if (!stage_id) {
+                    if (stage_id === "undefined") {
+                        console.log("ETRNTORTORTORTORTORTOadsdasdsadsa");
+                        
                         stageNew = await models.stage.create({
                             stage: stage,
                             description: description_stage,
@@ -269,7 +276,7 @@ module.exports = {
                         }, { transaction: t }).catch(err => console.log(err))
                     }
 
-                    if (!step_id) {
+                    if (step_id === "undefined") {
                         if (req.files) {
                             var photo = req.files.photo;
                             fileName = s3.putObject(NEW_BUCKET_NAME, photo);
@@ -278,25 +285,30 @@ module.exports = {
                         stepNew = await models.step.create({
                             icon: fileName,
                             step: step,
-                            stage_id: stage_id || stageNew.id
+                            stage_id: stage_id !== "undefined"  ? stage_id : stageNew.id
                         }, { transaction: t }).catch(err => console.log(err))
                     }
 
-                    if (stage_id) {
+                    if (stage_id !== "undefined") {
+                        console.log("entro");
+
                         stageFind = await models.stage.findOne({
                             where: { id: stage_id }
                         })
                         typeUser = stageFind.type
-                    } else {
+                    } else {                        
                         typeUser = stageNew.type
                     }
 
+                    console.log("STEPNEW",stepNew);
+                    
                     tipNew = await models.tip.create({
                         tip: tip,
                         description: description_tip,
-                        step_id: step_id || stepNew.id
+                        step_id: step_id !== "undefined"  ? step_id : stepNew.id
                     }, { transaction: t }).catch(err => { console.log(err) })
-
+                    console.log("tiptiptitp",tipNew);
+                    
                     if (typeUser == "startup") {
                         const startups = await models.startup.findAll({
                             attributes: ['id'],
