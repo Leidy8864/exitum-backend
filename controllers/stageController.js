@@ -8,7 +8,7 @@ const { successful, returnError } = require('../controllers/responseController')
 module.exports = {
     validate: (review) => {
 
-        const id_stage = check('id_stage')
+        const stage_id = check('stage_id')
             .exists().withMessage('Es necesario el id del stage.')
             .isNumeric().withMessage("El tipo de dato no es el adecuado.")
         const stage = check('stage').exists().withMessage("Es necesario el nombre para el stage")
@@ -21,7 +21,7 @@ module.exports = {
             case 'create':
                 return [ stage, type ]
             case 'update':
-                return [ id_stage, stage, type ]
+                return [ stage_id, stage ]
         }
     },
 
@@ -96,21 +96,17 @@ module.exports = {
             return res.status(200).send({ status: false, message: "Data incorrecta, por favor intentelo nuevamente.", data: errors.array() });
         }
 
-        const { stage, description, type } = req.body
-        const { id_stage } = req.params
+        const { stage, description } = req.body
+        const { stage_id } = req.params
 
         try {
-            const user = await existById( models.stage, id_stage )
+            const user = await existById( models.stage, stage_id )
             user.update( {
                 stage: stage,
-                description: description,
-                type: type
+                description: description
             } )
         } catch (err) {
             return res.status(500).json({ status: false, message: err.message, data: {} })
-        }
-           
+        }  
     }
-
-
 }
