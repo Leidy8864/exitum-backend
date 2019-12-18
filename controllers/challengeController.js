@@ -1,6 +1,7 @@
 
 var multer = require('multer');
 var path = require('path');
+var fs = require('fs');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -16,27 +17,6 @@ const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip'
 const FILES_TIP_REPLY_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip_reply';
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
-
-var storage = multer.diskStorage({ //multers disk storage settings
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname + '/uploads/'))
-    },
-    filename: function (req, file, cb) {
-        var datetimestamp = Date.now();
-        cb(null, file.fieldname + '-' + datetimestamp)
-    }
-});
-
-var upload = multer({ //multer settings
-    storage: storage,
-    fileFilter: function (req, file, callback) { //file filter
-        if (['xls', 'xlsx'].indexOf(file.name.split('.')[file.name.split('.').length - 1]) === -1) {
-            return callback(new Error('Wrong extension type'));
-        }
-        callback(null, true);
-    }
-}).single('file');
-
 module.exports = {
     validate: (method) => {
         var message_exists = "Este campo es obligatorio";
@@ -244,7 +224,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Campos incorrectos, por favor intentelo nuevamente.", data: errors.array() });
         }
-        const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id } = req.body
+        const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id, skills, categories } = req.body
 
         var st
         var stageFind = null
@@ -298,6 +278,32 @@ module.exports = {
                         description: description_tip,
                         step_id: step_id !== "undefined" ? step_id : stepNew.id
                     }, { transaction: t }).catch(err => { console.log(err) })
+
+                    if (skills) {
+                        var skills_id = await Promise.all(skills.map(async element => {
+                            var [response, created] = await models.skill.findOrCreate({
+                                where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    skill: element
+                                }
+                            })
+                            return await response.id
+                        }), { transaction: t })
+                        await tipNew.addSkill(skills_id, { transaction: t });
+                    }
+
+                    if (categories) {
+                        var categories_id = await Promise.all(categories.map(async element => {
+                            var [response, created] = await models.category.findOrCreate({
+                                where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                defaults: {
+                                    name: element
+                                }
+                            })
+                            return await response.id
+                        }), { transaction: t })
+                        await tipNew.addCategory(categories_id, { transaction: t });
+                    }
 
                     if (typeUser == "startup") {
                         const startups = await models.startup.findAll({
@@ -637,6 +643,16 @@ module.exports = {
         for (var i = 0; i < skll_usr.length; i++) {
             skll_ids.push(skll_usr[i].skill_id)
         }
+
+        const exp_usr = await models.experience.findAll({
+            where: { user_id: user_id },
+            attributes: ['user_id', 'category_id', 'id']
+        })
+        var exp_ids = []
+        for (var i = 0; i < exp_usr.length; i++) {
+            exp_ids.push(exp_usr[i].category_id)
+        }
+
         const challenges = await models.challenge.findAll({
             offset: (perPage * (page - 1)),
             limit: perPage,
@@ -661,7 +677,16 @@ module.exports = {
                                     [models.Sequelize.Op.in]: skll_ids
                                 }
                             },
-                            required: true
+                            required: false
+                        },
+                        {
+                            model: models.tip_category,
+                            where: {
+                                category_id: {
+                                    [models.Sequelize.Op.in]: exp_ids
+                                }
+                            },
+                            required: false
                         },
                         {
                             model: models.file_tip
@@ -807,30 +832,38 @@ module.exports = {
     /** API path that will upload the files */
     uploadExcel: async (req, res) => {
         var exceltojson; //Initialization
-        upload(req, res, function (err) {
-            if (err) {
-                res.json({ status: false, message: err });
-                return;
+        const messageFileInvalid = "Error el formato del archivo no es válido, solo se admite archivos Excel";
+
+        if (req.files) {
+            var file = req.files.file;
+            var datetimestamp = Date.now();
+            const fileName = datetimestamp + '-' + file.name;
+
+            console.log("FILE", file);
+            const conditionF = file.name.match(/\.(xls|xlsx)$/);
+
+            if (!file.name.match(/\.(xls|xlsx)$/)) {
+                return res.json({ status: false, message: messageFileInvalid })
             }
-            /** Multer gives us file info in req.files object */
-            if (!req.files) {
-                res.json({ status: false, message: "No file passed" });
-                return;
-            }
-            //start convert process
-            /** Check the extension of the incoming file and
-             *  use the appropriate module
-             */
-            if (req.files.file.name.split('.')[req.files.file.name.split('.').length - 1] === 'xlsx') {
+            file.mv('./uploads/' + fileName, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("uploaded");
+                }
+            });
+
+            if (fileName.match(/\.(xlsx)$/)) {
                 exceltojson = xlsxtojson;
             } else {
                 exceltojson = xlstojson;
             }
-            console.log(req.files.path)
-            console.log(req.file)
+
+            // console.log("PATH", path.dirname(fileName));
+            
             try {
                 exceltojson({
-                    input: "",//"./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
+                    input: `./uploads/${fileName}`, // ./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
                     output: null, //since we don't need output.json
                     lowerCaseHeaders: true
                 }, async (err, result) => {
@@ -863,7 +896,6 @@ module.exports = {
                                 },
                                 transaction: t
                             }).spread(async (tipNew, created) => {
-                                // userResult is the user instance
                                 if (created) {
                                     if (result[x].tipo == "startup") {
                                         var startups = await models.startup.findAll({
@@ -942,7 +974,7 @@ module.exports = {
                                         return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
                                     }
                                 }
-                                var cadena = result[x].skills;
+                                var cadena = result[x].habilidades;
                                 var skills = cadena.split(/(?:,| )+/);
                                 if (skills) {
                                     var skills_id = await Promise.all(skills.map(async element => {
@@ -954,8 +986,23 @@ module.exports = {
                                         })
                                         return await response.id
                                     }), { transaction: t })
+                                    await tipNew.addSkill(skills_id, { transaction: t });
                                 }
-                                await tipNew.addSkill(skills_id, { transaction: t });
+
+                                var cadena_two = result[x].categorias;
+                                var categories = cadena_two.split(/(?:,| )+/);
+                                if (categories) {
+                                    var categories_id = await Promise.all(categories.map(async element => {
+                                        var [response, created] = await models.category.findOrCreate({
+                                            where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                            defaults: {
+                                                name: element
+                                            }
+                                        })
+                                        return await response.id
+                                    }), { transaction: t })
+                                    await tipNew.addCategory(categories_id, { transaction: t });
+                                }
                             });
                         }
                     })
@@ -965,6 +1012,8 @@ module.exports = {
                 console.log(e)
                 res.json({ status: false, message: "Archivo corrupto" });
             }
-        });
+        } else {
+            return res.json({ status: false, message: messageFileInvalid })
+        }
     }
 }
