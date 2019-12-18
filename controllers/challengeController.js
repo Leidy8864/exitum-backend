@@ -1,5 +1,6 @@
 
 var multer = require('multer');
+var path = require('path');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -18,7 +19,7 @@ const { successful, returnError } = require('./responseController')
 
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function (req, file, cb) {
-        cb(null, './uploads/')
+        cb(null, path.join(__dirname + '/uploads/'))
     },
     filename: function (req, file, cb) {
         var datetimestamp = Date.now();
@@ -245,10 +246,6 @@ module.exports = {
         }
         const { stage, description_stage, type, stage_id, step, tip, description_tip, step_id } = req.body
 
-        console.log("BODY",req.body);
-        console.log("FILES",req.files);
-        
-        
         var st
         var stageFind = null
         var typeUser = null
@@ -292,16 +289,16 @@ module.exports = {
                             where: { id: stage_id }
                         })
                         typeUser = stageFind.type
-                    } else {                        
+                    } else {
                         typeUser = stageNew.type
                     }
-                    
+
                     tipNew = await models.tip.create({
                         tip: tip,
                         description: description_tip,
-                        step_id: step_id !== "undefined"  ? step_id : stepNew.id
+                        step_id: step_id !== "undefined" ? step_id : stepNew.id
                     }, { transaction: t }).catch(err => { console.log(err) })
-                    
+
                     if (typeUser == "startup") {
                         const startups = await models.startup.findAll({
                             attributes: ['id'],
@@ -604,8 +601,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        try 
-        {
+        try {
             const { challenge_id, key_s3 } = req.body
 
             var file = await models.file.findOne({
@@ -717,8 +713,7 @@ module.exports = {
 
         const { challenge_id, comment, status, verifying_user } = req.body
 
-        try 
-        {
+        try {
             var update_challenge = await existById(models.challenge, challenge_id)
 
             await update_challenge.update({
@@ -784,7 +779,7 @@ module.exports = {
 
     listSteps: async (req, res) => {
         const { stage_id } = req.query
-        if(!stage_id){
+        if (!stage_id) {
             models.step.findAll().then(steps => {
                 res.json({ status: true, message: "Lista de niveles", data: steps })
             })
@@ -794,7 +789,7 @@ module.exports = {
             }).then(steps => {
                 res.json({ status: true, message: "Lista de niveles", data: steps })
             })
-        }  
+        }
     },
 
     /** API path that will upload the files */
@@ -802,12 +797,12 @@ module.exports = {
         var exceltojson; //Initialization
         upload(req, res, function (err) {
             if (err) {
-                res.json({ error_code: 1, err_desc: err });
+                res.json({ status: false, message: err });
                 return;
             }
             /** Multer gives us file info in req.files object */
             if (!req.files) {
-                res.json({ error_code: 1, err_desc: "No file passed" });
+                res.json({ status: false, message: "No file passed" });
                 return;
             }
             //start convert process
@@ -819,21 +814,144 @@ module.exports = {
             } else {
                 exceltojson = xlstojson;
             }
+            console.log(req.files.path)
+            console.log(req.file)
             try {
                 exceltojson({
-                    input: "./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
+                    input: "",//"./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
                     output: null, //since we don't need output.json
                     lowerCaseHeaders: true
-                }, function (err, result) {
+                }, async (err, result) => {
                     if (err) {
                         console.log(err)
-                        return res.json({ error_code: 1, err_desc: err, data: null });
+                        return res.json({ status: false, message: err, data: null });
                     }
-                    res.json({ error_code: 0, err_desc: null, data: result });
+                    await models.sequelize.transaction(async (t) => {
+                        for (var x = 0; x < result.length; x++) {
+                            var stageNew = await models.stage.findOrCreate({
+                                where: {
+                                    stage: result[x].etapa,
+                                    type: result[x].tipo
+                                }, transaction: t
+                            })
+                            var stepNew = await models.step.findOrCreate({
+                                where: {
+                                    step: result[x].nivel,
+                                    stage_id: stageNew[0].dataValues.id
+                                }, transaction: t
+                            })
+
+                            await models.tip.findOrCreate({
+                                where: {
+                                    tip: result[x].reto,
+                                    step_id: stepNew[0].dataValues.id
+                                },
+                                defaults: {
+                                    description: result[x].reto_descripcion,
+                                },
+                                transaction: t
+                            }).spread(async (tipNew, created) => {
+                                // userResult is the user instance
+                                if (created) {
+                                    if (result[x].tipo == "startup") {
+                                        var startups = await models.startup.findAll({
+                                            attributes: ['id'],
+                                            include: [
+                                                { model: models.entrepreneur }
+                                            ]
+                                        })
+                                        var chlls = []
+                                        var stp_step = []
+                                        for (var i = 0; i < startups.length; i++) {
+                                            chlls.push({
+                                                user_id: startups[i].entrepreneur.user_id,
+                                                startup_id: startups[i].id,
+                                                stage_id: stageNew[0].dataValues.id,
+                                                step_id: stepNew[0].dataValues.id,
+                                                tip_id: tipNew.dataValues.id,
+                                                checked: false,
+                                                status: "Sin respuesta",
+                                                date: Date.now()
+                                            })
+                                            var startup_step = await models.startup_step.findOne({
+                                                where: {
+                                                    startup_id: startups[i].id,
+                                                    step_id: stepNew[0].dataValues.id,
+                                                }
+                                            })
+                                            if (!startup_step) {
+                                                stp_step.push({
+                                                    startup_id: startups[i].id,
+                                                    step_id: stepNew[0].dataValues.id,
+                                                    tip_completed: 0,
+                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                    state: 'incompleto'
+                                                })
+                                            }
+                                        }
+                                        await models.challenge.bulkCreate(chlls, { transaction: t });
+                                        await models.startup_step.bulkCreate(stp_step, { transaction: t });
+                                    } else if (result[x].tipo == "employee") {
+                                        var employees = await models.employee.findAll({
+                                            attributes: ['id', 'user_id'],
+                                        })
+                                        var chlls = []
+                                        var emp_step = []
+                                        for (var i = 0; i < employees.length; i++) {
+                                            chlls.push({
+                                                user_id: employees[i].user_id,
+                                                employee_id: employees[i].id,
+                                                stage_id: stageNew[0].dataValues.id,
+                                                step_id: stepNew[0].dataValues.id,
+                                                tip_id: tipNew.dataValues.id,
+                                                checked: false,
+                                                status: "Sin respuesta",
+                                                date: Date.now()
+                                            })
+                                            var employee_step = await models.employee_step.findOne({
+                                                where: {
+                                                    employee_id: employees[i].id,
+                                                    step_id: stepNew[0].dataValues.id
+                                                }
+                                            })
+                                            if (!employee_step) {
+                                                emp_step.push({
+                                                    employee_id: employees[i].id,
+                                                    step_id: stepNew[0].dataValues.id,
+                                                    tip_completed: 0,
+                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                    state: 'incompleto'
+                                                })
+                                            }
+                                        }
+                                        await models.challenge.bulkCreate(chlls, { transaction: t });
+                                        await models.employee_step.bulkCreate(emp_step, { transaction: t });
+                                    } else {
+                                        return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
+                                    }
+                                }
+                                var cadena = result[x].skills;
+                                var skills = cadena.split(/(?:,| )+/);
+                                if (skills) {
+                                    var skills_id = await Promise.all(skills.map(async element => {
+                                        var [response, created] = await models.skill.findOrCreate({
+                                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                            defaults: {
+                                                skill: element
+                                            }
+                                        })
+                                        return await response.id
+                                    }), { transaction: t })
+                                }
+                                await tipNew.addSkill(skills_id, { transaction: t });
+                            });
+                        }
+                    })
+                    res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
                 });
             } catch (e) {
                 console.log(e)
-                res.json({ error_code: 1, err_desc: "Corupted excel file" });
+                res.json({ status: false, message: "Archivo corrupto" });
             }
         });
     }
