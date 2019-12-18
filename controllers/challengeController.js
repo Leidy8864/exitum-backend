@@ -832,14 +832,9 @@ module.exports = {
             } else {
                 exceltojson = xlstojson;
             }
-<<<<<<< HEAD
 
             // console.log("PATH", path.dirname(fileName));
             
-=======
-            console.log(req.files)
-            console.log(req.file)
->>>>>>> 7ad7aaa5727e94e387eb854f01eccd4bf48297f4
             try {
                 exceltojson({
                     input: `./uploads/${fileName}`, // ./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
