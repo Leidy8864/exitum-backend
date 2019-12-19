@@ -32,7 +32,7 @@ module.exports = {
         try {
 
             const certification_name = await models.certification_name.findAll({});
-            successfulreturn (res, 'OK', certification_name)
+            return successful (res, 'OK', certification_name)
             
         } catch (error) { return returnError(res, error) }
 
