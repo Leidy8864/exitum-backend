@@ -839,179 +839,175 @@ module.exports = {
             var datetimestamp = Date.now();
             const fileName = datetimestamp + '-' + file.name;
 
-            console.log("FILE", file);
-            const conditionF = file.name.match(/\.(xls|xlsx)$/);
-
             if (!file.name.match(/\.(xls|xlsx)$/)) {
                 return res.json({ status: false, message: messageFileInvalid })
             }
-            file.mv('./uploads/' + fileName, function (err) {
+            await file.mv('./uploads/' + fileName, function (err) {
                 if (err) {
                     console.log(err);
                 } else {
                     console.log("uploaded");
-                }
-            });
-
-            if (fileName.match(/\.(xlsx)$/)) {
-                exceltojson = xlsxtojson;
-            } else {
-                exceltojson = xlstojson;
-            }
-
-            // console.log("PATH", path.dirname(fileName));
-            
-            try {
-                exceltojson({
-                    input: `./uploads/${fileName}`, // ./uploads/PruebaExitum.xlsx", //the same path where we uploaded our file
-                    output: null, //since we don't need output.json
-                    lowerCaseHeaders: true
-                }, async (err, result) => {
-                    if (err) {
-                        console.log(err)
-                        return res.json({ status: false, message: err, data: null });
+                    if (fileName.match(/\.(xlsx)$/)) {
+                        exceltojson = xlsxtojson;
+                    } else {
+                        exceltojson = xlstojson;
                     }
-                    await models.sequelize.transaction(async (t) => {
-                        for (var x = 0; x < result.length; x++) {
-                            var stageNew = await models.stage.findOrCreate({
-                                where: {
-                                    stage: result[x].etapa,
-                                    type: result[x].tipo
-                                }, transaction: t
-                            })
-                            var stepNew = await models.step.findOrCreate({
-                                where: {
-                                    step: result[x].nivel,
-                                    stage_id: stageNew[0].dataValues.id
-                                }, transaction: t
-                            })
-
-                            await models.tip.findOrCreate({
-                                where: {
-                                    tip: result[x].reto,
-                                    step_id: stepNew[0].dataValues.id
-                                },
-                                defaults: {
-                                    description: result[x].reto_descripcion,
-                                },
-                                transaction: t
-                            }).spread(async (tipNew, created) => {
-                                if (created) {
-                                    if (result[x].tipo == "startup") {
-                                        var startups = await models.startup.findAll({
-                                            attributes: ['id'],
-                                            include: [
-                                                { model: models.entrepreneur }
-                                            ]
-                                        })
-                                        var chlls = []
-                                        var stp_step = []
-                                        for (var i = 0; i < startups.length; i++) {
-                                            chlls.push({
-                                                user_id: startups[i].entrepreneur.user_id,
-                                                startup_id: startups[i].id,
-                                                stage_id: stageNew[0].dataValues.id,
-                                                step_id: stepNew[0].dataValues.id,
-                                                tip_id: tipNew.dataValues.id,
-                                                checked: false,
-                                                status: "Sin respuesta",
-                                                date: Date.now()
-                                            })
-                                            var startup_step = await models.startup_step.findOne({
-                                                where: {
-                                                    startup_id: startups[i].id,
-                                                    step_id: stepNew[0].dataValues.id,
+                    try {
+                        exceltojson({
+                            input: `./uploads/${fileName}`,
+                            output: null,
+                            lowerCaseHeaders: true
+                        }, async (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                return res.json({ status: false, message: err, data: null });
+                            }
+                            await models.sequelize.transaction(async (t) => {
+                                for (var x = 0; x < result.length; x++) {
+                                    if (result[x].etapa.length > 0 && result[x].tipo.length > 0 && result[x].nivel.length > 0) {
+                                        var stageNew = await models.stage.findOrCreate({
+                                            where: {
+                                                stage: result[x].etapa,
+                                                type: result[x].tipo
+                                            }, transaction: t
+                                        });
+                                        var stepNew = await models.step.findOrCreate({
+                                            where: {
+                                                step: result[x].nivel,
+                                                stage_id: stageNew[0].dataValues.id
+                                            }, transaction: t
+                                        });
+                                        await models.tip.findOrCreate({
+                                            where: {
+                                                tip: result[x].reto,
+                                                step_id: stepNew[0].dataValues.id
+                                            },
+                                            defaults: {
+                                                description: result[x].reto_descripcion,
+                                            },
+                                            transaction: t
+                                        }).spread(async (tipNew, created) => {
+                                            if (created) {
+                                                if (result[x].tipo == "startup") {
+                                                    var startups = await models.startup.findAll({
+                                                        attributes: ['id'],
+                                                        include: [
+                                                            { model: models.entrepreneur }
+                                                        ]
+                                                    });
+                                                    var chlls = [];
+                                                    var stp_step = [];
+                                                    for (var i = 0; i < startups.length; i++) {
+                                                        chlls.push({
+                                                            user_id: startups[i].entrepreneur.user_id,
+                                                            startup_id: startups[i].id,
+                                                            stage_id: stageNew[0].dataValues.id,
+                                                            step_id: stepNew[0].dataValues.id,
+                                                            tip_id: tipNew.dataValues.id,
+                                                            checked: false,
+                                                            status: "Sin respuesta",
+                                                            date: Date.now()
+                                                        });
+                                                        var startup_step = await models.startup_step.findOne({
+                                                            where: {
+                                                                startup_id: startups[i].id,
+                                                                step_id: stepNew[0].dataValues.id,
+                                                            }
+                                                        });
+                                                        if (!startup_step) {
+                                                            stp_step.push({
+                                                                startup_id: startups[i].id,
+                                                                step_id: stepNew[0].dataValues.id,
+                                                                tip_completed: 0,
+                                                                icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                                state: 'incompleto'
+                                                            });
+                                                        }
+                                                    }
+                                                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                                                    await models.startup_step.bulkCreate(stp_step, { transaction: t });
+                                                } else if (result[x].tipo == "employee") {
+                                                    var employees = await models.employee.findAll({
+                                                        attributes: ['id', 'user_id'],
+                                                    });
+                                                    var chlls = [];
+                                                    var emp_step = [];
+                                                    for (var i = 0; i < employees.length; i++) {
+                                                        chlls.push({
+                                                            user_id: employees[i].user_id,
+                                                            employee_id: employees[i].id,
+                                                            stage_id: stageNew[0].dataValues.id,
+                                                            step_id: stepNew[0].dataValues.id,
+                                                            tip_id: tipNew.dataValues.id,
+                                                            checked: false,
+                                                            status: "Sin respuesta",
+                                                            date: Date.now()
+                                                        });
+                                                        var employee_step = await models.employee_step.findOne({
+                                                            where: {
+                                                                employee_id: employees[i].id,
+                                                                step_id: stepNew[0].dataValues.id
+                                                            }
+                                                        });
+                                                        if (!employee_step) {
+                                                            emp_step.push({
+                                                                employee_id: employees[i].id,
+                                                                step_id: stepNew[0].dataValues.id,
+                                                                tip_completed: 0,
+                                                                icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                                state: 'incompleto'
+                                                            });
+                                                        }
+                                                    }
+                                                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                                                    await models.employee_step.bulkCreate(emp_step, { transaction: t });
+                                                } else {
+                                                    return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." });
                                                 }
-                                            })
-                                            if (!startup_step) {
-                                                stp_step.push({
-                                                    startup_id: startups[i].id,
-                                                    step_id: stepNew[0].dataValues.id,
-                                                    tip_completed: 0,
-                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                                    state: 'incompleto'
-                                                })
                                             }
-                                        }
-                                        await models.challenge.bulkCreate(chlls, { transaction: t });
-                                        await models.startup_step.bulkCreate(stp_step, { transaction: t });
-                                    } else if (result[x].tipo == "employee") {
-                                        var employees = await models.employee.findAll({
-                                            attributes: ['id', 'user_id'],
-                                        })
-                                        var chlls = []
-                                        var emp_step = []
-                                        for (var i = 0; i < employees.length; i++) {
-                                            chlls.push({
-                                                user_id: employees[i].user_id,
-                                                employee_id: employees[i].id,
-                                                stage_id: stageNew[0].dataValues.id,
-                                                step_id: stepNew[0].dataValues.id,
-                                                tip_id: tipNew.dataValues.id,
-                                                checked: false,
-                                                status: "Sin respuesta",
-                                                date: Date.now()
-                                            })
-                                            var employee_step = await models.employee_step.findOne({
-                                                where: {
-                                                    employee_id: employees[i].id,
-                                                    step_id: stepNew[0].dataValues.id
-                                                }
-                                            })
-                                            if (!employee_step) {
-                                                emp_step.push({
-                                                    employee_id: employees[i].id,
-                                                    step_id: stepNew[0].dataValues.id,
-                                                    tip_completed: 0,
-                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                                    state: 'incompleto'
-                                                })
+                                            var cadena = result[x].habilidades;
+                                            var skills = cadena.split(/(?:,| )+/);
+                                            if (skills) {
+                                                var skills_id = await Promise.all(skills.map(async (element) => {
+                                                    var [response, created] = await models.skill.findOrCreate({
+                                                        where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                                        defaults: {
+                                                            skill: element
+                                                        }
+                                                    });
+                                                    return await response.id;
+                                                }), { transaction: t });
+                                                await tipNew.addSkill(skills_id, { transaction: t });
                                             }
-                                        }
-                                        await models.challenge.bulkCreate(chlls, { transaction: t });
-                                        await models.employee_step.bulkCreate(emp_step, { transaction: t });
-                                    } else {
-                                        return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
+                                            var cadena_two = result[x].categorias;
+                                            var categories = cadena_two.split(/(?:,| )+/);
+                                            if (categories) {
+                                                var categories_id = await Promise.all(categories.map(async (element) => {
+                                                    var [response, created] = await models.category.findOrCreate({
+                                                        where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                                                        defaults: {
+                                                            name: element
+                                                        }
+                                                    });
+                                                    return await response.id;
+                                                }), { transaction: t });
+                                                await tipNew.addCategory(categories_id, { transaction: t });
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        return res.json({ status: false, message: "Valide que su archivo no tenga celdas vacias" });
                                     }
                                 }
-                                var cadena = result[x].habilidades;
-                                var skills = cadena.split(/(?:,| )+/);
-                                if (skills) {
-                                    var skills_id = await Promise.all(skills.map(async element => {
-                                        var [response, created] = await models.skill.findOrCreate({
-                                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
-                                            defaults: {
-                                                skill: element
-                                            }
-                                        })
-                                        return await response.id
-                                    }), { transaction: t })
-                                    await tipNew.addSkill(skills_id, { transaction: t });
-                                }
-
-                                var cadena_two = result[x].categorias;
-                                var categories = cadena_two.split(/(?:,| )+/);
-                                if (categories) {
-                                    var categories_id = await Promise.all(categories.map(async element => {
-                                        var [response, created] = await models.category.findOrCreate({
-                                            where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
-                                            defaults: {
-                                                name: element
-                                            }
-                                        })
-                                        return await response.id
-                                    }), { transaction: t })
-                                    await tipNew.addCategory(categories_id, { transaction: t });
-                                }
                             });
-                        }
-                    })
-                    res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
-                });
-            } catch (e) {
-                console.log(e)
-                res.json({ status: false, message: "Archivo corrupto" });
-            }
+                            res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
+                        });
+                    } catch (e) {
+                        console.log(e)
+                        res.json({ status: false, message: "Archivo corrupto" });
+                    }
+                }
+            });
         } else {
             return res.json({ status: false, message: messageFileInvalid })
         }

@@ -1001,7 +1001,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`file_tip`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`file_tip` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `key_s3` VARCHAR(245) NULL DEFAULT NULL,
   `name` VARCHAR(245) NULL DEFAULT NULL,
   `tip_id` INT(11) NOT NULL,

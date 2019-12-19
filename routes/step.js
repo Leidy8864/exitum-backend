@@ -6,6 +6,10 @@ router.get('/list',
     controller.all
 );
 
+router.get('/listByStage', 
+    controller.listByStage
+);
+
 router.post('/create',
     controller.validate('create'),
     controller.create

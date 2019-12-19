@@ -10,7 +10,7 @@ router.get('/all',
     controller.all
 );
 
-router.get('/show/:type',
+router.get('/show',
     controller.validate('show'),
     controller.show
 );
@@ -20,7 +20,7 @@ router.post('/create',
     controller.create
 );
 
-router.post('/update/:id_stage',
+router.post('/update',
     controller.validate('update'),
     controller.update
 );
