@@ -33,4 +33,13 @@ router.post('/delete',
     controller.delete
 );
 
+router.get('/detail', 
+    controller.detail
+);
+
+router.post('/delteFileTip',
+    controller.validate('deleteFile'),
+    controller.deleteFileTip
+);
+
 module.exports = router;

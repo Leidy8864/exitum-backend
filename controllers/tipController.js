@@ -24,8 +24,11 @@ module.exports = {
                 return [tip_id]
             case 'delete':
                 return [tip_id]
+            case 'deleteFile':
+                return [
+                    check('key_s3').exists()
+                ]
         }
-
     },
 
     all: async (req, res) => {
@@ -105,8 +108,10 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip_id, tip, description } = req.body
+        const { tip_id, tip, description, type } = req.body
+        //type : { "evaluación automatizada", "evaluado por la comunidad" }
         var name = null
+        var file = null
         try {
             await models.sequelize.transaction(async (t) => {
                 var tipNew = await existById(models.tip, tip_id)
@@ -114,9 +119,9 @@ module.exports = {
                 tipNew.update({
                     tip: tip,
                     description: description,
+                    type: type
                 }, { transaction: t })
 
-                console.log(tipNew)
                 const stepFind = await models.step.findOne({
                     where: { id: tipNew.step_id },
                     attributes: ['id'],
@@ -127,7 +132,7 @@ module.exports = {
                 })
 
                 if (req.files) {
-                    var file = req.files.file;
+                    file = req.files.file;
                     fileName = putObject(FILES_TIP_BUCKET_NAME, file);
                     name = file.name
                 }
@@ -189,8 +194,8 @@ module.exports = {
                         }
                     }
                     if (!challenges) {
-                        await models.challenge.bulkCreate(chlls, { updateOnDuplicate: true }, { transaction: t });
-                        await models.startup_step.bulkCreate(stp_step, { updateOnDuplicate: true }, { transaction: t });
+                        await models.challenge.bulkCreate(chlls, { transaction: t });
+                        await models.startup_step.bulkCreate(stp_step, { transaction: t });
                     }
                 } else if (typeUser == "employee") {
                     const employees = await models.employee.findAll({
@@ -246,6 +251,61 @@ module.exports = {
 
         } catch (error) { returnError(res, error) }
 
+    },
+
+    detail: async (req, res) => {
+        const { tip_id } = req.query
+        const tip = await models.tip.findOne({
+            where: {
+                id: tip_id
+            },
+            include: [
+                {
+                    model: models.file_tip,
+                    required: true
+                },
+                {
+                    model: models.tip_skill,
+                    required: true,
+                    include: [
+                        { model: models.skill }
+                    ]
+                },
+                {
+                    model: models.tip_category,
+                    required: true,
+                    include: [
+                        { model: models.category }
+                    ]
+                }
+            ]
+        })
+        if (!tip) {
+            return res.json({ status: false, message: "No exixte el reto" })
+        }
+        return res.json({ status: true, message: "Detalle del tip", data: tip })
+    },
+
+    deleteFileTip: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
+
+        try {
+            const { key_s3 } = req.body
+
+            var file = await models.file_tip.findOne({
+                where: { key_s3: key_s3 }
+            });
+
+            if (!file) { return res.json({ status: false, message: "El nombre del archivo no exixte." }) }
+
+            deleteObject(FILES_TIP_BUCKET_NAME, key_s3);
+
+            await file.destroy()
+
+            return successful(res, text.successDelete('archivo'))
+
+        } catch (error) { return returnError(res, error) }
     },
 
     addSkills: async (req, res) => {
