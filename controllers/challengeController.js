@@ -48,8 +48,8 @@ module.exports = {
                 return [
                     check('challenge_id', message_exists).exists(),
                     check('comment', message_exists).exists(),
-                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado'])
-                        .withMessage(text.only('Con observaciones', 'Verificado')),
+                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado', 'Por verificar'])
+                        .withMessage(text.only('Con observaciones', 'Verificado', 'Por verificar')),
                     check('verifying_use', message_exists).exists()
                 ]
             case 'deleteFile':
@@ -682,7 +682,7 @@ module.exports = {
                                     [models.Sequelize.Op.in]: exp_ids
                                 }
                             },
-                            required: true
+                            required: false
                         },
                         {
                             model: models.file_tip
@@ -756,6 +756,8 @@ module.exports = {
                 checked: (status == 'Verificado') ? 1 : 0,
                 verifying_user: verifying_user
             })
+
+            console.log(update_challenge)
 
             const challenge = await models.challenge.findOne({
                 where: { id: challenge_id },
