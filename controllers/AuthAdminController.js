@@ -168,12 +168,11 @@ module.exports = {
             if (!admin) successful(res, text.notFoundElement)
 
             await admin.update({ password: bcrypt.hashSync(password) })
+            const token = createToken(admin)
 
-            const administrador = models.administrador.findByPk(admin.id, {
-                attributes: ['id', 'name', 'email']
-            })
+            const response = { id: admin.id, name: admin.name, email: admin.email, token: token }
 
-            return successful(res, 'Contraseña restaurada satisfactoriamente.', administrador)
+            return successful(res, 'Contraseña restaurada satisfactoriamente.', response)
             
         } catch (error) { return returnError(res, error) }
 
