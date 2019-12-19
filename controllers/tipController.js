@@ -69,8 +69,27 @@ module.exports = {
                     { 
                         model: models.step,
                         required: true 
+                    },
+                    {
+                        model: models.file_tip,
+                        required: true
+                    },
+                    {
+                        model: models.tip_skill,
+                        required: true,
+                        include: [
+                            { model: models.skill }
+                        ]
+                    },
+                    {
+                        model: models.tip_category,
+                        required: true,
+                        include: [
+                            { model: models.category }
+                        ]
                     }
                 ]
+
             })
             const totalRows = await models.tip.count({
                 where: {
@@ -86,6 +105,24 @@ module.exports = {
                     { 
                         model: models.step,
                         required: true 
+                    },
+                    {
+                        model: models.file_tip,
+                        required: true
+                    },
+                    {
+                        model: models.tip_skill,
+                        required: true,
+                        include: [
+                            { model: models.skill }
+                        ]
+                    },
+                    {
+                        model: models.tip_category,
+                        required: true,
+                        include: [
+                            { model: models.category }
+                        ]
                     }
                 ]
             })
