@@ -25,7 +25,7 @@ router.get('/reset/:token',
 
 router.post('/reset',
   controller.validate('reset-post'),
-    controller.verifyToken
+    controller.resetPassword
 );
 
 router.get('/me',
