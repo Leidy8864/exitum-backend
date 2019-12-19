@@ -68,22 +68,22 @@ module.exports = {
                 include: [
                     { 
                         model: models.step,
-                        required: true 
+                        required: false 
                     },
                     {
                         model: models.file_tip,
-                        required: true
+                        required: false
                     },
                     {
                         model: models.tip_skill,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.skill }
                         ]
                     },
                     {
                         model: models.tip_category,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.category }
                         ]
@@ -104,22 +104,22 @@ module.exports = {
                 include: [
                     { 
                         model: models.step,
-                        required: true 
+                        required: false 
                     },
                     {
                         model: models.file_tip,
-                        required: true
+                        required: false
                     },
                     {
                         model: models.tip_skill,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.skill }
                         ]
                     },
                     {
                         model: models.tip_category,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.category }
                         ]
@@ -311,18 +311,18 @@ module.exports = {
             include: [
                 {
                     model: models.file_tip,
-                    required: true
+                    required: false
                 },
                 {
                     model: models.tip_skill,
-                    required: true,
+                    required: false,
                     include: [
                         { model: models.skill }
                     ]
                 },
                 {
                     model: models.tip_category,
-                    required: true,
+                    required: false,
                     include: [
                         { model: models.category }
                     ]
