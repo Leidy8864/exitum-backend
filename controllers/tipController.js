@@ -75,19 +75,19 @@ module.exports = {
             const totalRows = await models.tip.count({
                 where: {
                     step_id: step_id
-                },
-                include: [
-                    { 
-                        model: models.step,
-                        required: true
-                    }
-                ]
+                }
             })
             return res.json({ status: true, message: "Listado de retos por nivel", data: tips, current: page, pages: Math.ceil(totalRows / perPage) })
         } else {
             const tips = await models.tip.findAll({
                 offset: (perPage * (page - 1)),
-                limit: perPage
+                limit: perPage,
+                include: [
+                    { 
+                        model: models.step,
+                        required: true 
+                    }
+                ]
             })
             const totalRows = await models.tip.count()
             return res.json({ status: true, message: "Listado de retos por nivel", data: tips, current: page, pages: Math.ceil(totalRows / perPage) })
