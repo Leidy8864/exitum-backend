@@ -38,12 +38,18 @@ module.exports = {
     listByStage: async (req, res) => {
         try {
             const { stage_id } = req.query
-            const step = await models.step.findAll({
-                where: {
-                    stage_id: stage_id
-                }
-            });
-            return successful(res, 'OK', step)
+            if(stage_id){
+                const step = await models.step.findAll({
+                    where: {
+                        stage_id: stage_id
+                    }
+                });
+                return successful(res, 'OK', step)
+            } else {
+                const step = await models.step.findAll();
+                return successful(res, 'OK', step)
+            }
+            
 
         } catch (error) { return returnError(res, error) }
     },

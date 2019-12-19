@@ -4,6 +4,9 @@ const models = require('../models/index');
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
+const index = require('../config/index');
+const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
+const { getObject, putObject, getDownloadUrl, deleteObject } = require('../libs/aws-s3');
 
 module.exports = {
 
@@ -49,12 +52,18 @@ module.exports = {
 
     listByStep: async (req, res) => {
         const { step_id } = req.query
-        const tips = await models.tip.findAll({
-            where: {
-                step_id: step_id
-            }
-        })
-        return res.json({ status: true, message: "Listado de retos por nivel", data: tips })
+        if (step_id) {
+            const tips = await models.tip.findAll({
+                where: {
+                    step_id: step_id
+                }
+            })
+            return res.json({ status: true, message: "Listado de retos por nivel", data: tips })
+        } else {
+            const tips = await models.tip.findAll()
+            return res.json({ status: true, message: "Listado de retos por nivel", data: tips })
+        }
+
     },
 
     create: async (req, res) => {
@@ -82,17 +91,57 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip_id, tip, description, step_id } = req.body
-
+        const { tip_id, tip, description, skills, categories } = req.body
+        var name = null
         try {
-            var tip_data = await existById(models.tip, tip_id)
+            await models.sequelize.transaction(async (t) => {
+                var tip_data = await existById(models.tip, tip_id)
 
-            tip_data.update({
-                tip: tip,
-                description: description,
-                step_id: step_id
+                tip_data.update({
+                    tip: tip,
+                    description: description,
+                }, { transaction: t })
+
+                if (req.files) {
+                    var file = req.files.file;
+                    fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                    name = file.name
+                }
+
+                if (file) {
+                    await models.file_tip.create({
+                        name: name,
+                        key_s3: (fileName).split('/')[5],
+                        tip_id: tip_data.id
+                    }, { transaction: t });
+                }
+
+                if (skills) {
+                    var skills_id = await Promise.all(skills.map(async element => {
+                        var [response, created] = await models.skill.findOrCreate({
+                            where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                            defaults: {
+                                skill: element
+                            }
+                        })
+                        return await response.id
+                    }), { transaction: t })
+                    await tip_data.addSkill(skills_id, { transaction: t });
+                }
+
+                if (categories) {
+                    var categories_id = await Promise.all(categories.map(async element => {
+                        var [response, created] = await models.category.findOrCreate({
+                            where: { name: { [models.Sequelize.Op.like]: '%' + element + '%' } },
+                            defaults: {
+                                name: element
+                            }
+                        })
+                        return await response.id
+                    }), { transaction: t })
+                    await tip_data.addCategory(categories_id, { transaction: t });
+                }
             })
-
             return successful(res, text.successUpdate('tip'))
 
         } catch (error) { returnError(res, error) }
