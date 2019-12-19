@@ -1,7 +1,3 @@
-
-var multer = require('multer');
-var path = require('path');
-var fs = require('fs');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -820,9 +816,8 @@ module.exports = {
         }
     },
 
-    /** API path that will upload the files */
     uploadExcel: async (req, res) => {
-        var exceltojson; //Initialization
+        var exceltojson;
         const messageFileInvalid = "Error el formato del archivo no es válido, solo se admite archivos Excel";
 
         if (req.files) {
@@ -855,6 +850,9 @@ module.exports = {
                             }
                             await models.sequelize.transaction(async (t) => {
                                 for (var x = 0; x < result.length; x++) {
+                                    if (result[x].tipo !== "startup" && result[x].tipo !== "employee") {
+                                        return res.json({ status: false, message: "El campo tipo solo puede ser startup o employee." })
+                                    }
                                     if (result[x].etapa.length > 0 && result[x].tipo.length > 0 && result[x].nivel.length > 0) {
                                         var stageNew = await models.stage.findOrCreate({
                                             where: {
@@ -867,13 +865,23 @@ module.exports = {
                                                 step: result[x].nivel,
                                                 stage_id: stageNew[0].dataValues.id
                                             }, transaction: t
-                                        });
+                                        })
+                                        // .spread(async (stepNew, created) => {
+                                        //     if (created) {
+                                        //         for (var x = 1; x <= 4; x++) {
+                                        //             await models.tip.create({
+                                        //                 tip: "Reto número " + x,
+                                        //                 step_id: stepNew.id
+                                        //             }, { transaction: t })
+                                        //         }
+                                        //     }
+                                        // });
                                         await models.tip.findOrCreate({
                                             where: {
-                                                tip: result[x].reto,
                                                 step_id: stepNew[0].dataValues.id
                                             },
                                             defaults: {
+                                                tip: result[x].reto,
                                                 description: result[x].reto_descripcion,
                                             },
                                             transaction: t
@@ -990,8 +998,8 @@ module.exports = {
                                         return res.json({ status: false, message: "Valide que su archivo no tenga celdas vacias" });
                                     }
                                 }
+                                res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
                             });
-                            res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
                         });
                     } catch (e) {
                         console.log(e)
