@@ -47,11 +47,18 @@ module.exports = {
 
     listStages: async (req, res) => {
         const { type } = req.query
-        models.stage.findAll({
-            where: { type: type }
-        }).then(stages => {
-            res.json({ status: true, message: "Lista de etapas", data: stages })
-        })
+        if (type) {
+            models.stage.findAll({
+                where: { type: type }
+            }).then(stages => {
+                res.json({ status: true, message: "Lista de etapas", data: stages })
+            })
+        } else {
+            models.stage.findAll().then(stages => {
+                res.json({ status: true, message: "Lista de etapas", data: stages })
+            })
+        }
+
     },
 
 
