@@ -67,6 +67,7 @@ module.exports = {
                     include: [
                         { 
                             model: models.stage,
+                            required: true
                         }
                     ]
                 });

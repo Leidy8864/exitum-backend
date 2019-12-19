@@ -30,10 +30,6 @@ router.get('/listStage/:startup_id',
     controller.listStageStartup
 );
 
-router.get('/listStages',
-    controller.listStages
-);
-
 router.get('/listSteps',
     controller.listSteps
 );
