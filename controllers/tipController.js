@@ -66,24 +66,24 @@ module.exports = {
                     step_id: step_id
                 },
                 include: [
-                    { 
+                    {
                         model: models.step,
-                        required: true 
+                        required: false
                     },
                     {
                         model: models.file_tip,
-                        required: true
+                        required: false
                     },
                     {
                         model: models.tip_skill,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.skill }
                         ]
                     },
                     {
                         model: models.tip_category,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.category }
                         ]
@@ -102,24 +102,24 @@ module.exports = {
                 offset: (perPage * (page - 1)),
                 limit: perPage,
                 include: [
-                    { 
+                    {
                         model: models.step,
-                        required: true 
+                        required: false
                     },
                     {
                         model: models.file_tip,
-                        required: true
+                        required: false
                     },
                     {
                         model: models.tip_skill,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.skill }
                         ]
                     },
                     {
                         model: models.tip_category,
-                        required: true,
+                        required: false,
                         include: [
                             { model: models.category }
                         ]
@@ -179,19 +179,17 @@ module.exports = {
                         attributes: ['id', 'type']
                     }]
                 })
-
                 if (req.files) {
-                    file = req.files.file;
-                    fileName = putObject(FILES_TIP_BUCKET_NAME, file);
-                    name = file.name
-                }
-
-                if (file) {
-                    await models.file_tip.create({
-                        name: name,
-                        key_s3: (fileName).split('/')[5],
-                        tip_id: tipNew.id
-                    }, { transaction: t });
+                    for (var x = 0; x < req.files.file.length; x++) {
+                        file = req.files.file[x];
+                        fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                        name = file.name
+                        await models.file_tip.create({
+                            name: name,
+                            key_s3: (fileName).split('/')[5],
+                            tip_id: tipNew.id
+                        }, { transaction: t });
+                    }   
                 }
 
                 const typeUser = stepFind.stage.type
@@ -311,18 +309,18 @@ module.exports = {
             include: [
                 {
                     model: models.file_tip,
-                    required: true
+                    required: false
                 },
                 {
                     model: models.tip_skill,
-                    required: true,
+                    required: false,
                     include: [
                         { model: models.skill }
                     ]
                 },
                 {
                     model: models.tip_category,
-                    required: true,
+                    required: false,
                     include: [
                         { model: models.category }
                     ]

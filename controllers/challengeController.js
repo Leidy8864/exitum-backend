@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
 const models = require('../models/index');
 const index = require('../config/index');
 const { sendEmail } = require('../libs/mail')
-const { existById } = require('../controllers/elementController');
+const { existById, updateOrCreate } = require('../controllers/elementController');
 const { getObject, putObject, getDownloadUrl, deleteObject } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
@@ -865,17 +865,30 @@ module.exports = {
                                                 step: result[x].nivel,
                                                 stage_id: stageNew[0].dataValues.id
                                             }, transaction: t
-                                        })
-                                        // .spread(async (stepNew, created) => {
-                                        //     if (created) {
-                                        //         for (var x = 1; x <= 4; x++) {
-                                        //             await models.tip.create({
-                                        //                 tip: "Reto número " + x,
-                                        //                 step_id: stepNew.id
-                                        //             }, { transaction: t })
-                                        //         }
-                                        //     }
-                                        // });
+                                        }).spread(async (stepNew, created) => {
+                                            if (created) {
+                                                for (var x = 1; x <= 4; x++) {
+                                                    await models.tip.create({
+                                                        tip: "Reto número " + x,
+                                                        step_id: stepNew.id
+                                                    }, { transaction: t })
+                                                }
+                                            }
+
+                                            await updateOrCreate(
+                                                models.tip,
+                                                {
+                                                    step_id: stepNew.dataValues.id
+                                                },
+                                                {
+                                                    tip: result[x].reto,
+                                                    description: result[x].reto_descripcion,
+                                                },
+                                                {
+
+                                                }
+                                            )
+                                        });
                                         await models.tip.findOrCreate({
                                             where: {
                                                 step_id: stepNew[0].dataValues.id
@@ -884,7 +897,7 @@ module.exports = {
                                                 tip: result[x].reto,
                                                 description: result[x].reto_descripcion,
                                             },
-                                            transaction: t
+                                            transaction: t7
                                         }).spread(async (tipNew, created) => {
                                             if (created) {
                                                 if (result[x].tipo == "startup") {
@@ -978,7 +991,7 @@ module.exports = {
                                                 }), { transaction: t });
                                                 await tipNew.addSkill(skills_id, { transaction: t });
                                             }
-                                            var cadena_two = result[x].categorias;
+                                            var cadena_two = result[x].rubros;
                                             var categories = cadena_two.split(/(?:,| )+/);
                                             if (categories) {
                                                 var categories_id = await Promise.all(categories.map(async (element) => {
