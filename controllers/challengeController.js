@@ -47,7 +47,6 @@ module.exports = {
             case 'verifyChallenge':
                 return [
                     check('challenge_id', message_exists).exists(),
-                    check('comment', message_exists).exists(),
                     check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado', 'Verificando'])
                         .withMessage(text.only('Con observaciones', 'Verificado', 'Verificando')),
                     check('verifying_user', message_exists).exists()
