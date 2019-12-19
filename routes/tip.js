@@ -10,6 +10,14 @@ router.get('/listByStep',
     controller.listByStep
 );
 
+router.post('/addSkills',
+    controller.addSkills
+);
+
+router.post('/addCategories',
+    controller.addCategories
+);
+
 router.post('/create',
     controller.validate('create'),
     controller.create
