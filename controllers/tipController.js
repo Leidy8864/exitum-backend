@@ -64,12 +64,18 @@ module.exports = {
                 limit: perPage,
                 where: {
                     step_id: step_id
-                }
+                },
+                include: [
+                    { model: models.step }
+                ]
             })
             const totalRows = await models.tip.count({
                 where: {
                     step_id: step_id
-                }
+                },
+                include: [
+                    { model: models.step }
+                ]
             })
             return res.json({ status: true, message: "Listado de retos por nivel", data: tips, current: page, pages: Math.ceil(totalRows / perPage) })
         } else {
