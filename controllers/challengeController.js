@@ -50,7 +50,7 @@ module.exports = {
                     check('comment', message_exists).exists(),
                     check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado', 'Por verificar'])
                         .withMessage(text.only('Con observaciones', 'Verificado', 'Por verificar')),
-                    check('verifying_use', message_exists).exists()
+                    check('verifying_user', message_exists).exists()
                 ]
             case 'deleteFile':
                 return [
