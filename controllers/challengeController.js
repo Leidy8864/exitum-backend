@@ -673,7 +673,7 @@ module.exports = {
                                     [models.Sequelize.Op.in]: skll_ids
                                 }
                             },
-                            required: false
+                            required: true
                         },
                         {
                             model: models.tip_category,
@@ -682,7 +682,7 @@ module.exports = {
                                     [models.Sequelize.Op.in]: exp_ids
                                 }
                             },
-                            required: false
+                            required: true
                         },
                         {
                             model: models.file_tip
@@ -888,7 +888,7 @@ module.exports = {
                                                 }
                                             )
                                             console.log("@@@@@")
-                                            console.log("")
+                                            console.log("2")
                                             if (tipNew.created === true) {
                                                 if (result[x].tipo == "startup") {
                                                     var startups = await models.startup.findAll({
