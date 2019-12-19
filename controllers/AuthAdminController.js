@@ -126,7 +126,7 @@ module.exports = {
                 name: admin.name,
                 text: 'Notamos que tienes problemas para iniciar sesión.',
                 description: 'Por favor renueva tu contraseña haciendo click al botón.',
-                url: 'http:\/\/' + 'localhost:8081' + '\/admin\/reset\/' + token,
+                url: 'http:\/\/' + 'localhost:8088' + '\/admin\/reset\/' + token,
                 boton: 'Restaurar contraseña'
             }
     
@@ -150,7 +150,7 @@ module.exports = {
             return successful(res, 'OK', response)
         })
         .catch(error => {
-            return res.status(403).json({ status: false, message: error, data: {  } })
+            return res.status(200).json({ status: false, message: error, data: {  } })
         })
 
     } ,
