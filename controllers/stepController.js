@@ -36,20 +36,35 @@ module.exports = {
     },
 
     listByStage: async (req, res) => {
+        const { stage_id } = req.query
+        let perPage = 15;
+        let page = req.query.page || 1;
+
         try {
-            const { stage_id } = req.query
-            if(stage_id){
-                const step = await models.step.findAll({
+            if (stage_id) {
+                const steps = await models.step.findAll({
+                    offset: (perPage * (page - 1)),
+                    limit: perPage,
                     where: {
                         stage_id: stage_id
                     }
                 });
-                return successful(res, 'OK', step)
+                const totalRows = await models.step.count({
+                    where: {
+                        stage_id: stage_id
+                    }
+                });
+                return res.json({ status: true, message: "Listado de retos por nivel", data: steps, current: page, pages: Math.ceil(totalRows / perPage) })
             } else {
-                const step = await models.step.findAll();
-                return successful(res, 'OK', step)
+                const steps = await models.step.findAll({
+                    offset: (perPage * (page - 1)),
+                    limit: perPage
+                });
+                const totalRows = await models.step.count({
+                });
+                return res.json({ status: true, message: "Listado de retos por nivel", data: steps, current: page, pages: Math.ceil(totalRows / perPage) })
             }
-            
+
 
         } catch (error) { return returnError(res, error) }
     },
@@ -90,9 +105,9 @@ module.exports = {
                 }
                 return successful(res, text.successCreate('step'))
             })
-        } catch (error) { 
+        } catch (error) {
             console.log(error)
-            return returnError(res, error) 
+            return returnError(res, error)
         }
 
     },
@@ -122,9 +137,9 @@ module.exports = {
 
             return successful(res, text.successUpdate('step'))
 
-        } catch (error) { 
+        } catch (error) {
             console.log(error)
-            return returnError(res, error) 
+            return returnError(res, error)
         }
 
     },
@@ -170,7 +185,7 @@ module.exports = {
             console.log("hasta aca")
             await models.file.destroy({
                 where: {
-                    id: chlls_id    
+                    id: chlls_id
                 }
             })
             await models.challenge.destroy({
@@ -190,7 +205,7 @@ module.exports = {
             })
             await models.file_tip.destroy({
                 where: {
-                    id: tips_id    
+                    id: tips_id
                 }
             })
             await models.tip.destroy({

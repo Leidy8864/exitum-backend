@@ -383,7 +383,7 @@ module.exports = {
                                         name: user.name + ' ' + user.lastname,
                                         text: 'En Exitum estamos felices de tener tu confianza',
                                         description: 'Por favor verifica tu cuenta dándole click al botón.',
-                                        url: 'http:\/\/' + 'localhost:8089' + '\/dashboard\?token=' + response.accessToken,
+                                        url: 'http:\/\/' + 'exitum.pe' + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
                                 }
@@ -448,7 +448,7 @@ module.exports = {
                             name: user.name + ' ' + user.lastname,
                             text: 'Notamos que tienes problemas para iniciar sesión.',
                             description: 'Por favor renueva tu contraseña dándole click al botón.',
-                            url: 'http:\/\/' + 'localhost:8089' + '\/users\/reset\?token=' + token_password,
+                            url: 'http:\/\/' + 'exitum.pe' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
