@@ -89,9 +89,8 @@ module.exports = {
                                             step_id: stages[x].steps[y].id,
                                             tip_id: stages[x].steps[y].tips[z].id,
                                             checked: false,
-                                            status: "Por verificar",
-                                            date: Date.now(),
-                                            comment: null
+                                            status: "Sin respuesta",
+                                            date: Date.now()
                                         }
                                     )
                                 }

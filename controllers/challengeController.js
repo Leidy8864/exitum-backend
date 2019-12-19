@@ -48,8 +48,8 @@ module.exports = {
                 return [
                     check('challenge_id', message_exists).exists(),
                     check('comment', message_exists).exists(),
-                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado', 'Por verificar'])
-                        .withMessage(text.only('Con observaciones', 'Verificado', 'Por verificar')),
+                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado', 'Verificando'])
+                        .withMessage(text.only('Con observaciones', 'Verificado', 'Verificando')),
                     check('verifying_user', message_exists).exists()
                 ]
             case 'deleteFile':
@@ -482,7 +482,7 @@ module.exports = {
                 if (chll.status === 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
                 await models.challenge.update({
                     reply: reply,
-                    status: "Respondido",
+                    status: "Verificando",
                     date: Date.now(),
                 }, { where: { id: challenge_id } }, { transaction: t });
 
@@ -653,10 +653,10 @@ module.exports = {
             offset: (perPage * (page - 1)),
             limit: perPage,
             where: {
-                status: 'Respondido',
+                status: 'Verificando',
                 user_id: { [models.Sequelize.Op.notIn]: [user_id] }
             },
-            attributes: ['id', 'date', 'reply', 'comment'],
+            attributes: ['id', 'date', 'reply', 'comment', 'status'],
             include: [
                 {
                     model: models.user,
@@ -685,7 +685,8 @@ module.exports = {
                             required: false
                         },
                         {
-                            model: models.file_tip
+                            model: models.file_tip,
+                            required: true
                         }
                     ],
                     required: true
@@ -710,7 +711,7 @@ module.exports = {
         const totalRows = await models.challenge.findAll({
             distinct: true,
             where: {
-                status: 'Respondido',
+                status: 'Verificando',
             },
             attributes: ['id'],
             include: [
@@ -740,7 +741,6 @@ module.exports = {
     },
 
     verifyChallenge: async (req, res) => {
-
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
@@ -889,6 +889,7 @@ module.exports = {
                                                     step_id: stepNew.id
                                                 }
                                             )
+                                            console.log(tipNew)
                                             console.log("@@@@@")
                                             console.log("2")
                                             if (tipNew.created === true) {

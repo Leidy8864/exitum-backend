@@ -55,27 +55,19 @@ module.exports = {
     },
 
     updateOrCreate: async (model, where, newItem) => {
-        // Try to find record using findOne
-        // var response
-        // const item = await model.findOne({
-        //     where
-        // })
-        // if (!item) {
-        //     await model.create(newItem)
-        //         .then(item => (
-        //             response = { item, created: true })
-        //         )
-        // }
+        var response
+        var item
+        const itemFind = await model.findOne({
+            where
+        })
+        if (!itemFind) {
+            response = await model.create(newItem)
+        }
 
-        // await model.update(newItem, {
-        //     where: where
-        // }).then(() =>
-        //     await model.findOne({ where })
-        //         .then(item => (
-        //             response = { item, created: false })
-        //         )
-        // )
-
-        return response = {}
+        await model.update(newItem, {
+            where: where
+        })
+        response = await model.findOne({ where })
+        return response
     }
 }
