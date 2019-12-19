@@ -860,46 +860,36 @@ module.exports = {
                                                 type: result[x].tipo
                                             }, transaction: t
                                         });
-                                        var stepNew = await models.step.findOrCreate({
+                                        await models.step.findOrCreate({
                                             where: {
                                                 step: result[x].nivel,
                                                 stage_id: stageNew[0].dataValues.id
                                             }, transaction: t
                                         }).spread(async (stepNew, created) => {
                                             if (created) {
-                                                for (var x = 1; x <= 4; x++) {
+                                                for (var i = 1; i <= 4; i++) {
                                                     await models.tip.create({
-                                                        tip: "Reto número " + x,
+                                                        tip: "Reto número " + i,
                                                         step_id: stepNew.id
                                                     }, { transaction: t })
                                                 }
                                             }
-
-                                            await updateOrCreate(
+                                            console.log("@@@@@")
+                                            console.log(stepNew.id)
+                                            const tipNew = await updateOrCreate(
                                                 models.tip,
                                                 {
-                                                    step_id: stepNew.dataValues.id
+                                                    step_id: stepNew.id
                                                 },
                                                 {
                                                     tip: result[x].reto,
                                                     description: result[x].reto_descripcion,
-                                                },
-                                                {
-
+                                                    step_id: stepNew.id
                                                 }
                                             )
-                                        });
-                                        await models.tip.findOrCreate({
-                                            where: {
-                                                step_id: stepNew[0].dataValues.id
-                                            },
-                                            defaults: {
-                                                tip: result[x].reto,
-                                                description: result[x].reto_descripcion,
-                                            },
-                                            transaction: t7
-                                        }).spread(async (tipNew, created) => {
-                                            if (created) {
+                                            console.log("@@@@@")
+                                            console.log("")
+                                            if (tipNew.created === true) {
                                                 if (result[x].tipo == "startup") {
                                                     var startups = await models.startup.findAll({
                                                         attributes: ['id'],
@@ -915,7 +905,7 @@ module.exports = {
                                                             startup_id: startups[i].id,
                                                             stage_id: stageNew[0].dataValues.id,
                                                             step_id: stepNew[0].dataValues.id,
-                                                            tip_id: tipNew.dataValues.id,
+                                                            tip_id: tipNew.item.dataValues.id,
                                                             checked: false,
                                                             status: "Sin respuesta",
                                                             date: Date.now()
@@ -950,7 +940,7 @@ module.exports = {
                                                             employee_id: employees[i].id,
                                                             stage_id: stageNew[0].dataValues.id,
                                                             step_id: stepNew[0].dataValues.id,
-                                                            tip_id: tipNew.dataValues.id,
+                                                            tip_id: tipNew.item.dataValues.id,
                                                             checked: false,
                                                             status: "Sin respuesta",
                                                             date: Date.now()
@@ -989,7 +979,7 @@ module.exports = {
                                                     });
                                                     return await response.id;
                                                 }), { transaction: t });
-                                                await tipNew.addSkill(skills_id, { transaction: t });
+                                                await tipNew.item.addSkill(skills_id, { transaction: t });
                                             }
                                             var cadena_two = result[x].rubros;
                                             var categories = cadena_two.split(/(?:,| )+/);
@@ -1003,7 +993,7 @@ module.exports = {
                                                     });
                                                     return await response.id;
                                                 }), { transaction: t });
-                                                await tipNew.addCategory(categories_id, { transaction: t });
+                                                await tipNew.item.addCategory(categories_id, { transaction: t });
                                             }
                                         });
                                     }

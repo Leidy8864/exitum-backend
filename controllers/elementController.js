@@ -54,26 +54,28 @@ module.exports = {
         return diff;
     },
 
-    updateOrCreate: (model, where, newItem, beforeCreate) => {
+    updateOrCreate: async (model, where, newItem) => {
         // Try to find record using findOne
-        return model
-            .findOne({ where })
-            .then(item => {
-                if (!item) {
-                    // Item doesn't exist, so we create it
+        var response
+        await model.findOne({
+            where
+        }).then(item => {
+            if (!item) {
+                model.create(newItem)
+                    .then(item => (
+                        response = { item, created: true })
+                    )
+            }
 
-                    // Custom promise to add more data to the record
-                    // Being saved (optional)
-                    model.create(newItem)
-                        .then(item => ({
-                            item, created: true
-                        }, beforeCreate()))
-                }
-
-                // Item already exists, so we update it
-                return model
-                    .update(newItem, { where: where })
-                    .then(item => ({ item, created: false }))
-            })
+            model.update(newItem, {
+                where: where
+            }).then(() =>
+                model.findOne({ where })
+                    .then(item => (
+                        response = { item, created: false })
+                    )
+            )
+        })
+        return response
     }
 }

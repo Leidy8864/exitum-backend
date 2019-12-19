@@ -8,6 +8,7 @@ const model_startup = (sequelize, DataType) => {
         ruc: DataType.STRING,
         description: DataType.STRING,
         avg_rating: DataType.FLOAT(3, 2),
+        created: DataType.DATE,
         entrepreneur_id: {
             type: DataType.INTEGER,
             references: {
