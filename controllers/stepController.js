@@ -43,8 +43,8 @@ module.exports = {
         try {
             if (stage_id) {
                 const steps = await models.step.findAll({
-                    offset: (perPage * (page - 1)),
-                    limit: perPage,
+                    // offset: (perPage * (page - 1)),
+                    // limit: perPage,
                     where: {
                         stage_id: stage_id
                     },
@@ -62,8 +62,8 @@ module.exports = {
                 return res.json({ status: true, message: "Listado de retos por nivel", data: steps, current: page, pages: Math.ceil(totalRows / perPage) })
             } else {
                 const steps = await models.step.findAll({
-                    offset: (perPage * (page - 1)),
-                    limit: perPage,
+                    // offset: (perPage * (page - 1)),
+                    // limit: perPage,
                     include: [
                         { 
                             model: models.stage,
