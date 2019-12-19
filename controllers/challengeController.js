@@ -1,7 +1,3 @@
-
-var multer = require('multer');
-var path = require('path');
-var fs = require('fs');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -10,7 +6,7 @@ const Sequelize = require('sequelize');
 const models = require('../models/index');
 const index = require('../config/index');
 const { sendEmail } = require('../libs/mail')
-const { existById } = require('../controllers/elementController');
+const { existById, updateOrCreate } = require('../controllers/elementController');
 const { getObject, putObject, getDownloadUrl, deleteObject } = require('../libs/aws-s3');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/step-icons';
 const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip';
@@ -52,9 +48,9 @@ module.exports = {
                 return [
                     check('challenge_id', message_exists).exists(),
                     check('comment', message_exists).exists(),
-                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado'])
-                        .withMessage(text.only('Con observaciones', 'Verificado')),
-                    check('verifying_use', message_exists).exists()
+                    check('status').exists().withMessage(message_exists).isIn(['Con observaciones', 'Verificado', 'Por verificar'])
+                        .withMessage(text.only('Con observaciones', 'Verificado', 'Por verificar')),
+                    check('verifying_user', message_exists).exists()
                 ]
             case 'deleteFile':
                 return [
@@ -677,7 +673,7 @@ module.exports = {
                                     [models.Sequelize.Op.in]: skll_ids
                                 }
                             },
-                            required: false
+                            required: true
                         },
                         {
                             model: models.tip_category,
@@ -761,6 +757,8 @@ module.exports = {
                 verifying_user: verifying_user
             })
 
+            console.log(update_challenge)
+
             const challenge = await models.challenge.findOne({
                 where: { id: challenge_id },
                 include: [
@@ -805,15 +803,6 @@ module.exports = {
 
     },
 
-    listStages: async (req, res) => {
-        const { type } = req.query
-        models.stage.findAll({
-            where: { type: type }
-        }).then(stages => {
-            res.json({ status: true, message: "Lista de etapas", data: stages })
-        })
-    },
-
     listSteps: async (req, res) => {
         const { stage_id } = req.query
         if (!stage_id) {
@@ -829,9 +818,8 @@ module.exports = {
         }
     },
 
-    /** API path that will upload the files */
     uploadExcel: async (req, res) => {
-        var exceltojson; //Initialization
+        var exceltojson;
         const messageFileInvalid = "Error el formato del archivo no es válido, solo se admite archivos Excel";
 
         if (req.files) {
@@ -864,6 +852,9 @@ module.exports = {
                             }
                             await models.sequelize.transaction(async (t) => {
                                 for (var x = 0; x < result.length; x++) {
+                                    if (result[x].tipo !== "startup" && result[x].tipo !== "employee") {
+                                        return res.json({ status: false, message: "El campo tipo solo puede ser startup o employee." })
+                                    }
                                     if (result[x].etapa.length > 0 && result[x].tipo.length > 0 && result[x].nivel.length > 0) {
                                         var stageNew = await models.stage.findOrCreate({
                                             where: {
@@ -871,23 +862,36 @@ module.exports = {
                                                 type: result[x].tipo
                                             }, transaction: t
                                         });
-                                        var stepNew = await models.step.findOrCreate({
+                                        await models.step.findOrCreate({
                                             where: {
                                                 step: result[x].nivel,
                                                 stage_id: stageNew[0].dataValues.id
                                             }, transaction: t
-                                        });
-                                        await models.tip.findOrCreate({
-                                            where: {
-                                                tip: result[x].reto,
-                                                step_id: stepNew[0].dataValues.id
-                                            },
-                                            defaults: {
-                                                description: result[x].reto_descripcion,
-                                            },
-                                            transaction: t
-                                        }).spread(async (tipNew, created) => {
+                                        }).spread(async (stepNew, created) => {
                                             if (created) {
+                                                for (var i = 1; i <= 4; i++) {
+                                                    await models.tip.create({
+                                                        tip: "Reto número " + i,
+                                                        step_id: stepNew.id
+                                                    }, { transaction: t })
+                                                }
+                                            }
+                                            console.log("@@@@@")
+                                            console.log(stepNew.id)
+                                            const tipNew = await updateOrCreate(
+                                                models.tip,
+                                                {
+                                                    step_id: stepNew.id
+                                                },
+                                                {
+                                                    tip: result[x].reto,
+                                                    description: result[x].reto_descripcion,
+                                                    step_id: stepNew.id
+                                                }
+                                            )
+                                            console.log("@@@@@")
+                                            console.log("2")
+                                            if (tipNew.created === true) {
                                                 if (result[x].tipo == "startup") {
                                                     var startups = await models.startup.findAll({
                                                         attributes: ['id'],
@@ -903,7 +907,7 @@ module.exports = {
                                                             startup_id: startups[i].id,
                                                             stage_id: stageNew[0].dataValues.id,
                                                             step_id: stepNew[0].dataValues.id,
-                                                            tip_id: tipNew.dataValues.id,
+                                                            tip_id: tipNew.item.dataValues.id,
                                                             checked: false,
                                                             status: "Sin respuesta",
                                                             date: Date.now()
@@ -938,7 +942,7 @@ module.exports = {
                                                             employee_id: employees[i].id,
                                                             stage_id: stageNew[0].dataValues.id,
                                                             step_id: stepNew[0].dataValues.id,
-                                                            tip_id: tipNew.dataValues.id,
+                                                            tip_id: tipNew.item.dataValues.id,
                                                             checked: false,
                                                             status: "Sin respuesta",
                                                             date: Date.now()
@@ -977,9 +981,9 @@ module.exports = {
                                                     });
                                                     return await response.id;
                                                 }), { transaction: t });
-                                                await tipNew.addSkill(skills_id, { transaction: t });
+                                                await tipNew.item.addSkill(skills_id, { transaction: t });
                                             }
-                                            var cadena_two = result[x].categorias;
+                                            var cadena_two = result[x].rubros;
                                             var categories = cadena_two.split(/(?:,| )+/);
                                             if (categories) {
                                                 var categories_id = await Promise.all(categories.map(async (element) => {
@@ -991,7 +995,7 @@ module.exports = {
                                                     });
                                                     return await response.id;
                                                 }), { transaction: t });
-                                                await tipNew.addCategory(categories_id, { transaction: t });
+                                                await tipNew.item.addCategory(categories_id, { transaction: t });
                                             }
                                         });
                                     }
@@ -999,8 +1003,8 @@ module.exports = {
                                         return res.json({ status: false, message: "Valide que su archivo no tenga celdas vacias" });
                                     }
                                 }
+                                res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
                             });
-                            res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
                         });
                     } catch (e) {
                         console.log(e)

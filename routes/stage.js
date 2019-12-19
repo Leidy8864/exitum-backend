@@ -15,6 +15,10 @@ router.get('/show',
     controller.show
 );
 
+router.get('/listStages',
+    controller.listStages
+);
+
 router.post('/create',
     controller.validate('create'),
     controller.create
