@@ -295,14 +295,15 @@ module.exports = {
             if (entrepreneur_b) {
                 models.advertisement.findAll(
                     {
-                        offset: (perPage * (page - 1)),
                         limit: perPage,
+                        offset: (perPage * (page - 1)),
                         where: {
                             state: req.query.state,
                         },
                         include: [
                             {
                                 model: models.startup,
+                                required: true,
                                 include: [{
                                     model: models.entrepreneur,
                                     where: {
@@ -316,6 +317,9 @@ module.exports = {
                         ]
                     }
                 ).then(advertisements => {
+                    console.log(advertisements.length)
+                    console.log((perPage * (page - 1)))
+                    console.log(perPage)
                     models.advertisement.count({
                         where: {
                             state: req.query.state,
