@@ -52,14 +52,16 @@ module.exports = {
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         let perPage = 20;
+        let user = req.query.user
         let page = req.query.page || 1;
-        const { user } = req.query
 
         try 
         {
             var events_number = await models.workshop.count({ where: { user_id: { [ Sequelize.Op.ne ]:  user } } })
             
-            var events = await models.workshop.findAll({
+            var response = await models.workshop.findAll({
+                limit: perPage,
+                offset: (perPage * (page - 1)),
                 where: { 
                     user_id: { [ Sequelize.Op.ne ]:  user } ,
                 },
@@ -68,7 +70,7 @@ module.exports = {
                         model: models.user,
                         as: 'toWorkshopUsers',
                         attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ],
-                        through: { where: { user_id: { [ Sequelize.Op.eq ] : user } } } ,
+                        // through: { where: { user_id: { [ Sequelize.Op.eq ] : user } } } ,
                         // where: { id : user }
                     },
                     {
@@ -79,22 +81,44 @@ module.exports = {
                 attributes: [
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'photo',
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id',
-                    'participants', 'photo'
+                    'participants'
                     // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
                 ],
                 // group : [ 'id', 'toWorkshopUsers.id', 'toWorkshopCategories.id'],
-                limit: perPage,
-                offset: (perPage * (page - 1))
             })
-            
-            var event = events.reduce( (element, option) => {
-                if (!option.toWorkshopUsers.length) {
-                    element.push(option)
-                }
-                return element
-            }, [])
 
-            return res.status(200).json({ status: true, message: 'OK', data: event, current: page, pages: Math.ceil(events_number / perPage) })
+            var events = await Promise.all(response.map(async element => {
+                return {
+                    id: element.id, title: element.title, day: element.day, hour_start: element.hour_start, 
+                    hour_end: element.hour_end, place: element.place, description: element.description, 
+                    user_id: element.user_id, participants: element.participants, photo: element.photo,
+                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`,
+                    toWorkshopUsers: (element.toWorkshopUsers).reduce((data, option) => {
+                        if (option.id == user) {
+                            data.push({ id: option.id, fullname: option.fullname, photo: option.photo, user_workshop: option.user_workshop })
+                        }
+                        return data
+                    }, []), 
+                    toWorkshopCategories: element.toWorkshopCategories
+                }
+            }))
+            
+            // var events = response.reduce( (element, option) => {
+            //     if (!option.toWorkshopUsers.length) 
+            //     {
+            //         var data = {
+            //             id: option.id, title: option.title, day: option.day, hour_start: option.hour_start, 
+            //             hour_end: option.hour_end, place: option.place, description: option.description, 
+            //             user_id: option.user_id, participants: option.participants, photo: option.photo,
+            //             participants_count: `${option.toWorkshopUsers.length}/${option.participants}`,
+            //             toWorkshopUsers: option.toWorkshopUsers, toWorkshopCategories: option.toWorkshopCategories
+            //         }
+            //         element.push(data)
+            //     }
+            //     return element
+            // }, [])
+
+            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
         } catch (error) { return returnError(res, error) }
 
@@ -109,7 +133,7 @@ module.exports = {
 
         try 
         {    
-            var event = await models.workshop.findByPk(event_id, {
+            var response = await models.workshop.findByPk(event_id, {
                 include: [
                     {
                         model: models.user,
@@ -125,6 +149,15 @@ module.exports = {
                     'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants', 'photo'
                 ],
             })
+
+            var event = {
+                id: response.id, title: response.title, day: response.day, hour_start: response.hour_start, 
+                hour_end: response.hour_end, place: response.place, description: response.description, 
+                user_id: response.user_id, participants: response.participants, photo: response.photo,
+                participants_count: `${response.toWorkshopUsers.length}/${response.participants}`,
+                toWorkshopUsers: response.toWorkshopUsers, toWorkshopCategories: response.toWorkshopCategories
+            }
+            
             return successful(res, 'OK', event)
             
         } catch (error) { return returnError(res, error) }
@@ -170,7 +203,7 @@ module.exports = {
             const user = await existById(models.user, user_id, 'id')
             var events_number = await models.workshop.count({ where: { user_id: user.id } })
 
-            var events = await models.workshop.findAll({
+            var response = await models.workshop.findAll({
                 offset: (perPage * (page - 1)),
                 limit: perPage,
                 where: { user_id: user.id },
@@ -178,8 +211,24 @@ module.exports = {
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id',
                     'participants', 'photo'
+                ],
+                include: [
+                    {
+                        model: models.user,
+                        as: 'toWorkshopUsers',
+                        attributes:[ 'id' ]
+                    },
                 ]
             })
+
+            var events = await Promise.all(response.map(async element => {
+                return  {
+                    id: element.id, title: element.title, day: element.day, hour_start: element.hour_start, 
+                    hour_end: element.hour_end, place: element.place, description: element.description, 
+                    user_id: element.user_id, participants: element.participants, photo: element.photo,
+                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`
+                }
+            }))
 
             return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
 
@@ -198,11 +247,28 @@ module.exports = {
         {    
             const user = await existById(models.user, user_id)
 
-            var events = await user.getToUserWorkshops({ attributes: [ 
+            var response = await user.getToUserWorkshops({ attributes: [ 
                 'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ],
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id',
                     'participants', 'photo'
-             ] })
+                ],
+                include: [
+                    {
+                        model: models.user,
+                        as: 'toWorkshopUsers',
+                        attributes:[ 'id' ]
+                    },
+                ]
+             })
+
+            var events = await Promise.all(response.map(async element => {
+                return  {
+                    id: element.id, title: element.title, day: element.day, hour_start: element.hour_start, 
+                    hour_end: element.hour_end, place: element.place, description: element.description, 
+                    user_id: element.user_id, participants: element.participants, photo: element.photo,
+                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`
+                }
+            }))
 
             return successful(res, 'OK', events)
 

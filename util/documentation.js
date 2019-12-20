@@ -2570,7 +2570,7 @@
                            "step_id": 1,
                            "tip_id": 1,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-10-30T14:33:25.000Z",
                            "comment": null,
                            "reply": null
@@ -2584,7 +2584,7 @@
                            "step_id": 1,
                            "tip_id": 2,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-10-30T14:33:25.000Z",
                            "comment": null,
                            "reply": null
@@ -2598,7 +2598,7 @@
                            "step_id": 1,
                            "tip_id": 3,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-10-30T14:33:25.000Z",
                            "comment": null,
                            "reply": null
@@ -2612,7 +2612,7 @@
                            "step_id": 1,
                            "tip_id": 4,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-10-30T14:33:25.000Z",
                            "comment": null,
                            "reply": null
@@ -2662,7 +2662,7 @@
                    "step_id": 1,
                    "tip_id": 1,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-10-25T21:42:00.000Z",
                    "comment": null
                },
@@ -2675,7 +2675,7 @@
                    "step_id": 1,
                    "tip_id": 2,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-10-25T21:42:00.000Z",
                    "comment": null
                },
@@ -2688,7 +2688,7 @@
                    "step_id": 1,
                    "tip_id": 3,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-10-25T21:42:00.000Z",
                    "comment": null
                },
@@ -2701,7 +2701,7 @@
                    "step_id": 1,
                    "tip_id": 4,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-10-25T21:42:00.000Z",
                    "comment": null
                }
@@ -2819,7 +2819,7 @@
                            "step_id": 21,
                            "tip_id": 65,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-11-08T20:39:49.000Z",
                            "comment": null,
                            "reply": null
@@ -2833,7 +2833,7 @@
                            "step_id": 21,
                            "tip_id": 66,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-11-08T20:39:49.000Z",
                            "comment": null,
                            "reply": null
@@ -2864,7 +2864,7 @@
                            "step_id": 22,
                            "tip_id": 69,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-11-08T20:39:49.000Z",
                            "comment": null,
                            "reply": null
@@ -2878,7 +2878,7 @@
                            "step_id": 22,
                            "tip_id": 70,
                            "checked": false,
-                           "status": "Por verificar",
+                           "status": "Verificando",
                            "date": "2019-11-08T20:39:49.000Z",
                            "comment": null,
                            "reply": null
@@ -2928,7 +2928,7 @@
                    "step_id": 21,
                    "tip_id": 65,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-11-08T20:39:49.000Z",
                    "comment": null,
                    "reply": null,
@@ -2949,7 +2949,7 @@
                    "step_id": 21,
                    "tip_id": 66,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-11-08T20:39:49.000Z",
                    "comment": null,
                    "reply": null,
@@ -2970,7 +2970,7 @@
                    "step_id": 21,
                    "tip_id": 67,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-11-08T20:39:49.000Z",
                    "comment": null,
                    "reply": null,
@@ -2991,7 +2991,7 @@
                    "step_id": 21,
                    "tip_id": 68,
                    "checked": false,
-                   "status": "Por verificar",
+                   "status": "Verificando",
                    "date": "2019-11-08T20:39:49.000Z",
                    "comment": null,
                    "reply": null,
