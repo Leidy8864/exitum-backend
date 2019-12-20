@@ -9,6 +9,7 @@ const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
 const { createCategory } = require('./categoryController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/event-image';
+const Excel = require('exceljs');
 
 module.exports = {
 
@@ -398,6 +399,53 @@ module.exports = {
 
         } catch (error) { return returnError(res, error) }
 
+    },
+
+
+    downloadEventParticipants : async(req,res) =>{
+        
+        const {event_id} = req.params;   
+        const event = await existById(models.workshop, event_id);     
+        res.setHeader('Content-disposition', `attachment; filename=lista_participantes-${event.title}.xlsx`);
+        res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        var workbook = new Excel.stream.xlsx.WorkbookWriter({ stream: res, useStyles: true });
+        var worksheet = workbook.addWorksheet(`Participantes-${event.title}`);
+        worksheet.columns = [
+            { header: 'Participante',key:'participant',width:30,style:{font:{name:"Calibri"}}},
+            { header: 'Estado',key:'state', width:30,style:{font:{name:"Calibri"}}},
+        ];
+        var borders = {top:{style:"thin"},left:{style:"thin"},bottom:{style:"thin"},right:{style:"thin"}};
+        worksheet.getCell("A1").border = borders;
+        worksheet.getCell("B1").border = borders;
+        try 
+        {    
+            var event_user = await event.getToWorkshopUsers({
+                attributes: [ 'id', 'name','lastname','photo' ]
+            })
+
+            for(var i in event_user){
+                let state = ""
+                switch (event_user[i].user_workshop.status) {
+                    case "ACCEPTED":
+                        state = "Aceptado"
+                        break;
+                    case "PENDING" : 
+                        state = "En lista de espera"
+                    case "REJECTED" : 
+                    state = "En lista de espera"
+
+                    default:
+                        break;
+                }
+                worksheet.addRow({participant: event_user[i].name + ' '+ event_user[i].lastname, state: state });
+            }                            
+            worksheet.commit();
+            workbook.commit(); 
+            
+        } catch (error) { 
+            return returnError(res, error) ;
+        }
     }
 
 }

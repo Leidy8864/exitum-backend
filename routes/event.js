@@ -47,4 +47,7 @@ router.post('/delete/:event_id',
     controller.delete
 );
 
+router.get('/downloadParticipants/:event_id',
+    controller.downloadEventParticipants
+);
 module.exports = router;
