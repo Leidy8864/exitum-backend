@@ -330,6 +330,7 @@ module.exports = {
                                 model: models.startup,
                                 include: [{
                                     model: models.entrepreneur,
+                                    required: true
                                     // where: {
                                     //     id: entrepreneur.id
                                     // }
