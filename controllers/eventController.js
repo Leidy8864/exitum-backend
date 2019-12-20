@@ -60,8 +60,6 @@ module.exports = {
             var events_number = await models.workshop.count({ where: { user_id: { [ Sequelize.Op.ne ]:  user } } })
             
             var response = await models.workshop.findAll({
-                limit: perPage,
-                offset: (perPage * (page - 1)),
                 where: { 
                     user_id: { [ Sequelize.Op.ne ]:  user } ,
                 },
@@ -69,9 +67,7 @@ module.exports = {
                     {
                         model: models.user,
                         as: 'toWorkshopUsers',
-                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ],
-                        // through: { where: { user_id: { [ Sequelize.Op.eq ] : user } } } ,
-                        // where: { id : user }
+                        attributes:[ 'id', [ Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname' ], 'photo' ]
                     },
                     {
                         model: models.category,
@@ -82,43 +78,27 @@ module.exports = {
                     'id', 'title', 'day',  [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_start'),  '%h:%i %p'), 'hour_start' ], 'photo',
                     [ Sequelize.fn( 'TIME_FORMAT', Sequelize.col('hour_end'),  '%h:%i %p'), 'hour_end' ], 'place', 'description', 'user_id',
                     'participants'
-                    // [ Sequelize.fn( 'COUNT', Sequelize.col('toWorkshopUsers.id') ), 'join' ]
-                ],
-                // group : [ 'id', 'toWorkshopUsers.id', 'toWorkshopCategories.id'],
+                ]
             })
 
-            var events = await Promise.all(response.map(async element => {
-                return {
-                    id: element.id, title: element.title, day: element.day, hour_start: element.hour_start, 
-                    hour_end: element.hour_end, place: element.place, description: element.description, 
-                    user_id: element.user_id, participants: element.participants, photo: element.photo,
-                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`,
-                    toWorkshopUsers: (element.toWorkshopUsers).reduce((data, option) => {
-                        if (option.id == user) {
-                            data.push({ id: option.id, fullname: option.fullname, photo: option.photo, user_workshop: option.user_workshop })
-                        }
-                        return data
-                    }, []), 
-                    toWorkshopCategories: element.toWorkshopCategories
+            var filter = response.reduce((element, option) => {
+                var user_exists = (option.toWorkshopUsers).find(data => data.id == user);
+                if (!user_exists) {
+                    var data = {
+                        id: option.id, title: option.title, day: option.day, hour_start: option.hour_start, 
+                        hour_end: option.hour_end, place: option.place, description: option.description, 
+                        user_id: option.user_id, participants: option.participants, photo: option.photo,
+                        participants_count: `${option.toWorkshopUsers.length}/${option.participants}`,
+                        toWorkshopUsers: option.toWorkshopUsers, toWorkshopCategories: option.toWorkshopCategories
+                    }
+                    element.push(data)
                 }
-            }))
-            
-            // var events = response.reduce( (element, option) => {
-            //     if (!option.toWorkshopUsers.length) 
-            //     {
-            //         var data = {
-            //             id: option.id, title: option.title, day: option.day, hour_start: option.hour_start, 
-            //             hour_end: option.hour_end, place: option.place, description: option.description, 
-            //             user_id: option.user_id, participants: option.participants, photo: option.photo,
-            //             participants_count: `${option.toWorkshopUsers.length}/${option.participants}`,
-            //             toWorkshopUsers: option.toWorkshopUsers, toWorkshopCategories: option.toWorkshopCategories
-            //         }
-            //         element.push(data)
-            //     }
-            //     return element
-            // }, [])
+                return element
+            }, [])
 
-            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(events_number / perPage) })
+            var events = filter.slice( ( ( page - 1 ) * perPage), (page * perPage) )
+
+            return res.status(200).json({ status: true, message: 'OK', data: events, current: page, pages: Math.ceil(filter.length / perPage) })
 
         } catch (error) { return returnError(res, error) }
 
