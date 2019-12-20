@@ -57,17 +57,25 @@ module.exports = {
     updateOrCreate: async (model, where, newItem) => {
         var response
         var item
-        const itemFind = await model.findOne({
-            where
-        })
+        const itemFind = await model.findOne({ where })
+        console.log(itemFind)
         if (!itemFind) {
-            response = await model.create(newItem)
+            console.log("1111111111111111")
+
+            item = await model.create(newItem)
+            response = { item, created: true }
+            console.log(response)
+
+        } else {
+            console.log("22222222222222")
+            await model.update(newItem, { where: where })
+            item = await model.findOne({ where })
+            response = { item, created: true }
+            console.log(response)
         }
 
-        await model.update(newItem, {
-            where: where
-        })
-        response = await model.findOne({ where })
+        if (!response) throw (text.notFoundElement)
+
         return response
     }
 }

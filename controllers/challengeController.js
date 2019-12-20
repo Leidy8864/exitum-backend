@@ -756,7 +756,47 @@ module.exports = {
                 verifying_user: verifying_user
             })
 
-            console.log(update_challenge)
+            if (update_challenge.employee_id !== null) {
+                const challenges = await models.challenge.findAll({
+                    where: {
+                        employee_id: update_challenge.employee_id,
+                        step_id: update_challenge.step_id,
+                        status: 'verificado'
+                    }
+                })
+                var employee_step = await models.employee_step.findOne({
+                    where: {
+                        employee_id: update_challenge.employee_id,
+                        step_id: update_challenge.step_id
+                    }
+                })
+                countNew = challenges.length
+                await employee_step.update({
+                    tip_completed: countNew,
+                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/' + countNew + '-reto.svg',
+                    state: countNew >= 4 ? 'completado' : 'incompleto'
+                })
+            } else if (update_challenge.startup_id !== null) {
+                const challenges = await models.challenge.findAll({
+                    where: {
+                        startup_id: update_challenge.startup_id,
+                        step_id: update_challenge.step_id,
+                        status: 'verificado'
+                    }
+                })
+                var startup_step = await models.startup_step.findOne({
+                    where: {
+                        startup_id: update_challenge.startup_id,
+                        step_id: update_challenge.step_id
+                    }
+                })
+                countNew = challenges.length
+                await startup_step.update({
+                    tip_completed: countNew,
+                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/' + (countNew >= 4 ? 4 : countNew) + '-reto.svg',
+                    state: countNew >= 4 ? 'completado' : 'incompleto'
+                })
+            }
 
             const challenge = await models.challenge.findOne({
                 where: { id: challenge_id },
