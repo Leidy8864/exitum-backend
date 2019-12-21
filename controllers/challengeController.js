@@ -1,3 +1,4 @@
+const fs = require('fs')
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -862,6 +863,7 @@ module.exports = {
         const messageFileInvalid = "Error el formato del archivo no es válido, solo se admite archivos Excel";
 
         if (req.files) {
+            var messageAlert = null
             var file = req.files.file;
             var datetimestamp = Date.now();
             const fileName = datetimestamp + '-' + file.name;
@@ -907,93 +909,130 @@ module.exports = {
                                                 stage_id: stageNew[0].dataValues.id
                                             }, transaction: t
                                         }).spread(async (stepNew, created) => {
-                                            for (var i = 1; i <= 4; i++) {
-                                                if (created) {
+                                            if (created) {
+                                                for (var i = 0; i < 4; i++) {
                                                     await models.tip.create({
-                                                        tip: result[i].reto !== undefined || null ? result[i].reto : ("Reto número " + i),
-                                                        description: result[i].reto_descripcion !== undefined || null ? result[i].reto : ("Reto número " + i),
+                                                        tip: "Reto número " + (i + 1),
                                                         step_id: stepNew.id
                                                     }, { transaction: t })
                                                 }
                                             }
-
-                                            if (result[x].tipo == "startup") {
-                                                var startups = await models.startup.findAll({
-                                                    attributes: ['id'],
-                                                    include: [
-                                                        { model: models.entrepreneur }
-                                                    ]
-                                                });
-                                                var chlls = [];
-                                                var stp_step = [];
-                                                for (var i = 0; i < startups.length; i++) {
-                                                    chlls.push({
-                                                        user_id: startups[i].entrepreneur.user_id,
-                                                        startup_id: startups[i].id,
-                                                        stage_id: stageNew[0].dataValues.id,
-                                                        step_id: stepNew.id,
-                                                        tip_id: tipNew.dataValues.id,
-                                                        checked: false,
-                                                        status: "Sin respuesta",
-                                                        date: Date.now()
-                                                    });
-                                                    var startup_step = await models.startup_step.findOne({
-                                                        where: {
-                                                            startup_id: startups[i].id,
-                                                            step_id: stepNew.id,
-                                                        }
-                                                    });
-                                                    if (!startup_step) {
-                                                        stp_step.push({
-                                                            startup_id: startups[i].id,
-                                                            step_id: stepNew.id,
-                                                            tip_completed: 0,
-                                                            icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                                            state: 'incompleto'
-                                                        });
-                                                    }
-                                                }
-                                                await models.challenge.bulkCreate(chlls, { transaction: t });
-                                                await models.startup_step.bulkCreate(stp_step, { transaction: t });
-                                            } else if (result[x].tipo == "employee") {
-                                                var employees = await models.employee.findAll({
-                                                    attributes: ['id', 'user_id'],
-                                                });
-                                                var chlls = [];
-                                                var emp_step = [];
-                                                for (var i = 0; i < employees.length; i++) {
-                                                    chlls.push({
-                                                        user_id: employees[i].user_id,
-                                                        employee_id: employees[i].id,
-                                                        stage_id: stageNew[0].dataValues.id,
-                                                        step_id: stepNew.id,
-                                                        tip_id: tipNew.dataValues.id,
-                                                        checked: false,
-                                                        status: "Sin respuesta",
-                                                        date: Date.now()
-                                                    });
-                                                    var employee_step = await models.employee_step.findOne({
-                                                        where: {
-                                                            employee_id: employees[i].id,
-                                                            step_id: stepNew.id
-                                                        }
-                                                    });
-                                                    if (!employee_step) {
-                                                        emp_step.push({
-                                                            employee_id: employees[i].id,
-                                                            step_id: stepNew.id,
-                                                            tip_completed: 0,
-                                                            icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                                            state: 'incompleto'
-                                                        });
-                                                    }
-                                                }
-                                                await models.challenge.bulkCreate(chlls, { transaction: t });
-                                                await models.employee_step.bulkCreate(emp_step, { transaction: t });
-                                            } else {
-                                                return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." });
+                                            var tipNew = await models.tip.findOne({
+                                                where: {
+                                                    step_id: stepNew.id,
+                                                    description: null
+                                                },
+                                                transaction: t
+                                            })
+                                            if (tipNew === null) {
+                                                messageAlert = ",pero el nivel '" + result[x].nivel + "'  de la etapa '" + result[x].etapa + "' ya tiene cuatro retos creados, edite los retos en el panel de administrador o cree un nuevo nivel"
                                             }
+                                            if (tipNew) {
+                                                const tipFind = await models.tip.findOne({
+                                                    where: {
+                                                        tip: result[x].reto,
+                                                        description: result[x].reto_descripcion,
+                                                        step_id: stepNew.id
+                                                    },
+                                                    transaction: t
+                                                })
+                                                if (!tipFind) {
+                                                    tipNew.update({
+                                                        tip: result[x].reto,
+                                                        description: result[x].reto_descripcion,
+                                                        step_id: stepNew.id
+                                                    }, { transaction: t })
 
+                                                    if (result[x].tipo == "startup") {
+                                                        var startups = await models.startup.findAll({
+                                                            attributes: ['id'],
+                                                            include: [
+                                                                { model: models.entrepreneur }
+                                                            ],
+                                                            transaction: t
+                                                        });
+                                                        var chlls = [];
+                                                        var stp_step = [];
+                                                        for (var i = 0; i < startups.length; i++) {
+                                                            chlls.push({
+                                                                user_id: startups[i].entrepreneur.user_id,
+                                                                startup_id: startups[i].id,
+                                                                stage_id: stageNew[0].dataValues.id,
+                                                                step_id: stepNew.id,
+                                                                tip_id: tipNew.dataValues.id,
+                                                                checked: false,
+                                                                status: "Sin respuesta",
+                                                                date: Date.now()
+                                                            });
+                                                            var startup_step = await models.startup_step.findOne({
+                                                                attributes: ['startup_id'],
+                                                                where: {
+                                                                    startup_id: startups[i].id,
+                                                                    step_id: stepNew.id,
+                                                                },
+                                                                transaction: t
+                                                            });
+                                                            if (!startup_step) {
+                                                                stp_step.push({
+                                                                    startup_id: startups[i].id,
+                                                                    step_id: stepNew.id,
+                                                                    tip_completed: 0,
+                                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                                    state: 'incompleto'
+                                                                });
+                                                            }
+                                                        }
+                                                        await models.challenge.bulkCreate(chlls, { transaction: t }).catch(err => { console.log(err) });
+                                                        await models.startup_step.bulkCreate(stp_step, { transaction: t }).catch(err => { console.log(err) });
+                                                    } else if (result[x].tipo == "employee") {
+                                                        var employees = await models.employee.findAll({
+                                                            attributes: ['id', 'user_id'],
+                                                        });
+                                                        var chlls = [];
+                                                        var emp_step = [];
+                                                        for (var i = 0; i < employees.length; i++) {
+                                                            chlls.push({
+                                                                user_id: employees[i].user_id,
+                                                                employee_id: employees[i].id,
+                                                                stage_id: stageNew[0].dataValues.id,
+                                                                step_id: stepNew.id,
+                                                                tip_id: tipNew.dataValues.id,
+                                                                checked: false,
+                                                                status: "Sin respuesta",
+                                                                date: Date.now()
+                                                            });
+                                                            var employee_step = await models.employee_step.findOne({
+                                                                attributes: ['employee_id'],
+                                                                where: {
+                                                                    employee_id: employees[i].id,
+                                                                    step_id: stepNew.id
+                                                                },
+                                                                transaction: t
+                                                            });
+                                                            if (!employee_step) {
+                                                                emp_step.push({
+                                                                    employee_id: employees[i].id,
+                                                                    step_id: stepNew.id,
+                                                                    tip_completed: 0,
+                                                                    icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
+                                                                    state: 'incompleto'
+                                                                });
+                                                            }
+                                                        }
+                                                        await models.challenge.bulkCreate(chlls, { transaction: t }).catch(err => { console.log(err) });;
+                                                        await models.employee_step.bulkCreate(emp_step, { transaction: t }).catch(err => { console.log(err) });;
+                                                    } else {
+                                                        return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." });
+                                                    }
+                                                }
+
+                                            }
+                                            tipNew = await models.tip.findOne({
+                                                where: {
+                                                    step_id: stepNew.id,
+                                                },
+                                                transaction: t
+                                            })
                                             var cadena = result[x].habilidades;
                                             var skills = cadena.split(/(?:,| )+/);
                                             if (skills) {
@@ -1028,9 +1067,10 @@ module.exports = {
                                         return res.json({ status: false, message: "Valide que su archivo no tenga celdas vacias" });
                                     }
                                 }
-                                res.json({ status: true, message: "Se crearon correctamente los retos", data: result });
+                                res.json({ status: true, message: "Se crearon correctamente los retos " + messageAlert, data: result });
                             });
                         });
+                        fs.unlinkSync(`./uploads/${fileName}`)
                     } catch (e) {
                         console.log(e)
                         res.json({ status: false, message: "Archivo corrupto" });

@@ -52,31 +52,5 @@ module.exports = {
         }
 
         return diff;
-    },
-
-    updateOrCreate: async (model, where, newItem) => {
-        var response
-        var item
-        var itemFind = await model.findOne({ where: where }).catch(err => console.log(err))
-        console.log(itemFind)
-        if (!itemFind) {
-            console.log("1111111111111111")
-
-            response = await model.create(newItem).catch(err => console.log(err))
-            console.log(item)
-            //return response = { item, created: true }
-            console.log(response)
-
-        } else {
-            console.log("22222222222222")
-            await model.update(newItem, { where: where }).catch(err => console.log(err))
-            response = await model.findOne({ where: where }).catch(err => console.log(err))
-            //return response = { item, created: true }
-            //console.log(response)
-        }
-
-        if (!response) throw (text.notFoundElement)
-
-        return response
     }
 }
