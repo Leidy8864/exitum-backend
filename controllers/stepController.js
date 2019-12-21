@@ -49,7 +49,7 @@ module.exports = {
                         stage_id: stage_id
                     },
                     include: [
-                        { 
+                        {
                             model: models.stage,
                         }
                     ]
@@ -65,7 +65,7 @@ module.exports = {
                     // offset: (perPage * (page - 1)),
                     // limit: perPage,
                     include: [
-                        { 
+                        {
                             model: models.stage,
                             required: false
                         }
@@ -158,12 +158,13 @@ module.exports = {
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
         const { step_id } = req.query
-        const tips = await models.tip.findAll({
-            where: {
-                step_id: step_id
+        const tips = await models.tip.update(
+            {
+                status: false
             },
-            attributes: ['id']
-        })
+            {
+                where: { step_id: step_id }
+            })
     },
 
     delete: async (req, res) => {
