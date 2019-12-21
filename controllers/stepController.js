@@ -153,8 +153,20 @@ module.exports = {
 
     },
 
-    delete: async (req, res) => {
+    deleteLogic: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
+        const { step_id } = req.query
+        const tips = await models.tip.findAll({
+            where: {
+                step_id: step_id
+            },
+            attributes: ['id']
+        })
+    },
+
+    delete: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 

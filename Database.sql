@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`startup` (
   `entrepreneur_id` INT(11) NOT NULL,
   `stage_id` INT(11) NOT NULL,
   `category_id` INT(11) NOT NULL,
+  `created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_startup_emprendedor1_idx` (`entrepreneur_id` ASC),
   INDEX `fk_startup_stage1_idx` (`stage_id` ASC),
@@ -483,6 +484,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`step` (
   `step` VARCHAR(245) NULL DEFAULT NULL,
   `icon` VARCHAR(120) NULL DEFAULT NULL,
   `stage_id` INT(11) NOT NULL,
+  `status` tinyint(1) NULL DEFAULT 1, 
   PRIMARY KEY (`id`),
   INDEX `fk_step_stage1_idx` (`stage_id` ASC),
   CONSTRAINT `fk_step_stage1`

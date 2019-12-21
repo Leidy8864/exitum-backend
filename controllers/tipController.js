@@ -180,8 +180,19 @@ module.exports = {
                     }]
                 })
                 if (req.files) {
-                    for (var x = 0; x < req.files.file.length; x++) {
-                        file = req.files.file[x];
+                    if (req.files.file instanceof Array ) {
+                        for (var x = 0; x < req.files.file.length; x++) {
+                            file = req.files.file[x];
+                            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                            name = file.name
+                            await models.file_tip.create({
+                                name: name,
+                                key_s3: (fileName).split('/')[5],
+                                tip_id: tipNew.id
+                            }, { transaction: t });
+                        }
+                    } else {
+                        file = req.files.file;
                         fileName = putObject(FILES_TIP_BUCKET_NAME, file);
                         name = file.name
                         await models.file_tip.create({
@@ -189,11 +200,10 @@ module.exports = {
                             key_s3: (fileName).split('/')[5],
                             tip_id: tipNew.id
                         }, { transaction: t });
-                    }   
+                    }
                 }
 
                 const typeUser = stepFind.stage.type
-
                 if (typeUser == "startup") {
                     const startups = await models.startup.findAll({
                         attributes: ['id'],
@@ -205,7 +215,8 @@ module.exports = {
                     var stp_step = []
                     var challenges = null
                     for (var i = 0; i < startups.length; i++) {
-                        challenges = await models.challenge.findAll({
+                        challenges = await models.challenge.findOne({
+                            attributes: ['id'],
                             where: {
                                 user_id: startups[i].entrepreneur.user_id,
                                 startup_id: startups[i].id,
@@ -225,6 +236,7 @@ module.exports = {
                             date: Date.now()
                         })
                         const startup_step = await models.startup_step.findOne({
+                            attributes: ['startup_id'],
                             where: {
                                 startup_id: startups[i].id,
                                 step_id: stepFind.id
@@ -252,6 +264,7 @@ module.exports = {
                     var emp_step = []
                     for (var i = 0; i < employees.length; i++) {
                         challenges = await models.challenge.findAll({
+                            attributes: ['id'],
                             where: {
                                 user_id: employees[i].user_id,
                                 employee_id: employees[i].id,
@@ -271,6 +284,7 @@ module.exports = {
                             date: Date.now()
                         })
                         const employee_step = await models.employee_step.findOne({
+                            attributes: ['employee_id'],
                             where: {
                                 employee_id: employees[i].id,
                                 step_id: stepFind.id
@@ -369,6 +383,7 @@ module.exports = {
                     })
                     return await response.id
                 }), { transaction: t })
+                await models.tip_skill.destroy({ where: { tip_id: tip_id } });
                 await tip_data.addSkill(skills_id, { transaction: t });
                 return res.json({ status: true, message: "Skills añadidos correctamente" })
             }
@@ -389,6 +404,7 @@ module.exports = {
                     })
                     return await response.id
                 }), { transaction: t })
+                await models.tip_category.destroy({ where: { tip_id: tip_id } });
                 await tip_data.addCategory(categories_id, { transaction: t });
                 return res.json({ status: true, message: "Categorias añadidas correctamente" })
             }
