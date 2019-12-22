@@ -71,7 +71,9 @@ module.exports = {
                 include: [
                     {
                         model: models.step,
-                        required: 1
+                        where: {
+                            required: 1
+                        }
                     },
                     {
                         model: models.file_tip,
@@ -107,7 +109,9 @@ module.exports = {
                 include: [
                     {
                         model: models.step,
-                        required: 1
+                        where: {
+                            required: 1
+                        }
                     },
                     {
                         model: models.file_tip,
