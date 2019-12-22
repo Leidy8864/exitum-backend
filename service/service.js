@@ -7,7 +7,8 @@ const privateKEY  = fs.readFileSync(path.join(__dirname, '/../key/privateKey.key
 function createToken (user) 
 {
     const payload = {
-        sub : user.id
+        id : user.id,
+        name : user.name
     }
 
     const signOptions = {
