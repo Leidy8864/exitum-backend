@@ -5,6 +5,7 @@ module.exports = (sequelize, DataType) => {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
         icon: DataType.STRING,
         step: DataType.STRING,
+        status: DataType.INTEGER,
         stage_id: {
             type: DataType.INTEGER,
             references: {

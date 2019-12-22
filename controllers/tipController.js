@@ -40,8 +40,8 @@ module.exports = {
             const number_tips = await models.tip.count()
 
             const tip = await models.tip.findAll({
-                offset: (perPage * (page - 1)),
-                limit: perPage,
+                // offset: (perPage * (page - 1)),
+                // limit: perPage,
                 include: [
                     { model: models.step }
                 ]
@@ -60,8 +60,8 @@ module.exports = {
 
         if (step_id) {
             const tips = await models.tip.findAll({
-                offset: (perPage * (page - 1)),
-                limit: perPage,
+                // offset: (perPage * (page - 1)),
+                // limit: perPage,
                 where: {
                     step_id: step_id
                 },
@@ -99,8 +99,8 @@ module.exports = {
             return res.json({ status: true, message: "Listado de retos por nivel", data: tips, current: page, pages: Math.ceil(totalRows / perPage) })
         } else {
             const tips = await models.tip.findAll({
-                offset: (perPage * (page - 1)),
-                limit: perPage,
+                // offset: (perPage * (page - 1)),
+                // limit: perPage,
                 include: [
                     {
                         model: models.step,

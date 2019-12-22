@@ -398,6 +398,7 @@ module.exports = {
                 include: [
                     {
                         model: models.step,
+                        where: { status: 1 },
                         include: [
                             {
                                 model: models.startup_step,
@@ -514,6 +515,7 @@ module.exports = {
             include: [
                 {
                     model: models.step,
+                    where: { status: 1 },
                     include: [
                         {
                             model: models.employee_step,
@@ -704,6 +706,9 @@ module.exports = {
                 },
                 {
                     model: models.step,
+                    where: {
+                        status: 1
+                    },
                     required: true
                 },
             ]
@@ -729,6 +734,13 @@ module.exports = {
                             required: true
                         }
                     ],
+                    required: true
+                },
+                {
+                    model: models.step,
+                    where: {
+                        status: 1
+                    },
                     required: true
                 }
             ]
@@ -846,12 +858,12 @@ module.exports = {
     listSteps: async (req, res) => {
         const { stage_id } = req.query
         if (!stage_id) {
-            models.step.findAll().then(steps => {
+            models.step.findAll({ where: { status: true } }).then(steps => {
                 res.json({ status: true, message: "Lista de niveles", data: steps })
             })
         } else {
             models.step.findAll({
-                where: { stage_id: stage_id }
+                where: { stage_id: stage_id, status: true }
             }).then(steps => {
                 res.json({ status: true, message: "Lista de niveles", data: steps })
             })
