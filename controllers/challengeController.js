@@ -905,8 +905,11 @@ module.exports = {
                             }
                             await models.sequelize.transaction(async (t) => {
                                 for (var x = 0; x < result.length; x++) {
-                                    if (result[x].tipo !== "startup" && result[x].tipo !== "employee") {
-                                        return res.json({ status: false, message: "El campo tipo solo puede ser startup o employee." })
+                                    if (!['startup', 'employee'].includes(result[x].tipo.toLowerCase())) {
+                                        return res.json({ status: false, message: "El campo tipo solo puede ser 'startup' o 'employee'." })
+                                    }
+                                    if (!['pre semilla', 'semilla', 'temprana', 'crecimiento', 'expansión', 'etapa 1 empleado'].includes(result[x].etapa.toLowerCase())) {
+                                        return res.json({ status: false, message: "El campo 'etapa' solo pueden tener los siguientes valores: 'Pre semilla', 'Semilla', 'Temprana', 'Crecimiento', 'Expansión', 'Etapa 1 impulsor'." })
                                     }
                                     if (result[x].etapa.length > 0 && result[x].tipo.length > 0 && result[x].nivel.length > 0 && result[x].reto.length > 0) {
                                         var stageNew = await models.stage.findOrCreate({
@@ -927,7 +930,7 @@ module.exports = {
                                                         tip: "Reto número " + (i + 1),
                                                         step_id: stepNew.id
                                                     }, { transaction: t })
-                                                }
+                                                }    
                                             }
                                             var tipNew = await models.tip.findOne({
                                                 where: {

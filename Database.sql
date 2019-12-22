@@ -354,6 +354,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
   `lng` DECIMAL(11,8) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
   `participants` INT(11) NULL DEFAULT NULL,
+  `photo` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_workshop_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_workshop_user1`
@@ -1629,8 +1630,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 INSERT INTO `currency` (`id`, `currency`) VALUES (NULL, 'PEN'), (NULL, 'USD');
 INSERT INTO `country` (`id`, `country`, `code`, `currency_id`) VALUES (NULL, 'Perú', 'PE', 1), (NULL, 'Estados Unidos', 'EEUU', 2);
 
-INSERT INTO `entrepreneur` (`id`, `user_id`) VALUES (NULL, '5'), (NULL, '6');
-
 INSERT INTO `category` (`id`, `name`) 
 VALUES (NULL, 'Tecnológico'), 
 (NULL, 'Radio y televisión'), 
@@ -1647,6 +1646,12 @@ VALUES (NULL, 'Tecnológico'),
 (NULL, 'Agricultura'), 
 (NULL, 'Educación'), 
 (NULL, 'Salud');
+
+INSERT INTO `area` (`id`, `name`) VALUES (NULL, 'Área 1'), (NULL, 'Área 2'), (NULL, 'Área 3'), (NULL, 'Área 4');
+
+INSERT INTO `language` (`id`, `language`) VALUES ('1', 'ingles');
+INSERT INTO `language` (`id`, `language`) VALUES ('2', 'espanol');
+INSERT INTO `language` (`id`, `language`) VALUES ('3', 'portugues');
 
 INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (1,'Emprendedor');
 INSERT INTO `exitum`.`skill` (`id`,`skill`) VALUES (2,'Diseñador Ux');
@@ -1692,4 +1697,4 @@ VALUES (1, 'Pre semilla', "Etapa donde solo se tiene una idea superficial y se b
 (3, 'Temprana', "Etapa donde se ha de crear un MVP, producto mínimo viable, para lanzarlo al mercado y recibir un feedback para detectar pros y contras.", 'startup'), 
 (4, 'Crecimiento', "Etapa donde nuestra empresa consigue escalar consiguiendo ingresos de inversores y propios.", 'startup'), 
 (5, 'Expansión', "Etapa donde se busca alcanzar nuevos horizontes en otros mercados.", 'startup'), 
-(6, 'Etapa 1 empleado', "Etapa 1 empleado.", 'employee')
+(6, 'Etapa 1 empleado', "Etapa 1 empleado.", 'employee');
