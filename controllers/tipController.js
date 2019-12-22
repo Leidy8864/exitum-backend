@@ -43,9 +43,11 @@ module.exports = {
                 // offset: (perPage * (page - 1)),
                 // limit: perPage,
                 include: [
-                    { 
+                    {
                         model: models.step,
-                        status: 1 
+                        where: {
+                            status: 1
+                        }
                     }
                 ]
             });
@@ -72,7 +74,7 @@ module.exports = {
                     {
                         model: models.step,
                         where: {
-                            required: 1
+                            status: 1
                         }
                     },
                     {
@@ -110,7 +112,7 @@ module.exports = {
                     {
                         model: models.step,
                         where: {
-                            required: 1
+                            status: 1
                         }
                     },
                     {
@@ -187,7 +189,7 @@ module.exports = {
                     }]
                 })
                 if (req.files) {
-                    if (req.files.file instanceof Array ) {
+                    if (req.files.file instanceof Array) {
                         for (var x = 0; x < req.files.file.length; x++) {
                             file = req.files.file[x];
                             fileName = putObject(FILES_TIP_BUCKET_NAME, file);
