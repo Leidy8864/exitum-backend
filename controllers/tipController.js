@@ -43,7 +43,10 @@ module.exports = {
                 // offset: (perPage * (page - 1)),
                 // limit: perPage,
                 include: [
-                    { model: models.step }
+                    { 
+                        model: models.step,
+                        status: 1 
+                    }
                 ]
             });
 
@@ -68,7 +71,7 @@ module.exports = {
                 include: [
                     {
                         model: models.step,
-                        required: false
+                        required: 1
                     },
                     {
                         model: models.file_tip,
@@ -104,7 +107,7 @@ module.exports = {
                 include: [
                     {
                         model: models.step,
-                        required: false
+                        required: 1
                     },
                     {
                         model: models.file_tip,
