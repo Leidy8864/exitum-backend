@@ -280,7 +280,6 @@ module.exports = {
                 fileName = s3.putObject(NEW_BUCKET_NAME, photo);
                 await event.update({ photo: fileName });
             }
-            console.log(categories)
             if (categories) {
                 if (categories instanceof Array) {
                     var categories_id = await Promise.all(categories.map(async element => {
@@ -289,9 +288,7 @@ module.exports = {
                     }))
                     await event.addToWorkshopCategories(categories_id)
                 } else {
-                    console.log("entro")
                     var response = await createCategory(categories)
-                    console.log("response"+response)
                     await event.addToWorkshopCategories(response.id)
                 }
             }
