@@ -96,6 +96,9 @@ module.exports = {
                     const newUser = await models.user.create({
                         name: req.body.name,
                         lastname: req.body.lastname,
+                        lastname_1: req.body.lastname_1,
+                        lastname_2: req.body.lastname_2,
+                        genre: req.body.genre,
                         method: 'local',
                         email: req.body.email,
                         password: bcrypt.hashSync(req.body.password),
@@ -236,7 +239,7 @@ module.exports = {
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
                         const newUser = await models.user.create({
                             name: user.firstname,
-                            lastname: user.lastname,
+                            lastname_1: user.lastname,
                             provider_id: user.id,
                             confirmed: true,
                             active: true,
@@ -541,7 +544,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { user_id, name, lastname, phone, role, birthday, description, skill_id, active } = req.body
+        const { user_id, name, lastname, lastname_1, lastname_2, genre, phone, role, birthday, description, skill_id, active } = req.body
 
         try 
         {
@@ -566,6 +569,9 @@ module.exports = {
                 await user.update({
                     name: name,
                     lastname: lastname,
+                    lastname_1: lastname_1,
+                    lastname_2: lastname_2,
+                    genre: genre,
                     phone: phone,
                     photo: fileName,
                     active: active || true,
