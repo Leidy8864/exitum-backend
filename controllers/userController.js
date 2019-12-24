@@ -111,7 +111,8 @@ module.exports = {
                         country_id: 165,
                         // currency_id: country.currency_id || 1
                         currency_id: 1,
-                        avg_rating: 1
+                        avg_rating: 1,
+                        country_phone_id: req.body.country_phone_id
                     }, { transaction: t });
                     return newUser;
                 });
@@ -542,7 +543,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { user_id, name, lastname, lastname_1, lastname_2, genre, phone, role, birthday, description, skill_id, active } = req.body
+        const { user_id, name, lastname, lastname_1, lastname_2, genre, phone, role, birthday, description, skill_id, active, country_phone_id } = req.body
 
         try {
             const user = await models.user.findOne({
@@ -574,7 +575,8 @@ module.exports = {
                     active: active || true,
                     role: role,
                     birthday: birthday,
-                    description: description
+                    description: description,
+                    country_phone_id: country_phone_id
                 });
 
                 await highlight(user, skill_id)

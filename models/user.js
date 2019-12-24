@@ -59,6 +59,13 @@ module.exports = (sequelize, DataType) => {
 					model: 'currency',
 					key: 'id'
 				}
+			},
+			country_phone_id: {
+				type: DataType.INTEGER,
+				references: {
+					model: 'country',
+					key: 'id'
+				}
 			}
 		},
 		{
@@ -76,6 +83,9 @@ module.exports = (sequelize, DataType) => {
 		});
 		user.belongsTo(models.country, {
 			foreignKey: 'country_id'
+		});
+		user.belongsTo(models.country, {
+			foreignKey: 'country_phone_id'
 		});
 		user.belongsTo(models.currency, {
 			foreignKey: 'currency_id'
