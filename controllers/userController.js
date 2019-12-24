@@ -29,7 +29,10 @@ module.exports = {
             case 'signUp':
                 return [
                     check('name').exists().withMessage(message_exists).isString().withMessage(message_string),
-                    check('lastname').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('lastname_1').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('lastname_2').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('emailConfirm').exists().withMessage(message_exists).isString().withMessage(message_string),
+                    check('passwordConfirm').exists().withMessage(message_exists).isString().withMessage(message_string),
                     // check('country_id', message_exists).exists().withMessage(message_exists).isNumeric().withMessage(message_numeric),
                     check_email,
                     check_password.isLength({ min: 8 }).withMessage("Cantidad mínima de caracteres 8")
@@ -90,12 +93,17 @@ module.exports = {
                 //     message: "Este email ya ha sido registrado"
                 // });
             } else {
+                if (req.body.email !== req.body.emailConfirm) {
+                    return res.json({ status: false, message: "El correo no coincide." })
+                }
+                if (req.body.password !== req.body.passwordConfirm) {
+                    return res.json({ status: false, message: "La contraseña no coincide." })
+                }
                 const result = await models.sequelize.transaction(async (t) => {
                     // const country = await models.country.findOne({ where: { id: req.body.country_id } }, { transaction: t });
-
                     const newUser = await models.user.create({
                         name: req.body.name,
-                        lastname: req.body.lastname,
+                        //lastname: req.body.lastname,
                         lastname_1: req.body.lastname_1,
                         lastname_2: req.body.lastname_2,
                         genre: req.body.genre,
@@ -111,8 +119,7 @@ module.exports = {
                         country_id: 165,
                         // currency_id: country.currency_id || 1
                         currency_id: 1,
-                        avg_rating: 1,
-                        country_phone_id: req.body.country_phone_id
+                        avg_rating: 1
                     }, { transaction: t });
                     return newUser;
                 });
@@ -566,7 +573,7 @@ module.exports = {
 
                 await user.update({
                     name: name,
-                    lastname: lastname,
+                    //lastname: lastname,
                     lastname_1: lastname_1,
                     lastname_2: lastname_2,
                     genre: genre,
