@@ -702,11 +702,15 @@ module.exports = {
 
     listCityByCountry: (req, res) => {
         const { country_id } = req.query
-        models.department.findAll({
-            where: {
-                country_id: country_id
+        let whereCondition = {};
+        if (country_id) {
+            whereCondition = {
+                where: {
+                    country_id: country_id
+                }
             }
-        }).then(department => {
+        }
+        models.department.findAll(whereCondition).then(department => {
             if (department) {
                 return res.status(200).json({ status: true, message: "OK", data: department })
             } else {
@@ -728,7 +732,7 @@ module.exports = {
         try {
             const user = await models.user.findByPk(user_id,
                 {
-                    attributes: ['id', 'name', 'lastname', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
+                    attributes: ['id', 'name', 'lastname_1', 'lastname_2','email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
                         'to_hour', [Sequelize.fn('Date_format', Sequelize.col('birthday'), '%Y-%m-%d'), 'birthday'], 'description'
                     ],
                     include: [
