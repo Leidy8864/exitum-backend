@@ -99,10 +99,12 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   `description` TEXT NULL DEFAULT NULL,
   `country_id` INT(11) NOT NULL,
   `currency_id` INT(11) NOT NULL,
+  `country_phone_id` INT(11) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   INDEX `fk_user_country1_idx` (`country_id` ASC),
   INDEX `fk_user_currency1_idx` (`currency_id` ASC),
+  INDEX `fk_user_country2_idx` (`country_phone_id` ASC),
   CONSTRAINT `fk_user_country1`
     FOREIGN KEY (`country_id`)
     REFERENCES `exitum`.`country` (`id`)
@@ -111,6 +113,11 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user` (
   CONSTRAINT `fk_user_currency1`
     FOREIGN KEY (`currency_id`)
     REFERENCES `exitum`.`currency` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  CONSTRAINT `fk_user_country2`
+    FOREIGN KEY (`country_phone_id` , `country_currency_id`)
+    REFERENCES `exitum`.`country` (`id` , `currency_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -361,6 +368,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
   `participants` INT(11) NULL DEFAULT NULL,
   `photo` VARCHAR(255) NULL DEFAULT NULL,
   `department_id` INT NOT NULL,
+  
   PRIMARY KEY (`id`),
   INDEX `fk_workshop_user1_idx` (`user_id` ASC) ,
   INDEX `fk_workshop_department1_idx` (`department_id` ASC) ,
