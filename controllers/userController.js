@@ -108,7 +108,7 @@ module.exports = {
                         from_hour: '7:00:00',
                         to_hour: '22:00:00',
                         // country_id: country.id || 1,
-                        country_id: 1,
+                        country_id: 165,
                         // currency_id: country.currency_id || 1
                         currency_id: 1,
                         avg_rating: 1
@@ -211,13 +211,12 @@ module.exports = {
     },
 
     me: (req, res) => {
-        try 
-        {
-            
+        try {
+
             return res.status(200).json({ status: true, data: req.user })
 
         } catch (error) {
-            return res.status(500).json({error: error})
+            return res.status(500).json({ error: error })
         }
     },
 
@@ -248,10 +247,10 @@ module.exports = {
                             photo: user.photo,
                             from_hour: '7:00:00',
                             to_hour: '22:00:00',
-                            country_id: 1,
+                            country_id: 165,
                             currency_id: 1,
                             avg_rating: 1,
-                            method : user.provider
+                            method: user.provider
                         }, { transaction: t });
 
                         await models.token.create({
@@ -515,15 +514,14 @@ module.exports = {
 
         const { user_id } = req.body
 
-        try 
-        {
+        try {
             const user = await models.user.findOne({
                 where: { id: user_id },
                 attributes: { exclude: ['password'] }
             });
 
-            if (!user) return successful(res, text.notFoundElement,  {}, 402)
-            if (!req.files) return successful(res, text.requireImage,  {}, 402)
+            if (!user) return successful(res, text.notFoundElement, {}, 402)
+            if (!req.files) return successful(res, text.requireImage, {}, 402)
 
             if (user.photo && user.photo != '' && !user.photo.indexOf(index.aws.s3.BUCKET_NAME)) {
                 s3.deleteObject(NEW_BUCKET_NAME, (user.photo).split('/')[5]);
@@ -535,7 +533,7 @@ module.exports = {
 
             return successful(res, text.successUpdate('imagen'), user)
 
-        } catch (error) { return returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
     },
 
@@ -546,8 +544,7 @@ module.exports = {
 
         const { user_id, name, lastname, lastname_1, lastname_2, genre, phone, role, birthday, description, skill_id, active } = req.body
 
-        try 
-        {
+        try {
             const user = await models.user.findOne({
                 where: { id: user_id },
                 attributes: { exclude: ['password'] }
@@ -677,7 +674,7 @@ module.exports = {
                 return res.json({ status: false, message: "No existe el usuario" })
             }
 
-        } catch (error) { return returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
     },
 
@@ -688,6 +685,27 @@ module.exports = {
             } else {
                 return res.status(200).json({ status: false, message: "No hay paises registrados" })
             }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
+        })
+    },
+
+    listCityByCountry: (req, res) => {
+        const { country_id } = req.query
+        models.department.findAll({
+            where: {
+                country_id: country_id
+            }
+        }).then(department => {
+            if (department) {
+                return res.status(200).json({ status: true, message: "OK", data: department })
+            } else {
+                return res.status(200).json({ status: false, message: "No hay paises registrados" })
+            }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
         })
     },
 
@@ -698,8 +716,7 @@ module.exports = {
 
         const { user_id } = req.params
 
-        try 
-        {
+        try {
             const user = await models.user.findByPk(user_id,
                 {
                     attributes: ['id', 'name', 'lastname', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
@@ -720,17 +737,17 @@ module.exports = {
                             attributes: ['country']
                         }
                     ],
-                    order: [ [ { model: models.experience }, 'date_start', 'DESC' ] ],
+                    order: [[{ model: models.experience }, 'date_start', 'DESC']],
 
                 })
 
             // var 
-            
+
             // var unavailables = await user.getUnavailables()
 
             return successful(res, 'OK', user)
 
-        } catch (error) { return returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
     },
 
@@ -819,7 +836,7 @@ module.exports = {
             var user = await models.user.findAll({ attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname']], where: { id: { [Sequelize.Op.ne]: user_id } } })
             return successful(res, 'OK', user)
 
-        } catch (error) { return returnError(res, error) } 
+        } catch (error) { return returnError(res, error) }
 
     }
 }

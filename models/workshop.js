@@ -19,6 +19,13 @@ module.exports = (sequelize, DataType) => {
                 model: 'user',
                 key: 'id'
             }
+        },
+        department_id: {
+            type: DataType.INTEGER,
+            references: {
+                model: 'department',
+                key: 'id'
+            }
         }
     },
     {

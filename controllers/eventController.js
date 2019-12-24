@@ -11,6 +11,14 @@ const { createCategory } = require('./categoryController')
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/event-image';
 const Excel = require('exceljs');
 
+async function createDepartment(name) {
+    var [department, created] = await models.department.findOrCreate({
+        where: { name: name },
+        defaults: { name: name }
+    })
+    return await department
+}
+
 module.exports = {
 
     validate: (method) => {
@@ -257,46 +265,65 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants } = req.body
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants, country_id, department } = req.body
 
         try {
-            const user = await existById(models.user, user_id, 'id')
+            var result = await models.sequelize.transaction(async (t) => {
+                const user = await existById(models.user, user_id, 'id')
 
-            var event = await models.workshop.create({
-                title: title,
-                description: description,
-                day: day,
-                hour_start: hour_start,
-                hour_end: hour_end,
-                place: place,
-                lat: lat,
-                lng: lng,
-                user_id: user.id,
-                participants: (participants) ? participants : 50
-            })
+                var departmentNew = await models.department.findOrCreate({
+                    where: { department: department },
+                    defaults: { department: department, country_id: country_id },
+                    transaction: t
+                }).catch(err => {
+                    console.log(err)
+                })
 
-            if (req.files) {
-                var photo = req.files.photo;
-                fileName = s3.putObject(NEW_BUCKET_NAME, photo);
-                await event.update({ photo: fileName });
-            }
-            if (categories) {
-                if (categories instanceof Array) {
-                    var categories_id = await Promise.all(categories.map(async element => {
-                        var response = await createCategory(element)
-                        return await response.id
-                    }))
-                    await event.addToWorkshopCategories(categories_id)
-                } else {
-                    var response = await createCategory(categories)
-                    await event.addToWorkshopCategories(response.id)
+                var event = await models.workshop.create({
+                    title: title,
+                    description: description,
+                    day: day,
+                    hour_start: hour_start,
+                    hour_end: hour_end,
+                    place: place,
+                    lat: lat,
+                    lng: lng,
+                    user_id: user.id,
+                    department_id: departmentNew[0].id,
+                    participants: (participants) ? participants : 50
+                }, { transaction: t }).catch(err => {
+                    console.log(err)
+                })
+
+                if (req.files) {
+                    var photo = req.files.photo;
+                    fileName = s3.putObject(NEW_BUCKET_NAME, photo);
+                    await event.update({ photo: fileName }, { transaction: t });
                 }
-            }
-
-            return successful(res, text.successCreate('evento'), categories)
-
+                if (categories) {
+                    if (categories instanceof Array) {
+                        var categories_id = await Promise.all(categories.map(async element => {
+                            var [area, created] = await models.category.findOrCreate({
+                                where: { name: element },
+                                defaults: { name: element },
+                                transaction: t
+                            })
+                            return await area.id
+                        }), { transaction: t })
+                        await event.addToWorkshopCategories(categories_id, { transaction: t }).catch(err => {console.log(err)})
+                    } else {
+                        var [area, created] = await models.category.findOrCreate({
+                            where: { name: categories },
+                            defaults: { name: categories },
+                            transaction: t
+                        })
+                        await event.addToWorkshopCategories(area.id, { transaction: t }).catch(err => {console.log(err)})
+                    }
+                }
+                return event
+            })
+            return successful(res, text.successCreate('evento'), result)
         } catch (error) { return returnError(res, error) }
-
     },
 
     update: async (req, res) => {
