@@ -5,14 +5,14 @@ const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('../controllers/responseController');
 
-async function createArea (name) {
+async function createArea(name) {
 
-    var [ area, created ] = await  models.area.findOrCreate({
+    var [area, created] = await models.area.findOrCreate({
         where: { name: name },
         defaults: { name: name }
     })
     return await area
-    
+
 }
 
 module.exports = {
@@ -24,22 +24,26 @@ module.exports = {
 
         switch (review) {
             case 'create':
-                return [ name ]
+                return [name]
         }
     },
 
-    all:  async(req, res) => {
+    all: async (req, res) => {
 
         try {
 
             const area = await models.area.findAll({});
-            return successful(res, 'OK', area)
-            
-        } catch (error) { return returnError(res, error) }  
+            if (area) {
+                return successful(res, 'OK', area)
+            } else {
+                return res.json({ status: false, message: "No existen areas registradas." })
+            }
+
+        } catch (error) { return returnError(res, error) }
 
     },
 
-    create: async(req, res) => {
+    create: async (req, res) => {
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
@@ -50,8 +54,8 @@ module.exports = {
 
             await createArea(name)
             return successful(res, text.successCreate('area'))
-            
-        } catch (error) { return returnError(res, error) } 
+
+        } catch (error) { return returnError(res, error) }
 
     }
 }

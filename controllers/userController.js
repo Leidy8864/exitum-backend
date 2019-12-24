@@ -96,6 +96,9 @@ module.exports = {
                     const newUser = await models.user.create({
                         name: req.body.name,
                         lastname: req.body.lastname,
+                        lastname_1: req.body.lastname_1,
+                        lastname_2: req.body.lastname_2,
+                        genre: req.body.genre,
                         method: 'local',
                         email: req.body.email,
                         password: bcrypt.hashSync(req.body.password),
@@ -105,7 +108,7 @@ module.exports = {
                         from_hour: '7:00:00',
                         to_hour: '23:00:00',
                         // country_id: country.id || 1,
-                        country_id: 1,
+                        country_id: 165,
                         // currency_id: country.currency_id || 1
                         currency_id: 1,
                         avg_rating: 1
@@ -235,7 +238,7 @@ module.exports = {
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
                         const newUser = await models.user.create({
                             name: user.firstname,
-                            lastname: user.lastname,
+                            lastname_1: user.lastname,
                             provider_id: user.id,
                             confirmed: true,
                             active: true,
@@ -244,7 +247,7 @@ module.exports = {
                             photo: user.photo,
                             from_hour: '7:00:00',
                             to_hour: '23:00:00',
-                            country_id: 1,
+                            country_id: 165,
                             currency_id: 1,
                             avg_rating: 1,
                             method: user.provider
@@ -539,7 +542,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { user_id, name, lastname, phone, role, birthday, description, skill_id, active } = req.body
+        const { user_id, name, lastname, lastname_1, lastname_2, genre, phone, role, birthday, description, skill_id, active } = req.body
 
         try {
             const user = await models.user.findOne({
@@ -563,6 +566,9 @@ module.exports = {
                 await user.update({
                     name: name,
                     lastname: lastname,
+                    lastname_1: lastname_1,
+                    lastname_2: lastname_2,
+                    genre: genre,
                     phone: phone,
                     photo: fileName,
                     active: active || true,
@@ -679,6 +685,27 @@ module.exports = {
             } else {
                 return res.status(200).json({ status: false, message: "No hay paises registrados" })
             }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
+        })
+    },
+
+    listCityByCountry: (req, res) => {
+        const { country_id } = req.query
+        models.department.findAll({
+            where: {
+                country_id: country_id
+            }
+        }).then(department => {
+            if (department) {
+                return res.status(200).json({ status: true, message: "OK", data: department })
+            } else {
+                return res.status(200).json({ status: false, message: "No hay paises registrados" })
+            }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
         })
     },
 

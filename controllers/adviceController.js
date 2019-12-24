@@ -40,14 +40,18 @@ module.exports = {
             user_id: user_id
         }
         if (type == "employee") {
-            const employee = await models.employee.findOne({ where: { user_id: user_id } })
+            const employee = await models.employee.findOne({ where: { user_id: user_id } }).catch(err => {
+                console.log(err)
+            })
             whereConsult = {
                 user_id: user_id,
                 employee_id: employee.id
             }
             if (!employee) { return res.json({ status: false, message: "No se ha registrado como impulsor." }) }
         } else if (type == "entrepreneur") {
-            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } })
+            const entrepreneur = await models.entrepreneur.findOne({ where: { user_id: user_id } }).catch(err => {
+                console.log(err)
+            })
             whereConsult = {
                 user_id: user_id,
                 entrepreneur_id: entrepreneur.id,

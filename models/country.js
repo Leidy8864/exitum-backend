@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         country: DataTypes.STRING,
         code: DataTypes.STRING,
+        calling_code: DataTypes.STRING,
         currency_id: {
             type: DataTypes.INTEGER,
             references: {

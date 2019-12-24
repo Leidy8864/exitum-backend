@@ -59,6 +59,10 @@ router.get('/countries',
   controller.listCountry
 );
 
+router.get('/cityByCountry',
+  controller.listCityByCountry
+);
+
 router.post('/comment/:to_user_id',
   controllerReview.validate('comment'),
   controllerReview.comment
