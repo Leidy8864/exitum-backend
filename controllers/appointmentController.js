@@ -183,7 +183,7 @@ module.exports = {
 			validateRangeTime(user.from_hour, user.to_hour, timeF[3])
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
-			if(!unavailable.indexOf(timeF[3])) throw(text.notAvailable('hora'))
+			if(unavailable.indexOf(timeF[3]) <= 0) throw(text.notAvailable('hora'))
 			// if(validateDateActual(date)) validateTimeActual(time)
 
 			var [ response, created ] = await models.appointment.findOrCreate({
@@ -254,11 +254,11 @@ module.exports = {
 			validateRangeTime(user.from_hour, user.to_hour, timeS)
 			var unavailable =  arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
-			if(!unavailable.indexOf(timeS)) throw(text.notAvailable('hora'))
+			if(unavailable.indexOf(timeS) <= 0) throw(text.notAvailable('hora'))
 
 			if (appointment.date != dateS && appointment.time != timeS) {
 
-				if(validateDateActual(date)) validateTimeActual(time)
+				if(! validateDateActual(date)) validateTimeActual(time)
 				if(await findAppointment(to_user_id, dateS, timeS)) throw(text.duplicateElement)
 
 			} else  {
