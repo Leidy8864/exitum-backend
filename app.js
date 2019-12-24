@@ -34,6 +34,7 @@ var stepRouter = require('./routes/step');
 var tipRouter = require('./routes/tip');
 var careerRouter = require('./routes/career');
 var authAdminRouter = require('./routes/authAdmin');
+var termsRouter = require('./routes/terms')
 
 //const controller = require('./controllers/userController');
 const passport = require('passport');
@@ -46,9 +47,14 @@ var hbs = exphbs.create({
   layoutsDir: path.join(__dirname, 'views/layouts')
 });
 
-// view engine setup
-app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
+// view engine setup
+app.engine('.hbs', exphbs({
+  extname: '.hbs',
+  defaultLayout: 'main',
+  partialsDir: path.join(__dirname, 'views/partials'),
+  layoutsDir: path.join(__dirname, 'views/layouts')
+}));
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
@@ -58,7 +64,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
-app.use(bodyParser.json());  
+app.use(bodyParser.json());
 app.use(cors());
 app.use(upload());
 app.use(passport.initialize());
@@ -92,6 +98,7 @@ app.use('/steps', stepRouter);
 app.use('/tips', tipRouter);
 app.use('/careers', careerRouter);
 app.use('/admin', authAdminRouter);
+app.use('/legal', termsRouter)
 
 app.get("/test", (req, res) => {
   console.log("mario")
