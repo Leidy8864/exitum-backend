@@ -103,7 +103,7 @@ module.exports = {
                     // const country = await models.country.findOne({ where: { id: req.body.country_id } }, { transaction: t });
                     const newUser = await models.user.create({
                         name: req.body.name,
-                        //lastname: req.body.lastname,
+                        lastname: req.body.lastname_1 + ' ' + req.body.lastname_2,
                         lastname_1: req.body.lastname_1,
                         lastname_2: req.body.lastname_2,
                         genre: req.body.genre,
@@ -162,7 +162,7 @@ module.exports = {
                                 template: 'template',
                                 context: {
                                     title: 'Bienvenido a bordo',
-                                    name: req.body.name + ' ' + req.body.lastname,
+                                    name: req.body.name + ' ' + req.body.lastname_1,
                                     text: 'En Exitum estamos felices de tener tu confianza',
                                     description: 'Por favor verifica tu cuenta dándole click al botón.',
                                     url: 'http:\/\/' + 'exitum.pe' + '\/dashboard\?token=' + response.accessToken,
@@ -246,6 +246,7 @@ module.exports = {
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
                         const newUser = await models.user.create({
                             name: user.firstname,
+                            lastname: user.lastname,
                             lastname_1: user.lastname,
                             provider_id: user.id,
                             confirmed: true,
@@ -573,7 +574,7 @@ module.exports = {
 
                 await user.update({
                     name: name,
-                    //lastname: lastname,
+                    lastname: lastname_1 + ' ' + lastname_2,
                     lastname_1: lastname_1,
                     lastname_2: lastname_2,
                     genre: genre,
@@ -746,8 +747,7 @@ module.exports = {
                             as: 'experience'
                         },
                         {
-                            model: models.country,
-                            attributes: ['country']
+                            model: models.country
                         },
                         {
                             model: models.unavailable,
