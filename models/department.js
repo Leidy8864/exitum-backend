@@ -23,9 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         department.belongsTo(models.country, {
             foreignKey: 'country_id'
         });
-        // department.hasMany(models.event, {
-        //     foreignKey: 'department_id'
-        // });
+        department.hasMany(models.workshop, {
+            foreignKey: 'id'
+        });
     };
     return department
 }

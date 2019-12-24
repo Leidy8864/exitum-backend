@@ -130,9 +130,12 @@ module.exports = {
                         model: models.category,
                         as: 'toWorkshopCategories'
                     },
-                    // {
-                    //     model: models.department
-                    // }
+                    {
+                        model: models.department,
+                        include : {
+                            model : models.country
+                        }
+                    }
                 ],
                 attributes: [
                     'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants', 'photo'
@@ -144,7 +147,8 @@ module.exports = {
                 hour_end: response.hour_end, place: response.place, description: response.description,
                 user_id: response.user_id, participants: response.participants, photo: response.photo,
                 participants_count: `${response.toWorkshopUsers.length}/${response.participants}`,
-                toWorkshopUsers: response.toWorkshopUsers, toWorkshopCategories: response.toWorkshopCategories
+                toWorkshopUsers: response.toWorkshopUsers, toWorkshopCategories: response.toWorkshopCategories,
+                department : response.department
             }
 
             return successful(res, 'OK', event)
