@@ -693,33 +693,20 @@ module.exports = {
 
     listCityByCountry: (req, res) => {
         const { country_id } = req.query
-        if (country_id) {
-            models.department.findAll({
-                where: {
-                    country_id: country_id
-                }
-            }).then(department => {
-                if (department) {
-                    return res.status(200).json({ status: true, message: "OK", data: department })
-                } else {
-                    return res.status(200).json({ status: false, message: "No hay paises registrados" })
-                }
-            }).catch(err => {
-                console.log(err)
-                return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
-            })
-        } else {
-            models.department.findAll().then(department => {
-                if (department) {
-                    return res.status(200).json({ status: true, message: "OK", data: department })
-                } else {
-                    return res.status(200).json({ status: false, message: "No hay paises registrados" })
-                }
-            }).catch(err => {
-                console.log(err)
-                return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
-            })
-        }
+        models.department.findAll({
+            where: {
+                country_id: country_id
+            }
+        }).then(department => {
+            if (department) {
+                return res.status(200).json({ status: true, message: "OK", data: department })
+            } else {
+                return res.status(200).json({ status: false, message: "No hay paises registrados" })
+            }
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo" })
+        })
     },
 
     show: async (req, res) => {
