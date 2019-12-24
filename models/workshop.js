@@ -37,6 +37,9 @@ module.exports = (sequelize, DataType) => {
         workshop.belongsTo(models.user, {
             foreignKey: 'user_id'
         });
+        workshop.belongsTo(models.department, {
+            foreignKey: 'department_id'
+        });
         workshop.belongsToMany(models.category, {
             as: { singular: 'toWorkshopCategory', plural: 'toWorkshopCategories' },
             through: models.category_workshop,
