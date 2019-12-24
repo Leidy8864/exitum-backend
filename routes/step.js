@@ -22,7 +22,7 @@ router.post('/update',
 
 router.post('/delete',
     controller.validate('delete'),
-    controller.delete
+    controller.deleteLogic
 );
 
 

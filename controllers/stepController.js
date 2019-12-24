@@ -26,9 +26,8 @@ module.exports = {
 
     },
     all: async (req, res) => {
-
         try {
-            const step = await models.step.findAll({});
+            const step = await models.step.findAll({ where: { status: true } });
             return successful(res, 'OK', step)
 
         } catch (error) { return returnError(res, error) }
@@ -43,13 +42,14 @@ module.exports = {
         try {
             if (stage_id) {
                 const steps = await models.step.findAll({
-                    offset: (perPage * (page - 1)),
-                    limit: perPage,
+                    // offset: (perPage * (page - 1)),
+                    // limit: perPage,
                     where: {
-                        stage_id: stage_id
+                        stage_id: stage_id,
+                        status: true
                     },
                     include: [
-                        { 
+                        {
                             model: models.stage,
                         }
                     ]
@@ -62,10 +62,13 @@ module.exports = {
                 return res.json({ status: true, message: "Listado de retos por nivel", data: steps, current: page, pages: Math.ceil(totalRows / perPage) })
             } else {
                 const steps = await models.step.findAll({
-                    offset: (perPage * (page - 1)),
-                    limit: perPage,
+                    // offset: (perPage * (page - 1)),
+                    // limit: perPage,
+                    where: {
+                        status: true
+                    },
                     include: [
-                        { 
+                        {
                             model: models.stage,
                             required: false
                         }
@@ -153,8 +156,25 @@ module.exports = {
 
     },
 
-    delete: async (req, res) => {
+    deleteLogic: async (req, res) => {
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
+        const { step_id } = req.query
+        const step = await models.step.update(
+            { status: 0 },
+            { where: { id: step_id } }
+        ).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelvelo a intentar." })
+        })
+
+        if (step) {
+            return res.json({ status: true, message: "La etapa fue eliminada." })
+        }
+    },
+
+    delete: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 

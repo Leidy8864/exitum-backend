@@ -52,22 +52,5 @@ module.exports = {
         }
 
         return diff;
-    },
-
-    updateOrCreate: async (model, where, newItem) => {
-        var response
-        var item
-        const itemFind = await model.findOne({
-            where
-        })
-        if (!itemFind) {
-            response = await model.create(newItem)
-        }
-
-        await model.update(newItem, {
-            where: where
-        })
-        response = await model.findOne({ where })
-        return response
     }
 }

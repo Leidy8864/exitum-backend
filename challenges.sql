@@ -10,7 +10,6 @@ VALUES (1, 'Pre semilla', "Etapa donde solo se tiene una idea superficial y se b
 (8, 'Etapa 3 empleado', "Etapa 3 empleado.", 'employee'),
 (9, 'Etapa 4 empleado', "Etapa 4 empleado.", 'employee');
 
-
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('1', 'Nivel 1 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('2', 'Nivel 2 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('3', 'Nivel 3 Etapa 1 startup', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '1');
@@ -214,6 +213,19 @@ INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('20', '1');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('21', '1');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('24', '1');
 
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('1', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('4', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('5', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('8', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('9', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('12', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('13', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('16', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('17', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('20', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('21', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('24', '2');
+
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('31', 'Nivel 1 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('32', 'Nivel 2 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
 INSERT INTO `step` (`id`, `step`, `icon`, `stage_id`) VALUES ('33', 'Nivel 3 Etapa 1 employee', 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png', '6');
@@ -385,6 +397,27 @@ INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '8');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('133', '9');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '7');
 INSERT INTO `tip_skill` (`tip_id`, `skill_id`) VALUES ('136', '12');
+
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('121', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('121', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('121', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('124', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('124', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('125', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('125', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('125', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('128', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('128', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('129', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('129', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('129', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('132', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('132', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('133', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('133', '2');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('133', '3');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('136', '1');
+INSERT INTO `tip_category` (`tip_id`, `category_id`) VALUES ('136', '2');
 
 insert into `exitum`.`file_tip`(id, name, key_s3, tip_id) values 
 ( 1, "Business_Model_Canvas.docx", "Business_Model_Canvas.docx", 1),
