@@ -132,8 +132,8 @@ module.exports = {
                     },
                     {
                         model: models.department,
-                        include : {
-                            model : models.country
+                        include: {
+                            model: models.country
                         }
                     }
                 ],
@@ -148,7 +148,7 @@ module.exports = {
                 user_id: response.user_id, participants: response.participants, photo: response.photo,
                 participants_count: `${response.toWorkshopUsers.length}/${response.participants}`,
                 toWorkshopUsers: response.toWorkshopUsers, toWorkshopCategories: response.toWorkshopCategories,
-                department : response.department
+                department: response.department
             }
 
             return successful(res, 'OK', event)
@@ -317,14 +317,14 @@ module.exports = {
                             })
                             return await area.id
                         }), { transaction: t })
-                        await event.addToWorkshopCategories(categories_id, { transaction: t }).catch(err => {console.log(err)})
+                        await event.addToWorkshopCategories(categories_id, { transaction: t }).catch(err => { console.log(err) })
                     } else {
                         var [area, created] = await models.category.findOrCreate({
                             where: { name: categories },
                             defaults: { name: categories },
                             transaction: t
                         })
-                        await event.addToWorkshopCategories(area.id, { transaction: t }).catch(err => {console.log(err)})
+                        await event.addToWorkshopCategories(area.id, { transaction: t }).catch(err => { console.log(err) })
                     }
                 }
                 return event
@@ -380,17 +380,24 @@ module.exports = {
                 photo: photo
             })
 
-            if (categories && categories.length > 0) {
 
-                await models.category_workshop.destroy({ where: { workshop_id: event.id } })
+            if (categories) {
+                if (categories instanceof Array) {
 
-                var categories_id = await Promise.all(categories.map(async element => {
-                    var response = await createCategory(element)
-                    return await response
-                }))
+                    await models.category_workshop.destroy({ where: { workshop_id: event.id } })
+                    var categories_id = await Promise.all(categories.map(async element => {
+                        var response = await createCategory(element)
+                        return await response
+                    }))
+                    await event.addToWorkshopCategories(categories_id)
 
-                await event.addToWorkshopCategories(categories_id)
+                } else {
 
+                    await models.category_workshop.destroy({ where: { workshop_id: event.id } })
+                    var response = await createCategory(categories)
+                    await event.addToWorkshopCategories(response.id)
+
+                }
             }
 
             return successful(res, text.successUpdate('evento'));
