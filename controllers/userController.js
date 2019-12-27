@@ -89,9 +89,6 @@ module.exports = {
             const user = await models.user.findOne({ where: { email: req.body.email } });
             if (user) {
                 res.status(200).send({ status: false, message: "Este email ya ha sido registrado" });
-                // return res.status(422).json({
-                //     message: "Este email ya ha sido registrado"
-                // });
             } else {
                 if (req.body.email !== req.body.emailConfirm) {
                     return res.json({ status: false, message: "El correo no coincide." })
@@ -162,13 +159,14 @@ module.exports = {
                                 template: 'template',
                                 context: {
                                     title: 'Bienvenido a bordo',
-                                    name: req.body.name + ' ' + req.body.lastname_1,
+                                    name: req.body.name + ' ' + req.body.lastname_1 + ' ' + req.body.lastname_2,
                                     text: 'En Exitum estamos felices de tener tu confianza',
                                     description: 'Por favor verifica tu cuenta dándole click al botón.',
                                     url: 'http:\/\/' + '35.175.241.103:5000' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
                             }
+                            console.log(req.body.name + ' ' + req.body.lastname_1 + ' ' + req.body.lastname_2)
                             transporter.sendMail(mailOptions).then(() => {
                                 console.log('Un email de verificación ha sido enviado a ' + req.body.email + '.');
                             }).catch(err => {
@@ -199,7 +197,7 @@ module.exports = {
         };
         models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
             if (!user) {
-                res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+                res.status(200).send({ status: false, message: "Esta cuenta no existe, por favor regístrese." });
             } else {
                 const resultPassword = bcrypt.compareSync(userData.password, user.password);
                 if (resultPassword) {
@@ -242,7 +240,6 @@ module.exports = {
                     return helper.generateAccessData(existingUser, res);
                 } else {
                     const result = await models.sequelize.transaction(async (t) => {
-
                         console.log("El usuario no existe en la BD estamos creando uno nuevo");
                         const newUser = await models.user.create({
                             name: user.firstname,
@@ -272,13 +269,11 @@ module.exports = {
                     });
                     return helper.generateAccessData(result, res);
                 }
-
             } else {
                 return res.status(200).json({ status: false, message: "Error al obtener información del usuario" })
             }
         } catch (error) {
             console.log("Error");
-
             var message = '';
             if (error.name === 'SequelizeUniqueConstraintError') {
 
