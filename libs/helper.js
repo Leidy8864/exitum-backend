@@ -32,6 +32,8 @@ module.exports = {
             id: user.id,
             name: user.name,
             lastname: user.lastname,
+            lastname_1: user.lastname_1,
+            lastname_2: user.lastname_2,
             email: user.email,
             accessToken: accessToken,
             role: user.role,

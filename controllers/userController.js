@@ -165,7 +165,7 @@ module.exports = {
                                     name: req.body.name + ' ' + req.body.lastname_1,
                                     text: 'En Exitum estamos felices de tener tu confianza',
                                     description: 'Por favor verifica tu cuenta dándole click al botón.',
-                                    url: 'http:\/\/' + 'exitum.pe' + '\/dashboard\?token=' + response.accessToken,
+                                    url: 'http:\/\/' + '35.175.241.103:5000' + '\/dashboard\?token=' + response.accessToken,
                                     boton: 'Verificar cuenta'
                                 },
                             }
@@ -391,10 +391,10 @@ module.exports = {
                                     template: 'template',
                                     context: {
                                         title: 'Bienvenido a bordo',
-                                        name: user.name + ' ' + user.lastname,
+                                        name: user.name + ' ' + user.lastname_1 + ' ' + user.lastname_2,
                                         text: 'En Exitum estamos felices de tener tu confianza',
                                         description: 'Por favor verifica tu cuenta dándole click al botón.',
-                                        url: 'http:\/\/' + 'exitum.pe' + '\/dashboard\?token=' + response.accessToken,
+                                        url: 'http:\/\/' + '35.175.241.103:5000' + '\/dashboard\?token=' + response.accessToken,
                                         boton: 'Verificar cuenta'
                                     },
                                 }
@@ -456,10 +456,10 @@ module.exports = {
                         template: 'template',
                         context: {
                             title: 'Problemas al iniciar sesión',
-                            name: user.name + ' ' + user.lastname,
+                            name: user.name + ' ' + user.lastname_1 + ' ' + user.lastname_2,
                             text: 'Notamos que tienes problemas para iniciar sesión.',
                             description: 'Por favor renueva tu contraseña dándole click al botón.',
-                            url: 'http:\/\/' + 'exitum.pe' + '\/users\/reset\?token=' + token_password,
+                            url: 'http:\/\/' + '35.175.241.103:5000' + '\/users\/reset\?token=' + token_password,
                             boton: 'Recuperar cuenta'
                         },
                     }
@@ -733,7 +733,7 @@ module.exports = {
         try {
             const user = await models.user.findByPk(user_id,
                 {
-                    attributes: ['id', 'name', 'lastname_1', 'lastname_2','email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
+                    attributes: ['id', 'name', 'lastname_1', 'lastname_2', 'email', 'confirmed', 'phone', 'last_login', 'photo', 'avg_rating', 'from_hour',
                         'to_hour', [Sequelize.fn('Date_format', Sequelize.col('birthday'), '%Y-%m-%d'), 'birthday'], 'description'
                     ],
                     include: [

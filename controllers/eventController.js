@@ -439,7 +439,7 @@ module.exports = {
                     const data_send = {
                         fecha: event.dataValues.day, hora: event.dataValues.hour_start,
                         titulo: event.title, direccion: event.place, descripcion: event.description,
-                        mensaje: text.message_event(`${user.name} ${user.lastname}`, 'esta pendiente de aceptación.Te enviaremos un correo con la confirmación')
+                        mensaje: text.message_event(`${user.name} ${user.lastname_1} ${user.lastname_2}`, 'esta pendiente de aceptación.Te enviaremos un correo con la confirmación')
                     }
                     sendEmail(email_info, data_send)
                 }
@@ -449,7 +449,7 @@ module.exports = {
                     const data_send = {
                         fecha: event.dataValues.day, hora: event.dataValues.hour_start,
                         titulo: event.title, direccion: event.place, descripcion: event.description,
-                        mensaje: text.message_event(`${user.name} ${user.lastname}`, 'ha sido aceptada')
+                        mensaje: text.message_event(`${user.name} ${user.lastname_1} ${user.lastname_2}`, 'ha sido aceptada')
                     }
                     sendEmail(email_info, data_send)
                 }
