@@ -3,7 +3,7 @@ const models = require('../models/index')
 const s3 = require('../libs/aws-s3');
 const index = require('../config/index');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/startup-profile';
-
+const moment = require('moment');
 const { check, validationResult } = require('express-validator');
 
 module.exports = {
@@ -80,9 +80,15 @@ module.exports = {
                                 }
                             ]
                         }, { transaction: t }).then(stages => {
+                            
+                            var duracion_dias = 0
+
                             for (var x = 0; x < stages.length; x++) {
                                 for (var y = 0; y < stages[x].steps.length; y++) {
                                     for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
+
+                                        duracion_dias = parseInt(stages[x].steps[y].tips[z].duration_days) + duracion_dias
+
                                         chlls.push(
                                             {
                                                 user_id: id,
@@ -92,7 +98,8 @@ module.exports = {
                                                 tip_id: stages[x].steps[y].tips[z].id,
                                                 checked: false,
                                                 status: "Sin respuesta",
-                                                date: Date.now()
+                                                date: Date.now(),
+                                                date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
                                             }
                                         )
                                     }
@@ -103,7 +110,8 @@ module.exports = {
                                             step_id: stages[x].steps[y].id,
                                             tip_completed: 0,
                                             icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                            state: 'incompleto'
+                                            state: 'incompleto',
+                                            date_initial: Date.now()
                                         }
                                     )
                                 }

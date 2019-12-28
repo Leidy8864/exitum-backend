@@ -1,4 +1,5 @@
 const fs = require('fs')
+var moment = require('moment');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 const text = require('../libs/text')
@@ -904,7 +905,10 @@ module.exports = {
                                 return res.json({ status: false, message: err, data: null });
                             }
                             await models.sequelize.transaction(async (t) => {
+                                var duracion_dias = 0
                                 for (var x = 0; x < result.length; x++) {
+                                    duracion_dias = parseInt(result[x].duracion_dias) + duracion_dias
+                                    console.log("dias : ", duracion_dias)
                                     if (!['startup', 'employee'].includes(result[x].tipo.toLowerCase())) {
                                         return res.json({ status: false, message: "El campo tipo solo puede ser 'startup' o 'employee'." })
                                     }
@@ -930,7 +934,7 @@ module.exports = {
                                                         tip: "Reto número " + (i + 1),
                                                         step_id: stepNew.id
                                                     }, { transaction: t })
-                                                }    
+                                                }
                                             }
                                             var tipNew = await models.tip.findOne({
                                                 where: {
@@ -940,7 +944,7 @@ module.exports = {
                                                 transaction: t
                                             })
                                             if (tipNew === null) {
-                                                messageAlert = ",pero el nivel '" + result[x].nivel + "'  de la etapa '" + result[x].etapa + "' ya tiene cuatro retos creados, edite los retos en el panel de administrador o cree un nuevo nivel"
+                                                messageAlert = ", pero el nivel '" + result[x].nivel + "'  de la etapa '" + result[x].etapa + "' ya tiene cuatro retos creados, edite los retos en el panel de administrador o cree un nuevo nivel"
                                             }
                                             if (tipNew) {
                                                 const tipFind = await models.tip.findOne({
@@ -955,9 +959,9 @@ module.exports = {
                                                     tipNew.update({
                                                         tip: result[x].reto,
                                                         description: result[x].reto_descripcion,
-                                                        step_id: stepNew.id
+                                                        step_id: stepNew.id,
+                                                        duration_days: result[x].duracion_dias
                                                     }, { transaction: t })
-
                                                     if (result[x].tipo == "startup") {
                                                         var startups = await models.startup.findAll({
                                                             attributes: ['id'],
@@ -977,7 +981,8 @@ module.exports = {
                                                                 tip_id: tipNew.dataValues.id,
                                                                 checked: false,
                                                                 status: "Sin respuesta",
-                                                                date: Date.now()
+                                                                date: Date.now(),
+                                                                date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
                                                             });
                                                             var startup_step = await models.startup_step.findOne({
                                                                 attributes: ['startup_id'],
@@ -993,7 +998,8 @@ module.exports = {
                                                                     step_id: stepNew.id,
                                                                     tip_completed: 0,
                                                                     icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                                                    state: 'incompleto'
+                                                                    state: 'incompleto',
+                                                                    date_initial: Date.now()
                                                                 });
                                                             }
                                                         }
@@ -1014,7 +1020,8 @@ module.exports = {
                                                                 tip_id: tipNew.dataValues.id,
                                                                 checked: false,
                                                                 status: "Sin respuesta",
-                                                                date: Date.now()
+                                                                date: Date.now(),
+                                                                date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
                                                             });
                                                             var employee_step = await models.employee_step.findOne({
                                                                 attributes: ['employee_id'],
@@ -1030,7 +1037,8 @@ module.exports = {
                                                                     step_id: stepNew.id,
                                                                     tip_completed: 0,
                                                                     icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                                                    state: 'incompleto'
+                                                                    state: 'incompleto',
+                                                                    date_initial: Date.now()
                                                                 });
                                                             }
                                                         }
@@ -1095,5 +1103,20 @@ module.exports = {
         } else {
             return res.json({ status: false, message: messageFileInvalid })
         }
+    },
+
+    showAlertTip: async (req, res) => {
+        const { user_id, type } = req.query
+        const challenges = await models.challenge.findAll({
+            where: {
+                user_id: user_id,
+                status: 'Sin respuesta',
+                date_max: {
+                    [models.Sequelize.Op.gte]: moment(Date.now()).add(2, 'd').toDate()
+                }
+            }
+        })
+        return res.json({ status: true, message: "Retos próximos a completar", data: challenges })
+
     }
 }

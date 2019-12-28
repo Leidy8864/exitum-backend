@@ -67,13 +67,17 @@ router.get('/toVerify',
     controller.showChallengesToVerify
 );
 
-router.post('/verify', 
+router.post('/verify',
     controller.validate('verifyChallenge'),
     controller.verifyChallenge
 );
 
 router.post('/uploadExcel', function (req, res) {
     controller.uploadExcel(req, res);
+});
+
+router.post('/showAlert', function (req, res) {
+    controller.showAlertTip(req, res);
 });
 
 module.exports = router;

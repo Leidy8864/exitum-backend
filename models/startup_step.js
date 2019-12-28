@@ -22,7 +22,8 @@ const model_startup = (sequelize, DataType) => {
             type: DataType.ENUM,
             values: ['completado', 'incompleto'],
             allowNull: false
-        }
+        },
+        date_initial: DataType.DATE
     },
         {
             freezeTableName: true,

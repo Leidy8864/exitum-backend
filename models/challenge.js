@@ -56,7 +56,9 @@ module.exports = (sequelize, DataTypes) => {
         status: DataTypes.STRING,
         date: DataTypes.DATE,
         comment: DataTypes.STRING,
-        reply: DataTypes.STRING
+        reply: DataTypes.STRING,
+        date_max: DataTypes.DATE,
+        date_completed: DataTypes.DATE,
     },
     {
         freezeTableName: true,
