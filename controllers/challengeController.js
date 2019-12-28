@@ -1108,6 +1108,19 @@ module.exports = {
     showAlertTip: async (req, res) => {
         const { user_id, type } = req.query
         const challenges = await models.challenge.findAll({
+            attributes: ['date_max'],
+            include: [
+                {
+                    model: models.startup,
+                    attributes: ['name'],
+                    required: false
+                },
+                {
+                    model: models.tip,
+                    attributes: ['tip'],
+                    required: false
+                }
+            ],
             where: {
                 user_id: user_id,
                 status: 'Sin respuesta',
@@ -1117,6 +1130,5 @@ module.exports = {
             }
         })
         return res.json({ status: true, message: "Retos próximos a completar", data: challenges })
-
     }
 }
