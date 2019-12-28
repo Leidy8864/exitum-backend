@@ -578,7 +578,8 @@ module.exports = {
                     role: role,
                     birthday: birthday,
                     description: description,
-                    country_phone_id: country_phone_id
+                    country_phone_id: country_phone_id,
+                    last_login: Date.now()
                 });
 
                 await highlight(user, skill_id)

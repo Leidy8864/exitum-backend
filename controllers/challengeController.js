@@ -1124,7 +1124,7 @@ module.exports = {
                 user_id: user_id,
                 status: 'Sin respuesta',
                 date_max: {
-                    [models.Sequelize.Op.gte]: moment(Date.now()).add(2, 'd').toDate()
+                    [models.Sequelize.Op.lte]: moment(Date.now()).add(2, 'd').toDate()
                 }
             }
         })
@@ -1133,5 +1133,9 @@ module.exports = {
         } else {
             return res.json({ status: false, message: "No hay retos próximos a completar" })
         }
+    },
+
+    sendEmailAlertTip: async (req, res) => {
+        const { user_id, type } = req.query
     }
 }
