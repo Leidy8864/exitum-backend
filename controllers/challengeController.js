@@ -1129,6 +1129,10 @@ module.exports = {
                 }
             }
         })
-        return res.json({ status: true, message: "Retos próximos a completar", data: challenges })
+        if (challenges){
+            return res.json({ status: true, message: "Retos próximos a completar", data: challenges })
+        } else {
+            return res.json({ status: false, message: "No hay retos próximos a completar" })
+        }
     }
 }
