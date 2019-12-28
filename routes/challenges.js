@@ -76,7 +76,7 @@ router.post('/uploadExcel', function (req, res) {
     controller.uploadExcel(req, res);
 });
 
-router.post('/showAlert', function (req, res) {
+router.get('/showAlert', function (req, res) {
     controller.showAlertTip(req, res);
 });
 
