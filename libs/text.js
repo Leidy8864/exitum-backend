@@ -47,6 +47,7 @@ module.exports = {
     email: (text) => `Es necesario un correo electronico para el ${text}.`,
     password: (text) => `Es necesario una contraseña para el ${text}.`,
     failLogin:  `Credenciales incorrectas.`,
+    adminNotExist: `No existe esta cuenta.`,
     duplicateEmail: `El correo electrónico ya se encuentra registrado.`,
     tip: `Es necesario el nombre del tip`,
     tokenNotProvided: `Lo sentimos no cuenta con los permisos necesarios.`,

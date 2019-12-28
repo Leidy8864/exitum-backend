@@ -155,7 +155,6 @@ module.exports = {
                                 from: index.emailExitum,
                                 to: req.body.email,
                                 subject: 'Verificación de la cuenta',
-                                //html: 'Hola,\n\n' + 'Por favor verifique su cuenta haciendo click en: \nhttp:\/\/' + 'localhost:8089' + '\/dashboard\/' + response.accessToken + '\n<img src="cid:unique@rojo"/>',
                                 template: 'template',
                                 context: {
                                     title: 'Bienvenido a bordo',
@@ -166,7 +165,6 @@ module.exports = {
                                     boton: 'Verificar cuenta'
                                 },
                             }
-                            console.log(req.body.name + ' ' + req.body.lastname_1 + ' ' + req.body.lastname_2)
                             transporter.sendMail(mailOptions).then(() => {
                                 console.log('Un email de verificación ha sido enviado a ' + req.body.email + '.');
                             }).catch(err => {
@@ -186,7 +184,7 @@ module.exports = {
     },
 
     //Función encargada de realizar la autenticación del usuario de manera local
-    signIn: (req, res) => {
+    signIn: async (req, res) => {
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente.", data: errors.array() });
@@ -195,25 +193,29 @@ module.exports = {
             email: req.body.email,
             password: req.body.password
         };
-        models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
-            if (!user) {
-                res.status(200).send({ status: false, message: "Esta cuenta no existe, por favor regístrese." });
-            } else {
-                const resultPassword = bcrypt.compareSync(userData.password, user.password);
-                if (resultPassword) {
-                    console.log(req.client.clientId)
-                    // var token = createToken(user)
-                    helper.generateAccessData(user, res);
-                    // return res.status(200).json({ status: true, message: 'OK', data: token  })
-
+        const userSocial = await models.user.findOne({ where: { email: userData.email, method: 'google' || 'facebook' } })
+        if (userSocial) {
+            res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+        } else {
+            models.user.findOne({ where: { email: userData.email, method: 'local' } }).then(user => {
+                if (!user) {
+                    res.status(200).send({ status: false, message: "Esta cuenta no existe, por favor regístrese." });
                 } else {
-                    res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+                    const resultPassword = bcrypt.compareSync(userData.password, user.password);
+                    if (resultPassword) {
+                        console.log(req.client.clientId)
+                        // var token = createToken(user)
+                        helper.generateAccessData(user, res);
+                        // return res.status(200).json({ status: true, message: 'OK', data: token  })
+                    } else {
+                        res.status(200).send({ status: false, message: "Credenciales incorrectas, por favor intentelo nuevamente." });
+                    }
                 }
-            }
-        }).catch(error => {
-            console.log('Algo esta fallando: ' + error);
-            res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
-        });
+            }).catch(error => {
+                console.log('Algo esta fallando: ' + error);
+                res.status(200).send({ status: false, message: "Hubo un error en el sistema, favor de intentarlo en unos minutos." })
+            });
+        }
     },
 
     me: (req, res) => {
