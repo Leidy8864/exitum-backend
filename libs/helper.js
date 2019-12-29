@@ -21,11 +21,11 @@ module.exports = {
     },
 
     generateAccessData: function (user, res) {
-        const expiresIn = 12*60*60;
+        // const expiresIn = 12*60*60;
 
         const accessToken = jwt.sign({ id: user.id },
             SECRET_KEY, {
-            expiresIn : expiresIn
+            // expiresIn : expiresIn
         });
 
         const accessData = {

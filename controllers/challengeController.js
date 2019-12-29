@@ -1104,7 +1104,7 @@ module.exports = {
     },
 
     showAlertTip: async (req, res) => {
-        const { user_id, type } = req.query
+        const { user_id, type } = req.query        
         const challenges = await models.challenge.findAll({
             attributes: ['date_max'],
             include: [
@@ -1123,7 +1123,7 @@ module.exports = {
                 user_id: user_id,
                 status: 'Sin respuesta',
                 date_max: {
-                    [models.Sequelize.Op.gte]: moment(Date.now()).subtract(2, 'd').toDate()
+                    [models.Sequelize.Op.lte]: moment(Date.now()).add(3, 'd').toDate()
                 }
             }
         })
