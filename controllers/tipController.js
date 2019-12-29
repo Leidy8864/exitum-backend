@@ -171,18 +171,6 @@ module.exports = {
         try {
             await models.sequelize.transaction(async (t) => {
                 var tipNew = await existById(models.tip, tip_id)
-
-                // const tips = await models.tip.findAll({
-                //     attributes: [[models.Sequelize.fn('sum', models.Sequelize.col('duration_days')), 'total']],
-                //     where: {
-                //         step_id: tipNew.step_id,
-                //         duration_days: {
-                //             [models.Sequelize.Op.not]: null
-                //         }
-                //     }
-                // })
-                // console.log(tips)
-
                 tipNew.update({
                     tip: tip,
                     description: description,
@@ -221,9 +209,7 @@ module.exports = {
                         }, { transaction: t });
                     }
                 }
-
                 const typeUser = stepFind.stage.type
-                var duracion_dias = 0
                 if (typeUser == "startup") {
                     const startups = await models.startup.findAll({
                         attributes: ['id'],
@@ -234,6 +220,7 @@ module.exports = {
                     var chlls = []
                     var stp_step = []
                     var challenges = null
+                    var startup_step = null
                     for (var i = 0; i < startups.length; i++) {
                         challenges = await models.challenge.findOne({
                             attributes: ['id'],
@@ -243,8 +230,23 @@ module.exports = {
                                 stage_id: stepFind.stage.id,
                                 step_id: stepFind.id,
                                 tip_id: tipNew.id
-                            }
+                            }, transaction: t
                         })
+
+                        if (challenges) {
+                            await models.challenge.update({
+                                date_max: moment(Date.now()).add(duration_days, 'd').toDate()
+                            }, {
+                                where: {
+                                    user_id: startups[i].entrepreneur.user_id,
+                                    startup_id: startups[i].id,
+                                    stage_id: stepFind.stage.id,
+                                    step_id: stepFind.id,
+                                    tip_id: tipNew.id
+                                }, transaction: t
+                            }).catch(err => { console.log(err) })
+                        }
+
                         chlls.push({
                             user_id: startups[i].entrepreneur.user_id,
                             startup_id: startups[i].id,
@@ -256,12 +258,12 @@ module.exports = {
                             date: Date.now(),
                             date_max: moment(Date.now()).add(duration_days, 'd').toDate()
                         })
-                        const startup_step = await models.startup_step.findOne({
+                        startup_step = await models.startup_step.findOne({
                             attributes: ['startup_id'],
                             where: {
                                 startup_id: startups[i].id,
                                 step_id: stepFind.id
-                            }
+                            }, transaction: t
                         })
                         if (!startup_step) {
                             stp_step.push({
@@ -271,6 +273,15 @@ module.exports = {
                                 icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
                                 state: 'incompleto',
                                 date_initial: Date.now()
+                            })
+                        } else {
+                            await models.startup_step.update({
+                                date_initial: Date.now()
+                            }, {
+                                where: {
+                                    startup_id: startups[i].id,
+                                    step_id: stepFind.id
+                                }, transaction: t
                             })
                         }
                     }
@@ -284,6 +295,8 @@ module.exports = {
                     })
                     var chlls = []
                     var emp_step = []
+                    var challenges = null
+                    var employee_step = null
                     for (var i = 0; i < employees.length; i++) {
                         challenges = await models.challenge.findAll({
                             attributes: ['id'],
@@ -293,8 +306,23 @@ module.exports = {
                                 stage_id: stepFind.stage.id,
                                 step_id: stepFind.id,
                                 tip_id: tipNew.id
-                            }
+                            },
+                            transaction: t
                         })
+
+                        if (challenges) {
+                            await models.challenge.update({
+                                date_max: moment(Date.now()).add(duration_days, 'd').toDate()
+                            }, {
+                                where: {
+                                    user_id: employees[i].user_id,
+                                    employee_id: employees[i].id,
+                                    stage_id: stepFind.stage.id,
+                                    step_id: stepFind.id,
+                                    tip_id: tipNew.id
+                                }, transaction: t
+                            }).catch(err => { console.log(err) })
+                        }
                         chlls.push({
                             user_id: employees[i].user_id,
                             employee_id: employees[i].id,
@@ -306,12 +334,13 @@ module.exports = {
                             date: Date.now(),
                             date_max: moment(Date.now()).add(duration_days, 'd').toDate()
                         })
-                        const employee_step = await models.employee_step.findOne({
+                        employee_step = await models.employee_step.findOne({
                             attributes: ['employee_id'],
                             where: {
                                 employee_id: employees[i].id,
                                 step_id: stepFind.id
-                            }
+                            },
+                            transaction: t
                         })
                         if (!employee_step) {
                             emp_step.push({
@@ -321,6 +350,15 @@ module.exports = {
                                 icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
                                 state: 'incompleto',
                                 date_initial: Date.now()
+                            })
+                        } else {
+                            await models.startup_step.update({
+                                date_initial: Date.now()
+                            }, {
+                                where: {
+                                    startup_id: startups[i].id,
+                                    step_id: stepFind.id
+                                }, transaction: t
                             })
                         }
                     }

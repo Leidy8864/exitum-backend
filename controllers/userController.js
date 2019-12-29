@@ -14,7 +14,7 @@ const s3 = require('../libs/aws-s3');
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('../controllers/responseController');
 const NEW_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/imagenes/user-profile';
-
+var cron = require("node-cron");
 
 module.exports = {
     //Función encargada de validar los campos que se reciben desde el FrontEnd
@@ -566,7 +566,7 @@ module.exports = {
                     fileName = s3.putObject(NEW_BUCKET_NAME, photo);
                 }
                 var lastnameComp = null
-                if(lastname_1 && lastname_2){
+                if (lastname_1 && lastname_2) {
                     lastnameComp = lastname_1 + ' ' + lastname_2
                 }
                 await user.update({
@@ -653,7 +653,7 @@ module.exports = {
                                                         checked: false,
                                                         status: "Sin respuesta",
                                                         date: Date.now(),
-                                                        date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
+                                                        date_max: moment(Date.now()).add(stages[x].steps[y].tips[z].duration_days, 'd').toDate()
                                                     }
                                                 )
                                             }
@@ -862,3 +862,123 @@ module.exports = {
 
     }
 }
+
+// schedule tasks to be run on the server
+cron.schedule("00 00 23 * *", async () => {
+//cron.schedule("* * * * *", async () => {
+    console.log("Running Cron Job");
+
+    const users = await models.user.findAll({
+        where: {
+            last_login: {
+                [models.Sequelize.Op.lte]: moment(Date.now()).subtract(3, 'd').toDate()
+            }
+        }
+    })
+    for (var i = 0; i < users.length; i++) {
+        const challenge = await models.challenge.findOne({
+            include: [
+                { model: models.tip },
+                { model: models.startup }
+            ],
+            where: {
+                user_id: users[i].dataValues.id,
+                status: 'Sin respuesta',
+                date_max: {
+                    [models.Sequelize.Op.lte]: moment(Date.now()).add(3, 'd').toDate()
+                }
+            }
+        })
+        console.log('date max ' + moment(users[i].dataValues.date_max).toDate())
+        console.log('hoy ' + moment(Date.now()).toDate())
+        var nameComp = null
+        if (users[i].dataValues.lastname_2) {
+            nameComp = users[i].dataValues.name + ' ' + users[i].dataValues.lastname_1 + ' ' + users[i].dataValues.lastname_2
+        } else {
+            nameComp = users[i].dataValues.name + ' ' + users[i].dataValues.lastname_1
+        }
+        var description = null
+        if (challenge.startup && moment(users[i].dataValues.date_max).diff(Date.now()) > 0) {
+            description = 'Al reto "' + challenge.tip.tip + '" de la startup ' + challenge.startup.name + ' solo le quedan ' + moment(users[i].dataValues.date_max).diff(Date.now(), 'days') + ' días para que lo puedas completar.'
+        } else if (challenge.startup && moment(users[i].dataValues.date_max).diff(Date.now()) === 0) {
+            description = 'Solo tienes hasta hoy para completar el reto "' + challenge.tip.tip + '" de la startup ' + challenge.startup.name
+        } else if (!challenge.startup && moment(users[i].dataValues.date_max).diff(Date.now()) > 0) {
+            description = 'Al reto ' + challenge.tip.tip + ' solo le quedan ' + moment(users[i].dataValues.date_max).diff(Date.now()) + ' días para que lo puedas completar.'
+        } else if (!challenge.startup && moment(users[i].dataValues.date_max).diff(Date.now()) === 0) {
+            description = 'Solo tienes hasta hoy para completar el reto ' + challenge.tip.tip
+        } else {
+            description = 'Tienes retos por completar.'
+        }
+
+        var mailOptions = {
+            from: index.emailExitum,
+            to: users[i].dataValues.email,
+            subject: 'Hemos notado tu ausencia',
+            template: 'template',
+            context: {
+                title: 'Hemos notado tu ausencia',
+                name: nameComp,
+                text: 'No te olvides de continuar con tus retos',
+                description: description,
+                url: 'http:\/\/' + '35.175.241.103:5000' + '\/dashboard',
+                boton: 'Ir a Exitum'
+            }
+        }
+
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: index.emailExitum,
+                pass: index.passwordExitum
+            }
+        });
+        var email = users[i].dataValues.email
+        transporter.verify(function (error, success) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("El servidor esta listo para enviar mensajes.");
+                const handlebarOptions = {
+                    viewEngine: {
+                        extName: '.handlebars',
+                        partialsDir: './public/images',
+                        layoutsDir: './public',
+                        defaultLayout: 'template.handlebars',
+                    },
+                    viewPath: './public',
+                    extName: '.handlebars',
+                };
+
+                transporter.use('compile', hbs(handlebarOptions));
+            }
+            transporter.sendMail(mailOptions).then(() => {
+                console.log('Un email ha sido enviado a ' + email + '.');
+            }).catch(err => {
+                console.log("Error: " + err)
+            })
+        });
+    }
+
+    // var transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: index.emailExitum,
+    //     pass: index.passwordExitum
+    //   }
+    // });
+
+    // const mailOptions = {
+    //   from: '"John Doe" <john.doe@example.com>', // sender address
+    //   to: 'leidy.callupe@tecsup.edu.pe', // list of receivers
+    //   subject: 'Hello there!', // Subject line
+    //   text: 'A Message from Node Cron App', // plain text body
+    //   html: '<b>A Message from Node Cron App</b>' // html body
+    // };
+
+    // transporter.sendMail(mailOptions, function (error, info) {
+    //   console.log(info.messageId);
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    // });
+});

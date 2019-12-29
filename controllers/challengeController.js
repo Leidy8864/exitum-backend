@@ -981,7 +981,7 @@ module.exports = {
                                                                 checked: false,
                                                                 status: "Sin respuesta",
                                                                 date: Date.now(),
-                                                                date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
+                                                                date_max: moment(Date.now()).add(result[x].duracion_dias, 'd').toDate()
                                                             });
                                                             var startup_step = await models.startup_step.findOne({
                                                                 attributes: ['startup_id'],
@@ -1020,7 +1020,7 @@ module.exports = {
                                                                 checked: false,
                                                                 status: "Sin respuesta",
                                                                 date: Date.now(),
-                                                                date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
+                                                                date_max: moment(Date.now()).add(result[x].duracion_dias, 'd').toDate()
                                                             });
                                                             var employee_step = await models.employee_step.findOne({
                                                                 attributes: ['employee_id'],

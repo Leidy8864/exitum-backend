@@ -4,10 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var exphbs = require('express-handlebars');
+var hbs = require('nodemailer-express-handlebars');
 var bodyParser = require('body-parser');
 var cron = require("node-cron");
 var index = require('./config/index');
 var nodemailer = require('nodemailer');
+var moment = require('moment');
+var models = require('./models/index');
 
 var usersRouter = require('./routes/users');
 var employeesRouter = require('./routes/employees');
@@ -119,32 +122,6 @@ app.use(function (err, req, res, next) {
   return
 });
 
-// schedule tasks to be run on the server
-cron.schedule("00 00 23 * *", function () {
-  console.log("Running Cron Job");
 
-  var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: index.emailExitum,
-        pass: index.passwordExitum
-    }
-  });
-
-  const mailOptions = {
-      from: '"John Doe" <john.doe@example.com>', // sender address
-      to: 'leidy.callupe@tecsup.edu.pe', // list of receivers
-      subject: 'Hello there!', // Subject line
-      text: 'A Message from Node Cron App', // plain text body
-      html: '<b>A Message from Node Cron App</b>' // html body
-  };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-      console.log(info.messageId);
-      if (err) {
-          console.log(err);
-      }
-  });
-});
 
 module.exports = app;
