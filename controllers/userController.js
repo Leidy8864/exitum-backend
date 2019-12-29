@@ -565,10 +565,13 @@ module.exports = {
                     var photo = req.files.photo;
                     fileName = s3.putObject(NEW_BUCKET_NAME, photo);
                 }
-
+                var lastnameComp = null
+                if(lastname_1 && lastname_2){
+                    lastnameComp = lastname_1 + ' ' + lastname_2
+                }
                 await user.update({
                     name: name,
-                    lastname: lastname_1 + ' ' + lastname_2,
+                    lastname: lastnameComp,
                     lastname_1: lastname_1,
                     lastname_2: lastname_2,
                     genre: genre,

@@ -146,13 +146,14 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip, description, step_id } = req.body
+        const { tip, description, step_id, duration_days } = req.body
 
         try {
             await models.tip.create({
                 tip: tip,
                 description: description,
-                step_id: step_id
+                step_id: step_id,
+                duration_days: duration_days
             })
 
             return successful(res, text.successCreate('tip'))
@@ -166,7 +167,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip_id, tip, description, type } = req.body
+        const { tip_id, tip, description, type, duration_days } = req.body
         //type : { "evaluación automatizada", "evaluado por la comunidad" }
         var name = null
         var file = null
@@ -174,10 +175,22 @@ module.exports = {
             await models.sequelize.transaction(async (t) => {
                 var tipNew = await existById(models.tip, tip_id)
 
+                // const tips = await models.tip.findAll({
+                //     attributes: [[models.Sequelize.fn('sum', models.Sequelize.col('duration_days')), 'total']],
+                //     where: {
+                //         step_id: tipNew.step_id,
+                //         duration_days: {
+                //             [models.Sequelize.Op.not]: null
+                //         }
+                //     }
+                // })
+                // console.log(tips)
+
                 tipNew.update({
                     tip: tip,
                     description: description,
-                    type: type
+                    type: type,
+                    duration_days: duration_days
                 }, { transaction: t })
 
                 const stepFind = await models.step.findOne({
@@ -213,6 +226,7 @@ module.exports = {
                 }
 
                 const typeUser = stepFind.stage.type
+                var duracion_dias = 0
                 if (typeUser == "startup") {
                     const startups = await models.startup.findAll({
                         attributes: ['id'],
@@ -242,7 +256,8 @@ module.exports = {
                             tip_id: tipNew.id,
                             checked: false,
                             status: "Sin respuesta",
-                            date: Date.now()
+                            date: Date.now(),
+                            date_max: moment(Date.now()).add(duration_days, 'd').toDate()
                         })
                         const startup_step = await models.startup_step.findOne({
                             attributes: ['startup_id'],
@@ -257,7 +272,8 @@ module.exports = {
                                 step_id: stepFind.id,
                                 tip_completed: 0,
                                 icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                state: 'incompleto'
+                                state: 'incompleto',
+                                date_initial: Date.now()
                             })
                         }
                     }
@@ -290,7 +306,8 @@ module.exports = {
                             tip_id: tipNew.id,
                             checked: false,
                             status: "Sin respuesta",
-                            date: Date.now()
+                            date: Date.now(),
+                            date_max: moment(Date.now()).add(duration_days, 'd').toDate()
                         })
                         const employee_step = await models.employee_step.findOne({
                             attributes: ['employee_id'],
@@ -305,7 +322,8 @@ module.exports = {
                                 step_id: stepFind.id,
                                 tip_completed: 0,
                                 icon_count_tip: 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/tip-icons/0-reto.svg',
-                                state: 'incompleto'
+                                state: 'incompleto',
+                                date_initial: Date.now()
                             })
                         }
                     }

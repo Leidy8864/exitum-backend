@@ -1047,7 +1047,6 @@ module.exports = {
                                                         return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." });
                                                     }
                                                 }
-
                                             }
                                             tipNew = await models.tip.findOne({
                                                 where: {
@@ -1124,18 +1123,15 @@ module.exports = {
                 user_id: user_id,
                 status: 'Sin respuesta',
                 date_max: {
-                    [models.Sequelize.Op.lte]: moment(Date.now()).add(2, 'd').toDate()
+                    [models.Sequelize.Op.gte]: moment(Date.now()).subtract(2, 'd').toDate()
                 }
             }
         })
         if (challenges){
+            console.log(moment(Date.now()).toDate())
             return res.json({ status: true, message: "Retos próximos a completar", data: challenges })
         } else {
             return res.json({ status: false, message: "No hay retos próximos a completar" })
         }
-    },
-
-    sendEmailAlertTip: async (req, res) => {
-        const { user_id, type } = req.query
     }
 }
