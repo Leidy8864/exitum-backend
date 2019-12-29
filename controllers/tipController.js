@@ -33,7 +33,6 @@ module.exports = {
     },
 
     all: async (req, res) => {
-
         const perPage = 20;
         let page = req.query.page || 1;
 
@@ -139,11 +138,9 @@ module.exports = {
             const totalRows = await models.tip.count()
             return res.json({ status: true, message: "Listado de retos por nivel", data: tips, current: page, pages: Math.ceil(totalRows / perPage) })
         }
-
     },
 
     create: async (req, res) => {
-
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
@@ -164,7 +161,6 @@ module.exports = {
     },
 
     update: async (req, res) => {
-
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 

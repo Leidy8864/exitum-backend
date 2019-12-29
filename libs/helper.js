@@ -27,13 +27,16 @@ module.exports = {
             SECRET_KEY, {
             // expiresIn : expiresIn
         });
-
+        var lastnameComp = null
+        if (user.lastname_2) {
+            lastnameComp = user.lastname_1 + ' ' + user.lastname_2
+        } else {
+            lastnameComp = user.lastname_1
+        }
         const accessData = {
             id: user.id,
             name: user.name,
-            lastname: user.lastname,
-            lastname_1: user.lastname_1,
-            lastname_2: user.lastname_2,
+            lastname: lastnameComp,
             email: user.email,
             accessToken: accessToken,
             role: user.role,
