@@ -3,8 +3,7 @@
 module.exports = (sequelize, DataType) => {
     const area = sequelize.define('area', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        name: DataType.STRING,
-        ciiu: DataType.STRING,
+        name: DataType.STRING
     },
     {
         freezeTableName: true,

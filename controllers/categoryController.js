@@ -34,7 +34,9 @@ module.exports = {
 
         try {
 
-            var category = await models.category.findAll({});
+            var category = await models.category.findAll({
+                order: ['name']
+            });
             return successful(res, 'OK', category)
 
         } catch (error) { return returnError(res, error) } 
