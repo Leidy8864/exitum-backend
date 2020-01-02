@@ -1646,6 +1646,47 @@ CREATE TABLE IF NOT EXISTS `exitum`.`tip_category` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `exitum`.`query`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`query` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `query` TEXT NULL,
+  `tip_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_question_tip1_idx` (`tip_id` ASC),
+  CONSTRAINT `fk_question_tip1`
+    FOREIGN KEY (`tip_id`)
+    REFERENCES `exitum`.`tip` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `exitum`.`reply`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `exitum`.`reply` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reply` TEXT NULL,
+  `challenge_id` INT NOT NULL,
+  `query_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_answer_challenge1_idx` (`challenge_id` ASC),
+  INDEX `fk_reply_query1_idx` (`query_id` ASC),
+  CONSTRAINT `fk_answer_challenge1`
+    FOREIGN KEY (`challenge_id`)
+    REFERENCES `exitum`.`challenge` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_reply_query1`
+    FOREIGN KEY (`query_id`)
+    REFERENCES `exitum`.`query` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -2381,6 +2422,15 @@ INSERT INTO `category` (`id`, `name`, `ciiu`) VALUES ('414', 'POMPAS FÚNEBRES Y
 INSERT INTO `category` (`id`, `name`, `ciiu`) VALUES ('415', 'OTRAS ACTIVIDADES DE SERVICIOS PERSONALES N.C.P.', '9609');
 INSERT INTO `category` (`id`, `name`, `ciiu`) VALUES ('416', 'ACTIVIDADES DE LOS HOGARES COMO EMPLEADORES DE PERSONAL DOMÉSTICO', '9700');
 INSERT INTO `category` (`id`, `name`, `ciiu`) VALUES ('417', 'ACTIVIDADES DE ORGANIZACIONES Y ÓRGANOS EXTRATERRITORIALES', '9900');
+
+INSERT INTO `area` (`id`, `name`) VALUES
+(1,'Área de gestión'),
+(2,'Área de recursos humanos'),
+(3,'Área de comercialización'),
+(4,'Área de contabilidad y finanzas'),
+(5,'Área de producción'),
+(6,'Área de administración'),
+(7,'Área de aspectos legales');
 
 INSERT INTO `department` (`id`, `department`,`country_id`) VALUES 
 (1, 'Ancash', 165), 

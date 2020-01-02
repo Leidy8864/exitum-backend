@@ -48,6 +48,9 @@ module.exports = (sequelize, DataType) => {
         });
         tip.hasMany(models.tip_category, {
             foreignKey: 'tip_id'
+        });
+        tip.hasMany(models.query, {
+            foreignKey: 'tip_id'
         })
         // tip.belongsToMany(models.employee, {
         //     through: 'employee_tip',

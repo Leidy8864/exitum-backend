@@ -164,7 +164,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip_id, tip, description, type, duration_days } = req.body
+        const { tip_id, tip, description, type, duration_days, queries } = req.body
         //type : { "evaluación automatizada", "evaluado por la comunidad" }
         var name = null
         var file = null
@@ -177,6 +177,23 @@ module.exports = {
                     type: type,
                     duration_days: duration_days
                 }, { transaction: t })
+
+                if (queries) {
+                    await Promise.all(queries.map(async (query) => {
+                        var str = query;
+                        var jsonQuery = JSON.parse(str);
+                        if (jsonQuery.id) {
+                            await models.query.update({
+                                query: jsonQuery.query
+                            }, { where: { id: jsonQuery.id } }, { transaction: t }).catch(err => { console.log(err) })
+                        } else {
+                            await models.query.create({
+                                query: jsonQuery.query,
+                                tip_id: tip_id
+                            }, { transaction: t })
+                        }
+                    }))
+                }
 
                 const stepFind = await models.step.findOne({
                     where: { id: tipNew.step_id },

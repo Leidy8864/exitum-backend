@@ -94,6 +94,9 @@ module.exports = (sequelize, DataTypes) => {
         challenge.hasMany(models.file, {
             foreignKey: 'challenge_id'
         });
+        challenge.hasMany(models.reply, {
+            foreignKey: 'challenge_id'
+        });
     }
     return challenge
 };
