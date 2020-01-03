@@ -26,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
         query.hasMany(models.reply, {
             foreignKey: 'query_id'
         });
-        query.belongsToMany(models.challenge, {
-            as: { singular: 'reply', plural: 'replies' },
-            through: models.reply,
-            foreignKey: 'query_id',
-            otherKey: 'challenge_id'
-        });
+        // query.belongsToMany(models.challenge, {
+        //     as: { singular: 'reply', plural: 'replies' },
+        //     through: models.reply,
+        //     foreignKey: 'query_id',
+        //     otherKey: 'challenge_id'
+        // });
     }
     return query
 };

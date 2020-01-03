@@ -445,21 +445,21 @@ module.exports = {
                             order: ['id'],
                             include: [
                                 { model: models.file_tip },
-                                {
-                                    model: models.query,
-                                    as: 'queries',
-                                    // include: [
-                                    //     {
-                                    //         model: models.reply,
-                                    //         // where: {
-                                    //         //     challenge_id: models.Sequelize.literal('challenges.id')
-                                    //         // },
-                                    //         //attributes: ['reply'],
-                                    //         required: false
-                                    //     }
-                                    // ],
-                                    required: false
-                                }
+                                // {
+                                //     model: models.query,
+                                //     as: 'queries',
+                                //     // include: [
+                                //     //     {
+                                //     //         model: models.reply,
+                                //     //         // where: {
+                                //     //         //     challenge_id: models.Sequelize.literal('challenges.id')
+                                //     //         // },
+                                //     //         //attributes: ['reply'],
+                                //     //         required: false
+                                //     //     }
+                                //     // ],
+                                //     required: false
+                                // }
                             ]
                         },
                         {

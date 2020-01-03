@@ -98,6 +98,7 @@ module.exports = {
                     },
                     {
                         model: models.query,
+                        as: 'queries',
                         include: [
                             { 
                                 model: models.reply,
@@ -227,7 +228,6 @@ module.exports = {
                     }
 
                 }
-
                 const stepFind = await models.step.findOne({
                     where: { id: tipNew.step_id },
                     attributes: ['id'],
