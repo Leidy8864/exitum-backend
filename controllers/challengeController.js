@@ -438,8 +438,13 @@ module.exports = {
                     include: [
                         {
                             model: models.tip,
+                            order: ['id'],
                             include: [
-                                { model: models.file_tip }
+                                { model: models.file_tip },
+                                {
+                                    model: models.query,
+                                    required: false
+                                }
                             ]
                         },
                         {
@@ -551,8 +556,13 @@ module.exports = {
                     include: [
                         {
                             model: models.tip,
+                            order: ['id'],
                             include: [
-                                { model: models.file_tip }
+                                { model: models.file_tip },
+                                {
+                                    model: models.query,
+                                    required: false
+                                }
                             ]
                         },
                         {
@@ -668,6 +678,7 @@ module.exports = {
                 },
                 {
                     model: models.tip,
+                    order: ['id'],
                     include: [
                         {
                             model: models.tip_skill,
@@ -690,6 +701,10 @@ module.exports = {
                         {
                             model: models.file_tip,
                             required: true
+                        },
+                        {
+                            model: models.query,
+                            required: false
                         }
                     ],
                     required: true
@@ -1104,7 +1119,7 @@ module.exports = {
     },
 
     showAlertTip: async (req, res) => {
-        const { user_id, type } = req.query        
+        const { user_id, type } = req.query
         const challenges = await models.challenge.findAll({
             attributes: ['date_max'],
             include: [
@@ -1127,7 +1142,7 @@ module.exports = {
                 }
             }
         })
-        if (challenges){
+        if (challenges) {
             console.log(moment(Date.now()).toDate())
             return res.json({ status: true, message: "Retos próximos a completar", data: challenges })
         } else {

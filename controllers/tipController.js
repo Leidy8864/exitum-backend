@@ -70,6 +70,7 @@ module.exports = {
                 where: {
                     step_id: step_id
                 },
+                order: ['id'],
                 include: [
                     {
                         model: models.step,
@@ -97,6 +98,13 @@ module.exports = {
                     },
                     {
                         model: models.query,
+                        include: [
+                            { 
+                                model: models.reply,
+                                attributes: ['reply'],
+                                required: false 
+                            }
+                        ],
                         required: false
                     }
                 ]
@@ -121,6 +129,10 @@ module.exports = {
                     },
                     {
                         model: models.file_tip,
+                        required: false
+                    },
+                    {
+                        model: models.query,
                         required: false
                     },
                     {
@@ -423,6 +435,10 @@ module.exports = {
             include: [
                 {
                     model: models.file_tip,
+                    required: false
+                },
+                {
+                    model: models.query,
                     required: false
                 },
                 {
