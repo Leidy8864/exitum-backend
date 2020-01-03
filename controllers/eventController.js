@@ -491,12 +491,27 @@ module.exports = {
         try 
         {
             var event = await existById(models.workshop, event_id)
+            var users = await event.getToWorkshopUsers({
+                attributes: ['name', 'email']
+            });
+
+            users.map( user => {
+                const email_info = { to: user.email, subject: 'Cancelación de evento.', template: 'cancel-event' }
+    
+                const data_send =  {
+                    title: `El evento ${event.title}`,
+                    text: '¡Ha sido cancelado!',
+                    description: `Lo sentimos ${user.name} el organizador de evento ha decido cancelar el evento, muchas gracias por su comprensión.`
+                }
+        
+                sendEmail(email_info, data_send)
+            })
 
             await models.category_workshop.destroy({ where: { workshop_id: event.id } })
             await models.user_workshop.destroy({ where: { workshop_id: event.id } })
             await event.destroy()
 
-            return successful(res, text.successDelete('evento'))
+            return successful(res, text.successDelete('evento'), event)
 
         } catch (error) { return returnError(res, error) }
 
