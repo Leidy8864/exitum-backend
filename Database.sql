@@ -434,15 +434,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(145) NULL DEFAULT NULL,
   `date_expedition` DATETIME NULL DEFAULT NULL,
   `date_expiration` DATETIME NULL DEFAULT NULL,
   `document_url` VARCHAR(255) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
   `company_id` INT(11) NOT NULL,
+  `certification_name_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_certification_user1_idx` (`user_id` ASC),
-  INDEX `fk_certification_company1_idx` (`company_id` ASC),
+  INDEX `fk_certification_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_certification_company1_idx` (`company_id` ASC) VISIBLE,
+  INDEX `fk_certification_certification_name1_idx` (`certification_name_id` ASC) VISIBLE,
   CONSTRAINT `fk_certification_company1`
     FOREIGN KEY (`company_id`)
     REFERENCES `exitum`.`company` (`id`)
@@ -451,6 +452,11 @@ CREATE TABLE IF NOT EXISTS `exitum`.`certification` (
   CONSTRAINT `fk_certification_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_certification_certification_name1`
+    FOREIGN KEY (`certification_name_id`)
+    REFERENCES `exitum`.`certification_name` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

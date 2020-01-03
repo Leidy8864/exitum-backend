@@ -40,7 +40,8 @@ var stepRouter = require('./routes/step');
 var tipRouter = require('./routes/tip');
 var careerRouter = require('./routes/career');
 var authAdminRouter = require('./routes/authAdmin');
-var termsRouter = require('./routes/terms')
+var termsRouter = require('./routes/terms');
+var specialityRouter = require('./routes/speciality');
 
 //const controller = require('./controllers/userController');
 const passport = require('passport');
@@ -104,7 +105,8 @@ app.use('/steps', stepRouter);
 app.use('/tips', tipRouter);
 app.use('/careers', careerRouter);
 app.use('/admin', authAdminRouter);
-app.use('/legal', termsRouter)
+app.use('/legal', termsRouter);
+app.use('/specialities', specialityRouter)
 
 app.get("/test", (req, res) => {
   console.log("mario")

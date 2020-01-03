@@ -1,0 +1,29 @@
+'use strict'
+
+module.exports = (sequelize, DataTypes) => {
+    const certification_speciality = sequelize.define('certification_speciality', {
+        certification_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                references: {
+                    model: 'certification',
+                    key: 'id'
+                }
+            }
+        },
+        speciality_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'speciality',
+                key: 'id'
+            }
+        }
+    },
+    {
+        freezeTableName: true,
+        timestamps: false,
+        omitNull: true
+    });
+
+    return certification_speciality
+}

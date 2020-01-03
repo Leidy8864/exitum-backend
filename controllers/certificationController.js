@@ -5,6 +5,7 @@ const index = require('../config/index');
 const models = require('../models/index')
 const { putObject, getObject } = require('../libs/aws-s3');
 const { createCompany } = require('./companyController')
+const { createSpeciality } = require('./specialityController')
 const { check, validationResult } = require('express-validator');
 const { existById } = require('../controllers/elementController');
 const { successful, returnError } = require('./responseController')
@@ -77,7 +78,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { user_id, name, issuing_company, date_expedition, date_expiration } = req.body
+        const { user_id, name, issuing_company, date_expedition, date_expiration, specialities } = req.body
 
         try 
         {
@@ -114,6 +115,13 @@ module.exports = {
 
             if (!created) throw(text.duplicateElement)
 
+            var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                var speciality_id = await createSpeciality(speciality)
+                return await speciality_id.id
+            }))
+
+            await certification.addToCertificationSpecialities(specialities_id)
+
             return successful(res, text.successCreate('certificado'))
             
         } catch (error) { return returnError(res, error) }
@@ -147,7 +155,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration } = req.body
+        const { user_id, certification_id, name, issuing_company, date_expedition, date_expiration, specialities } = req.body
 
         try 
         {
@@ -171,8 +179,8 @@ module.exports = {
 
             var fileName = certification.document_url
            
-            if (req.files) {
-
+            if (req.files) 
+            {
                 if (certification.document_url) s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[5])
                 
                 const { document } = req.files
@@ -184,10 +192,21 @@ module.exports = {
                 user_id: user_id,
                 certification_name_id: certification_name.id,
                 company_id: company.id,
-                date_expedition: new Date(date_expedition),
-                date_expiration: new Date(date_expiration),
+                date_expedition: (date_expedition) ? new Date(date_expedition) : certification.date_expedition,
+                date_expiration: (date_expiration) ? new Date(date_expiration) : certification.date_expiration,
                 document_url: fileName
             })
+
+            if (specialities instanceof Array) 
+           {
+                await models.certification_speciality.destroy({ where: { certification_id: certification.id } })
+                var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                    var speciality_id = await createSpeciality(speciality)
+                    return await speciality_id.id
+                }))
+    
+                await certification.addToCertificationSpecialities(specialities_id)
+           }
 
             return successful(res, text.successUpdate('certificado'))
 
@@ -218,7 +237,8 @@ module.exports = {
             if (certification.document_url  && certification.document_url != '') {
                 s3.deleteObject(NEW_BUCKET_NAME, (certification.document_url).split('/')[5]);
             }
-    
+
+            await models.certification_speciality.destroy({ where: { certification_id: certification.id } })
             await certification.destroy()
 
             return successful(res, text.successDelete('certificado'))

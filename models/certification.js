@@ -42,6 +42,12 @@ module.exports = (sequelize, DataTypes) => {
         certification.belongsTo(models.certification_name, {
             foreignKey: 'certification_name_id'
         })
+        certification.belongsToMany(models.certification, {
+            as: { singular: 'toCertificationSpeciality', plural: 'toCertificationSpecialities' },
+			through: models.certification_speciality,
+			foreignKey:'certification_id',
+			otherKey: 'speciality_id'
+		});
     };
     return certification;
 };
