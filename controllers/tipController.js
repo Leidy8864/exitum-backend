@@ -269,7 +269,6 @@ module.exports = {
                             }
                         }
                     }
-
                 }
                 const stepFind = await models.step.findOne({
                     where: { id: tipNew.step_id },
