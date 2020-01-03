@@ -652,7 +652,6 @@ module.exports = {
                                                         tip_id: stages[x].steps[y].tips[z].id,
                                                         checked: false,
                                                         status: "Sin respuesta",
-                                                        date: Date.now(),
                                                         date_max: moment(Date.now()).add(stages[x].steps[y].tips[z].duration_days, 'd').toDate()
                                                     }
                                                 )

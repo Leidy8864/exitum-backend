@@ -317,8 +317,7 @@ module.exports = {
                                 step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 tip_id: tipNew.id,
                                 checked: false,
-                                status: "Sin respuesta",
-                                date: Date.now()
+                                status: "Sin respuesta"
                             })
                             const startup_step = await models.startup_step.findOne({
                                 where: {
@@ -352,8 +351,7 @@ module.exports = {
                                 step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 tip_id: tipNew.id,
                                 checked: false,
-                                status: "Sin respuesta",
-                                date: Date.now()
+                                status: "Sin respuesta"
                             })
                             const employee_step = await models.employee_step.findOne({
                                 where: {
@@ -478,14 +476,9 @@ module.exports = {
     },
 
     replyTip: async (req, res) => {
-        var fileName = ""
         const { challenge_id, reply, replies } = req.body
-        var name = ""
-        if (req.files) {
-            var file = req.files.file;
-            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
-            name = file.name
-        }
+        var name = null
+        var fileName = null
         try {
             await models.sequelize.transaction(async (t) => {
                 const chll = await models.challenge.findOne({ where: { id: challenge_id } })
@@ -499,12 +492,28 @@ module.exports = {
                         date_completed: Date.now(),
                     }, { where: { id: challenge_id } }, { transaction: t }).catch(err => { console.log(err) });
 
-                    if (file) {
-                        await models.file.create({
-                            name: name,
-                            key_s3: (fileName).split('/')[5],
-                            challenge_id: challenge_id
-                        }, { transaction: t });
+                    if (req.files) {
+                        if (req.files.file instanceof Array) {
+                            for (var x = 0; x < req.files.file.length; x++) {
+                                file = req.files.file[x];
+                                fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                                name = file.name
+                                await models.file.create({
+                                    name: name,
+                                    key_s3: (fileName).split('/')[5],
+                                    challenge_id: challenge_id
+                                }, { transaction: t });
+                            }
+                        } else {
+                            file = req.files.file;
+                            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                            name = file.name
+                            await models.file.create({
+                                name: name,
+                                key_s3: (fileName).split('/')[5],
+                                challenge_id: challenge_id
+                            }, { transaction: t });
+                        }
                     }
 
                     if (replies) {
@@ -530,7 +539,6 @@ module.exports = {
                     }
                     return res.json({ status: true, message: "Respuesta enviada correctamente" })
                 }
-
             });
         } catch (error) {
             console.log("Error" + error);
@@ -814,7 +822,7 @@ module.exports = {
 
             await update_challenge.update({
                 comment: comment,
-                date: Date.now(),
+                date_completed: Date.now(),
                 status: status,
                 checked: (status == 'Verificado') ? 1 : 0,
                 verifying_user: verifying_user
@@ -1030,7 +1038,6 @@ module.exports = {
                                                                 tip_id: tipNew.dataValues.id,
                                                                 checked: false,
                                                                 status: "Sin respuesta",
-                                                                date: Date.now(),
                                                                 date_max: moment(Date.now()).add(result[x].duracion_dias, 'd').toDate()
                                                             });
                                                             var startup_step = await models.startup_step.findOne({
@@ -1069,7 +1076,6 @@ module.exports = {
                                                                 tip_id: tipNew.dataValues.id,
                                                                 checked: false,
                                                                 status: "Sin respuesta",
-                                                                date: Date.now(),
                                                                 date_max: moment(Date.now()).add(result[x].duracion_dias, 'd').toDate()
                                                             });
                                                             var employee_step = await models.employee_step.findOne({
@@ -1156,7 +1162,7 @@ module.exports = {
     showAlertTip: async (req, res) => {
         const { user_id, type } = req.query
         const challenges = await models.challenge.findAll({
-            attributes: ['date_max'],
+            attributes: ['date_max', 'viewed'],
             include: [
                 {
                     model: models.startup,
@@ -1188,13 +1194,20 @@ module.exports = {
 
     viewedChallenge: async (req, res) => {
         const { challenge_id } = req.query
-        await models.challenge.update({
-            viewed: 1
-        }, { where: { id: challenge_id } }).then(chll => {
-            res.json({ status: true, message: "Reto visto", data: chll })
-        }).catch(err => {
-            console.log(err)
-            res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
-        })
+        const challenge = await models.challenge.findOne({ attributes: ['viewed'], where: { id: challenge_id } })
+        if (challenge.viewed === 0) {
+            await models.challenge.update({
+                viewed: 1,
+                date_viewed: Date.now()
+            }, { where: { id: challenge_id } }).then(chll => {
+                res.json({ status: true, message: "Reto visto", data: chll })
+            }).catch(err => {
+                console.log(err)
+                res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
+            })
+        } else {
+            res.json({ status: true, message: "Este reto ya fue visto" })
+        }
+
     }
 }

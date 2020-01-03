@@ -48,7 +48,14 @@ module.exports = {
                 if (req.files) {
                     fileName = s3.putObject(NEW_BUCKET_NAME, req.files.photo);
                 }
-                const startup = await models.startup.findOne({ where: { name: name, id: entrepreneur.id } });
+                const startup = await models.startup.findOne({
+                    where: {
+                        name: {
+                            [models.Sequelize.Op.like]: `%${name}%`
+                        },
+                        entrepreneur_id: entrepreneur.id
+                    }
+                });
                 if (startup) {
                     return res.json({ status: false, message: "Este nombre ya esta en uso" });
                 } else {
@@ -80,7 +87,7 @@ module.exports = {
                                 }
                             ]
                         }, { transaction: t }).then(stages => {
-                            
+
                             var duracion_dias = 0
 
                             for (var x = 0; x < stages.length; x++) {
@@ -98,7 +105,6 @@ module.exports = {
                                                 tip_id: stages[x].steps[y].tips[z].id,
                                                 checked: false,
                                                 status: "Sin respuesta",
-                                                date: Date.now(),
                                                 date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
                                             }
                                         )

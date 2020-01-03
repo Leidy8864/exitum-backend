@@ -346,7 +346,6 @@ module.exports = {
                             tip_id: tipNew.id,
                             checked: false,
                             status: "Sin respuesta",
-                            date: Date.now(),
                             date_max: moment(Date.now()).add(duration_days, 'd').toDate()
                         })
                         startup_step = await models.startup_step.findOne({
@@ -422,7 +421,6 @@ module.exports = {
                             tip_id: tipNew.id,
                             checked: false,
                             status: "Sin respuesta",
-                            date: Date.now(),
                             date_max: moment(Date.now()).add(duration_days, 'd').toDate()
                         })
                         employee_step = await models.employee_step.findOne({
