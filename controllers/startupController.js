@@ -81,7 +81,13 @@ module.exports = {
                                     model: models.step,
                                     include: [
                                         {
-                                            model: models.tip
+                                            model: models.tip,
+                                            include: [
+                                                { 
+                                                    model: models.query,
+                                                    required: false 
+                                                }
+                                            ]
                                         }
                                     ]
                                 }
@@ -108,8 +114,12 @@ module.exports = {
                                                 date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
                                             }
                                         )
-                                    }
+                                        
+                                        for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
 
+                                        }
+
+                                    }
                                     steps.push(
                                         {
                                             startup_id: startup.id,
@@ -125,8 +135,34 @@ module.exports = {
                         })
                         await models.challenge.bulkCreate(chlls, { transaction: t });
                         await models.startup_step.bulkCreate(steps, { transaction: t });
+
+                        // var replyArr = []
+                        // const chllsNews = await models.challenge.findAll({
+                        //     attributes: ['id'],
+                        //     where: {
+                        //         startup_id: startup.id
+                        //     },
+                        //     include: [
+                        //         {
+                        //             model: models.query,
+                        //             as: 'replies',
+                        //             required: false
+                        //         }
+                        //     ],
+                        //     transaction: t
+                        // })
+                        // res.json({ chllsNews })
+                        // if (chllsNews) {
+                        //     for (var i = 0; i < chllsNews.length; i++) {
+                        //         replyArr.push({
+                        //             challenge_id: chllsNews[i].id,
+                        //             query_id: query.id
+                        //         })
+                        //     }
+                        //     await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
+                        // }
                     });
-                    return res.json({ status: true, message: "Startup creado correctamente" });
+                    //return res.json({ status: true, message: "Startup creado correctamente" });
                 }
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
