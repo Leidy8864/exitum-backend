@@ -1178,7 +1178,7 @@ module.exports = {
             where: {
                 user_id: user_id,
                 status: 'Sin respuesta',
-                //viewed: 1,
+                viewed: 1,
                 date_max: {
                     [models.Sequelize.Op.lte]: moment(Date.now()).add(3, 'd').toDate()
                 }
