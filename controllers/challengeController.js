@@ -481,7 +481,7 @@ module.exports = {
 
     replyTip: async (req, res) => {
         var fileName = ""
-        const { challenge_id, reply } = req.body
+        const { challenge_id, reply, queries } = req.body
         var name = ""
         if (req.files) {
             var file = req.files.file;
@@ -505,6 +505,8 @@ module.exports = {
                         challenge_id: challenge_id
                     }, { transaction: t });
                 }
+
+                
                 return res.json({ status: true, message: "Respuesta enviada correctamente" })
             });
         } catch (error) {
@@ -775,8 +777,6 @@ module.exports = {
         }).catch(err => {
             console.log(err)
         })
-        console.log(challenges.length)
-        console.log(totalRows.length)
         return res.json({ status: true, message: "Retos para verificar.", data: challenges, current: page, pages: Math.ceil(totalRows.length / perPage) })
     },
 
@@ -1068,8 +1068,8 @@ module.exports = {
                                                                 });
                                                             }
                                                         }
-                                                        await models.challenge.bulkCreate(chlls, { transaction: t }).catch(err => { console.log(err) });;
-                                                        await models.employee_step.bulkCreate(emp_step, { transaction: t }).catch(err => { console.log(err) });;
+                                                        await models.challenge.bulkCreate(chlls, { transaction: t }).catch(err => { console.log(err) });
+                                                        await models.employee_step.bulkCreate(emp_step, { transaction: t }).catch(err => { console.log(err) });
                                                     } else {
                                                         return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." });
                                                     }
