@@ -110,6 +110,11 @@ module.exports = {
                             {
                                 model: models.reply,
                                 attributes: ['reply'],
+                                where: {
+                                    reply: {
+                                        [models.Sequelize.Op.not]: null
+                                    }
+                                },
                                 required: false
                             }
                         ],
@@ -207,6 +212,13 @@ module.exports = {
                 }, { transaction: t })
 
                 if (queries) {
+                    const chlls = await models.challenge.findAll({
+                        attributes: ['id'],
+                        where: {
+                            tip_id: tip_id
+                        }
+                    })
+                    var replyArr = []
                     if (queries instanceof Array) {
                         await Promise.all(queries.map(async (query) => {
                             var str = query;
@@ -216,17 +228,20 @@ module.exports = {
                                     query: jsonQuery.query
                                 }, { where: { id: jsonQuery.id } }, { transaction: t }).catch(err => { console.log(err) })
                             } else {
-                                await models.query.create({
+                                const query = await models.query.create({
                                     query: jsonQuery.query,
                                     tip_id: tip_id
                                 }, { transaction: t }).catch(err => { console.log(err) })
 
-                                await models.challenge.findAll({
-                                    where: {
-                                        
+                                if (chlls) {
+                                    for (var i = 0; i < chlls.length; i++) {
+                                        replyArr.push({
+                                            challenge_id: chlls[i].id,
+                                            query_id: query.id
+                                        })
                                     }
-                                })
-
+                                    await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
+                                }
                             }
                         }))
                     } else {
@@ -237,13 +252,22 @@ module.exports = {
                                 query: jsonQuery.query
                             }, { where: { id: jsonQuery.id } }, { transaction: t }).catch(err => { console.log(err) })
                         } else {
-                            await models.query.create({
+                            const query = await models.query.create({
                                 query: jsonQuery.query,
                                 tip_id: tip_id
                             }, { transaction: t }).catch(err => { console.log(err) })
+
+                            if (chlls) {
+                                for (var i = 0; i < chlls.length; i++) {
+                                    replyArr.push({
+                                        challenge_id: chlls[i].id,
+                                        query_id: query.id
+                                    })
+                                }
+                                await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
+                            }
                         }
                     }
-
                 }
                 const stepFind = await models.step.findOne({
                     where: { id: tipNew.step_id },

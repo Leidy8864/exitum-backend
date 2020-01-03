@@ -54,11 +54,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         checked: DataTypes.BOOLEAN,
         status: DataTypes.STRING,
-        date: DataTypes.DATE,
+        date_publication: DataTypes.DATE,
         comment: DataTypes.STRING,
         reply: DataTypes.STRING,
         date_max: DataTypes.DATE,
         date_completed: DataTypes.DATE,
+        viewed: DataTypes.INTEGER,
+        date_viewed: DataTypes.DATE
     },
         {
             freezeTableName: true,

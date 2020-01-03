@@ -84,7 +84,7 @@ module.exports = {
                 attributes: [
                     'id', 'title', 'day', [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'], 'photo',
                     [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_end'), '%h:%i %p'), 'hour_end'], 'place', 'description', 'user_id',
-                    'participants'
+                    'participants', 'date_publication'
                 ]
             })
 
@@ -138,7 +138,7 @@ module.exports = {
                     }
                 ],
                 attributes: [
-                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants', 'photo'
+                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants', 'photo', 'date_publication'
                 ],
             })
 
@@ -148,7 +148,7 @@ module.exports = {
                 user_id: response.user_id, participants: response.participants, photo: response.photo,
                 participants_count: `${response.toWorkshopUsers.length}/${response.participants}`,
                 toWorkshopUsers: response.toWorkshopUsers, toWorkshopCategories: response.toWorkshopCategories,
-                department: response.department
+                department: response.department, date_publication: response.date_publication
             }
 
             return successful(res, 'OK', event)
@@ -201,7 +201,7 @@ module.exports = {
                 attributes: [
                     'id', 'title', 'day', [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'],
                     [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_end'), '%h:%i %p'), 'hour_end'], 'place', 'description', 'user_id',
-                    'participants', 'photo'
+                    'participants', 'photo', 'date_publication'
                 ],
                 include: [
                     {
@@ -217,7 +217,8 @@ module.exports = {
                     id: element.id, title: element.title, day: element.day, hour_start: element.hour_start,
                     hour_end: element.hour_end, place: element.place, description: element.description,
                     user_id: element.user_id, participants: element.participants, photo: element.photo,
-                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`
+                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`,
+                    date_publication: element.date_publication
                 }
             }))
 
@@ -416,7 +417,7 @@ module.exports = {
         try {
             var event = await models.workshop.findByPk(event_id, {
                 attributes: ['id', 'title', 'description', [Sequelize.fn('Date_format', Sequelize.col('day'), "%W %M %e %Y"), 'day'],
-                    [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'], 'place', 'participants', 'photo']
+                    [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'], 'place', 'participants', 'photo', 'date_publication']
             })
             if (!event) throw text.notFoundElement
 

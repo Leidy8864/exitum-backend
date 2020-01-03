@@ -148,8 +148,7 @@ module.exports = {
                             step_id: stepFind.id,
                             tip_id: tipNew.id,
                             checked: false,
-                            status: "Sin respuesta",
-                            date: Date.now()
+                            status: "Sin respuesta"
                         })
                         const startup_step = await models.startup_step.findOne({
                             where: {
@@ -183,8 +182,7 @@ module.exports = {
                             step_id: stepFind.id,
                             tip_id: tipNew.id,
                             checked: false,
-                            status: "Sin respuesta",
-                            date: Date.now()
+                            status: "Sin respuesta"
                         })
                         const employee_step = await models.employee_step.findOne({
                             where: {
@@ -481,7 +479,7 @@ module.exports = {
 
     replyTip: async (req, res) => {
         var fileName = ""
-        const { challenge_id, reply } = req.body
+        const { challenge_id, reply, replies } = req.body
         var name = ""
         if (req.files) {
             var file = req.files.file;
@@ -491,25 +489,52 @@ module.exports = {
         try {
             await models.sequelize.transaction(async (t) => {
                 const chll = await models.challenge.findOne({ where: { id: challenge_id } })
-                if (chll.status === 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
-                await models.challenge.update({
-                    reply: reply,
-                    status: "Verificando",
-                    date: Date.now(),
-                }, { where: { id: challenge_id } }, { transaction: t });
+                if (!chll) {
+                    res.json({ status: false, message: "No existe el reto" })
+                } else {
+                    if (chll.status === 'Verificado') { return res.json({ status: false, message: "Este reto fue verificado, no se puede editar." }) }
+                    await models.challenge.update({
+                        reply: reply,
+                        status: 'Verificando',
+                        date_completed: Date.now(),
+                    }, { where: { id: challenge_id } }, { transaction: t }).catch(err => { console.log(err) });
 
-                if (file) {
-                    await models.file.create({
-                        name: name,
-                        key_s3: (fileName).split('/')[5],
-                        challenge_id: challenge_id
-                    }, { transaction: t });
+                    if (file) {
+                        await models.file.create({
+                            name: name,
+                            key_s3: (fileName).split('/')[5],
+                            challenge_id: challenge_id
+                        }, { transaction: t });
+                    }
+
+                    if (replies) {
+                        if (replies instanceof Array) {
+                            await Promise.all(replies.map(async (reply) => {
+                                var str = reply;
+                                var jsonReply = JSON.parse(str);
+                                if (jsonReply.id) {
+                                    await models.reply.update({
+                                        reply: jsonReply.reply
+                                    }, { where: { id: jsonReply.id } }, { transaction: t }).catch(err => { console.log(err) })
+                                }
+                            }))
+                        } else {
+                            var str = replies;
+                            var jsonReply = JSON.parse(str);
+                            if (jsonReply.id) {
+                                await models.reply.update({
+                                    reply: jsonReply.reply
+                                }, { where: { id: jsonReply.id } }, { transaction: t }).catch(err => { console.log(err) })
+                            }
+                        }
+                    }
+                    return res.json({ status: true, message: "Respuesta enviada correctamente" })
                 }
-                return res.json({ status: true, message: "Respuesta enviada correctamente" })
+
             });
         } catch (error) {
             console.log("Error" + error);
-            res.status(200).json({ status: false, message: "Error al responder el reto" });
+            res.json({ status: false, message: "Por favor, vuelva a intentarlo." });
         }
     },
 
@@ -775,8 +800,6 @@ module.exports = {
         }).catch(err => {
             console.log(err)
         })
-        console.log(challenges.length)
-        console.log(totalRows.length)
         return res.json({ status: true, message: "Retos para verificar.", data: challenges, current: page, pages: Math.ceil(totalRows.length / perPage) })
     },
 
@@ -1068,8 +1091,8 @@ module.exports = {
                                                                 });
                                                             }
                                                         }
-                                                        await models.challenge.bulkCreate(chlls, { transaction: t }).catch(err => { console.log(err) });;
-                                                        await models.employee_step.bulkCreate(emp_step, { transaction: t }).catch(err => { console.log(err) });;
+                                                        await models.challenge.bulkCreate(chlls, { transaction: t }).catch(err => { console.log(err) });
+                                                        await models.employee_step.bulkCreate(emp_step, { transaction: t }).catch(err => { console.log(err) });
                                                     } else {
                                                         return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." });
                                                     }
@@ -1149,6 +1172,7 @@ module.exports = {
             where: {
                 user_id: user_id,
                 status: 'Sin respuesta',
+                viewed: 1,
                 date_max: {
                     [models.Sequelize.Op.lte]: moment(Date.now()).add(3, 'd').toDate()
                 }
@@ -1160,5 +1184,17 @@ module.exports = {
         } else {
             return res.json({ status: false, message: "No hay retos próximos a completar" })
         }
+    },
+
+    viewedChallenge: async (req, res) => {
+        const { challenge_id } = req.query
+        await models.challenge.update({
+            viewed: 1
+        }, { where: { id: challenge_id } }).then(chll => {
+            res.json({ status: true, message: "Reto visto", data: chll })
+        }).catch(err => {
+            console.log(err)
+            res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
+        })
     }
 }
