@@ -441,7 +441,7 @@ module.exports = {
                                 date_initial: Date.now()
                             })
                         } else {
-                            await models.emp_step.update({
+                            await models.employee_step.update({
                                 date_initial: Date.now()
                             }, {
                                 where: {
