@@ -182,8 +182,7 @@ module.exports = {
                             step_id: stepFind.id,
                             tip_id: tipNew.id,
                             checked: false,
-                            status: "Sin respuesta",
-                            date: Date.now()
+                            status: "Sin respuesta"
                         })
                         const employee_step = await models.employee_step.findOne({
                             where: {

@@ -218,10 +218,9 @@ module.exports = {
                             tip_id: tip_id
                         }
                     })
-
+                    var replyArr = []
                     if (queries instanceof Array) {
                         await Promise.all(queries.map(async (query) => {
-                            var replyArr = []
                             var str = query;
                             var jsonQuery = JSON.parse(str);
                             if (jsonQuery.id) {
