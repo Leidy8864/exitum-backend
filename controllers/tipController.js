@@ -179,8 +179,23 @@ module.exports = {
                 }, { transaction: t })
 
                 if (queries) {
-                    await Promise.all(queries.map(async (query) => {
-                        var str = query;
+                    if (queries instanceof Array) {
+                        await Promise.all(queries.map(async (query) => {
+                            var str = query;
+                            var jsonQuery = JSON.parse(str);
+                            if (jsonQuery.id) {
+                                await models.query.update({
+                                    query: jsonQuery.query
+                                }, { where: { id: jsonQuery.id } }, { transaction: t }).catch(err => { console.log(err) })
+                            } else {
+                                await models.query.create({
+                                    query: jsonQuery.query,
+                                    tip_id: tip_id
+                                }, { transaction: t })
+                            }
+                        }))
+                    } else {
+                        var str = queries;
                         var jsonQuery = JSON.parse(str);
                         if (jsonQuery.id) {
                             await models.query.update({
@@ -192,7 +207,8 @@ module.exports = {
                                 tip_id: tip_id
                             }, { transaction: t })
                         }
-                    }))
+                    }
+
                 }
 
                 const stepFind = await models.step.findOne({
