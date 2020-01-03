@@ -441,11 +441,11 @@ module.exports = {
                                 date_initial: Date.now()
                             })
                         } else {
-                            await models.startup_step.update({
+                            await models.employee_step.update({
                                 date_initial: Date.now()
                             }, {
                                 where: {
-                                    startup_id: startups[i].id,
+                                    employee_id: employees[i].id,
                                     step_id: stepFind.id
                                 }, transaction: t
                             })
