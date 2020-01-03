@@ -84,7 +84,7 @@ module.exports = {
                 attributes: [
                     'id', 'title', 'day', [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'], 'photo',
                     [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_end'), '%h:%i %p'), 'hour_end'], 'place', 'description', 'user_id',
-                    'participants'
+                    'participants', 'date_publication'
                 ]
             })
 
@@ -138,7 +138,7 @@ module.exports = {
                     }
                 ],
                 attributes: [
-                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants', 'photo'
+                    'id', 'title', 'day', 'hour_start', 'hour_end', 'place', 'description', 'user_id', 'participants', 'photo', 'date_publication'
                 ],
             })
 
@@ -201,7 +201,7 @@ module.exports = {
                 attributes: [
                     'id', 'title', 'day', [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'],
                     [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_end'), '%h:%i %p'), 'hour_end'], 'place', 'description', 'user_id',
-                    'participants', 'photo'
+                    'participants', 'photo', 'date_publication'
                 ],
                 include: [
                     {
@@ -416,7 +416,7 @@ module.exports = {
         try {
             var event = await models.workshop.findByPk(event_id, {
                 attributes: ['id', 'title', 'description', [Sequelize.fn('Date_format', Sequelize.col('day'), "%W %M %e %Y"), 'day'],
-                    [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'], 'place', 'participants', 'photo']
+                    [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'], 'place', 'participants', 'photo', 'date_publication']
             })
             if (!event) throw text.notFoundElement
 

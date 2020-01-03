@@ -497,7 +497,7 @@ module.exports = {
                     await models.challenge.update({
                         reply: reply,
                         status: 'Verificando',
-                        date: Date.now(),
+                        date_completed: Date.now(),
                     }, { where: { id: challenge_id } }, { transaction: t }).catch(err => { console.log(err) });
 
                     if (file) {
