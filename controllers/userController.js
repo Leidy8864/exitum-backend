@@ -672,6 +672,40 @@ module.exports = {
                                 })
                                 await models.challenge.bulkCreate(chlls, { transaction: t });
                                 await models.employee_step.bulkCreate(steps, { transaction: t });
+
+                                var replyArr = []
+
+                                const chllsNews = await models.challenge.findAll({
+                                    attributes: ['id'],
+                                    where: {
+                                        employee_id: employee.id
+                                    },
+                                    include: [
+                                        {
+                                            model: models.tip,
+                                            attributes: ['id', 'tip'],
+                                            include: [
+                                                {
+                                                    model: models.query,
+                                                    required: true
+                                                }
+                                            ],
+                                            required: true
+                                        }
+                                    ],
+                                    transaction: t
+                                })
+                                if (chllsNews) {
+                                    for (var i = 0; i < chllsNews.length; i++) {
+                                        for (var n = 0; n < chllsNews[i].tip.queries.length; n++) {
+                                            replyArr.push({
+                                                challenge_id: chllsNews[i].id,
+                                                query_id: chllsNews[i].tip.queries[n].id
+                                            })
+                                        }
+                                    }
+                                    await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
+                                }
                                 return employee;
                             });
                             return res.status(200).json({ status: true, message: "Usuario actualizado correctamente", data: user });
