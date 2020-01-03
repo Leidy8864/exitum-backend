@@ -22,7 +22,8 @@ module.exports = {
                     check('university_name').exists().withMessage(text.name('universidad')),
                     check('description').exists().withMessage(text.description),
                     check('date_start').exists().withMessage(text.dateStart),
-                    check('date_end').exists().withMessage(text.dateEnd)
+                    check('date_end').exists().withMessage(text.dateEnd),
+                    check('specialities').exists().withMessage('Son necesarias las especialidades.')
                 ]
             case 'update':
                 return [

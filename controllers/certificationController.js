@@ -25,7 +25,8 @@ module.exports = {
                 return [
                     user_id, check('name').exists().withMessage(text.name('certificado')),
                     check('issuing_company').exists().withMessage(text.name('empresa')),
-                    check('date_expedition').exists().withMessage(text.dateExpedition)
+                    check('date_expedition').exists().withMessage(text.dateExpedition),
+                    check('specialities').exists().withMessage('Son necesarias las especialidades.')
                 ]
             case 'update':
                 return [ user_id, check('certification_id').exists().withMessage(text.id('certificado')).isNumeric().withMessage(text.numeric) ]

@@ -1,5 +1,6 @@
 
 const models = require('../models/index');
+const { createSpeciality } = require('./specialityController')
 
 const { check, validationResult } = require('express-validator');
 
@@ -33,6 +34,7 @@ module.exports = {
                     check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('area_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                     check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
+                    check('specialities').exists().withMessage(message_exists)
                 ]
             case 'update':
 
@@ -54,6 +56,7 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(200).json({ status: false, message: "Campos incorrectos", data: errors.array() });
         }
+
         const ads = await models.advertisement.findOne({ where: { startup_id: req.body.startup_id, title: req.body.title } });
         if (ads) {
             return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." })
@@ -70,8 +73,9 @@ module.exports = {
                         slug: generateSlug(req.body.title)
                     }, { transaction: t });
 
-                    const { skills } = req.body
-                    if (skills) {
+                    const { skills, specialities } = req.body
+                    if (skills) 
+                    {
                         var skills_id = await Promise.all(skills.map(async element => {
                             var [response, created] = await models.skill.findOrCreate({
                                 where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
@@ -84,6 +88,16 @@ module.exports = {
                         ))
                     }
                     await advertisement.addSkill(skills_id, { transaction: t });
+
+                    var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                        var speciality_id = await createSpeciality(speciality)
+                        return await speciality_id.id
+                    }))
+
+                    console.log(specialities_id)
+        
+                    await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t })
+
                     return advertisement;
 
                 });
@@ -102,6 +116,7 @@ module.exports = {
         }
         const advertisement_id = req.body.advertisement_id;
         const skills = req.body.skills;
+        const specialities = req.body.specialities;
         const ads = await models.advertisement.findOne({ where: { startup_id: req.body.startup_id, title: req.body.title, id: { [models.Sequelize.Op.notIn]: [req.body.advertisement_id] } } });
         if (ads) { return res.json({ status: false, message: "Este titulo ya lo usaste en otro anuncio." }) }
         try {
@@ -122,6 +137,18 @@ module.exports = {
                         }), { transaction: t })
                     }
                     await advertisement.addSkill(skills_id, { transaction: t });
+
+                    if (specialities instanceof Array) 
+                    {
+                            await models.advertisement_speciality.destroy({ where: { advertisement_id: advertisement.id } })
+                            var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                                var speciality_id = await createSpeciality(speciality)
+                                return await speciality_id.id
+                            }))
+                
+                            await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t})
+                    }
+
                     const advertisementNew = await advertisement.update({
                         title: req.body.title,
                         description: req.body.description,
