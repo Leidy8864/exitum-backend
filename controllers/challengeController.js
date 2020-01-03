@@ -437,7 +437,7 @@ module.exports = {
                     as: 'challenges',
                     where: { 
                         startup_id: startup.id,
-                        '$tip.query.reply$': models.Sequelize.literal('challenges.id')
+                        //'$tip.query.reply$': models.Sequelize.literal('challenges.id')
                     },
                     include: [
                         {
@@ -447,16 +447,17 @@ module.exports = {
                                 { model: models.file_tip },
                                 {
                                     model: models.query,
-                                    include: [
-                                        {
-                                            model: models.reply,
-                                            // where: {
-                                            //     challenge_id: models.Sequelize.literal('challenges.id')
-                                            // },
-                                            //attributes: ['reply'],
-                                            required: false
-                                        }
-                                    ],
+                                    as: 'queries',
+                                    // include: [
+                                    //     {
+                                    //         model: models.reply,
+                                    //         // where: {
+                                    //         //     challenge_id: models.Sequelize.literal('challenges.id')
+                                    //         // },
+                                    //         //attributes: ['reply'],
+                                    //         required: false
+                                    //     }
+                                    // ],
                                     required: false
                                 }
                             ]
@@ -465,29 +466,9 @@ module.exports = {
                             model: models.file,
                             required: false
                         },
-                        // {
-                        //     model: models.reply,
-                        //     where: {
-                        //         challenge_id: models.Sequelize.literal('challenges.id')
-                        //     },
-                        //     include: [
-                        //         { model: models.query }
-                        //     ],
-                        //     //attributes: ['reply'],
-                        //     required: false
-                        // }
                         {
                             model: models.query,
-                            include: [
-                                {
-                                    model: models.reply,
-                                    // where: {
-                                    //     challenge_id: models.Sequelize.literal('challenges.id')
-                                    // },
-                                    //attributes: ['reply'],
-                                    required: false
-                                }
-                            ],
+                            as: 'replies',
                             required: false
                         }
                     ]
