@@ -367,7 +367,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
   `participants` INT(11) NULL DEFAULT NULL,
   `photo` VARCHAR(255) NULL DEFAULT NULL,
   `department_id` INT NOT NULL,
-  
+  `date_publication` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_workshop_user1_idx` (`user_id` ASC) ,
   INDEX `fk_workshop_department1_idx` (`department_id` ASC) ,
@@ -1597,6 +1597,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user_workshop` (
   `workshop_id` INT(11) NOT NULL,
   `rate` TINYINT(1) NULL DEFAULT NULL,
   `status` ENUM('ACCEPTED', 'PENDING', 'REJECTED') NULL DEFAULT NULL,
+
   PRIMARY KEY (`user_id`, `workshop_id`),
   INDEX `fk_user_has_workshop_workshop1_idx` (`workshop_id` ASC),
   INDEX `fk_user_has_workshop_user1_idx` (`user_id` ASC),
