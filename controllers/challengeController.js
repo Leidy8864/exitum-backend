@@ -317,8 +317,7 @@ module.exports = {
                                 step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 tip_id: tipNew.id,
                                 checked: false,
-                                status: "Sin respuesta",
-                                date: Date.now()
+                                status: "Sin respuesta"
                             })
                             const startup_step = await models.startup_step.findOne({
                                 where: {
@@ -352,8 +351,7 @@ module.exports = {
                                 step_id: step_id !== "undefined" ? step_id : stepNew.id,
                                 tip_id: tipNew.id,
                                 checked: false,
-                                status: "Sin respuesta",
-                                date: Date.now()
+                                status: "Sin respuesta"
                             })
                             const employee_step = await models.employee_step.findOne({
                                 where: {
@@ -814,7 +812,7 @@ module.exports = {
 
             await update_challenge.update({
                 comment: comment,
-                date: Date.now(),
+                date_completed: Date.now(),
                 status: status,
                 checked: (status == 'Verificado') ? 1 : 0,
                 verifying_user: verifying_user
@@ -1030,7 +1028,6 @@ module.exports = {
                                                                 tip_id: tipNew.dataValues.id,
                                                                 checked: false,
                                                                 status: "Sin respuesta",
-                                                                date: Date.now(),
                                                                 date_max: moment(Date.now()).add(result[x].duracion_dias, 'd').toDate()
                                                             });
                                                             var startup_step = await models.startup_step.findOne({
@@ -1069,7 +1066,6 @@ module.exports = {
                                                                 tip_id: tipNew.dataValues.id,
                                                                 checked: false,
                                                                 status: "Sin respuesta",
-                                                                date: Date.now(),
                                                                 date_max: moment(Date.now()).add(result[x].duracion_dias, 'd').toDate()
                                                             });
                                                             var employee_step = await models.employee_step.findOne({
@@ -1189,7 +1185,8 @@ module.exports = {
     viewedChallenge: async (req, res) => {
         const { challenge_id } = req.query
         await models.challenge.update({
-            viewed: 1
+            viewed: 1,
+            date_viewed: Date.now()
         }, { where: { id: challenge_id } }).then(chll => {
             res.json({ status: true, message: "Reto visto", data: chll })
         }).catch(err => {
