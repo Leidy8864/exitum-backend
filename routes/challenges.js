@@ -80,4 +80,8 @@ router.get('/showAlert', function (req, res) {
     controller.showAlertTip(req, res);
 });
 
+router.post('/viewedChallenge',
+    controller.viewedChallenge
+);
+
 module.exports = router;

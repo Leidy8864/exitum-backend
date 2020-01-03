@@ -59,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         reply: DataTypes.STRING,
         date_max: DataTypes.DATE,
         date_completed: DataTypes.DATE,
+        viewed: DataTypes.INTEGER
     },
         {
             freezeTableName: true,

@@ -556,6 +556,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`challenge` (
   `verifying_user` INT(11) NULL DEFAULT NULL,
   `date_max` DATETIME NULL DEFAULT NULL,
   `date_completed` DATETIME NULL DEFAULT NULL,
+  `viewed` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_tips_has_startup_startup1_idx` (`startup_id` ASC),
   INDEX `fk_tips_has_startup_tips1_idx` (`tip_id` ASC),

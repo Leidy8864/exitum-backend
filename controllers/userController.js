@@ -865,7 +865,7 @@ module.exports = {
 
 // schedule tasks to be run on the server
 cron.schedule("00 00 23 * *", async () => {
-//cron.schedule("* * * * *", async () => {
+    //cron.schedule("* * * * *", async () => {
     console.log("Running Cron Job");
 
     const users = await models.user.findAll({
@@ -884,6 +884,7 @@ cron.schedule("00 00 23 * *", async () => {
             where: {
                 user_id: users[i].dataValues.id,
                 status: 'Sin respuesta',
+                viewed: 1,
                 date_max: {
                     [models.Sequelize.Op.lte]: moment(Date.now()).add(3, 'd').toDate()
                 }

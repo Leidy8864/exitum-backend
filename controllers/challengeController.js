@@ -1174,6 +1174,7 @@ module.exports = {
             where: {
                 user_id: user_id,
                 status: 'Sin respuesta',
+                viewed: 1,
                 date_max: {
                     [models.Sequelize.Op.lte]: moment(Date.now()).add(3, 'd').toDate()
                 }
@@ -1185,5 +1186,17 @@ module.exports = {
         } else {
             return res.json({ status: false, message: "No hay retos próximos a completar" })
         }
+    },
+
+    viewedChallenge: async (req, res) => {
+        const { challenge_id } = req.query
+        await models.challenge.update({
+            viewed: 1
+        }, { where: { id: challenge_id } }).then(chll => {
+            res.json({ status: true, message: "Reto visto", data: chll })
+        }).catch(err => {
+            console.log(err)
+            res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
+        })
     }
 }
