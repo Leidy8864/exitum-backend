@@ -94,6 +94,10 @@ module.exports = {
                         include: [
                             { model: models.category }
                         ]
+                    },
+                    {
+                        model: models.query,
+                        required: false
                     }
                 ]
 
