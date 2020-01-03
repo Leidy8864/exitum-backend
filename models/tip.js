@@ -13,7 +13,8 @@ module.exports = (sequelize, DataType) => {
             }
         },
         type: DataType.STRING,
-        duration_days: DataType.INTEGER
+        duration_days: DataType.INTEGER,
+        questionnaire: DataType.INTEGER
     },
     {
         freezeTableName: true,

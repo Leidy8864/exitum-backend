@@ -168,7 +168,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { tip_id, tip, description, type, duration_days, queries } = req.body
+        const { tip_id, tip, description, type, duration_days, queries, questionnaire } = req.body
         //type : { "evaluación automatizada", "evaluado por la comunidad" }
         var name = null
         var file = null
@@ -179,7 +179,8 @@ module.exports = {
                     tip: tip,
                     description: description,
                     type: type,
-                    duration_days: duration_days
+                    duration_days: duration_days,
+                    questionnaire: questionnaire
                 }, { transaction: t })
 
                 if (queries) {
@@ -195,7 +196,7 @@ module.exports = {
                                 await models.query.create({
                                     query: jsonQuery.query,
                                     tip_id: tip_id
-                                }, { transaction: t })
+                                }, { transaction: t }).catch(err => { console.log(err) })
                             }
                         }))
                     } else {
@@ -209,7 +210,7 @@ module.exports = {
                             await models.query.create({
                                 query: jsonQuery.query,
                                 tip_id: tip_id
-                            }, { transaction: t })
+                            }, { transaction: t }).catch(err => { console.log(err) })
                         }
                     }
 

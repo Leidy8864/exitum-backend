@@ -525,6 +525,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`tip` (
   `step_id` INT(11) NOT NULL,
   `type` VARCHAR(255) NOT NULL DEFAULT "evaluado por la comunidad",
   `duration_days` INT(3) NOT NULL DEFAULT 1,
+  `questionnaire` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_tip_step1_idx` (`step_id` ASC),
   CONSTRAINT `fk_tip_step1`
