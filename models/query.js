@@ -12,19 +12,25 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
     },
-    {
-        freezeTableName: true,
-        timestamps: false,
-        omitNull: true,
-        underscored: true
+        {
+            freezeTableName: true,
+            timestamps: false,
+            omitNull: true,
+            underscored: true
 
-    })
+        })
     query.associate = (models) => {
         query.belongsTo(models.tip, {
             foreignKey: 'tip_id'
         });
         query.hasMany(models.reply, {
-            foreignKey:'query_id'
+            foreignKey: 'query_id'
+        });
+        query.belongsToMany(models.challenge, {
+            as: { singular: 'reply', plural: 'replies' },
+            through: models.reply,
+            foreignKey: 'query_id',
+            otherKey: 'challenge_id'
         });
     }
     return query

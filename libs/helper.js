@@ -37,11 +37,15 @@ module.exports = {
             id: user.id,
             name: user.name,
             lastname: lastnameComp,
+            lastname_1: user.lastname_1,
+            lastname_2: user.lastname_2,
             email: user.email,
             accessToken: accessToken,
             role: user.role,
+            birthday: user.birthday,
             confirmed: user.confirmed,
-            photo: user.photo
+            photo: user.photo,
+            genre: user.genre
             // expiresIn : expiresIn
         }
 

@@ -22,21 +22,21 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'startup',
                 key: 'id'
-            }           
+            }
         },
         stage_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'stage',
                 key: 'id'
-            } 
+            }
         },
         step_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'step',
                 key: 'id'
-            } 
+            }
         },
         tip_id: {
             type: DataTypes.INTEGER,
@@ -60,13 +60,13 @@ module.exports = (sequelize, DataTypes) => {
         date_max: DataTypes.DATE,
         date_completed: DataTypes.DATE,
     },
-    {
-        freezeTableName: true,
-        timestamps: false,
-        omitNull: true,
-        underscored: true
+        {
+            freezeTableName: true,
+            timestamps: false,
+            omitNull: true,
+            underscored: true
 
-    })
+        })
     challenge.associate = function (models) {
         challenge.belongsTo(models.user, {
             foreignKey: 'user_id',
@@ -96,6 +96,12 @@ module.exports = (sequelize, DataTypes) => {
         });
         challenge.hasMany(models.reply, {
             foreignKey: 'challenge_id'
+        });
+        challenge.belongsToMany(models.query, {
+            as: { singular: 'reply', plural: 'replies' },
+            through: models.reply,
+            foreignKey: 'challenge_id',
+            otherKey: 'query_id'
         });
     }
     return challenge
