@@ -51,8 +51,9 @@ module.exports = {
                 include: [ 
                     { model: models.university },
                     { model: models.career },
+                    { model: models.speciality, as: 'toEducationSpecialities' },
                 ],
-                group: [ 'id', 'career.name' ]
+                group: [ 'id', 'career.name', 'toEducationSpecialities.id' ]
             })
 
             return successful(res, 'Ok', education)
@@ -146,7 +147,7 @@ module.exports = {
                     return await speciality_id.id
                 }))
     
-                await certification.addToCertificationSpecialities(specialities_id)
+                await certification.addToEducationSpecialities(specialities_id)
            }
 
             return successful(res, text.successUpdate('educación'))

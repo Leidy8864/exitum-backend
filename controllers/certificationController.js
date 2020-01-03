@@ -53,6 +53,7 @@ module.exports = {
                 include: [
                     { model: models.company },
                     { model: models.certification_name },
+                    { model: models.speciality, as: 'toCertificationSpecialities' },
                 ]
             })
 
@@ -64,7 +65,8 @@ module.exports = {
                     date_expedition : element.date_expedition,
                     date_expiration : element.date_expiration,
                     url : (element.document_url  && element.document_url != '') ? text.downloadDocument(element.document_url) : null,
-                    issuing_company: element.company.name
+                    issuing_company: element.company.name,
+                    speciality: element.toCertificationSpecialities
                }
             } ))
 

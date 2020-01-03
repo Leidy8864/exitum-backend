@@ -233,8 +233,8 @@ module.exports = {
     },
 
     findAllAdvertActive: async (req, res) => {
-        try {
-
+        try 
+        {
 
             const page = parseInt(req.query.page);
             const pageSize = parseInt(req.query.pageSize);
@@ -249,15 +249,11 @@ module.exports = {
                 offset: offset,
                 where: { state: 'active' },
 
-                include: [{
-                    model: models.skill
-                },
-                {
-                    model: models.area
-                },
-                {
-                    model: models.startup
-                }
+                include: [
+                    { model: models.skill },
+                    { model: models.area },
+                    { model: models.startup },
+                    { model: models.speciality, as: 'toAdvertisementSpecialities' },
                 ]
             });
 
@@ -278,19 +274,14 @@ module.exports = {
 
         const advertisement_id = req.params.advertisement_id;
 
-        try {
-
+        try 
+        {
             const advertisements = await models.advertisement.findByPk(advertisement_id, {
                 include: [
-                    {
-                        model: models.skill
-                    },
-                    {
-                        model: models.area
-                    },
-                    {
-                        model: models.startup
-                    }
+                    { model: models.skill },
+                    { model: models.area },
+                    { model: models.startup },
+                    { model: models.speciality, as: 'toAdvertisementSpecialities' },
                 ]
             });
 

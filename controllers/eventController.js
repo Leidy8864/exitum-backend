@@ -1,4 +1,5 @@
 const text = require('../libs/text')
+var moment = require('moment');
 const s3 = require('../libs/aws-s3');
 const Sequelize = require('sequelize');
 const index = require('../config/index');
@@ -63,12 +64,20 @@ module.exports = {
         let user = req.query.user
         let page = req.query.page || 1;
 
-        try {
+        try 
+        {
             var events_number = await models.workshop.count({ where: { user_id: { [Sequelize.Op.ne]: user } } })
+
+            var date = moment().subtract(24, 'hours');
+            var minute = date.minutes();
+			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
             var response = await models.workshop.findAll({
                 where: {
-                    user_id: { [Sequelize.Op.ne]: user },
+                    [Sequelize.Op.and]: [
+                        { user_id: { [Sequelize.Op.ne]: user } },
+                        { day: { [Sequelize.Op.gte]: local } }
+                    ]
                 },
                 include: [
                     {
@@ -235,10 +244,17 @@ module.exports = {
 
         const { user_id } = req.params
 
-        try {
+        try 
+        {
+
             const user = await existById(models.user, user_id)
 
+            var date = moment().subtract(24, 'hours');
+            var minute = date.minutes();
+			var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
+
             var response = await user.getToUserWorkshops({
+                where: { day: { [Sequelize.Op.gte]: local } },
                 attributes: [
                     'id', 'title', 'day', [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'],
                     [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_end'), '%h:%i %p'), 'hour_end'], 'place', 'description', 'user_id',
@@ -382,8 +398,10 @@ module.exports = {
             })
 
 
-            if (categories) {
-                if (categories instanceof Array) {
+            if (categories) 
+            {
+                if (categories instanceof Array) 
+                {
 
                     await models.category_workshop.destroy({ where: { workshop_id: event.id } })
                     var categories_id = await Promise.all(categories.map(async element => {
@@ -470,7 +488,8 @@ module.exports = {
 
         const { event_id } = req.params
 
-        try {
+        try 
+        {
             var event = await existById(models.workshop, event_id)
 
             await models.category_workshop.destroy({ where: { workshop_id: event.id } })

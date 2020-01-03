@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'career_id'
         });
 
-        education.belongsToMany(models.education, {
+        education.belongsToMany(models.speciality, {
             as: { singular: 'toEducationSpeciality', plural: 'toEducationSpecialities' },
 			through: models.education_speciality,
 			foreignKey:'education_id',

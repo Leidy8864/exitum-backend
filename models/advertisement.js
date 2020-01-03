@@ -65,7 +65,7 @@ module.exports = (sequelize, DataType) => {
         advertisement.hasMany(models.advertisement_skill, {
             foreignKey: 'advertisement_id'
         });
-        advertisement.belongsToMany(models.education, {
+        advertisement.belongsToMany(models.speciality, {
             as: { singular: 'toAdvertisementSpeciality', plural: 'toAdvertisementSpecialities' },
 			through: models.advertisement_speciality,
 			foreignKey:'advertisement_id',
