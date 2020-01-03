@@ -141,13 +141,13 @@ module.exports = {
 
             if (specialities instanceof Array) 
            {
-                await models.certification_speciality.destroy({ where: { certification_id: certification.id } })
+                await models.education_speciality.destroy({ where: { education_id: education.id } })
                 var specialities_id = await  Promise.all(specialities.map(async speciality => {
                     var speciality_id = await createSpeciality(speciality)
                     return await speciality_id.id
                 }))
     
-                await certification.addToEducationSpecialities(specialities_id)
+                await education.addToEducationSpecialities(specialities_id)
            }
 
             return successful(res, text.successUpdate('educación'))
