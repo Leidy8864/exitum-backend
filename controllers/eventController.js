@@ -148,7 +148,7 @@ module.exports = {
                 user_id: response.user_id, participants: response.participants, photo: response.photo,
                 participants_count: `${response.toWorkshopUsers.length}/${response.participants}`,
                 toWorkshopUsers: response.toWorkshopUsers, toWorkshopCategories: response.toWorkshopCategories,
-                department: response.department
+                department: response.department, date_publication: response.date_publication
             }
 
             return successful(res, 'OK', event)
@@ -217,7 +217,8 @@ module.exports = {
                     id: element.id, title: element.title, day: element.day, hour_start: element.hour_start,
                     hour_end: element.hour_end, place: element.place, description: element.description,
                     user_id: element.user_id, participants: element.participants, photo: element.photo,
-                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`
+                    participants_count: `${element.toWorkshopUsers.length}/${element.participants}`,
+                    date_publication: element.date_publication
                 }
             }))
 
