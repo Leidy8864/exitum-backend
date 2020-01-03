@@ -61,6 +61,7 @@ module.exports = {
                 } else {
                     var chlls = []
                     var steps = []
+                    var qrs = []
                     await models.sequelize.transaction(async (t) => {
                         const startup = await models.startup.create({
                             name: name,
@@ -83,9 +84,9 @@ module.exports = {
                                         {
                                             model: models.tip,
                                             include: [
-                                                { 
+                                                {
                                                     model: models.query,
-                                                    required: false 
+                                                    required: false
                                                 }
                                             ]
                                         }
@@ -114,9 +115,9 @@ module.exports = {
                                                 date_max: moment(Date.now()).add(duracion_dias, 'd').toDate()
                                             }
                                         )
-                                        
-                                        for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
 
+                                        for (var w = 0; w < stages[x].steps[y].tips[z].queries.length; w++) {
+                                            qrs.push({ id: stages[x].steps[y].tips[z].queries[w].id })
                                         }
 
                                     }
@@ -136,33 +137,30 @@ module.exports = {
                         await models.challenge.bulkCreate(chlls, { transaction: t });
                         await models.startup_step.bulkCreate(steps, { transaction: t });
 
-                        // var replyArr = []
-                        // const chllsNews = await models.challenge.findAll({
-                        //     attributes: ['id'],
-                        //     where: {
-                        //         startup_id: startup.id
-                        //     },
-                        //     include: [
-                        //         {
-                        //             model: models.query,
-                        //             as: 'replies',
-                        //             required: false
-                        //         }
-                        //     ],
-                        //     transaction: t
-                        // })
-                        // res.json({ chllsNews })
-                        // if (chllsNews) {
-                        //     for (var i = 0; i < chllsNews.length; i++) {
-                        //         replyArr.push({
-                        //             challenge_id: chllsNews[i].id,
-                        //             query_id: query.id
-                        //         })
-                        //     }
-                        //     await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
-                        // }
+                        var replyArr = []
+                        const chllsNews = await models.challenge.findAll({
+                            attributes: ['id'],
+                            where: {
+                                startup_id: startup.id
+                            },
+                            transaction: t
+                        })
+                        if (chllsNews) {
+                            for (var i = 0; i < chllsNews.length; i++) {
+                                for (var n = 0; n < qrs.length; n++) {
+                                    replyArr.push({
+                                        challenge_id: chllsNews[i].id,
+                                        query_id: qrs[n].id
+                                    })
+                                }
+
+                            }
+                            //console.log(replyArr)
+                            //res.json({ replyArr })
+                            await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
+                        }
                     });
-                    //return res.json({ status: true, message: "Startup creado correctamente" });
+                    return res.json({ status: true, message: "Startup creado correctamente" });
                 }
             } else {
                 return res.json({ status: false, message: "No existe el usuario" })
