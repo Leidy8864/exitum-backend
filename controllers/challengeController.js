@@ -1194,14 +1194,20 @@ module.exports = {
 
     viewedChallenge: async (req, res) => {
         const { challenge_id } = req.query
-        await models.challenge.update({
-            viewed: 1,
-            date_viewed: Date.now()
-        }, { where: { id: challenge_id } }).then(chll => {
-            res.json({ status: true, message: "Reto visto", data: chll })
-        }).catch(err => {
-            console.log(err)
-            res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
-        })
+        const challenge = await models.challenge.findOne({ attributes: ['viewed'], where: { id: challenge_id } })
+        if (challenge.viewed === 0) {
+            await models.challenge.update({
+                viewed: 1,
+                date_viewed: Date.now()
+            }, { where: { id: challenge_id } }).then(chll => {
+                res.json({ status: true, message: "Reto visto", data: chll })
+            }).catch(err => {
+                console.log(err)
+                res.json({ status: false, message: "Lo sentimos, vuelva a intentarlo." })
+            })
+        } else {
+            res.json({ status: true, message: "Este reto ya fue visto" })
+        }
+
     }
 }
