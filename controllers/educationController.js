@@ -2,6 +2,7 @@ const text = require('../libs/text')
 const Sequelize = require('sequelize');
 const models = require('../models/index');
 const { existById } = require('./elementController')
+const { createSpeciality } = require('./specialityController')
 const { createUniversity } = require('./universityController')
 const { check, validationResult } = require('express-validator');
 const { createCareer } = require('./careerController');
@@ -64,7 +65,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { user_id, university_name, description, date_start, date_end } = req.body
+        const { user_id, university_name, description, date_start, date_end, specialities } = req.body
 
         try 
         {    
@@ -89,6 +90,13 @@ module.exports = {
 
             if (!created) throw(text.duplicateElement)
 
+            var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                var speciality_id = await createSpeciality(speciality)
+                return await speciality_id.id
+            }))
+
+            await education.addToEducationSpecialities(specialities_id)
+
             return successful(res, text.successCreate('educación'), education)
 
         } catch (error) { return returnError(res, error) }
@@ -100,7 +108,7 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { education_id, user_id, university_name, description, date_start, date_end } = req.body
+        const { education_id, user_id, university_name, description, date_start, date_end, specialities } = req.body
         
         try 
         {
@@ -129,6 +137,17 @@ module.exports = {
                 university_id: university.id
             });
 
+            if (specialities instanceof Array) 
+           {
+                await models.certification_speciality.destroy({ where: { certification_id: certification.id } })
+                var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                    var speciality_id = await createSpeciality(speciality)
+                    return await speciality_id.id
+                }))
+    
+                await certification.addToCertificationSpecialities(specialities_id)
+           }
+
             return successful(res, text.successUpdate('educación'))
 
         } catch (error) { return returnError(res, error) }
@@ -155,6 +174,7 @@ module.exports = {
 
             if (!education) throw(text.notFoundElement)
 
+            await models.education_speciality.destroy({ where: { education_id: education.id } })
             await education.destroy()
 
             return successful(res, text.successUpdate('educación'))

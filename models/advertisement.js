@@ -65,6 +65,12 @@ module.exports = (sequelize, DataType) => {
         advertisement.hasMany(models.advertisement_skill, {
             foreignKey: 'advertisement_id'
         });
+        advertisement.belongsToMany(models.education, {
+            as: { singular: 'toAdvertisementSpeciality', plural: 'toAdvertisementSpecialities' },
+			through: models.advertisement_speciality,
+			foreignKey:'advertisement_id',
+			otherKey: 'speciality_id'
+		});
     };
     return advertisement;
 };
