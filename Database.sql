@@ -1654,6 +1654,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`query` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `query` TEXT NULL,
   `tip_id` INT NOT NULL,
+  `active` TINYINT NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_question_tip1_idx` (`tip_id` ASC),
   CONSTRAINT `fk_question_tip1`

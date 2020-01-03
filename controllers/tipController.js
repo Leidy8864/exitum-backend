@@ -29,6 +29,10 @@ module.exports = {
                 return [
                     check('key_s3').exists()
                 ]
+            case 'deleteQuery':
+                return [
+                    check('query_id').exists()
+                ]
         }
     },
 
@@ -99,11 +103,14 @@ module.exports = {
                     {
                         model: models.query,
                         as: 'queries',
+                        where: {
+                            active: 1
+                        },
                         include: [
-                            { 
+                            {
                                 model: models.reply,
                                 attributes: ['reply'],
-                                required: false 
+                                required: false
                             }
                         ],
                         required: false
@@ -134,6 +141,9 @@ module.exports = {
                     },
                     {
                         model: models.query,
+                        where: {
+                            active: 1
+                        },
                         required: false
                     },
                     {
@@ -210,6 +220,13 @@ module.exports = {
                                     query: jsonQuery.query,
                                     tip_id: tip_id
                                 }, { transaction: t }).catch(err => { console.log(err) })
+
+                                await models.challenge.findAll({
+                                    where: {
+                                        
+                                    }
+                                })
+
                             }
                         }))
                     } else {
@@ -439,6 +456,9 @@ module.exports = {
                 },
                 {
                     model: models.query,
+                    where: {
+                        active: 1
+                    },
                     required: false
                 },
                 {
@@ -541,6 +561,19 @@ module.exports = {
             return successful(res, text.successDelete('tip'))
 
         } catch (error) { return returnError(res, error) }
+
+    },
+
+    deleteQuery: async (req, res) => {
+        const { query_id } = req.body
+        await models.query.update({
+            active: 0
+        }, { where: { id: query_id } }).then(query => {
+            res.json({ status: true, message: "Se elimino correctamente.", data: query })
+        }).catch(err => {
+            console.log(err)
+            res.json({ status: false, message: "Vuelva a intentarlo." })
+        })
 
     }
 }

@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     const query = sequelize.define('query', {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         query: DataTypes.STRING,
+        active: DataTypes.INTEGER,
         tip_id: {
             type: DataTypes.INTEGER,
             references: {

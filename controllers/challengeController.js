@@ -434,33 +434,14 @@ module.exports = {
             include: [
                 {
                     model: models.challenge,
-                    as: 'challenges',
-                    where: { 
+                    where: {
                         startup_id: startup.id,
-                        //'$tip.query.reply$': models.Sequelize.literal('challenges.id')
                     },
                     include: [
                         {
                             model: models.tip,
                             order: ['id'],
-                            include: [
-                                { model: models.file_tip },
-                                // {
-                                //     model: models.query,
-                                //     as: 'queries',
-                                //     // include: [
-                                //     //     {
-                                //     //         model: models.reply,
-                                //     //         // where: {
-                                //     //         //     challenge_id: models.Sequelize.literal('challenges.id')
-                                //     //         // },
-                                //     //         //attributes: ['reply'],
-                                //     //         required: false
-                                //     //     }
-                                //     // ],
-                                //     required: false
-                                // }
-                            ]
+                            include: [{ model: models.file_tip }]
                         },
                         {
                             model: models.file,
@@ -469,6 +450,9 @@ module.exports = {
                         {
                             model: models.query,
                             as: 'replies',
+                            where: {
+                                active: 1
+                            },
                             required: false
                         }
                     ]
@@ -579,22 +563,19 @@ module.exports = {
                             model: models.tip,
                             order: ['id'],
                             include: [
-                                { model: models.file_tip },
-                                {
-                                    model: models.query,
-                                    include: [
-                                        {
-                                            model: models.reply,
-                                            attributes: ['reply'],
-                                            required: false
-                                        }
-                                    ],
-                                    required: false
-                                }
+                                { model: models.file_tip }
                             ]
                         },
                         {
                             model: models.file
+                        },
+                        {
+                            model: models.query,
+                            as: 'replies',
+                            where: {
+                                active: 1
+                            },
+                            required: false
                         }
                     ]
                 }
@@ -732,6 +713,9 @@ module.exports = {
                         },
                         {
                             model: models.query,
+                            where: {
+                                active: 1
+                            },
                             required: false
                         }
                     ],
