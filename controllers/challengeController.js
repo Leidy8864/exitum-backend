@@ -148,8 +148,7 @@ module.exports = {
                             step_id: stepFind.id,
                             tip_id: tipNew.id,
                             checked: false,
-                            status: "Sin respuesta",
-                            date: Date.now()
+                            status: "Sin respuesta"
                         })
                         const startup_step = await models.startup_step.findOne({
                             where: {
