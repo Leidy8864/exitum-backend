@@ -51,8 +51,9 @@ module.exports = {
                 include: [ 
                     { model: models.university },
                     { model: models.career },
+                    { model: models.speciality, as: 'toEducationSpecialities' },
                 ],
-                group: [ 'id', 'career.name' ]
+                group: [ 'id', 'career.name', 'toEducationSpecialities.id' ]
             })
 
             return successful(res, 'Ok', education)
