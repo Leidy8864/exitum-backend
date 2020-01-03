@@ -33,8 +33,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`category` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(145) NULL DEFAULT NULL,
-  `ciiu` VARCHAR(100) NULL DEFAULT NULL,
+  `name` VARCHAR(145) NULL DEFAULT NULL
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
