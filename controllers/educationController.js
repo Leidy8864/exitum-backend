@@ -147,7 +147,7 @@ module.exports = {
                     return await speciality_id.id
                 }))
     
-                await certification.addToCertificationSpecialities(specialities_id)
+                await certification.addToEducationSpecialities(specialities_id)
            }
 
             return successful(res, text.successUpdate('educación'))
