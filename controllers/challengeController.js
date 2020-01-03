@@ -476,14 +476,9 @@ module.exports = {
     },
 
     replyTip: async (req, res) => {
-        var fileName = ""
         const { challenge_id, reply, replies } = req.body
-        var name = ""
-        if (req.files) {
-            var file = req.files.file;
-            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
-            name = file.name
-        }
+        var name = null
+        var fileName = null
         try {
             await models.sequelize.transaction(async (t) => {
                 const chll = await models.challenge.findOne({ where: { id: challenge_id } })
@@ -497,12 +492,28 @@ module.exports = {
                         date_completed: Date.now(),
                     }, { where: { id: challenge_id } }, { transaction: t }).catch(err => { console.log(err) });
 
-                    if (file) {
-                        await models.file.create({
-                            name: name,
-                            key_s3: (fileName).split('/')[5],
-                            challenge_id: challenge_id
-                        }, { transaction: t });
+                    if (req.files) {
+                        if (req.files.file instanceof Array) {
+                            for (var x = 0; x < req.files.file.length; x++) {
+                                file = req.files.file[x];
+                                fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                                name = file.name
+                                await models.file.create({
+                                    name: name,
+                                    key_s3: (fileName).split('/')[5],
+                                    challenge_id: challenge_id
+                                }, { transaction: t });
+                            }
+                        } else {
+                            file = req.files.file;
+                            fileName = putObject(FILES_TIP_BUCKET_NAME, file);
+                            name = file.name
+                            await models.file.create({
+                                name: name,
+                                key_s3: (fileName).split('/')[5],
+                                challenge_id: challenge_id
+                            }, { transaction: t });
+                        }
                     }
 
                     if (replies) {
@@ -528,7 +539,6 @@ module.exports = {
                     }
                     return res.json({ status: true, message: "Respuesta enviada correctamente" })
                 }
-
             });
         } catch (error) {
             console.log("Error" + error);
