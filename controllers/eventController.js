@@ -181,7 +181,7 @@ module.exports = {
             var event_user = await event.getToWorkshopUsers({
                 offset: (perPage * (page - 1)),
                 limit: perPage,
-                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname'], 'photo']
+                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name')), 'fullname'], 'photo']
             })
 
             return res.status(200).json({ status: true, message: 'OK', data: event_user, current: page, pages: Math.ceil(events_number / perPage) })
@@ -289,19 +289,26 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants, country_id, department } = req.body
+        const { title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants, country_id, 
+            department, price_ticked, currency_id } = req.body
+        const ticked = req.body.ticked || false;
 
-        try {
+        try 
+        {
             var result = await models.sequelize.transaction(async (t) => {
                 const user = await existById(models.user, user_id, 'id')
+
+                if (ticked) 
+                {
+                    if (!price_ticked) return returnError(res, 'Es necesario un precio para la entrada')
+                    if (!currency_id) return returnError(res, 'Es necesario la moneda para el costo de la entrada')
+                }
 
                 var departmentNew = await models.department.findOrCreate({
                     where: { department: department },
                     defaults: { department: department, country_id: country_id },
                     transaction: t
-                }).catch(err => {
-                    console.log(err)
-                })
+                }).catch(err => { console.log(err) })
 
                 var event = await models.workshop.create({
                     title: title,
@@ -314,17 +321,21 @@ module.exports = {
                     lng: lng,
                     user_id: user.id,
                     department_id: departmentNew[0].id,
-                    participants: (participants) ? participants : 50
-                }, { transaction: t }).catch(err => {
-                    console.log(err)
-                })
+                    participants: (participants) ? participants : 50,
+                    ticked: ticked,
+                    price_ticked: price_ticked, 
+                    currency_id: currency_id
+                }, { transaction: t }).catch(err => { console.log(err) })
 
-                if (req.files) {
+                if (req.files) 
+                {
                     var photo = req.files.photo;
                     fileName = s3.putObject(NEW_BUCKET_NAME, photo);
                     await event.update({ photo: fileName }, { transaction: t });
                 }
-                if (categories) {
+
+                if (categories) 
+                {
                     if (categories instanceof Array) {
                         var categories_id = await Promise.all(categories.map(async element => {
                             var [area, created] = await models.category.findOrCreate({
@@ -346,7 +357,9 @@ module.exports = {
                 }
                 return event
             })
+
             return successful(res, text.successCreate('evento'), result)
+
         } catch (error) { return returnError(res, error) }
     },
 
@@ -355,9 +368,18 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { event_id, title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants } = req.body
+        const { event_id, title, description, day, hour_start, hour_end, place, lat, lng, user_id, categories, participants,
+            price_ticked, currency_id } = req.body
+        const ticked = req.body.ticked || false;
 
-        try {
+        try 
+        {
+            if (ticked) 
+            {
+                if (!price_ticked) return returnError(res, 'Es necesario un precio para la entrada')
+                if (!currency_id) return returnError(res, 'Es necesario la moneda para el costo de la entrada')
+            }
+
             var event = await models.workshop.findOne({
                 where: {
                     [Sequelize.Op.and]: [
@@ -394,7 +416,10 @@ module.exports = {
                 lat: lat || event.lat,
                 lng: lng || event.lng,
                 participants: participants || event.participants,
-                photo: photo
+                photo: photo,
+                ticked: ticked,
+                price_ticked: price_ticked, 
+                currency_id: currency_id
             })
 
 

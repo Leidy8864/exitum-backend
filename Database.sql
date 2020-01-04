@@ -1697,6 +1697,71 @@ CREATE TABLE IF NOT EXISTS `exitum`.`reply` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+CREATE TABLE IF NOT EXISTS `exitum`.`speciality` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `exitum`.`education_speciality` (
+  `education_id` INT(11) NOT NULL,
+  `speciality_id` INT NOT NULL,
+  PRIMARY KEY (`education_id`, `speciality_id`),
+  INDEX `fk_education_has_speciality_speciality1_idx` (`speciality_id` ASC),
+  INDEX `fk_education_has_speciality_education1_idx` (`education_id` ASC),
+  CONSTRAINT `fk_education_has_speciality_education1`
+    FOREIGN KEY (`education_id`)
+    REFERENCES `exitum`.`education` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_education_has_speciality_speciality1`
+    FOREIGN KEY (`speciality_id`)
+    REFERENCES `exitum`.`speciality` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `exitum`.`advertisement_speciality` (
+  `advertisement_id` INT(11) NOT NULL,
+  `speciality_id` INT NOT NULL,
+  PRIMARY KEY (`advertisement_id`, `speciality_id`),
+  INDEX `fk_advertisement_has_speciality_speciality1_idx` (`speciality_id` ASC),
+  INDEX `fk_advertisement_has_speciality_advertisement1_idx` (`advertisement_id` ASC),
+  CONSTRAINT `fk_advertisement_has_speciality_advertisement1`
+    FOREIGN KEY (`advertisement_id`)
+    REFERENCES `exitum`.`advertisement` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_advertisement_has_speciality_speciality1`
+    FOREIGN KEY (`speciality_id`)
+    REFERENCES `exitum`.`speciality` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+CREATE TABLE IF NOT EXISTS `exitum`.`certification_speciality` (
+  `certification_id` INT(11) NOT NULL,
+  `speciality_id` INT NOT NULL,
+  PRIMARY KEY (`certification_id`, `speciality_id`),
+  INDEX `fk_certification_has_speciality_speciality1_idx` (`speciality_id` ASC),
+  INDEX `fk_certification_has_speciality_certification1_idx` (`certification_id` ASC),
+  CONSTRAINT `fk_certification_has_speciality_certification1`
+    FOREIGN KEY (`certification_id`)
+    REFERENCES `exitum`.`certification` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_certification_has_speciality_speciality1`
+    FOREIGN KEY (`speciality_id`)
+    REFERENCES `exitum`.`speciality` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

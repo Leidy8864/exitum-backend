@@ -841,6 +841,7 @@ module.exports = {
     },
 
     updateWorkshop: (req, res) => {
+        
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(200).send({ status: false, message: "Campos incorrectos", data: errors.array() });
@@ -884,11 +885,15 @@ module.exports = {
 
     allUser: async (req, res) => {
 
-        try {
-
+        try 
+        {
             const { user_id } = req.params
 
-            var user = await models.user.findAll({ attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname']], where: { id: { [Sequelize.Op.ne]: user_id } } })
+            var user = await models.user.findAll({ 
+                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname']], 
+                where: { id: { [Sequelize.Op.ne]: user_id } } 
+            })
+            
             return successful(res, 'OK', user)
 
         } catch (error) { return returnError(res, error) }

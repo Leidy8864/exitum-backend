@@ -1,5 +1,7 @@
 'use strict'
 
+const Sequelize = require('sequelize')
+
 module.exports = (sequelize, DataType) => {
     const workshop = sequelize.define('workshop', {
         id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
@@ -13,6 +15,15 @@ module.exports = (sequelize, DataType) => {
         lng: DataType.FLOAT(11, 8),
         photo: DataType.STRING,
         participants: DataType.INTEGER,
+        ticked: Sequelize.TINYINT,
+        price_ticked: DataType.FLOAT(10, 8),
+        currency_id: {
+            type: DataType.INTEGER,
+            references: {
+                model: 'currency',
+                key: 'id'
+            }
+        },
         user_id: {
             type: DataType.INTEGER,
             references: {

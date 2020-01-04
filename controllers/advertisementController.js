@@ -146,7 +146,7 @@ module.exports = {
                                 return await speciality_id.id
                             }))
                 
-                            await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t})
+                            await advertisement.addToAdvertisementSpecialities(specialities_id)
                     }
 
                     const advertisementNew = await advertisement.update({
