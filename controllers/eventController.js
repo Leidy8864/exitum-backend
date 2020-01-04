@@ -70,10 +70,7 @@ module.exports = {
 
             var date = moment().subtract(24, 'hours');
             var minute = date.minutes();
-            var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
-
-            // var dede = 
-            // console.log(dede)
+            var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD').add('1', 'days')
 
             var response = await models.workshop.findAll({
                 where: {
