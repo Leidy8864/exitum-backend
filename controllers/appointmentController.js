@@ -15,8 +15,8 @@ async function getAppointment(appointment_id) {
 	})
 }
 
-async function findAppointment(to_user_id, date, time) {
-
+async function findAppointment(to_user_id, date, time) 
+{
 	var response = await models.appointment.findOne({
 		where: {
 			[Sequelize.Op.and]: [{ to_user_id: to_user_id }, { date: new Date(date) }, { time: time }]
@@ -91,7 +91,8 @@ module.exports = {
 		// const perPage = 3
 		// var page = req.query.page || 1;
 
-		try {
+		try 
+		{
 			const user = await existById(models.user, to_user_id, 'id')
 			var date = moment().subtract(24, 'hours');
 			var minute = date.minutes();
@@ -107,7 +108,7 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'toAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname'] ]
 					}
 				]
 			})
@@ -148,11 +149,11 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'toAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname_1'), ' ', Sequelize.col('toAppointmentUser.lastname_2')), 'fullname']]
 					},
 					{
 						model: models.user, as: 'fromAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname_1'), ' ', Sequelize.col('fromAppointmentUser.lastname_2')), 'fullname']]
 					}
 				]
 			})
@@ -344,11 +345,11 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'toAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname')), 'fullname'], 'email']
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname_1'), ' ', Sequelize.col('toAppointmentUser.lastname_2')), 'fullname'], 'email']
 					},
 					{
 						model: models.user, as: 'fromAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname')), 'fullname'], 'email']
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname_1'), ' ', Sequelize.col('fromAppointmentUser.lastname_2')), 'fullname'], 'email']
 					}
 				]
 			})
