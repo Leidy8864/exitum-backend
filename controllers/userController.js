@@ -237,16 +237,16 @@ module.exports = {
             req.user ? user = req.user : '';
             if (user) {
                 const existingUser = await models.user.findOne({ where: { email: user.email, provider_id: user.id } });
-                if (existingUser) {
-                    console.log("User exists");
+                if (existingUser) 
+                {
                     return helper.generateAccessData(existingUser, res);
                 } else {
                     const result = await models.sequelize.transaction(async (t) => {
-                        console.log("El usuario no existe en la BD estamos creando uno nuevo");
+                        var user_lastname = user.lastname
                         const newUser = await models.user.create({
                             name: user.firstname,
-                            lastname: user.lastname,
-                            lastname_1: user.lastname,
+                            lastname: user_lastname,
+                            lastname_1: user_lastname,
                             provider_id: user.id,
                             confirmed: true,
                             active: true,
