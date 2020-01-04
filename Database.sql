@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`advice` (
   `description` TEXT NULL DEFAULT NULL,
   `type` ENUM('employee', 'startup', 'entrepreneur') NULL DEFAULT NULL,
   `order` INT(11) NULL DEFAULT NULL,
+  `active` TINYINT(1) NULL DEFAULT 1, 
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -507,7 +508,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `exitum`.`step` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `step` VARCHAR(245) NULL DEFAULT NULL,
-  `icon` VARCHAR(250) NULL DEFAULT NULL,
+  `icon` VARCHAR(250) NULL DEFAULT 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png',
   `stage_id` INT(11) NOT NULL,
   `status` tinyint(1) NULL DEFAULT 1, 
   PRIMARY KEY (`id`),
@@ -1530,7 +1531,7 @@ CREATE TABLE IF NOT EXISTS `exitum`.`user_advice` (
   `employee_id` INT(11) NULL DEFAULT NULL,
   `entrepreneur_id` INT(11) NULL DEFAULT NULL,
   `date_viewed` DATETIME NULL DEFAULT NULL,
-  `viewed` TINYINT(1) NULL DEFAULT NULL,
+  `viewed` TINYINT(1) NULL DEFAULT NULL
   PRIMARY KEY (`id`),
   INDEX `fk_user_has_advice_advice1_idx` (`advice_id` ASC),
   INDEX `fk_user_has_advice_user1_idx` (`user_id` ASC),
