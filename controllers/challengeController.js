@@ -729,6 +729,10 @@ module.exports = {
                     attributes: ['id', 'name', 'lastname', 'photo']
                 },
                 {
+                    model: models.startup,
+                    required: false
+                },
+                {
                     model: models.tip,
                     order: ['id'],
                     include: [
@@ -752,7 +756,7 @@ module.exports = {
                         },
                         {
                             model: models.file_tip,
-                            required: true
+                            required: false
                         },
                         {
                             model: models.query,
@@ -765,11 +769,8 @@ module.exports = {
                     required: true
                 },
                 {
-                    model: models.file
-                },
-                {
-                    model: models.startup,
-                    required: true
+                    model: models.file,
+                    required: false
                 },
                 {
                     model: models.stage,
