@@ -187,5 +187,19 @@ module.exports = {
             console.log(err)
             res.json({ status: false, message: "Error al eliminar el consejo" })
         });
+    },
+
+    list: async (req, res) => {
+        await models.advice.findAll({
+            where: {
+                active: 1
+            },
+            order: ['type']
+        }).then(advices => {
+            return res.json({ status: true, message: "Lista de consejos.", data: advices })
+        }).catch(err => {
+            console.log(err)
+            return res.json({ status: false, message: "Lo sentimos, vuelve a intentarlo." })
+        })
     }
 }

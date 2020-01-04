@@ -25,4 +25,8 @@ router.post('/delete',
     controller.deleteAdvice
 );
 
+router.get('/list',
+    controller.list
+)
+
 module.exports = router;

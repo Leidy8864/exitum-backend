@@ -450,6 +450,11 @@ module.exports = {
                                 active: 1
                             },
                             required: false
+                        },
+                        {
+                            model: models.user,
+                            as: 'verifyingChallenge',
+                            required: false
                         }
                     ]
                 }

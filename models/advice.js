@@ -8,6 +8,7 @@ module.exports = (sequelize, DataType) => {
             title: DataType.STRING,
             description: DataType.STRING,
             active: DataType.INTEGER,
+            type: DataType.STRING,
             order: DataType.INTEGER
         },
         {
