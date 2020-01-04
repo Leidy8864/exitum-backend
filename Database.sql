@@ -355,34 +355,44 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `exitum`.`workshop`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exitum`.`workshop` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(145) NULL,
-  `description` TEXT NULL,
-  `day` DATE NULL,
-  `hour_start` TIME NULL,
-  `hour_end` TIME NULL,
-  `place` VARCHAR(200) NULL,
-  `lat` DECIMAL(10,8) NULL,
-  `lng` DECIMAL(11,8) NULL,
-  `user_id` INT NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(145) NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `day` DATE NULL DEFAULT NULL,
+  `hour_start` TIME NULL DEFAULT NULL,
+  `hour_end` TIME NULL DEFAULT NULL,
+  `place` VARCHAR(200) NULL DEFAULT NULL,
+  `lat` DECIMAL(10,8) NULL DEFAULT NULL,
+  `lng` DECIMAL(11,8) NULL DEFAULT NULL,
+  `user_id` INT(11) NOT NULL,
+  `department_id` INT(11) NOT NULL,
   `participants` INT(11) NULL DEFAULT NULL,
   `photo` VARCHAR(255) NULL DEFAULT NULL,
-  `department_id` INT NOT NULL,
-  `date_publication` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_publication` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ticked` TINYINT(1) NULL DEFAULT NULL,
+  `price_ticked` FLOAT(10,2) NULL DEFAULT NULL,
+  `currency_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_workshop_user1_idx` (`user_id` ASC) ,
-  INDEX `fk_workshop_department1_idx` (`department_id` ASC) ,
-  CONSTRAINT `fk_workshop_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `exitum`.`user` (`id`)
+  INDEX `fk_workshop_user1_idx` (`user_id` ASC),
+  INDEX `fk_workshop_department1_idx` (`department_id` ASC),
+  INDEX `fk_workshop_currency_idx` (`currency_id` ASC),
+  CONSTRAINT `fk_workshop_currency1`
+    FOREIGN KEY (`currency_id`)
+    REFERENCES `exitum`.`currency` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_workshop_department1`
     FOREIGN KEY (`department_id`)
     REFERENCES `exitum`.`department` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_workshop_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `exitum`.`user` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
