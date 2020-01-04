@@ -454,6 +454,7 @@ module.exports = {
                         {
                             model: models.user,
                             as: 'verifyingChallenge',
+                            attributes: ['name', 'lastname_1', 'lastname_2'],
                             required: false
                         }
                     ]
@@ -613,6 +614,12 @@ module.exports = {
                             where: {
                                 active: 1
                             },
+                            required: false
+                        },
+                        {
+                            model: models.user,
+                            attributes: ['name', 'lastname_1', 'lastname_2'],
+                            as: 'verifyingChallenge',
                             required: false
                         }
                     ]
