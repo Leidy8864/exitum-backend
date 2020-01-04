@@ -34,7 +34,7 @@ module.exports = {
                     check('description').exists().withMessage(message_exists).isString().withMessage(message_string),
                     check('area_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
                     check('startup_id').exists().withMessage(message_exists).isInt().withMessage(message_numeric),
-                    check('specialities').exists().withMessage(message_exists)
+                    //check('specialities').exists().withMessage(message_exists)
                 ]
             case 'update':
 
@@ -74,8 +74,7 @@ module.exports = {
                     }, { transaction: t });
 
                     const { skills, specialities } = req.body
-                    if (skills) 
-                    {
+                    if (skills) {
                         var skills_id = await Promise.all(skills.map(async element => {
                             var [response, created] = await models.skill.findOrCreate({
                                 where: { skill: { [models.Sequelize.Op.like]: '%' + element + '%' } },
@@ -89,15 +88,14 @@ module.exports = {
                     }
                     await advertisement.addSkill(skills_id, { transaction: t });
 
-                    var specialities_id = await  Promise.all(specialities.map(async speciality => {
-                        var speciality_id = await createSpeciality(speciality)
-                        return await speciality_id.id
-                    }))
+                    if (specialities) {
+                        var specialities_id = await Promise.all(specialities.map(async speciality => {
+                            var speciality_id = await createSpeciality(speciality)
+                            return await speciality_id.id
+                        }))
 
-                    console.log(specialities_id)
-        
-                    await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t })
-
+                        await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t })
+                    }
                     return advertisement;
 
                 });
@@ -138,15 +136,14 @@ module.exports = {
                     }
                     await advertisement.addSkill(skills_id, { transaction: t });
 
-                    if (specialities instanceof Array) 
-                    {
-                            await models.advertisement_speciality.destroy({ where: { advertisement_id: advertisement.id } })
-                            var specialities_id = await  Promise.all(specialities.map(async speciality => {
-                                var speciality_id = await createSpeciality(speciality)
-                                return await speciality_id.id
-                            }))
-                
-                            await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t})
+                    if (specialities instanceof Array) {
+                        await models.advertisement_speciality.destroy({ where: { advertisement_id: advertisement.id } })
+                        var specialities_id = await Promise.all(specialities.map(async speciality => {
+                            var speciality_id = await createSpeciality(speciality)
+                            return await speciality_id.id
+                        }))
+
+                        await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t })
                     }
 
                     const advertisementNew = await advertisement.update({
@@ -233,8 +230,7 @@ module.exports = {
     },
 
     findAllAdvertActive: async (req, res) => {
-        try 
-        {
+        try {
 
             const page = parseInt(req.query.page);
             const pageSize = parseInt(req.query.pageSize);
@@ -274,8 +270,7 @@ module.exports = {
 
         const advertisement_id = req.params.advertisement_id;
 
-        try 
-        {
+        try {
             const advertisements = await models.advertisement.findByPk(advertisement_id, {
                 include: [
                     { model: models.skill },
