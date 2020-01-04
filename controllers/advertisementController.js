@@ -134,7 +134,7 @@ module.exports = {
                             return await response.id
                         }), { transaction: t })
                     }
-                    await advertisement.addSkill(skills_id, { transaction: t });
+                    await advertisement.addSkill(skills_id);
 
                     if (specialities instanceof Array) {
                         await models.advertisement_speciality.destroy({ where: { advertisement_id: advertisement.id } })
