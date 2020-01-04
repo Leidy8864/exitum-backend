@@ -260,10 +260,8 @@ module.exports = {
                             currency_id: 1,
                             avg_rating: 1,
                             method: user.provider,
-                            lastname: 'Social Login',
+                            lastname: user_lastname
                         }, { transaction: t });
-
-                        console.log(user_lastname, newUser)
 
                         await models.token.create({
                             token: "",

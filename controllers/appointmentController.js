@@ -363,7 +363,8 @@ module.exports = {
 				const data_send = { message: text.messageConfirmation(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
 				sendEmail(email_info, data_send)
 			}
-			else {
+			else 
+			{
 				await appointment.destroy()
 
 				//Send E-mail
