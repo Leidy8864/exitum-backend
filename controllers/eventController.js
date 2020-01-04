@@ -68,9 +68,9 @@ module.exports = {
         {
             var events_number = await models.workshop.count({ where: { user_id: { [Sequelize.Op.ne]: user } } })
 
-            var date = moment().subtract(24, 'hours');
+            var date = moment().subtract(24, 'hours').add('1', 'days');
             var minute = date.minutes();
-            var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD').add('1', 'days')
+            var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
             var response = await models.workshop.findAll({
                 where: {
