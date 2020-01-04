@@ -6,7 +6,10 @@ module.exports = (sequelize, DataType) => {
         {
             id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
             title: DataType.STRING,
-            description: DataType.STRING
+            description: DataType.STRING,
+            active: DataType.INTEGER,
+            type: DataType.STRING,
+            order: DataType.INTEGER
         },
         {
             freezeTableName: true,
