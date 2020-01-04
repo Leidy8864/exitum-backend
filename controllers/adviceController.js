@@ -160,17 +160,26 @@ module.exports = {
         var errors = validationResult(req);
         if (!errors.isEmpty()) { return returnError(res, text.validationData, errors.array()) }
 
-        const { advice_id, title, description } = req.body
+        const { advice_id, title, description, type } = req.body
+        var adviceMax = null
+        if (type) {
+            adviceMax = await models.advice.findAll({
+                where: { type: type, active: 1 },
+                attributes: [[models.Sequelize.fn('max', models.Sequelize.col('order')), 'max']]
+            })
+        }
 
         await models.advice.update({
             title: title,
             description: description,
+            type: type,
+            order: adviceMax[0].dataValues.max + 1
         }, { where: { id: advice_id } }).then(advice => {
-            res.json({ status: true, message: "Actualizado correctamente", data: advice })
-        }).catch(err => {
-            console.log(err)
-            res.json({ status: false, message: "Error al actualizar el consejo" })
-        })
+                res.json({ status: true, message: "Actualizado correctamente", data: advice })
+            }).catch(err => {
+                console.log(err)
+                res.json({ status: false, message: "Error al actualizar el consejo" })
+            })
     },
 
     deleteAdvice: async (req, res) => {
