@@ -98,7 +98,6 @@ app.use('/appointments', appointmentRouter);
 app.use('/universities', universityRouter);
 app.use('/events', eventRouter);
 app.use('/advices', adviceRouter);
-app.use('/occupations', adviceRouter);
 app.use('/occupations', occupationRouter);
 app.use('/certification-name', certificationNameRouter);
 app.use('/steps', stepRouter);

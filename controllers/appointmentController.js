@@ -339,7 +339,8 @@ module.exports = {
 		const { appointment_id } = req.params
 		const { status } = req.body
 
-		try {
+		try 
+		{
 			var appointment = await models.appointment.findByPk(appointment_id, {
 				attributes: ['id', 'title', 'from_user_id', 'to_user_id', 'date', [Sequelize.fn('TIME_FORMAT', Sequelize.col('time'), '%h:%i %p'), 'time'], 'type', 'description', 'status'],
 				include: [
@@ -406,7 +407,7 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'fromAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname']]
 					}
 				]
 			})
