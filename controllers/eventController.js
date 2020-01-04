@@ -71,8 +71,6 @@ module.exports = {
             var date = moment().subtract(24, 'hours');
             var minute = date.minutes();
             var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
-            
-            console.log(local)
 
             var response = await models.workshop.findAll({
                 where: {
@@ -107,6 +105,7 @@ module.exports = {
                         hour_end: option.hour_end, place: option.place, description: option.description,
                         user_id: option.user_id, participants: option.participants, photo: option.photo,
                         participants_count: `${option.toWorkshopUsers.length}/${option.participants}`,
+                        date_publication: option.date_publication,
                         toWorkshopUsers: option.toWorkshopUsers, toWorkshopCategories: option.toWorkshopCategories
                     }
                     element.push(data)
@@ -260,7 +259,7 @@ module.exports = {
                 attributes: [
                     'id', 'title', 'day', [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_start'), '%h:%i %p'), 'hour_start'],
                     [Sequelize.fn('TIME_FORMAT', Sequelize.col('hour_end'), '%h:%i %p'), 'hour_end'], 'place', 'description', 'user_id',
-                    'participants', 'photo'
+                    'participants', 'photo', 'date_publication'
                 ],
                 include: [
                     {
@@ -276,6 +275,7 @@ module.exports = {
                     id: element.id, title: element.title, day: element.day, hour_start: element.hour_start,
                     hour_end: element.hour_end, place: element.place, description: element.description,
                     user_id: element.user_id, participants: element.participants, photo: element.photo,
+                    date_publication: element.date_publication,
                     participants_count: `${element.toWorkshopUsers.length}/${element.participants}`
                 }
             }))
@@ -561,7 +561,8 @@ module.exports = {
         var borders = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
         worksheet.getCell("A1").border = borders;
         worksheet.getCell("B1").border = borders;
-        try {
+        try 
+        {
             var event_user = await event.getToWorkshopUsers({
                 attributes: ['id', 'name', 'lastname_1', 'lastname_2', 'photo']
             })
@@ -585,9 +586,7 @@ module.exports = {
             worksheet.commit();
             workbook.commit();
 
-        } catch (error) {
-            return returnError(res, error);
-        }
+        } catch (error) { return returnError(res, error); }
     }
 
 }

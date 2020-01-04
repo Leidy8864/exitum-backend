@@ -155,13 +155,7 @@
                                                                                     <div
                                                                                         class="container-burbuja pb-10">
                                                                                         <div class="burbuja-top">
-                                                                                            <p>Hola {{receptor}}! Te informamos que
-                                                                                                tienes reuniones
-                                                                                                pendientes por aceptar o
-                                                                                                cancelar, por favor
-                                                                                                revisa tu bandeja de
-                                                                                                entrada en Exitum.com
-                                                                                            </p>
+                                                                                            <p>{{message_popup}}</p>
                                                                                         </div>
                                                                                         <div class="burbuja-bottom">
                                                                                         </div>
@@ -215,9 +209,11 @@
                                                                     <img src="https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/user.png"
                                                                         border="0" alt="">
                                                                 </th>
+                                                                {{#if hacia}}
                                                                 <td class="text">
-                                                                    <p> {{emisor}} </p>
+                                                                    <p> {{hacia}} </p>
                                                                 </td>
+                                                                {{/if}}
                                                             </tr>
                                                             <tr style="padding: 0 20px 20px 0;">
                                                                 <th class="icon">

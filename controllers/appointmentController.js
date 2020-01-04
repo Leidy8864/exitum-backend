@@ -171,16 +171,22 @@ module.exports = {
 		const { to_user_id } = req.params;
 		const { from_user_id, title, date, time, type, description } = req.body;
 
-		try {
+		try 
+		{
 			const user = await existById(models.user, to_user_id)
 			const user_emit = await existById(models.user, from_user_id)
 			var timeF = timesFormat(time)
+
+			var now = moment().format('YYYY-MM-DD')
 
 			validateRangeTime(user.from_hour, user.to_hour, timeF[3])
 			var unavailable = arrayUnavailable(await user.getUnavailables({ attributes: ['time'] }))
 
 			if (unavailable.indexOf(timeF[3]) >= 0) throw (text.notAvailable('hora'))
-			// if(validateDateActual(date)) validateTimeActual(time)
+
+			validateDateActual(date)
+			
+			if (date == now) validateTimeActual(time)
 
 			var [response, created] = await models.appointment.findOrCreate({
 				where: {
@@ -201,15 +207,26 @@ module.exports = {
 			if (!created) throw (text.duplicateElement);
 
 			//Enviar email
-			if (response.type == 'reunion') {
+			if (response.type == 'reunion')
+			{
 				const appointment = await getAppointment(response.id)
-				const email_info = { to: user.email, subject: text.reunion, template: 'template-appointment', cc: user_emit.email }
+				//Emisor
+				const email_info = { to: user.email, subject: text.reunion, template: 'template-appointment' }
 				const data_send = {
 					fecha: appointment.date, hora: appointment.time,
-					emisor: user_emit.name + ' ' + user_emit.lastname_1 + ' ' + user_emit.lastname_2, receptor: user.name + '  ' + user.lastname_1 + ' ' + user_emit.lastname_2,
+					message_popup: text.messageToReceptor(user.name),
+					hacia: `${user_emit.name} ${user_emit.lastname_1} ${user_emit.lastname_2}`,
 					telefono: user_emit.phone, descripcion: appointment.description
 				}
 				sendEmail(email_info, data_send)
+				
+				const email_info1 = { to: user_emit.email, subject: text.reunion, template: 'template-appointment' }
+				const data_send1 = {
+					fecha: appointment.date, hora: appointment.time,
+					message_popup: text.messageToEmisor(`${user.name} ${user.lastname_1} ${user.lastname_2}`, user_emit.name),
+					telefono: user_emit.phone, descripcion: appointment.description
+				}
+				sendEmail(email_info1, data_send1)
 			}
 
 			return successful(res, text.successCreate('reserva'));
