@@ -136,14 +136,15 @@ module.exports = {
                     }
                     await advertisement.addSkill(skills_id);
 
-                    if (specialities instanceof Array) {
-                        await models.advertisement_speciality.destroy({ where: { advertisement_id: advertisement.id } })
-                        var specialities_id = await Promise.all(specialities.map(async speciality => {
-                            var speciality_id = await createSpeciality(speciality)
-                            return await speciality_id.id
-                        }))
-
-                        await advertisement.addToAdvertisementSpecialities(specialities_id, { transaction: t })
+                    if (specialities instanceof Array) 
+                    {
+                            await models.advertisement_speciality.destroy({ where: { advertisement_id: advertisement.id } })
+                            var specialities_id = await  Promise.all(specialities.map(async speciality => {
+                                var speciality_id = await createSpeciality(speciality)
+                                return await speciality_id.id
+                            }))
+                
+                            await advertisement.addToAdvertisementSpecialities(specialities_id)
                     }
 
                     const advertisementNew = await advertisement.update({
