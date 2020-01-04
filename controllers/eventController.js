@@ -110,7 +110,7 @@ module.exports = {
                         participants_count: `${option.toWorkshopUsers.length}/${option.participants}`,
                         date_publication: moment(option.date_publication).add(-5, 'hours'),
                         toWorkshopUsers: option.toWorkshopUsers, toWorkshopCategories: option.toWorkshopCategories
-                    }
+                    }   
                     element.push(data)
                 }
                 return element
