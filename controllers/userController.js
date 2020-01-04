@@ -245,7 +245,6 @@ module.exports = {
                         var user_lastname = user.lastname
                         const newUser = await models.user.create({
                             name: user.firstname,
-                            lastname: user_lastname,
                             lastname_1: user_lastname,
                             provider_id: user.id,
                             confirmed: true,
@@ -258,7 +257,8 @@ module.exports = {
                             country_id: 165,
                             currency_id: 1,
                             avg_rating: 1,
-                            method: user.provider
+                            method: user.provider,
+                            lastname: user_lastname,
                         }, { transaction: t });
 
                         await models.token.create({
