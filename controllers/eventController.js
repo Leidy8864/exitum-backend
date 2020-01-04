@@ -502,7 +502,7 @@ module.exports = {
         worksheet.getCell("B1").border = borders;
         try {
             var event_user = await event.getToWorkshopUsers({
-                attributes: ['id', 'name', 'lastname', 'photo']
+                attributes: ['id', 'name', 'lastname_1', 'lastname_2', 'photo']
             })
 
             for (var i in event_user) {
@@ -519,7 +519,7 @@ module.exports = {
                     default:
                         break;
                 }
-                worksheet.addRow({ participant: event_user[i].name + ' ' + event_user[i].lastname, state: state });
+                worksheet.addRow({ participant: `${event_user[i].name} ${event_user[i].lastname_1} ${event_user[i].lastname_2}`, state: state });
             }
             worksheet.commit();
             workbook.commit();
