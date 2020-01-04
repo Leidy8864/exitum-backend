@@ -696,25 +696,6 @@ module.exports = {
         const { user_id } = req.query
         let perPage = 20;
         let page = req.query.page || 1;
-        var startupInclude = {}
-        const employee = await models.employee.findOne({
-            where: {
-                user_id: user_id
-            }
-        })
-        const entrepreneur = await models.entrepreneur.findOne({
-            where: {
-                user_id: user_id
-            }
-        })
-        if (employee) {
-            startupInclude = {}
-        } else if (entrepreneur) {
-            startupInclude = {
-                model: models.startup,
-                required: false
-            }
-        }
 
         const skll_usr = await models.skill_user.findAll({
             where: { user_id: user_id }
@@ -746,6 +727,10 @@ module.exports = {
                     model: models.user,
                     as: 'ownerChallenge',
                     attributes: ['id', 'name', 'lastname', 'photo']
+                },
+                {
+                    model: models.startup,
+                    required: false
                 },
                 {
                     model: models.tip,
@@ -791,10 +776,6 @@ module.exports = {
                     model: models.stage,
                     required: true
                 },
-                // {
-                //     model: models.startup,
-                //     required: false
-                // },
                 {
                     model: models.step,
                     where: {
