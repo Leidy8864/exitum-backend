@@ -72,6 +72,9 @@ module.exports = {
             var minute = date.minutes();
             var local = date.subtract(minute, 'minutes').format('YYYY-MM-DD')
 
+            // var dede = 
+            // console.log(dede)
+
             var response = await models.workshop.findAll({
                 where: {
                     [Sequelize.Op.and]: [
@@ -105,7 +108,7 @@ module.exports = {
                         hour_end: option.hour_end, place: option.place, description: option.description,
                         user_id: option.user_id, participants: option.participants, photo: option.photo,
                         participants_count: `${option.toWorkshopUsers.length}/${option.participants}`,
-                        date_publication: option.date_publication,
+                        date_publication: moment(option.date_publication).add(-5, 'hours'),
                         toWorkshopUsers: option.toWorkshopUsers, toWorkshopCategories: option.toWorkshopCategories
                     }
                     element.push(data)
