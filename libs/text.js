@@ -54,5 +54,7 @@ module.exports = {
     failedTokenVerification: `Token no válido.`,
     failedTokenExpiration: `Token expirado.`,
     requireImage: `Se necesita una imagen.`,
+    messageToReceptor: (name) => `¡Hola ${name}! Te informamos que tienes reuniones pendientes por aceptar o cancelar, por favor revisa tu bandeja de entrada en Exitum.pe`,
+    messageToEmisor: (receptor, name) => `¡Hola ${name}! Te informamos que tu reunión con ${receptor} aún esta pendiente por ser aceptada.`,
 
 }
