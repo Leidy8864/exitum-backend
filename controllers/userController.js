@@ -242,7 +242,9 @@ module.exports = {
                     return helper.generateAccessData(existingUser, res);
                 } else {
                     const result = await models.sequelize.transaction(async (t) => {
+
                         var user_lastname = user.lastname
+
                         const newUser = await models.user.create({
                             name: user.firstname,
                             lastname_1: user_lastname,
@@ -260,6 +262,8 @@ module.exports = {
                             method: user.provider,
                             lastname: 'Social Login',
                         }, { transaction: t });
+
+                        console.log(user_lastname, newUser)
 
                         await models.token.create({
                             token: "",
