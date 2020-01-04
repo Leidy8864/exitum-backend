@@ -83,7 +83,7 @@ module.exports = {
                     {
                         model: models.user,
                         as: 'toWorkshopUsers',
-                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname'], 'photo']
+                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname'], 'photo']
                     },
                     {
                         model: models.category,
@@ -134,7 +134,7 @@ module.exports = {
                     {
                         model: models.user,
                         as: 'toWorkshopUsers',
-                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname')), 'fullname'], 'photo'],
+                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toWorkshopUsers.name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname'], 'photo'],
                     },
                     {
                         model: models.category,
@@ -182,7 +182,7 @@ module.exports = {
             var event_user = await event.getToWorkshopUsers({
                 offset: (perPage * (page - 1)),
                 limit: perPage,
-                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name')), 'fullname'], 'photo']
+                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname'], 'photo']
             })
 
             return res.status(200).json({ status: true, message: 'OK', data: event_user, current: page, pages: Math.ceil(events_number / perPage) })

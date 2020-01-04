@@ -886,12 +886,12 @@ module.exports = {
                     {
                         model: models.user,
                         as: 'ownerChallenge',
-                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('ownerChallenge.name'), ' ', Sequelize.col('ownerChallenge.lastname')), 'fullname'], 'email']
+                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('ownerChallenge.name'), ' ', Sequelize.col('ownerChallenge.lastname_1'), ' ', Sequelize.col('ownerChallenge.lastname_2')), 'fullname'], 'email']
                     },
                     {
                         model: models.user,
                         as: 'verifyingChallenge',
-                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('verifyingChallenge.name'), ' ', Sequelize.col('verifyingChallenge.lastname')), 'fullname'], 'email', 'photo']
+                        attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('verifyingChallenge.name'), ' ', Sequelize.col('verifyingChallenge.lastname_1'), ' ', Sequelize.col('verifyingChallenge.lastname_2')), 'fullname'], 'email', 'photo']
                     },
                     {
                         model: models.tip,
