@@ -25,5 +25,8 @@ router.post('/delete',
     controller.deleteLogic
 );
 
+router.post('/deleteNoLogic',
+    controller.delete
+);
 
 module.exports = router;
