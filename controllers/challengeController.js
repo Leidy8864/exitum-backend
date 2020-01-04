@@ -634,7 +634,7 @@ module.exports = {
                 checked: 1,
                 user_id: { [models.Sequelize.Op.notIn]: [user_id] }
             },
-            attributes: ['reply', 'date'],
+            attributes: ['reply', 'date_completed'],
             order: [
                 ['date', 'DESC']
             ],
@@ -711,7 +711,7 @@ module.exports = {
                 status: 'Verificando',
                 user_id: { [models.Sequelize.Op.notIn]: [user_id] }
             },
-            attributes: ['id', 'date', 'reply', 'comment', 'status'],
+            attributes: ['id', 'date_completed', 'reply', 'comment', 'status'],
             include: [
                 {
                     model: models.user,

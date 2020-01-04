@@ -22,7 +22,8 @@ module.exports = {
                     check('university_name').exists().withMessage(text.name('universidad')),
                     check('description').exists().withMessage(text.description),
                     check('date_start').exists().withMessage(text.dateStart),
-                    check('date_end').exists().withMessage(text.dateEnd)
+                    check('date_end').exists().withMessage(text.dateEnd),
+                    check('specialities').exists().withMessage('Son necesarias las especialidades.')
                 ]
             case 'update':
                 return [
@@ -50,8 +51,9 @@ module.exports = {
                 include: [ 
                     { model: models.university },
                     { model: models.career },
+                    { model: models.speciality, as: 'toEducationSpecialities' },
                 ],
-                group: [ 'id', 'career.name' ]
+                group: [ 'id', 'career.name', 'toEducationSpecialities.id' ]
             })
 
             return successful(res, 'Ok', education)
@@ -139,13 +141,13 @@ module.exports = {
 
             if (specialities instanceof Array) 
            {
-                await models.certification_speciality.destroy({ where: { certification_id: certification.id } })
+                await models.education_speciality.destroy({ where: { education_id: education.id } })
                 var specialities_id = await  Promise.all(specialities.map(async speciality => {
                     var speciality_id = await createSpeciality(speciality)
                     return await speciality_id.id
                 }))
     
-                await certification.addToCertificationSpecialities(specialities_id)
+                await education.addToEducationSpecialities(specialities_id)
            }
 
             return successful(res, text.successUpdate('educación'))

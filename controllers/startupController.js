@@ -61,6 +61,7 @@ module.exports = {
                 } else {
                     var chlls = []
                     var steps = []
+                    var qrs = []
                     await models.sequelize.transaction(async (t) => {
                         const startup = await models.startup.create({
                             name: name,
@@ -93,7 +94,6 @@ module.exports = {
                             for (var x = 0; x < stages.length; x++) {
                                 for (var y = 0; y < stages[x].steps.length; y++) {
                                     for (var z = 0; z < stages[x].steps[y].tips.length; z++) {
-
                                         duracion_dias = parseInt(stages[x].steps[y].tips[z].duration_days) + duracion_dias
 
                                         chlls.push(
@@ -109,7 +109,6 @@ module.exports = {
                                             }
                                         )
                                     }
-
                                     steps.push(
                                         {
                                             startup_id: startup.id,
@@ -125,6 +124,40 @@ module.exports = {
                         })
                         await models.challenge.bulkCreate(chlls, { transaction: t });
                         await models.startup_step.bulkCreate(steps, { transaction: t });
+
+                        var replyArr = []
+
+                        const chllsNews = await models.challenge.findAll({
+                            attributes: ['id'],
+                            where: {
+                                startup_id: startup.id
+                            },
+                            include: [
+                                {
+                                    model: models.tip,
+                                    attributes: ['id', 'tip'],
+                                    include: [
+                                        {
+                                            model: models.query,
+                                            required: true
+                                        }
+                                    ],
+                                    required: true
+                                }
+                            ],
+                            transaction: t
+                        })
+                        if (chllsNews) {
+                            for (var i = 0; i < chllsNews.length; i++) {
+                                for (var n = 0; n < chllsNews[i].tip.queries.length; n++) {
+                                    replyArr.push({
+                                        challenge_id: chllsNews[i].id,
+                                        query_id: chllsNews[i].tip.queries[n].id
+                                    })
+                                }
+                            }
+                            await models.reply.bulkCreate(replyArr, { transaction: t }).catch(err => { console.log(err) });
+                        }
                     });
                     return res.json({ status: true, message: "Startup creado correctamente" });
                 }
