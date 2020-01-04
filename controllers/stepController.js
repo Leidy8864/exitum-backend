@@ -92,8 +92,6 @@ module.exports = {
             if (req.files) {
                 const { icon } = req.files
                 fileName = putObject(NEW_BUCKET_NAME, icon);
-            } else {
-                return res.json({ status: false, message: "Es necesario subir un icono" })
             }
             await models.sequelize.transaction(async (t) => {
                 await models.stage.findOne({
@@ -105,7 +103,7 @@ module.exports = {
 
                 var stepNew = await models.step.create({
                     step: step,
-                    icon: fileName,
+                    icon: fileName || 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png',
                     stage_id: stage_id
                 }, { transaction: t })
 

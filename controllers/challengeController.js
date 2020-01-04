@@ -94,8 +94,6 @@ module.exports = {
         if (req.files) {
             var photo = req.files.photo;
             fileName = s3.putObject(NEW_BUCKET_NAME, photo);
-        } else {
-            return res.json({ status: false, message: "Es necesario subir un icono." })
         }
         await models.step.create({
             icon: fileName,
@@ -250,7 +248,7 @@ module.exports = {
                         if (req.files) {
                             var photo = req.files.photo;
                             fileName = s3.putObject(NEW_BUCKET_NAME, photo);
-                        } else { return res.json({ status: false, message: "Es necesario subir un icono." }) }
+                        }
 
                         stepNew = await models.step.create({
                             icon: fileName,
