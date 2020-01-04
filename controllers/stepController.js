@@ -103,7 +103,7 @@ module.exports = {
 
                 var stepNew = await models.step.create({
                     step: step,
-                    icon: fileName,
+                    icon: fileName || 'https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/rojo.png',
                     stage_id: stage_id
                 }, { transaction: t })
 
