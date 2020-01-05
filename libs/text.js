@@ -39,7 +39,7 @@ module.exports = {
     noComment: `Sin comentarios.`,
     messageIncorrectState: `El siguiente reto presenta algunas correcciones, por favor revisalas.`,
     messageConfirmationEmisor: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que ${receptor} accedió ha tener una reunión el día ${date} a la(s) ${time}.`,
-    messageConfirmationReceptor: (emisor, receptor, date, time) => `Hola estimado ${receptor}, gracias por confirmar tu con ${emisor} el día ${date} a la(s) ${time}.`,
+    messageConfirmationReceptor: (emisor, receptor, date, time) => `Hola estimado ${receptor}, gracias por confirmar reunión tu con ${emisor} el día ${date} a la(s) ${time}.`,
     messageRejectionEmisor: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que lamentablemente ${receptor} no accedió ha tener una reunión el dia ${date} a la(s) ${time}.`,
     messageRejectionReceptor: (emisor, receptor, date, time) => `Hola estimado ${receptor}, lamentamos que no pudiera acceder ha tener una reunión el día ${date} a la(s) ${time}.`,
     manProfileImage: `https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/man_profile.png`,
