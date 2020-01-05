@@ -49,7 +49,9 @@ module.exports = {
 
         try {
 
-            const company = await models.company.findAll({})
+            const company = await models.company.findAll({
+                order: [ ['name', 'ASC'] ]
+            })
             successful(res, 'OK', company)
 
         } catch (error) { returnError(res, error) }

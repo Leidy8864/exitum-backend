@@ -46,7 +46,9 @@ module.exports = {
 
         try {
 
-            const university = await models.university.findAll({})
+            const university = await models.university.findAll({
+                order: [ ['university', 'ASC'] ]
+            })
             successful(res, 'OK', university)
 
         } catch (error) { returnError(res, error) }
