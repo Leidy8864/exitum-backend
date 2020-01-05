@@ -359,18 +359,26 @@ module.exports = {
 				await appointment.update({ status: true })
 
 				//Send E-mail
-				const email_info = { to: appointment.fromAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response', cc: appointment.toAppointmentUser.email }
-				const data_send = { message: text.messageConfirmation(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
-				sendEmail(email_info, data_send)
+				const email_info_emisor = { to: appointment.fromAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response' }
+				const data_send_emisor = { message: text.messageConfirmationEmisor(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
+				sendEmail(email_info_emisor, data_send_emisor)
+				
+				const email_info_receptor = { to: appointment.toAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response' }
+				const data_send_receptor = { message: text.messageConfirmationReceptor(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
+				sendEmail(email_info_receptor, data_send_receptor)
 			}
 			else 
 			{
 				await appointment.destroy()
 
 				//Send E-mail
-				const email_info = { to: appointment.fromAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response', cc: appointment.toAppointmentUser.email }
-				const data_send = { message: text.messageRejection(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
-				sendEmail(email_info, data_send)
+				const email_info_emisor1 = { to: appointment.fromAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response' }
+				const data_send_emisor1 = { message: text.messageRejectionEmisor(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
+				sendEmail(email_info_emisor1, data_send_emisor1)
+				
+				const email_info_receptor1 = { to: appointment.toAppointmentUser.email, subject: text.confirmation, template: 'template-appointment-response' }
+				const data_send_receptor1 = { message: text.messageRejectionReceptor(appointment.fromAppointmentUser.dataValues.fullname, appointment.toAppointmentUser.dataValues.fullname, appointment.date, appointment.time), photo: 'verde.png' }
+				sendEmail(email_info_receptor1, data_send_receptor1)
 			}
 
 			return successful(res)
