@@ -336,18 +336,18 @@ module.exports = {
                                     tip_id: tipNew.id
                                 }, transaction: t
                             }).catch(err => { console.log(err) })
+                        } else {
+                            chlls.push({
+                                user_id: startups[i].entrepreneur.user_id,
+                                startup_id: startups[i].id,
+                                stage_id: stepFind.stage.id,
+                                step_id: stepFind.id,
+                                tip_id: tipNew.id,
+                                checked: false,
+                                status: "Sin respuesta",
+                                date_max: moment(Date.now()).add(duration_days, 'd').toDate()
+                            })
                         }
-
-                        chlls.push({
-                            user_id: startups[i].entrepreneur.user_id,
-                            startup_id: startups[i].id,
-                            stage_id: stepFind.stage.id,
-                            step_id: stepFind.id,
-                            tip_id: tipNew.id,
-                            checked: false,
-                            status: "Sin respuesta",
-                            date_max: moment(Date.now()).add(duration_days, 'd').toDate()
-                        })
                         startup_step = await models.startup_step.findOne({
                             attributes: ['startup_id'],
                             where: {
@@ -375,10 +375,8 @@ module.exports = {
                             })
                         }
                     }
-                    if (!challenges) {
-                        await models.challenge.bulkCreate(chlls, { transaction: t });
-                        await models.startup_step.bulkCreate(stp_step, { transaction: t });
-                    }
+                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                    await models.startup_step.bulkCreate(stp_step, { transaction: t });
                 } else if (typeUser == "employee") {
                     const employees = await models.employee.findAll({
                         attributes: ['id', 'user_id'],
@@ -388,7 +386,7 @@ module.exports = {
                     var challenges = null
                     var employee_step = null
                     for (var i = 0; i < employees.length; i++) {
-                        challenges = await models.challenge.findAll({
+                        challenges = await models.challenge.findOne({
                             attributes: ['id'],
                             where: {
                                 user_id: employees[i].user_id,
@@ -412,17 +410,18 @@ module.exports = {
                                     tip_id: tipNew.id
                                 }, transaction: t
                             }).catch(err => { console.log(err) })
+                        } else {
+                            chlls.push({
+                                user_id: employees[i].user_id,
+                                employee_id: employees[i].id,
+                                stage_id: stepFind.stage.id,
+                                step_id: stepFind.id,
+                                tip_id: tipNew.id,
+                                checked: false,
+                                status: "Sin respuesta",
+                                date_max: moment(Date.now()).add(duration_days, 'd').toDate()
+                            })   
                         }
-                        chlls.push({
-                            user_id: employees[i].user_id,
-                            employee_id: employees[i].id,
-                            stage_id: stepFind.stage.id,
-                            step_id: stepFind.id,
-                            tip_id: tipNew.id,
-                            checked: false,
-                            status: "Sin respuesta",
-                            date_max: moment(Date.now()).add(duration_days, 'd').toDate()
-                        })
                         employee_step = await models.employee_step.findOne({
                             attributes: ['employee_id'],
                             where: {
@@ -451,10 +450,8 @@ module.exports = {
                             })
                         }
                     }
-                    if (!challenges) {
-                        await models.challenge.bulkCreate(chlls, { transaction: t });
-                        await models.employee_step.bulkCreate(emp_step, { transaction: t });
-                    }
+                    await models.challenge.bulkCreate(chlls, { transaction: t });
+                    await models.employee_step.bulkCreate(emp_step, { transaction: t });
                 } else {
                     return res.json({ status: false, message: "El nivel pertenece a una estapa que no especifico el usuario al que pertenece el reto." })
                 }
