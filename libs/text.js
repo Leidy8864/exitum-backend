@@ -38,8 +38,10 @@ module.exports = {
     messageCorrectState: `El siguiente reto que completó ha sido aprobado, siéntase alegre.`,
     noComment: `Sin comentarios.`,
     messageIncorrectState: `El siguiente reto presenta algunas correcciones, por favor revisalas.`,
-    messageConfirmation: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que ${receptor} accedió ha tener una reunión el dia ${date} a la(s) ${time}.`,
-    messageRejection: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que lamentablemente ${receptor} no accedió ha tener una reunión el dia ${date} a la(s) ${time}.`,
+    messageConfirmationEmisor: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que ${receptor} accedió ha tener una reunión el día ${date} a la(s) ${time}.`,
+    messageConfirmationReceptor: (emisor, receptor, date, time) => `Hola estimado ${receptor}, gracias por confirmar reunión tu con ${emisor} el día ${date} a la(s) ${time}.`,
+    messageRejectionEmisor: (emisor, receptor, date, time) => `Hola estimado ${emisor}, te informamos que lamentablemente ${receptor} no accedió ha tener una reunión el dia ${date} a la(s) ${time}.`,
+    messageRejectionReceptor: (emisor, receptor, date, time) => `Hola estimado ${receptor}, lamentamos que no pudiera acceder ha tener una reunión el día ${date} a la(s) ${time}.`,
     manProfileImage: `https://techie-exitum.s3-us-west-1.amazonaws.com/imagenes/email-images/man_profile.png`,
     succesful_validation: `Se validó satisfactoriamente el reto.`,
     message_event: (usuario, status) => `Hola ${usuario}! Te informamos que tu solicitud de participacion en el siguiente evento, ${status}. Gracias por participar.`,
@@ -54,7 +56,7 @@ module.exports = {
     failedTokenVerification: `Token no válido.`,
     failedTokenExpiration: `Token expirado.`,
     requireImage: `Se necesita una imagen.`,
-    messageToReceptor: (name) => `¡Hola ${name}! Te informamos que tienes reuniones pendientes por aceptar o cancelar, por favor revisa tu bandeja de entrada en Exitum.pe`,
+    messageToReceptor: (name) => `¡Hola ${name}! Te informamos que tienes reuniones pendientes por aceptar o cancelar. Por favor revisa tu bandeja de entrada en Exitum.pe`,
     messageToEmisor: (receptor, name) => `¡Hola ${name}! Te informamos que tu reunión con ${receptor} aún esta pendiente por ser aceptada.`,
 
 }
