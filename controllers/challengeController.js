@@ -600,11 +600,15 @@ module.exports = {
                             model: models.tip,
                             order: ['id'],
                             include: [
-                                { model: models.file_tip }
+                                { 
+                                    model: models.file_tip,
+                                    required: false 
+                                }
                             ]
                         },
                         {
-                            model: models.file
+                            model: models.file,
+                            required: false
                         },
                         {
                             model: models.query,
@@ -758,15 +762,23 @@ module.exports = {
                             model: models.file_tip,
                             required: false
                         },
-                        {
-                            model: models.query,
-                            where: {
-                                active: 1
-                            },
-                            required: false
-                        }
+                        // {
+                        //     model: models.query,
+                        //     where: {
+                        //         active: 1
+                        //     },
+                        //     required: false
+                        // }
                     ],
                     required: true
+                },
+                {
+                    model: models.query,
+                    as: 'replies',
+                    where: {
+                        active: 1
+                    },
+                    required: false
                 },
                 {
                     model: models.file,
@@ -980,8 +992,8 @@ module.exports = {
                                     if (!['startup', 'employee'].includes(result[x].tipo.toLowerCase())) {
                                         return res.json({ status: false, message: "El campo tipo solo puede ser 'startup' o 'employee'." })
                                     }
-                                    if (!['pre semilla', 'semilla', 'temprana', 'crecimiento', 'expansión', 'etapa 1 empleado'].includes(result[x].etapa.toLowerCase())) {
-                                        return res.json({ status: false, message: "El campo 'etapa' solo pueden tener los siguientes valores: 'Pre semilla', 'Semilla', 'Temprana', 'Crecimiento', 'Expansión', 'Etapa 1 empleado'." })
+                                    if (!['pre semilla', 'semilla', 'temprana', 'crecimiento', 'expansión', 'etapa del impulsor'].includes(result[x].etapa.toLowerCase())) {
+                                        return res.json({ status: false, message: "El campo 'etapa' solo pueden tener los siguientes valores: 'Pre semilla', 'Semilla', 'Temprana', 'Crecimiento', 'Expansión', 'Etapa del impulsor'." })
                                     }
                                     if (result[x].etapa.length > 0 && result[x].tipo.length > 0 && result[x].nivel.length > 0 && result[x].reto.length > 0) {
                                         var stageNew = await models.stage.findOrCreate({
