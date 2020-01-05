@@ -18,7 +18,9 @@ module.exports = {
     findAllSkill: async (res) => {
         try 
         {
-            const skills = await models.skill.findAll();
+            const skills = await models.skill.findAll({
+                order: [ ['skill', 'ASC'] ]
+            });
             return successful(res, 'OK', skills)
 
         } catch (error) { return returnError(res, error) }
@@ -94,7 +96,7 @@ module.exports = {
 
             var skills = await user.getToUserSkills()
 
-            return successful(res, text.successCreate('skill'), skills)
+            return successful(res, 'OK', skills)
 
         } catch (error) { return returnError(res, error) }
 

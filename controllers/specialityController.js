@@ -35,7 +35,9 @@ module.exports = {
 
         try {
 
-            const speciality = await models.speciality.findAll({});
+            const speciality = await models.speciality.findAll({
+                order: [ ['name', 'ASC'] ]
+            });
             if (speciality) {
                 return successful(res, 'OK', speciality)
             } else {

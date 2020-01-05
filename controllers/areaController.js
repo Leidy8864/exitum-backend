@@ -32,7 +32,9 @@ module.exports = {
 
         try {
 
-            const area = await models.area.findAll({});
+            const area = await models.area.findAll({
+                order: [ ['name', 'ASC'] ]
+            });
             if (area) {
                 return successful(res, 'OK', area)
             } else {

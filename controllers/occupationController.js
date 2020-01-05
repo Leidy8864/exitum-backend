@@ -32,7 +32,9 @@ module.exports = {
 
         try 
         {
-            const occupation = await models.occupation.findAll({});
+            const occupation = await models.occupation.findAll({
+                order: [ ['name', 'ASC'] ]
+            });
             return successful(res, 'OK', occupation)
             
         } catch (error) { return returnError(res, error) }
