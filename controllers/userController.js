@@ -892,7 +892,7 @@ module.exports = {
             const { user_id } = req.params
 
             var user = await models.user.findAll({ 
-                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname']], 
+                attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1')), 'fullname']], 
                 where: { id: { [Sequelize.Op.ne]: user_id } } 
             })
             

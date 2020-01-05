@@ -108,7 +108,7 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'toAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname'] ]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1')), 'fullname'] ]
 					}
 				]
 			})
@@ -149,11 +149,11 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'toAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname_1'), ' ', Sequelize.col('toAppointmentUser.lastname_2')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname_1')), 'fullname']]
 					},
 					{
 						model: models.user, as: 'fromAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname_1'), ' ', Sequelize.col('fromAppointmentUser.lastname_2')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname_1')), 'fullname']]
 					}
 				]
 			})
@@ -216,7 +216,7 @@ module.exports = {
 				const data_send = {
 					fecha: appointment.date, hora: appointment.time,
 					message_popup: text.messageToReceptor(user.name),
-					hacia: `${user_emit.name} ${user_emit.lastname_1} ${user_emit.lastname_2}`,
+					hacia: `${user_emit.name} ${user_emit.lastname_1}`,
 					telefono: user_emit.phone, descripcion: appointment.description
 				}
 				sendEmail(email_info, data_send)
@@ -224,7 +224,7 @@ module.exports = {
 				const email_info1 = { to: user_emit.email, subject: text.reunion, template: 'template-appointment' }
 				const data_send1 = {
 					fecha: appointment.date, hora: appointment.time,
-					message_popup: text.messageToEmisor(`${user.name} ${user.lastname_1} ${user.lastname_2}`, user_emit.name),
+					message_popup: text.messageToEmisor(`${user.name} ${user.lastname_1}`, user_emit.name),
 					telefono: user_emit.phone, descripcion: appointment.description
 				}
 				sendEmail(email_info1, data_send1)
@@ -346,11 +346,11 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'toAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname_1'), ' ', Sequelize.col('toAppointmentUser.lastname_2')), 'fullname'], 'email']
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('toAppointmentUser.name'), ' ', Sequelize.col('toAppointmentUser.lastname_1')), 'fullname'], 'email']
 					},
 					{
 						model: models.user, as: 'fromAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname_1'), ' ', Sequelize.col('fromAppointmentUser.lastname_2')), 'fullname'], 'email']
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('fromAppointmentUser.name'), ' ', Sequelize.col('fromAppointmentUser.lastname_1')), 'fullname'], 'email']
 					}
 				]
 			})
@@ -408,7 +408,7 @@ module.exports = {
 				include: [
 					{
 						model: models.user, as: 'fromAppointmentUser',
-						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1'), ' ', Sequelize.col('lastname_2')), 'fullname']]
+						attributes: ['id', [Sequelize.fn('CONCAT', Sequelize.col('name'), ' ', Sequelize.col('lastname_1')), 'fullname']]
 					}
 				]
 			})
