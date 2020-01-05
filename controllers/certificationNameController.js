@@ -31,7 +31,9 @@ module.exports = {
 
         try {
 
-            const certification_name = await models.certification_name.findAll({});
+            const certification_name = await models.certification_name.findAll({
+                order: [ ['name', 'ASC'] ]
+            });
             return successful (res, 'OK', certification_name)
             
         } catch (error) { return returnError(res, error) }
