@@ -15,6 +15,8 @@ const FILES_TIP_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip'
 const FILES_TIP_REPLY_BUCKET_NAME = index.aws.s3.BUCKET_NAME + '/documentos/files_tip_reply';
 const { check, validationResult } = require('express-validator');
 const { successful, returnError } = require('./responseController')
+const path = require('path');
+
 module.exports = {
     validate: (method) => {
         var message_exists = "Este campo es obligatorio";
@@ -958,7 +960,7 @@ module.exports = {
             if (!file.name.match(/\.(xls|xlsx)$/)) {
                 return res.json({ status: false, message: messageFileInvalid })
             }
-            await file.mv('./uploads/' + fileName, function (err) {
+            await file.mv(path.join(__dirname, '../uploads/' + fileName), function (err) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -970,7 +972,7 @@ module.exports = {
                     }
                     try {
                         exceltojson({
-                            input: `./uploads/${fileName}`,
+                            input: path.join(__dirname, `../uploads/${fileName}`),
                             output: null,
                             lowerCaseHeaders: true
                         }, async (err, result) => {
@@ -1163,7 +1165,7 @@ module.exports = {
                                 res.json({ status: true, message: "Se crearon correctamente los retos " + messageAlert, data: result });
                             });
                         });
-                        fs.unlinkSync(`./uploads/${fileName}`)
+                        fs.unlinkSync(path.join(__dirname, `../uploads/${fileName}`))
                     } catch (e) {
                         console.log(e)
                         res.json({ status: false, message: "Archivo corrupto" });
