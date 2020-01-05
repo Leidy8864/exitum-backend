@@ -600,9 +600,9 @@ module.exports = {
                             model: models.tip,
                             order: ['id'],
                             include: [
-                                { 
+                                {
                                     model: models.file_tip,
-                                    required: false 
+                                    required: false
                                 }
                             ]
                         },
@@ -761,14 +761,7 @@ module.exports = {
                         {
                             model: models.file_tip,
                             required: false
-                        },
-                        // {
-                        //     model: models.query,
-                        //     where: {
-                        //         active: 1
-                        //     },
-                        //     required: false
-                        // }
+                        }
                     ],
                     required: true
                 },
